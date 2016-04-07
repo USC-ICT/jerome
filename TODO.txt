@@ -1,0 +1,33 @@
+The list of broken things
+
+- JavaScript integration between Engine and the SCXML interpreter. For example,
+	returning an utterance form c++. And the rest of the stuff, needs to get fixed
+	and tested.
+  15/09/24 - the initial implementation is done. Need more testing.
+
+- Training. need a call back to control training process. Have a timeout.
+	15/09/21 - API is done. Timeout can be done inside the callback
+
+- Training. Figure out the best optimization algorithm and parameters.
+
+- NPCEditor csxml is different from the alib csxml.
+  15/08/25 - fromat version 2 on NPCEditor side. Might need to store classfier description.
+	15/09/20 - format has been change to add classifier model
+	15/09/20 - changes are still pending in NPCEditor to supoprt the latest in Jerome
+	15/09/21 - Fixed NPCEditor to generate the format that Jerome reads.
+							It stil does not store the classifier model, so Jerome will
+							interpret each classfier as unigram-to-unigram mapping.
+
+- Add support for utterance count that exists in the latest NPCEditor
+	15/08/25 - format version 2 loads and saves the counts.
+							Need to include them into computation.
+
+- Adopt the Factory pattern for IO
+
+- Adopt the Factory pattern for Trainer
+
+- Write RankerProvider that handles all possible ranker, i.e, Unigram, Bigram,
+	Unigram + ID. Replace the current Unigram with that implementation.
+
+- Figure out a better way for registering Factory-based components.
+
