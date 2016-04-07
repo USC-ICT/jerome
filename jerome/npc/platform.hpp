@@ -37,99 +37,104 @@ namespace jerome {
   namespace npc {
 
     class Collection;
-		class Utterance;
+    class Utterance;
 
     namespace detail {
       class Engine;
     }
 
-    struct Platform
-      : public ReferenceClassInterface<detail::Engine>
-    {
+    struct Platform : public ReferenceClassInterface<detail::Engine> {
       typedef ReferenceClassInterface<detail::Engine> parent_type;
 
-/** 
-* Initializes the API. Needs to be called once before using any of the other
-* functions.
-*/
+      /**
+      * Initializes the API. Needs to be called once before using any of the
+      * other
+      * functions.
+      */
       static void initialize(const String& locale = "en_US.UTF8");
 
       Platform();
       virtual ~Platform();
 
-/**
-* Loads the collection and the classfier parameters from the stream is. 
-* Returns an error object if there is a problem during the load.
-*/
+      /**
+      * Loads the collection and the classfier parameters from the stream is.
+      * Returns an error object if there is a problem during the load.
+      */
       OptionalError loadCollection(std::istream& is);
-	  
-/**
-* Trains the classifier corresponding to the state stateName.
-*/
-      OptionalError train(const String& stateName,
-                          const TrainingCallback& callback = [] (
-                            TrainingState&) {});
 
-/**
-* Saves the collection to a stream. Returns an error object if there is
-* a problem during the save.
-*/
+      /**
+      * Trains the classifier corresponding to the state stateName.
+      */
+      OptionalError train(
+          const String& stateName,
+          const TrainingCallback& callback = [](TrainingState&) {});
+
+      /**
+      * Saves the collection to a stream. Returns an error object if there is
+      * a problem during the save.
+      */
       OptionalError saveCollection(std::ostream& os);
 
-/**
-* Asks the classifier with name stateName to select the best response to
-* the utterance question. Returns the best reponse or nothing if no response
-* score above the classifier threshold.
-*/
+      /**
+      * Asks the classifier with name stateName to select the best response to
+      * the utterance question. Returns the best reponse or nothing if no
+      * response
+      * score above the classifier threshold.
+      */
       optional<Utterance> respond(const String& stateName,
                                   const String& question);
 
-// DM-related API
-/**
-* Loads an scxml file with the dialogue manager script. Potentially the load
-* is happening on a different thread. The callback function is called with
-* either the DM state machine name or, in case of the failure, with the error
-* object describing the problem.
-*/
-      void  loadDialogueManager(std::istream& is,
-                                const std::function<void(const Result<String>&)>& cb =
-                                  [] (const Result<String>&) {
-                                  });
-			
-/**
-* Posts an event with name inName and data inData to the state machine with
-* the name inMachineName. Returns immediately.
-*/
-      void  postEvent(const String& inName,
-                      const StringStringMap& inData = StringStringMap(),
-                      const String& inMachineName = "");
+      // DM-related API
+      /**
+      * Loads an scxml file with the dialogue manager script. Potentially the
+      * load
+      * is happening on a different thread. The callback function is called with
+      * either the DM state machine name or, in case of the failure, with the
+      * error
+      * object describing the problem.
+      */
+      void loadDialogueManager(std::istream& is,
+                               const std::function<void(const Result<String>&)>&
+                                   cb = [](const Result<String>&) {});
 
-/**
-* Sets the platform's engine event handler. The event handler will receive
-* external event send by the SCXML engine. It is up to the platform client how
-* to handle the events. For example, the client may convert the event into
-* a VHMSG.
-*/
-			void setEngineEventHandler(const EngineEventHandler& eventHandler);
-			
-/**
- *  Find the utterance with the given ID. Return nothing, if the utterance does
-    not exist.
- */
+      /**
+      * Posts an event with name inName and data inData to the state machine
+      * with
+      * the name inMachineName. Returns immediately.
+      */
+      void postEvent(const String& inName,
+                     const StringStringMap& inData = StringStringMap(),
+                     const String& inMachineName = "");
 
-			optional<Utterance> utteranceWithID(const String& inUtteranceID);
+      /**
+      * Sets the platform's engine event handler. The event handler will receive
+      * external event send by the SCXML engine. It is up to the platform client
+      * how
+      * to handle the events. For example, the client may convert the event into
+      * a VHMSG.
+      */
+      void setEngineEventHandler(const EngineEventHandler& eventHandler);
 
-/**
- * Get the reference to the Collection object to add new utterances from the client side.
- */
-			Collection collection();
+      /**
+      * Find the utterance with the given ID. Return nothing, if the utterance
+      * does not exist.
+      */
+      optional<Utterance> utteranceWithID(const String& inUtteranceID);
 
-			void collectionWasUpdated(const OptionalString& inStateName = OptionalString());
-			
+      /**
+      * Get the reference to the Collection object to add new utterances from
+      * the client side.
+      */
+      Collection collection();
+
+      /**
+      * Tell the platform that you made changes to the collection, so it can 
+      * update its caches.
+      */
+      void collectionWasUpdated(
+          const OptionalString& inStateName = OptionalString());
     };
-
-
   }
 }
 
-#endif // defined __jerome_npc_platform_hpp__
+#endif  // defined __jerome_npc_platform_hpp__
