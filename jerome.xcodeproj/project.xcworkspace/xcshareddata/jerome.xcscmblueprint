@@ -1,0 +1,65 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "bc9a226e-16b4-fa00-ecb1-ce57b7db7bff++505+++AD662E1",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+    "e135fbfd-934b-0410-8715-9bd0f169ccc0++5194+++35DA06F" : {
+
+    },
+    "c5a290c1-3816-0410-b36e-9b4c0649adeb++4244+++D0CA8A9" : {
+
+    },
+    "bc9a226e-16b4-fa00-ecb1-ce57b7db7bff++505+++AD662E1" : {
+
+    },
+    "12d503d6-14b9-7ef4-db09-ce57b7db7bff++505+++46EF6CC" : {
+
+    },
+    "e135fbfd-934b-0410-8715-9bd0f169ccc0++5194+++3ABD34A" : {
+
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "e135fbfd-934b-0410-8715-9bd0f169ccc0++5194+++35DA06F" : 0,
+    "c5a290c1-3816-0410-b36e-9b4c0649adeb++4244+++D0CA8A9" : 0,
+    "bc9a226e-16b4-fa00-ecb1-ce57b7db7bff++505+++AD662E1" : 0,
+    "12d503d6-14b9-7ef4-db09-ce57b7db7bff++505+++46EF6CC" : 0,
+    "e135fbfd-934b-0410-8715-9bd0f169ccc0++5194+++3ABD34A" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "2AC65815-E491-4723-AB6D-06C73238D537",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "e135fbfd-934b-0410-8715-9bd0f169ccc0++5194+++35DA06F" : "3rd_party\/SCION\/",
+    "c5a290c1-3816-0410-b36e-9b4c0649adeb++4244+++D0CA8A9" : "",
+    "bc9a226e-16b4-fa00-ecb1-ce57b7db7bff++505+++AD662E1" : "alib\/",
+    "12d503d6-14b9-7ef4-db09-ce57b7db7bff++505+++46EF6CC" : "3rd_party\/kstem\/",
+    "e135fbfd-934b-0410-8715-9bd0f169ccc0++5194+++3ABD34A" : "3rd_party\/SCION\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "jerome",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "jerome.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/leuski-ict\/kstem",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "12d503d6-14b9-7ef4-db09-ce57b7db7bff++505+++46EF6CC"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/leuski-ict\/jerome.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "bc9a226e-16b4-fa00-ecb1-ce57b7db7bff++505+++AD662E1"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/svn.ict.usc.edu\/svn_nld",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "c5a290c1-3816-0410-b36e-9b4c0649adeb++4244+++D0CA8A9"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/svn.ict.usc.edu\/svn_vh",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "e135fbfd-934b-0410-8715-9bd0f169ccc0++5194+++35DA06F"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/svn.ict.usc.edu\/svn_vh",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "e135fbfd-934b-0410-8715-9bd0f169ccc0++5194+++3ABD34A"
+    }
+  ]
+}
