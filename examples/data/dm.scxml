@@ -1,0 +1,120 @@
+<scxml
+	xmlns="http://www.w3.org/2005/07/scxml"
+	version="1.0"
+	profile="ecmascript"
+	name="dm"
+	initial="regular"
+	id="root">
+
+	<script>
+		
+		var offTopicCount	= 0;
+        //	 var scion = require('scion');
+        var pm = scion.ext.platformModule.platform;
+        //	 pm.log(window);
+        var	domainName	 = "Anyone - The Twins";
+        var kOpaque	 = "opaque";
+        var kUnknown	 = "unknown";
+        var kConceal	 = "conceal";
+        var kAlternative	= "alternative";
+        var kRepeat	 = "repeat";
+        var kOfftopicTypes	= [ kOpaque, kUnknown, kConceal ];
+        var lastSpeechEvent	= null;
+        var lastUtterance	= null;
+        var kHistoryWindow	= 20;
+        var history	 = [];
+        function seenRecently(inAnswer, inDepth) {
+            if (inAnswer == null || inAnswer.id == null) return inDepth;
+            var theDepth = inDepth;
+            if (theDepth > history.length) theDepth = history.length;
+            for(var i = 0; theDepth > i; ++i) {
+                if (history[i] == inAnswer.id)
+                return i;
+            }
+            return inDepth;
+        }
+        function leastRecent(inAnswers, inDepth) {
+            var selectedUtterance	= null;
+            var	depth	 = -1;
+            for(var i = 0, n = inAnswers.length; n > i; ++i) {
+                var d	= seenRecently(inAnswers[i], inDepth);
+                if (d > depth) {
+                    depth	 = d;
+                    selectedUtterance	= inAnswers[i];
+                    if (depth >= inDepth) break;
+                }
+            }
+            return selectedUtterance;
+        }
+        function chooseOfftopic() {
+            var	offtopic = randomOfftopic(kOfftopicTypes[offTopicCount++]);
+            if (offTopicCount >= kOfftopicTypes.length) {
+                offTopicCount = kOfftopicTypes.length - 1;
+            }
+            return offtopic;
+        }
+        function randomOfftopic(inOfftopicType) {
+            var answers = classifier.answers(domainName).findAll( function(utterance) { return utterance.type == inOfftopicType });
+            if (answers.length == 0)
+            answers = classifier.answers(domainName).findAll( function(utterance) {
+                                                             return utterance.type == kOpaque || utterance.type == kUnknown || utterance.type == kConceal });
+            answers.shuffle();
+            return leastRecent(answers, kHistoryWindow);
+        }
+        function handleTextEvent(event) {
+            pm.log("in handleTextEvent");
+            
+            var response = null;
+            if (event.text == null)
+                return response;
+            var answers	 = classifier.search(domainName, event);
+            pm.log("domain",domainName);
+            if (answers.length == 0) {
+                pm.log("offtopic");
+                response = chooseOfftopic();
+            } else {
+                pm.log("ontopic", answers.length);
+                var selectedUtterance = answers[0];
+                pm.log("selectedUtterance", selectedUtterance.get("id"));
+                if (selectedUtterance.type == kAlternative) {
+                    if (lastSpeechEvent == null) {
+                        response = chooseOfftopic();
+                    } else {
+                        offTopicCount	= 0;
+                        response = handleTextEvent(lastSpeechEvent);
+                    }
+                } else if (selectedUtterance.type == kRepeat) {
+                    if (lastUtterance == null) {
+                        response = chooseOfftopic();
+                    } else {
+                        offTopicCount	= 0;
+                        response = lastUtterance;
+                    }
+                } else {
+                    lastSpeechEvent	= event;
+                    response = leastRecent(answers, kHistoryWindow);
+                }
+            }
+            lastUtterance	= response;
+            history.unshift(response.id);
+            if (response["toss"]) {
+                domainName = "Anyone - " + response["toss"];
+            }
+            pm.log("Responseid",response["id"]);
+            
+            return response;
+        }		</script>
+
+<state id="regular">
+
+	<transition target="regular" event="vrSpeech_asr_complete">
+		<script>
+			var response	= handleTextEvent(_event.data);
+			triggerUtterance(response.id, response.script);
+		</script>
+	</transition>
+
+</state>
+
+</scxml>
+
