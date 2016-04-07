@@ -1,0 +1,116 @@
+//
+//  value_imp.hpp
+//
+//  Created by Anton Leuski on 8/20/14.
+//  Copyright (c) 2015 ICT/USC. All rights reserved.
+//
+//  This file is part of Jerome.
+//
+//  Jerome is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU Lesser General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  Jerome is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU Lesser General Public License for more details.
+//
+//  You should have received a copy of the GNU Lesser General Public License
+//  along with Jerome.  If not, see <http://www.gnu.org/licenses/>.
+//
+
+#ifndef __jerome_javascript_value_imp_hpp__
+#define __jerome_javascript_value_imp_hpp__
+
+namespace jerome { namespace javascript { namespace detail {
+
+	template <typename Derived, typename Base>
+	template <typename ...Args>
+	Value	AbstractValue<Derived, Base>::operator () (Args ...args)
+	{
+		if (!isFunction()) throw object_is_not_function();
+		return ObjectAsFunctionCallback::call(context(), this->objectRef(), nullptr, std::forward<Args>(args)...);
+	}
+	
+	template <typename Derived, typename Base>
+	template <typename THIS_T, typename ...Args>
+	Value	AbstractValue<Derived, Base>::call(THIS_T this_arg, Args ...args)
+	{
+		if (!isFunction()) throw object_is_not_function();
+		return ObjectAsFunctionCallback::call(context(),
+											  this->objectRef(),
+											  (JSObjectRef)to_valueRef<THIS_T>::convert(context(), this_arg),
+											  std::forward<Args>(args)...);
+	}
+	
+	template <typename Derived, typename Base>
+	template <typename ...Args>
+	Value	AbstractValue<Derived, Base>::callAsConstructor(Args ...args)
+	{
+		if (!isFunction()) throw object_is_not_constructor();
+		return ObjectAsConstructorCallback::call(context(), this->objectRef(), std::forward<Args>(args)...);
+	}
+		
+	template <typename Derived, typename Base>
+	PrototypeProperty<Derived>	AbstractValue<Derived, Base>::prototype()
+	{
+		return PrototypeProperty<Derived>(*this->derived());
+	}
+	
+	template <typename Derived, typename Base>
+	Value	AbstractValue<Derived, Base>::prototype() const
+	{
+		return PrototypeProperty<const Derived>(*this->derived());
+	}
+	
+	template <typename Derived, typename Base>
+	NamedProperty<Derived>		AbstractValue<Derived, Base>::operator[] (const String& propertyName)
+	{
+		return NamedProperty<Derived>(*this->derived(), propertyName);
+	}
+	
+	template <typename Derived, typename Base>
+	Value						AbstractValue<Derived, Base>::operator[] (const String& propertyName) const
+	{
+		return NamedProperty<const Derived>(*this->derived(), propertyName);
+	}
+	
+	template <typename Derived, typename Base>
+	NamedProperty<Derived>		AbstractValue<Derived, Base>::operator[] (const char* propertyName)
+	{
+		return NamedProperty<Derived>(*this->derived(), propertyName);
+	}
+	
+	template <typename Derived, typename Base>
+	Value						AbstractValue<Derived, Base>::operator[] (const char* propertyName) const
+	{
+		return NamedProperty<const Derived>(*this->derived(), propertyName);
+	}
+	
+	template <typename Derived, typename Base>
+	IndexedProperty<Derived>	AbstractValue<Derived, Base>::operator[] (int propertyIndex)
+	{
+		return IndexedProperty<Derived>(*this->derived(), propertyIndex);
+	}
+	
+	template <typename Derived, typename Base>
+	Value						AbstractValue<Derived, Base>::operator[] (int propertyIndex) const
+	{
+		return IndexedProperty<const Derived>(*this->derived(), propertyIndex);
+	}
+	
+	
+	template <typename A, typename AB, typename B, typename BB>
+	inline bool operator == (const AbstractValue<A, AB>& a, const AbstractValue<B, BB>& b) {
+		return a.isEqual(b);
+	}
+	
+	template <typename Derived, typename Base>
+	std::ostream& operator<< (std::ostream& os, const AbstractValue<Derived, Base>& v ) {
+		return os << (String)v;
+	}
+
+}}}
+
+#endif // __jerome_javascript_value_imp_hpp__
