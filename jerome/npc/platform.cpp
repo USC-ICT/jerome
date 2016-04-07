@@ -54,12 +54,6 @@ namespace jerome {
       return implementation().loadCollection(is);
     }
 	
-	
-	Collection& Platform::getCollection()
-	{
-		return implementation().collection();
-	}
-
     void Platform::loadDialogueManager(std::istream& is,
                                        const std::function<void(const Result<String>&)>& cb)
     {
@@ -107,7 +101,7 @@ namespace jerome {
       return implementation().utteranceWithID(inUtteranceID);
     }
 
-		Collection Platform::collection()
+		Collection& Platform::collection()
 		{
 			return implementation().collection();
 		}

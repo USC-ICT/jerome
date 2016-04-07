@@ -48,7 +48,6 @@ namespace jerome {
     {
       typedef ReferenceClassInterface<detail::Engine> parent_type;
 
-
 /** 
 * Initializes the API. Needs to be called once before using any of the other
 * functions.
@@ -58,7 +57,6 @@ namespace jerome {
       Platform();
       virtual ~Platform();
 
-	  
 /**
 * Loads the collection and the classfier parameters from the stream is. 
 * Returns an error object if there is a problem during the load.
@@ -66,25 +64,16 @@ namespace jerome {
       OptionalError loadCollection(std::istream& is);
 	  
 /**
-* Get the reference to the Collection object to add new utterances from the client side.
-*/
-	  Collection& getCollection();
-
-/**
 * Trains the classifier corresponding to the state stateName.
 */
       OptionalError train(const String& stateName,
                           const TrainingCallback& callback = [] (
                             TrainingState&) {});
 
-//			void trainAllStates(const train_progress_callback_type& callback
-//													= [](const String&, double) { return true; });
-
 /**
 * Saves the collection to a stream. Returns an error object if there is
 * a problem during the save.
 */
-
       OptionalError saveCollection(std::ostream& os);
 
 /**
@@ -92,7 +81,6 @@ namespace jerome {
 * the utterance question. Returns the best reponse or nothing if no response
 * score above the classifier threshold.
 */
-
       optional<Utterance> respond(const String& stateName,
                                   const String& question);
 
@@ -116,7 +104,6 @@ namespace jerome {
                       const StringStringMap& inData = StringStringMap(),
                       const String& inMachineName = "");
 
-
 /**
 * Sets the platform's engine event handler. The event handler will receive
 * external event send by the SCXML engine. It is up to the platform client how
@@ -125,8 +112,18 @@ namespace jerome {
 */
 			void setEngineEventHandler(const EngineEventHandler& eventHandler);
 			
+/**
+ *  Find the utterance with the given ID. Return nothing, if the utterance does
+    not exist.
+ */
+
 			optional<Utterance> utteranceWithID(const String& inUtteranceID);
+
+/**
+ * Get the reference to the Collection object to add new utterances from the client side.
+ */
 			Collection collection();
+
 			void collectionWasUpdated(const OptionalString& inStateName = OptionalString());
 			
     };
