@@ -1083,10 +1083,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 62FAE718161154520065D358 /* Build configuration list for PBXNativeTarget "jerome.ios" */;
 			buildPhases = (
+				627818B01CC82FD700C344E4 /* ShellScript */,
 				62FAE70B161154520065D358 /* Sources */,
 				62FAE70C161154520065D358 /* Frameworks */,
 				62FAE70D161154520065D358 /* CopyFiles */,
-				62FAE743161155C80065D358 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1151,6 +1151,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		627818B01CC82FD700C344E4 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/jerome/scripting/startup.js",
+				"$(SRCROOT)/3rdParty/SCION/dist/scion.js",
+				"$(SRCROOT)/jerome/ir/report/HTMLReporter.xslt",
+				"$(SRCROOT)/scripts/make_includes.sh",
+				"$(SRCROOT)/jerome/scripting/utteranceCompiler.js",
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/startup.js.inc",
+				"$(DERIVED_FILE_DIR)/scion.js.inc",
+				"$(DERIVED_FILE_DIR)/HTMLReporter.xslt.inc",
+				"$(DERIVED_FILE_DIR)/utteranceCompiler.js.inc",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "source \"${SRCROOT}/scripts/make_includes.sh\"\n";
+		};
 		62B84DB51BB4B2AB009FD8E4 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1172,19 +1194,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "source \"${SRCROOT}/scripts/make_includes.sh\"\n\n\n\n\n\n\n\n\n\n\n\n";
-		};
-		62FAE743161155C80065D358 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = "## copy public header files preserving directory structure\n\n#cd \"${SRCROOT}\"\n#rsync  -Cavm --filter=\"+ */\" --filter=\"- *.private.h\" --filter=\"+ *.hpp\" --filter=\"+ *.h\" --filter=\"- *\"  alib \"${BUILT_PRODUCTS_DIR}/\"\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

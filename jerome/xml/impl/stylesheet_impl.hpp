@@ -24,9 +24,21 @@
 #define __jerome_xml_impl_stylesheet_impl_hpp__
 
 #include <fstream>
-#include <libxslt/transform.h>
 #include <jerome/xml/impl/document_impl.hpp>
 #include <jerome/xml/stylesheet.hpp>
+
+#ifndef __IPHONE_OS_VERSION_MIN_REQUIRED
+#include <libxslt/transform.h>
+#else
+
+// Apple does not have libxslt on iOS. We either need to compile it statically or
+// disable this feature...
+typedef void* xsltStylesheetPtr;
+static xsltStylesheetPtr xsltParseStylesheetDoc	(xmlDocPtr doc) { return NULL; }
+static void xsltFreeStylesheet(xsltStylesheetPtr style) {}
+static xmlDocPtr xsltApplyStylesheet	(xsltStylesheetPtr style,
+                     xmlDocPtr doc, const char **params) { return NULL; }
+#endif
 
 namespace jerome {
   namespace xml {
