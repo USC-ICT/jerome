@@ -11,7 +11,7 @@
 FILES_TO_INCLUDE=(\
 	"${SRCROOT}/jerome/scripting/startup.js" \
 	"${SRCROOT}/jerome/scripting/utteranceCompiler.js" \
-	"${SRCROOT}/../3rd_party/SCION/dist/scion.js" \
+	"${SRCROOT}/3rdParty/SCION/dist/scion.js" \
 	"${SRCROOT}/jerome/ir/report/HTMLReporter.xslt"\
 	)
 

@@ -1033,7 +1033,6 @@
 				622EA2CE1604D43600764667 /* Sources */,
 				622EA2CF1604D43600764667 /* Frameworks */,
 				622EA2D01604D43600764667 /* CopyFiles */,
-				62FAE70A16114B420065D358 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1159,7 +1158,7 @@
 			);
 			inputPaths = (
 				"$(SRCROOT)/jerome/scripting/startup.js",
-				"$(SRCROOT)/../3rd_party/SCION/dist/scion.js",
+				"$(SRCROOT)/3rdParty/SCION/dist/scion.js",
 				"$(SRCROOT)/jerome/ir/report/HTMLReporter.xslt",
 				"$(SRCROOT)/scripts/make_includes.sh",
 				"$(SRCROOT)/jerome/scripting/utteranceCompiler.js",
@@ -1173,19 +1172,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "source \"${SRCROOT}/scripts/make_includes.sh\"\n\n\n\n\n\n\n\n\n\n\n\n";
-		};
-		62FAE70A16114B420065D358 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "## copy public header files preserving directory structure\n\n#cd \"${SRCROOT}\"\n#rsync  -Cavm --filter=\"+ */\" --filter=\"- *.private.h\" --filter=\"+ *.hpp\" --filter=\"+ *.h\" --filter=\"- *\"  alib \"${BUILT_PRODUCTS_DIR}/\"\n\n\n\n\n\n\n\n\n";
 		};
 		62FAE743161155C80065D358 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
