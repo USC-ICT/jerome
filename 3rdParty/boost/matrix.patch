@@ -1,0 +1,12 @@
+diff -rupN old/boost_1_59_0/boost/numeric/ublas/matrix.hpp new/boost_1_59_0/boost/numeric/ublas/matrix.hpp
+--- old/boost_1_59_0/boost/numeric/ublas/matrix.hpp	2015-08-06 02:47:02.000000000 -0700
++++ new/boost_1_59_0/boost/numeric/ublas/matrix.hpp	2015-08-17 14:40:32.000000000 -0700
+@@ -1384,7 +1384,7 @@ namespace boost { namespace numeric { 
+ 
+         /*! @note "pass by value" the key idea to enable move semantics */
+         BOOST_UBLAS_INLINE
+-        fixed_matrix &operator = (matrix m) {
++        fixed_matrix &operator = (fixed_matrix m) {
+             assign_temporary(m);
+             return *this;
+         }

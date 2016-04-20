@@ -20,8 +20,6 @@
 		62092D5D16BB22E5003001AC /* scion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62092D5A16BB22E5003001AC /* scion.cpp */; };
 		620A3F08197E4EA8000400E3 /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620A3F07197E4EA8000400E3 /* matrix.cpp */; };
 		620A3F09197E4EA8000400E3 /* matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620A3F07197E4EA8000400E3 /* matrix.cpp */; };
-		620C627E1B7564C500FA2953 /* libkstem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 620C627B1B7564B600FA2953 /* libkstem.a */; };
-		620C627F1B7564CF00FA2953 /* libkstem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 620C623C1B75625F00FA2953 /* libkstem.a */; };
 		620C62831B75764A00FA2953 /* irregular_verbs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620C62821B75764A00FA2953 /* irregular_verbs.cpp */; };
 		620C62841B75764A00FA2953 /* irregular_verbs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620C62821B75764A00FA2953 /* irregular_verbs.cpp */; };
 		6211C3191B7F212C00F293DC /* writer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6211C3171B7F212C00F293DC /* writer.cpp */; };
@@ -41,7 +39,6 @@
 		62262175198DAE5900A0AA4E /* libjerome.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D21604D43600764667 /* libjerome.a */; };
 		62262176198DAE6500A0AA4E /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62AE719216FBE41C00547E42 /* boost.framework */; };
 		62262177198DB42C00A0AA4E /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62262156198C9B6800A0AA4E /* JavaScriptCore.framework */; };
-		62262178198DB43200A0AA4E /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 62C2526E152804270080A5CD /* libxml2.dylib */; };
 		622BF9941B82D472001588C7 /* JavaScriptEngineInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 622BF9921B82D472001588C7 /* JavaScriptEngineInterface.cpp */; };
 		622BF9951B82D472001588C7 /* JavaScriptEngineInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 622BF9921B82D472001588C7 /* JavaScriptEngineInterface.cpp */; };
 		622EA2D51604D43600764667 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D41604D43600764667 /* Foundation.framework */; };
@@ -57,13 +54,8 @@
 		62527B701BBB4A3D00767BA7 /* libnlopt_cxx.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 62176AD11A54741A000F745D /* libnlopt_cxx.0.dylib */; };
 		62527B711BBB4A4100767BA7 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62262156198C9B6800A0AA4E /* JavaScriptCore.framework */; };
 		62527B721BBB4A4400767BA7 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62BEF617153B4BF1009A9151 /* CoreFoundation.framework */; };
-		62527B731BBB4A4700767BA7 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 62C2526E152804270080A5CD /* libxml2.dylib */; };
 		62527B741BBB4A4A00767BA7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D41604D43600764667 /* Foundation.framework */; };
-		62527B761BBB4A6500767BA7 /* libvhmsg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62527B751BBB4A6500767BA7 /* libvhmsg.a */; };
 		62527B791BBB4E9A00767BA7 /* VHMSG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62527B771BBB4E9A00767BA7 /* VHMSG.cpp */; };
-		62527B7D1BBB573E00767BA7 /* libactivemq-cpp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62527B7B1BBB573D00767BA7 /* libactivemq-cpp.a */; };
-		62527B7E1BBB573E00767BA7 /* libvhcl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62527B7C1BBB573D00767BA7 /* libvhcl.a */; };
-		62527B801BBB576E00767BA7 /* libapr-1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62527B7F1BBB576E00767BA7 /* libapr-1.a */; };
 		6255E91A1B6C51AC00EA9402 /* Ranker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6255E9191B6C51AC00EA9402 /* Ranker.cpp */; };
 		6255E91B1B6C51AC00EA9402 /* Ranker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6255E9191B6C51AC00EA9402 /* Ranker.cpp */; };
 		6255E92A1B729A5200EA9402 /* parameters.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6255E9291B729A5200EA9402 /* parameters.cpp */; };
@@ -106,7 +98,6 @@
 		62CA481A1BB086DA00A2AA7B /* libjerome.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D21604D43600764667 /* libjerome.a */; };
 		62CA481B1BB086FA00A2AA7B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62262156198C9B6800A0AA4E /* JavaScriptCore.framework */; };
 		62CA481D1BB0870100A2AA7B /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62BEF617153B4BF1009A9151 /* CoreFoundation.framework */; };
-		62CA481E1BB0870700A2AA7B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 62C2526E152804270080A5CD /* libxml2.dylib */; };
 		62CA481F1BB0875500A2AA7B /* libnlopt_cxx.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 62176AD11A54741A000F745D /* libnlopt_cxx.0.dylib */; };
 		62CA48211BB087AA00A2AA7B /* libxslt.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CA48201BB087A900A2AA7B /* libxslt.tbd */; };
 		62CD1BDB16CD70DE004BDE86 /* async_js.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62CD1BD916CD70DE004BDE86 /* async_js.cpp */; };
@@ -130,34 +121,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		620C623B1B75625F00FA2953 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 620C62371B75625F00FA2953 /* kstem.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 620C62301B75623E00FA2953;
-			remoteInfo = kstem;
-		};
-		620C62771B7564B600FA2953 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 620C62371B75625F00FA2953 /* kstem.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 620C622F1B75623E00FA2953;
-			remoteInfo = kstem.osx;
-		};
-		620C627A1B7564B600FA2953 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 620C62371B75625F00FA2953 /* kstem.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 620C62601B75645D00FA2953;
-			remoteInfo = kstem.ios;
-		};
-		620C627C1B7564BB00FA2953 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 620C62371B75625F00FA2953 /* kstem.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 620C625F1B75645D00FA2953;
-			remoteInfo = kstem.ios;
-		};
 		62262170198DAD7C00A0AA4E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 62A2526E14365A860008E65F /* Project object */;
@@ -257,7 +220,6 @@
 		620A3F0A197E50FC000400E3 /* random.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = random.hpp; sourceTree = "<group>"; };
 		620C61B01B730FB500FA2953 /* async_boost.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = async_boost.hpp; sourceTree = "<group>"; };
 		620C61B11B730FC900FA2953 /* async_gcd.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = async_gcd.hpp; sourceTree = "<group>"; };
-		620C62371B75625F00FA2953 /* kstem.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = kstem.xcodeproj; path = ../3rd_party/kstem/kstem.xcodeproj; sourceTree = "<group>"; };
 		620C62821B75764A00FA2953 /* irregular_verbs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = irregular_verbs.cpp; sourceTree = "<group>"; };
 		620C62861B75766E00FA2953 /* irregular_verbs.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = irregular_verbs.hpp; sourceTree = "<group>"; };
 		6211C3101B7EBC9C00F293DC /* sample_count.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = sample_count.hpp; sourceTree = "<group>"; };
@@ -275,7 +237,7 @@
 		6211C33B1B80717300F293DC /* stylesheet.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = stylesheet.hpp; sourceTree = "<group>"; };
 		6211C33F1B8112D100F293DC /* output_buffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = output_buffer.hpp; sourceTree = "<group>"; };
 		62176ACE1A546946000F745D /* classifier_Tests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = classifier_Tests.mm; sourceTree = "<group>"; };
-		62176AD11A54741A000F745D /* libnlopt_cxx.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libnlopt_cxx.0.dylib; path = "../3rd_party/nlopt-2.3/build/lib/libnlopt_cxx.0.dylib"; sourceTree = "<group>"; };
+		62176AD11A54741A000F745D /* libnlopt_cxx.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libnlopt_cxx.0.dylib; path = lib/libnlopt_cxx.0.dylib; sourceTree = "<group>"; };
 		621FE8E3174E9FCF00C18F4F /* scored.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = scored.hpp; sourceTree = "<group>"; };
 		6221391C1BACBEDB009BE083 /* Trainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Trainer.cpp; sourceTree = "<group>"; };
 		62262156198C9B6800A0AA4E /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -304,13 +266,9 @@
 		62527B5E1BBB06A700767BA7 /* EngineEvent.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EngineEvent.hpp; sourceTree = "<group>"; };
 		62527B631BBB490500767BA7 /* vhmsg_jerome */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = vhmsg_jerome; sourceTree = BUILT_PRODUCTS_DIR; };
 		62527B651BBB490500767BA7 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		62527B751BBB4A6500767BA7 /* libvhmsg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvhmsg.a; path = ../3rd_party/examples_only/osx/lib/libvhmsg.a; sourceTree = "<group>"; };
 		62527B771BBB4E9A00767BA7 /* VHMSG.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VHMSG.cpp; sourceTree = "<group>"; };
 		62527B781BBB4E9A00767BA7 /* VHMSG.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VHMSG.hpp; sourceTree = "<group>"; };
 		62527B7A1BBB55EC00767BA7 /* VHMSGHandler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VHMSGHandler.hpp; sourceTree = "<group>"; };
-		62527B7B1BBB573D00767BA7 /* libactivemq-cpp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libactivemq-cpp.a"; path = "../3rd_party/examples_only/osx/lib/libactivemq-cpp.a"; sourceTree = "<group>"; };
-		62527B7C1BBB573D00767BA7 /* libvhcl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvhcl.a; path = ../3rd_party/examples_only/osx/lib/libvhcl.a; sourceTree = "<group>"; };
-		62527B7F1BBB576E00767BA7 /* libapr-1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libapr-1.a"; path = "../3rd_party/examples_only/osx/lib/libapr-1.a"; sourceTree = "<group>"; };
 		62527B811BBB6D2700767BA7 /* FunctionSignature.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FunctionSignature.hpp; sourceTree = "<group>"; };
 		6255E9171B6C4B0100EA9402 /* Trainer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Trainer.hpp; sourceTree = "<group>"; };
 		6255E9191B6C51AC00EA9402 /* Ranker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Ranker.cpp; sourceTree = "<group>"; };
@@ -369,10 +327,9 @@
 		62AC3BC51BBC9CB90067C540 /* update_header_define.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = update_header_define.sh; sourceTree = "<group>"; };
 		62AC3BC61BBCBA730067C540 /* update_copyright.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = update_copyright.sh; sourceTree = "<group>"; };
 		62AC3BC71BBCBB2D0067C540 /* copyright.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = copyright.txt; sourceTree = "<group>"; };
-		62AE719216FBE41C00547E42 /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ../3rd_party/boost/osx/framework/boost.framework; sourceTree = "<group>"; };
+		62AE719216FBE41C00547E42 /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = Frameworks/boost.framework; sourceTree = "<group>"; };
 		62AF79C316CB0C850005CC53 /* utteranceCompiler.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = utteranceCompiler.js; sourceTree = "<group>"; };
 		62BEF617153B4BF1009A9151 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
-		62C2526E152804270080A5CD /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		62C3275C1B9423A7001EB593 /* to_record.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = to_record.hpp; sourceTree = "<group>"; };
 		62C3275E1B962CFD001EB593 /* Factory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Factory.hpp; sourceTree = "<group>"; };
 		62C327601B962DCC001EB593 /* RankerFactory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RankerFactory.hpp; sourceTree = "<group>"; };
@@ -464,7 +421,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				62176AD21A54741A000F745D /* libnlopt_cxx.0.dylib in Frameworks */,
-				62262178198DB43200A0AA4E /* libxml2.dylib in Frameworks */,
 				62262177198DB42C00A0AA4E /* JavaScriptCore.framework in Frameworks */,
 				62262175198DAE5900A0AA4E /* libjerome.a in Frameworks */,
 				62262166198DAD7C00A0AA4E /* XCTest.framework in Frameworks */,
@@ -476,7 +432,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				620C627F1B7564CF00FA2953 /* libkstem.a in Frameworks */,
 				62262157198C9B6800A0AA4E /* JavaScriptCore.framework in Frameworks */,
 				622EA2D51604D43600764667 /* Foundation.framework in Frameworks */,
 				62AE719316FBE41C00547E42 /* boost.framework in Frameworks */,
@@ -487,10 +442,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				62527B801BBB576E00767BA7 /* libapr-1.a in Frameworks */,
-				62527B7D1BBB573E00767BA7 /* libactivemq-cpp.a in Frameworks */,
-				62527B7E1BBB573E00767BA7 /* libvhcl.a in Frameworks */,
-				62527B761BBB4A6500767BA7 /* libvhmsg.a in Frameworks */,
 				62527B701BBB4A3D00767BA7 /* libnlopt_cxx.0.dylib in Frameworks */,
 				62527B6E1BBB4A3700767BA7 /* libjerome.a in Frameworks */,
 				62527B6B1BBB49A800767BA7 /* boost.framework in Frameworks */,
@@ -498,7 +449,6 @@
 				62527B721BBB4A4400767BA7 /* CoreFoundation.framework in Frameworks */,
 				62527B741BBB4A4A00767BA7 /* Foundation.framework in Frameworks */,
 				62527B6F1BBB4A3A00767BA7 /* libxslt.tbd in Frameworks */,
-				62527B731BBB4A4700767BA7 /* libxml2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -512,7 +462,6 @@
 				62CA481B1BB086FA00A2AA7B /* JavaScriptCore.framework in Frameworks */,
 				62CA481D1BB0870100A2AA7B /* CoreFoundation.framework in Frameworks */,
 				62CA481F1BB0875500A2AA7B /* libnlopt_cxx.0.dylib in Frameworks */,
-				62CA481E1BB0870700A2AA7B /* libxml2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -520,7 +469,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				620C627E1B7564C500FA2953 /* libkstem.a in Frameworks */,
 				62FAE710161154520065D358 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -547,15 +495,6 @@
 				62D8A8291BF699F9005355B0 /* regex.hpp */,
 			);
 			path = type;
-			sourceTree = "<group>";
-		};
-		620C62381B75625F00FA2953 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				620C623C1B75625F00FA2953 /* libkstem.a */,
-				620C627B1B7564B600FA2953 /* libkstem.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		620C62871B758D7D00FA2953 /* report */ = {
@@ -621,20 +560,16 @@
 		622EA2D31604D43600764667 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				62527B7F1BBB576E00767BA7 /* libapr-1.a */,
-				62527B7B1BBB573D00767BA7 /* libactivemq-cpp.a */,
-				62527B7C1BBB573D00767BA7 /* libvhcl.a */,
-				62527B751BBB4A6500767BA7 /* libvhmsg.a */,
+				627818AF1CC825D800C344E4 /* ios */,
+				627818AE1CC8239700C344E4 /* osx */,
 				62CA48201BB087A900A2AA7B /* libxslt.tbd */,
-				62176AD11A54741A000F745D /* libnlopt_cxx.0.dylib */,
-				62AE719216FBE41C00547E42 /* boost.framework */,
 				62262156198C9B6800A0AA4E /* JavaScriptCore.framework */,
 				62BEF617153B4BF1009A9151 /* CoreFoundation.framework */,
-				62C2526E152804270080A5CD /* libxml2.dylib */,
 				622EA2D41604D43600764667 /* Foundation.framework */,
 				62262165198DAD7C00A0AA4E /* XCTest.framework */,
 			);
 			name = Frameworks;
+			path = ../build;
 			sourceTree = "<group>";
 		};
 		622F89CE1512900600726296 /* npc */ = {
@@ -764,6 +699,22 @@
 			path = rm;
 			sourceTree = "<group>";
 		};
+		627818AE1CC8239700C344E4 /* osx */ = {
+			isa = PBXGroup;
+			children = (
+				62176AD11A54741A000F745D /* libnlopt_cxx.0.dylib */,
+				62AE719216FBE41C00547E42 /* boost.framework */,
+			);
+			path = osx;
+			sourceTree = "<group>";
+		};
+		627818AF1CC825D800C344E4 /* ios */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = ios;
+			sourceTree = "<group>";
+		};
 		628F1563199164440050F485 /* javascript */ = {
 			isa = PBXGroup;
 			children = (
@@ -836,7 +787,6 @@
 		62A2526C14365A860008E65F = {
 			isa = PBXGroup;
 			children = (
-				620C62371B75625F00FA2953 /* kstem.xcodeproj */,
 				62A2527914365A870008E65F /* jerome */,
 				62262167198DAD7C00A0AA4E /* jerome.osx Tests */,
 				62CA480E1BB0859E00A2AA7B /* simple_jerome */,
@@ -1088,7 +1038,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				620C62781B7564B600FA2953 /* PBXTargetDependency */,
 			);
 			name = jerome.osx;
 			productName = alib;
@@ -1143,7 +1092,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				620C627D1B7564BB00FA2953 /* PBXTargetDependency */,
 			);
 			name = jerome.ios;
 			productName = alib.ios;
@@ -1181,12 +1129,6 @@
 			mainGroup = 62A2526C14365A860008E65F;
 			productRefGroup = 62A2527814365A870008E65F /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 620C62381B75625F00FA2953 /* Products */;
-					ProjectRef = 620C62371B75625F00FA2953 /* kstem.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				622EA2D11604D43600764667 /* jerome.osx */,
@@ -1197,23 +1139,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		620C623C1B75625F00FA2953 /* libkstem.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libkstem.a;
-			remoteRef = 620C623B1B75625F00FA2953 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		620C627B1B7564B600FA2953 /* libkstem.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libkstem.a;
-			remoteRef = 620C627A1B7564B600FA2953 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		62262162198DAD7C00A0AA4E /* Resources */ = {
@@ -1404,16 +1329,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		620C62781B7564B600FA2953 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = kstem.osx;
-			targetProxy = 620C62771B7564B600FA2953 /* PBXContainerItemProxy */;
-		};
-		620C627D1B7564BB00FA2953 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = kstem.ios;
-			targetProxy = 620C627C1B7564BB00FA2953 /* PBXContainerItemProxy */;
-		};
 		62262171198DAD7C00A0AA4E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 622EA2D11604D43600764667 /* jerome.osx */;
@@ -1534,7 +1449,12 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../3rd_party/boost/osx/framework\"",
+					"\"$(SRCROOT)/../build/osx/Frameworks\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)",
+					/usr/include/libxml2,
+					../build/osx/include,
 				);
 				PRODUCT_NAME = jerome;
 				SDKROOT = macosx;
@@ -1547,7 +1467,12 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../3rd_party/boost/osx/framework\"",
+					"\"$(SRCROOT)/../build/osx/Frameworks\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)",
+					/usr/include/libxml2,
+					../build/osx/include,
 				);
 				PRODUCT_NAME = jerome;
 				SDKROOT = macosx;
@@ -1667,13 +1592,6 @@
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)",
-					/usr/include/libxml2,
-					"\"../3rd_party/libiOSJavaScriptCore-534.27\"",
-					"\"../3rd_party/ViennaCL-1.5.1\"",
-					"\"../3rd_party/nlopt-2.3/build/include\"",
-				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1681,6 +1599,7 @@
 					"$(OTHER_CFLAGS)",
 					"-DJEROME_INTERNAL_BASIC_REPORT",
 				);
+				SYMROOT = "$(HOME)/Documents/Developer/Build/$(PROJECT_NAME)";
 			};
 			name = Debug;
 		};
@@ -1709,16 +1628,10 @@
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)",
-					/usr/include/libxml2,
-					"\"../3rd_party/libiOSJavaScriptCore-534.27\"",
-					"\"../3rd_party/ViennaCL-1.5.1\"",
-					"\"../3rd_party/nlopt-2.3/build/include\"",
-				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				SYMROOT = "$(HOME)/Documents/Developer/Build/$(PROJECT_NAME)";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1791,7 +1704,12 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../3rd_party/boost/ios/framework\"",
+					"\"$(SRCROOT)/../build/ios/Frameworks\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)",
+					/usr/include/libxml2,
+					../build/ios/include,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -1809,7 +1727,12 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../3rd_party/boost/ios/framework\"",
+					"\"$(SRCROOT)/../build/ios/Frameworks\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)",
+					/usr/include/libxml2,
+					../build/ios/include,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (

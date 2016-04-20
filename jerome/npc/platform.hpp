@@ -125,7 +125,7 @@ namespace jerome {
       * Get the reference to the Collection object to add new utterances from
       * the client side.
       */
-      Collection collection();
+      Collection& collection();
 
       /**
       * Tell the platform that you made changes to the collection, so it can 
