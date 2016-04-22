@@ -110,32 +110,32 @@ using namespace jerome;
 
 - (void)setEngineEventHandler:(void (^_Nonnull)(ALPlatformEvent * _Nonnull))eventHandler
 {
-  self->_platform.setEngineEventHandler(([self](const npc::EngineEvent& event) {
-    			id<ALPlatformDelegate> del = self.delegate;
-    			if (!del || ![del respondsToSelector:@selector(platform:didReceiveEvent:)]) return;
-    			ALPlatformEvent* e = [ALPlatformEvent new];
-    			e.name = [NSString stringWithCPPString:event.name()];
-    			e.type = [NSString stringWithOptionalCPPString:event.type()];
-    			e.target = [NSString stringWithOptionalCPPString:event.target()];
-    			e.origin = [NSString stringWithOptionalCPPString:event.origin()];
-    			e.data = [NSDictionary dictionaryWithStringMap:event.data()];
-    			[del platform:self didReceiveEvent:e];
-    		})
+  self->_platform.setEngineEventHandler(
+  [self, eventHandler](const npc::EngineEvent& event)
+  {
+    ALPlatformEvent* e = [ALPlatformEvent new];
+    e.name = [NSString stringWithCPPString:event.name()];
+    e.type = [NSString stringWithOptionalCPPString:event.type()];
+    e.target = [NSString stringWithOptionalCPPString:event.target()];
+    e.origin = [NSString stringWithOptionalCPPString:event.origin()];
+    e.data = [NSDictionary dictionaryWithStringMap:event.data()];
+    eventHandler(e);
+  });
 }
 
 - (ALUtterance* _Nullable)utteranceWithID:(NSString* _Nonnull)utteranceID
 {
-  return nil;
+  return [ALUtterance utteranceWithOptionalUtterance:self->_platform.utteranceWithID(utteranceID.cppString)];
 }
 
 - (void)collectionWasUpdated
 {
-  
+  self->_platform.collectionWasUpdated();
 }
 
 - (void)collectionWasUpdatedInState:(NSString* _Nonnull)stateName
 {
-  
+  self->_platform.collectionWasUpdated(stateName.cppString);
 }
 
 

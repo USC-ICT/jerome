@@ -116,6 +116,12 @@
 		62E4E3A61B5DFA9A008440CC /* platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62E4E3A31B5DFA9A008440CC /* platform.cpp */; };
 		62E830E71B64752500847135 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62E830E51B64752400847135 /* engine.cpp */; };
 		62E830E81B64752500847135 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62E830E51B64752400847135 /* engine.cpp */; };
+		62FA58C01CC99DED00641E2C /* libjerome.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D21604D43600764667 /* libjerome.a */; };
+		62FA58C11CC99DFB00641E2C /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62262156198C9B6800A0AA4E /* JavaScriptCore.framework */; };
+		62FA58C21CC99E0800641E2C /* libxslt.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CA48201BB087A900A2AA7B /* libxslt.tbd */; };
+		62FA58C41CC99E1600641E2C /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58C31CC99E1600641E2C /* libxml2.2.tbd */; };
+		62FA58C51CC99E5200641E2C /* libnlopt_cxx.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 62176AD11A54741A000F745D /* libnlopt_cxx.0.dylib */; };
+		62FA58C71CC9A01A00641E2C /* libkstem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58C61CC9A01A00641E2C /* libkstem.a */; };
 		62FAE710161154520065D358 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D41604D43600764667 /* Foundation.framework */; };
 		62FAE71F161155500065D358 /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 622F89CF1512900600726296 /* model.cpp */; };
 		62FAE722161155500065D358 /* model_cpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620176271606850500FC583D /* model_cpp.cpp */; };
@@ -429,6 +435,8 @@
 		62E830E51B64752400847135 /* engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = engine.cpp; sourceTree = "<group>"; };
 		62E830E61B64752500847135 /* engine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = engine.hpp; sourceTree = "<group>"; };
 		62F2369F1B67616B00009DFF /* npc.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = npc.hpp; sourceTree = "<group>"; };
+		62FA58C31CC99E1600641E2C /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
+		62FA58C61CC9A01A00641E2C /* libkstem.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libkstem.a; path = ../../../Documents/Developer/Build/kstem/Release/libkstem.a; sourceTree = "<group>"; };
 		62FAE7061611488B0065D358 /* ranker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ranker.hpp; sourceTree = "<group>"; };
 		62FAE70F161154520065D358 /* libjerome.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libjerome.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		62FF24881B8FDBE700C3504C /* AnyWeighting.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnyWeighting.hpp; sourceTree = "<group>"; };
@@ -477,7 +485,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62FA58C71CC9A01A00641E2C /* libkstem.a in Frameworks */,
+				62FA58C51CC99E5200641E2C /* libnlopt_cxx.0.dylib in Frameworks */,
+				62FA58C41CC99E1600641E2C /* libxml2.2.tbd in Frameworks */,
+				62FA58C01CC99DED00641E2C /* libjerome.a in Frameworks */,
 				627818CE1CC8356C00C344E4 /* boost.framework in Frameworks */,
+				62FA58C11CC99DFB00641E2C /* JavaScriptCore.framework in Frameworks */,
+				62FA58C21CC99E0800641E2C /* libxslt.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -589,6 +603,8 @@
 		622EA2D31604D43600764667 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				62FA58C61CC9A01A00641E2C /* libkstem.a */,
+				62FA58C31CC99E1600641E2C /* libxml2.2.tbd */,
 				627818AF1CC825D800C344E4 /* ios */,
 				627818AE1CC8239700C344E4 /* osx */,
 				62CA48201BB087A900A2AA7B /* libxslt.tbd */,
@@ -1714,6 +1730,10 @@
 				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/../build/osx/lib",
+					"$(HOME)/Documents/Developer/Build/kstem/Release",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
@@ -1760,6 +1780,10 @@
 				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/../build/osx/lib",
+					"$(HOME)/Documents/Developer/Build/kstem/Release",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
@@ -1989,6 +2013,7 @@
 				627818BD1CC831C300C344E4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		62A2527114365A860008E65F /* Build configuration list for PBXProject "jerome" */ = {
 			isa = XCConfigurationList;
