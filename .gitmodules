@@ -1,0 +1,3 @@
+[submodule "3rdParty/kstem"]
+	path = 3rdParty/kstem
+	url = https://leuski-ict@github.com/leuski-ict/kstem.git
