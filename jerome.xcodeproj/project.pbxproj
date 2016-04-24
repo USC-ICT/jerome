@@ -120,8 +120,7 @@
 		62FA58C11CC99DFB00641E2C /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62262156198C9B6800A0AA4E /* JavaScriptCore.framework */; };
 		62FA58C21CC99E0800641E2C /* libxslt.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CA48201BB087A900A2AA7B /* libxslt.tbd */; };
 		62FA58C41CC99E1600641E2C /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58C31CC99E1600641E2C /* libxml2.2.tbd */; };
-		62FA58C51CC99E5200641E2C /* libnlopt_cxx.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 62176AD11A54741A000F745D /* libnlopt_cxx.0.dylib */; };
-		62FA58C71CC9A01A00641E2C /* libkstem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58C61CC9A01A00641E2C /* libkstem.a */; };
+		62FA58D31CCB347200641E2C /* libkstem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58D01CCB344800641E2C /* libkstem.a */; };
 		62FAE710161154520065D358 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D41604D43600764667 /* Foundation.framework */; };
 		62FAE71F161155500065D358 /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 622F89CF1512900600726296 /* model.cpp */; };
 		62FAE722161155500065D358 /* model_cpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620176271606850500FC583D /* model_cpp.cpp */; };
@@ -167,6 +166,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 622EA2D11604D43600764667;
 			remoteInfo = alib.osx;
+		};
+		62FA58CF1CCB344800641E2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62FA58CA1CCB344700641E2C /* kstem.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 620C62301B75623E00FA2953;
+			remoteInfo = kstem.osx;
+		};
+		62FA58D11CCB344800641E2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62FA58CA1CCB344700641E2C /* kstem.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 620C62601B75645D00FA2953;
+			remoteInfo = kstem.ios;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -436,7 +449,7 @@
 		62E830E61B64752500847135 /* engine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = engine.hpp; sourceTree = "<group>"; };
 		62F2369F1B67616B00009DFF /* npc.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = npc.hpp; sourceTree = "<group>"; };
 		62FA58C31CC99E1600641E2C /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
-		62FA58C61CC9A01A00641E2C /* libkstem.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libkstem.a; path = ../../../Documents/Developer/Build/kstem/Release/libkstem.a; sourceTree = "<group>"; };
+		62FA58CA1CCB344700641E2C /* kstem.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = kstem.xcodeproj; path = 3rdParty/kstem/kstem.xcodeproj; sourceTree = "<group>"; };
 		62FAE7061611488B0065D358 /* ranker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ranker.hpp; sourceTree = "<group>"; };
 		62FAE70F161154520065D358 /* libjerome.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libjerome.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		62FF24881B8FDBE700C3504C /* AnyWeighting.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AnyWeighting.hpp; sourceTree = "<group>"; };
@@ -485,8 +498,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				62FA58C71CC9A01A00641E2C /* libkstem.a in Frameworks */,
-				62FA58C51CC99E5200641E2C /* libnlopt_cxx.0.dylib in Frameworks */,
+				62FA58D31CCB347200641E2C /* libkstem.a in Frameworks */,
 				62FA58C41CC99E1600641E2C /* libxml2.2.tbd in Frameworks */,
 				62FA58C01CC99DED00641E2C /* libjerome.a in Frameworks */,
 				627818CE1CC8356C00C344E4 /* boost.framework in Frameworks */,
@@ -603,7 +615,6 @@
 		622EA2D31604D43600764667 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				62FA58C61CC9A01A00641E2C /* libkstem.a */,
 				62FA58C31CC99E1600641E2C /* libxml2.2.tbd */,
 				627818AF1CC825D800C344E4 /* ios */,
 				627818AE1CC8239700C344E4 /* osx */,
@@ -846,6 +857,7 @@
 		62A2526C14365A860008E65F = {
 			isa = PBXGroup;
 			children = (
+				62FA58CA1CCB344700641E2C /* kstem.xcodeproj */,
 				62A2527914365A870008E65F /* jerome */,
 				62262167198DAD7C00A0AA4E /* jerome.osx Tests */,
 				62CA480E1BB0859E00A2AA7B /* simple_jerome */,
@@ -1056,6 +1068,15 @@
 			path = math;
 			sourceTree = "<group>";
 		};
+		62FA58CB1CCB344700641E2C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				62FA58D01CCB344800641E2C /* libkstem.a */,
+				62FA58D21CCB344800641E2C /* libkstem.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		62FAE7051611488B0065D358 /* cl */ = {
 			isa = PBXGroup;
 			children = (
@@ -1226,6 +1247,12 @@
 			mainGroup = 62A2526C14365A860008E65F;
 			productRefGroup = 62A2527814365A870008E65F /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 62FA58CB1CCB344700641E2C /* Products */;
+					ProjectRef = 62FA58CA1CCB344700641E2C /* kstem.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				622EA2D11604D43600764667 /* jerome.osx */,
@@ -1237,6 +1264,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		62FA58D01CCB344800641E2C /* libkstem.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libkstem.a;
+			remoteRef = 62FA58CF1CCB344800641E2C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		62FA58D21CCB344800641E2C /* libkstem.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libkstem.a;
+			remoteRef = 62FA58D11CCB344800641E2C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		62262162198DAD7C00A0AA4E /* Resources */ = {
@@ -1730,12 +1774,10 @@
 				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(SRCROOT)/../build/osx/lib",
-					"$(HOME)/Documents/Developer/Build/kstem/Release",
-				);
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../build/osx/lib";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = ../build/osx/lib/libnlopt_cxx.a;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -1780,12 +1822,10 @@
 				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(SRCROOT)/../build/osx/lib",
-					"$(HOME)/Documents/Developer/Build/kstem/Release",
-				);
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../build/osx/lib";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = ../build/osx/lib/libnlopt_cxx.a;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

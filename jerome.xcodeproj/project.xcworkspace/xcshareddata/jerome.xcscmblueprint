@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "8508F681E158D9A934D695B6299B3706C1DF56F5",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "AF7B8F2C77574B557995AB799899B68DE8A759D5" : 0,
+    "8508F681E158D9A934D695B6299B3706C1DF56F5" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "A66148BA-3227-4D02-B3A4-0B35AE6565AD",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "AF7B8F2C77574B557995AB799899B68DE8A759D5" : "jerome\/3rdParty\/kstem\/",
+    "8508F681E158D9A934D695B6299B3706C1DF56F5" : "jerome\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "jerome",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "jerome.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/leuski-ict\/jerome.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "8508F681E158D9A934D695B6299B3706C1DF56F5"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/leuski-ict\/kstem.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "AF7B8F2C77574B557995AB799899B68DE8A759D5"
+    }
+  ]
+}
