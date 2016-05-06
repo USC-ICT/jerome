@@ -38,6 +38,13 @@ using namespace jerome;
 
 @implementation ALPlatform
 
++ (void)initialize
+{
+  if (self == [ALPlatform class]) {
+    jerome::npc::Platform::initialize();
+  }
+}
+
 - (instancetype)init
 {
 	if (self = [super init]) {
