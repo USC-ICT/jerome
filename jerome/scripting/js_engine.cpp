@@ -55,10 +55,18 @@ namespace jerome {
 			evaluateScript(kCompilerJS, "scxml.utteranceCompiler.js");
 		}
 		
-		void Engine::evaluateScript(const String& script, const String& sourceURL, int startingLineNumber,
+    
+    Engine::~Engine()
+    {
+      
+    }
+    
+		void Engine::evaluateScript(const String& script, const String& sourceURL,
+                                int startingLineNumber,
 									const std::function<void(const js::Value&)>& callback) {
-			performBlock([=]() {
-				callback(context().evaluateScript(script, sourceURL, startingLineNumber));
+      js::Context theContext = context();
+			performBlock([=]() mutable {
+				callback(theContext.evaluateScript(script, sourceURL, startingLineNumber));
 			});
 		}
 

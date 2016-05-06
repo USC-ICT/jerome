@@ -35,6 +35,7 @@ namespace jerome {
 		struct JEROME_SYMBOL_VISIBLE Engine {
 			
 			Engine();
+      virtual ~Engine();
 			
 			void	evaluateScript(const String& script, const String& sourceURL = "",
 													 int startingLineNumber = 0,
