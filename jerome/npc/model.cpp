@@ -374,35 +374,21 @@ namespace jerome {
       const String& field,
       const String& inValue) const
     {
-#if USE_BOOST_REGEX
-	  static boost::regex kImportPattern("<import\\s+(.*?)\\s*=\\s*\"(.*?)\".*?>",
-        boost::regex_constants::optimize
-        | boost::regex_constants::icase);
-      static boost::regex kWhitespacePrefixPattern("^\\s.*",
-        boost::regex_constants::optimize
-        | boost::regex_constants::icase);
-      static boost::regex kWhitespaceSuffixPattern(".*\\s$",
-        boost::regex_constants::optimize
-        | boost::regex_constants::icase);
 
-      boost::smatch match;
-      if (!boost::regex_search(inValue, match,
-            kImportPattern) || match.empty()) return inValue;
-#else
-      static std::regex kImportPattern("<import\\s+(.*?)\\s*=\\s*\"(.*?)\".*?>",
-        std::regex_constants::optimize
-        | std::regex_constants::icase);
-      static std::regex kWhitespacePrefixPattern("^\\s.*",
-        std::regex_constants::optimize
-        | std::regex_constants::icase);
-      static std::regex kWhitespaceSuffixPattern(".*\\s$",
-        std::regex_constants::optimize
-        | std::regex_constants::icase);
+      static rgx::regex kImportPattern("<import\\s+(.*?)\\s*=\\s*\"(.*?)\".*?>",
+        rgx::regex_constants::optimize
+        | rgx::regex_constants::icase);
+      static rgx::regex kWhitespacePrefixPattern("^\\s.*",
+        rgx::regex_constants::optimize
+        | rgx::regex_constants::icase);
+      static rgx::regex kWhitespaceSuffixPattern(".*\\s$",
+        rgx::regex_constants::optimize
+        | rgx::regex_constants::icase);
 
-      std::smatch match;
-      if (!std::regex_search(inValue, match,
+      rgx::smatch match;
+      if (!rgx::regex_search(inValue, match,
             kImportPattern) || match.empty()) return inValue;
-#endif
+
       String    text;
 
       while (true) {
@@ -417,47 +403,26 @@ namespace jerome {
         }
 
         String    delim1, delim2;
-#if USE_BOOST_REGEX
-		if (match.prefix().length()
-           && replacement.length()
-           && !boost::regex_match(match.prefix().str(),
-              kWhitespaceSuffixPattern)
-           && !boost::regex_match(replacement,
-              kWhitespacePrefixPattern)) delim1 = " ";
 
-        if (match.suffix().length()
-           && replacement.length()
-           && !boost::regex_match(match.suffix().str(),
-              kWhitespacePrefixPattern)
-           && !boost::regex_match(replacement,
-              kWhitespaceSuffixPattern)) delim2 = " ";
-
-        text = match.prefix().str() + delim1 + replacement + delim2 +
-               match.suffix().str();
-
-        if (!boost::regex_search(text, match,
-              kImportPattern) || match.empty()) return text;
-#else
         if (match.prefix().length()
            && replacement.length()
-           && !std::regex_match(match.prefix().str(),
+           && !rgx::regex_match(match.prefix().str(),
               kWhitespaceSuffixPattern)
-           && !std::regex_match(replacement,
+           && !rgx::regex_match(replacement,
               kWhitespacePrefixPattern)) delim1 = " ";
 
         if (match.suffix().length()
            && replacement.length()
-           && !std::regex_match(match.suffix().str(),
+           && !rgx::regex_match(match.suffix().str(),
               kWhitespacePrefixPattern)
-           && !std::regex_match(replacement,
+           && !rgx::regex_match(replacement,
               kWhitespaceSuffixPattern)) delim2 = " ";
 
         text = match.prefix().str() + delim1 + replacement + delim2 +
                match.suffix().str();
 
-        if (!std::regex_search(text, match,
+        if (!rgx::regex_search(text, match,
               kImportPattern) || match.empty()) return text;
-#endif
       }
     }
 
