@@ -46,7 +46,7 @@ namespace jerome { namespace javascript {
 		struct from_valueRef;
 		
 		template <typename T, class Enable = void>
-		struct to_valueRef;
+		struct to_value;
 		
 		struct JSString;
 		

@@ -45,22 +45,21 @@ namespace jerome { namespace javascript { namespace detail {
 	inline JSString::JSString(JSString&& inOther)
 	: mStringRef(std::move(inOther.mStringRef))
 	{
-		retain();
+    inOther.mStringRef = nullptr;
 	}
 	
 	inline JSString::JSString(const String& inString)
 	: mStringRef(JSStringCreateWithUTF8CString(inString.c_str()))
-	{}
+	{
+  }
 	
 	inline JSString::JSString(const char* inString)
 	: mStringRef(JSStringCreateWithUTF8CString(inString))
-	{}
-	
-	inline JSString::JSString(const Context& ctx, JSValueRef valueRef)
-	: mStringRef(ctx.callJSCFunction("converting string", JSValueToStringCopy, valueRef))
-	{}
-	
-	inline JSString::operator String () const {
+	{
+  }
+		
+	inline String JSString::string () const {
+    if (!mStringRef) return "null";
 		std::size_t	size	= JSStringGetMaximumUTF8CStringSize(mStringRef);
 		std::auto_ptr<char> buffer(new char[size]);
 		JSStringGetUTF8CString(mStringRef, buffer.get(), size);

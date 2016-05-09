@@ -191,7 +191,7 @@ namespace jerome { namespace javascript {
 - (void)testConversionForClassWithTraits
 {
 	jerome::javascript::Context ctx;
-	jerome::javascript::detail::to_valueRef<A>::convert(ctx, A());
+	jerome::javascript::detail::to_value<A>::convert(ctx, A());
 }
 
 - (void)testCallable

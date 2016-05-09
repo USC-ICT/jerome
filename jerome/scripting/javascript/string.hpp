@@ -28,7 +28,7 @@
 namespace jerome { namespace javascript { namespace detail {
 	
 	struct JSString {
-		JSString(JSStringRef inJSStringRef);
+		explicit JSString(JSStringRef inJSStringRef);
 		~JSString();
 		JSString(const JSString& inOther);
 		JSString(JSString&& inOther);
@@ -37,14 +37,13 @@ namespace jerome { namespace javascript { namespace detail {
 		JSString& operator = (const JSString&) = delete;
 		JSString& operator = (JSString&&) = delete;
 		
-		JSString(const String& inString);
+		explicit JSString(const String& inString);
 		
-		JSString(const char* inString);
+		explicit JSString(const char* inString);
 		
-		JSString(const Context& ctx, JSValueRef valueRef);
-		operator JSStringRef () const { return mStringRef; }
+		JSStringRef jsStringRef() const { return mStringRef; }
 		
-		operator String () const;
+		String string() const;
 	private:
 		JSStringRef	mStringRef;
 		

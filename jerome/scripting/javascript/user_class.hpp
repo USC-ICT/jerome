@@ -46,13 +46,13 @@ namespace jerome { namespace javascript {
 			}
 		}
 		
-		virtual bool	hasProperty(Value& object, const char* propertyName)
+		virtual bool	hasProperty(Value& object, const String& propertyName)
 		{ return false; }
-		virtual Value	getProperty(Value& object, const char* propertyName)
+		virtual Value	getProperty(Value& object, const String& propertyName)
 		{ throw get_property_undefined(); }
-		virtual bool	setProperty(Value& object, const char* propertyName, const Value& value)
+		virtual bool	setProperty(Value& object, const String& propertyName, const Value& value)
 		{ return false;  }
-		virtual bool	deleteProperty(Value& object, const char* propertyName)
+		virtual bool	deleteProperty(Value& object, const String& propertyName)
 		{ return false; }
 		virtual Value	callAsFunction(Value& function, Value& thisObject, const std::vector<Value> arguments)
 		{ throw object_is_not_function(); }

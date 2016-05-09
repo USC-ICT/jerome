@@ -52,6 +52,8 @@ namespace jerome { namespace javascript {
 		};
 		
 		template <typename> struct ExceptionHandlerProperty;
+    
+    struct ValueArray;
 	}
 	
 	struct Context {
@@ -113,7 +115,14 @@ namespace jerome { namespace javascript {
 		//		defined
 		//	std collection				array
 		//	associative collection		object with key/values mapped to properties
-		
+
+    void protect(JSValueRef valueRef) const;
+    void unprotect(JSValueRef valueRef) const;
+    
+    Value makeBoolean(bool value) const;
+    Value makeNumber(double value) const;
+    Value makeString(const String& value) const;
+    
 		template <typename T>
 		Value newValue(T&& value);
 
@@ -152,27 +161,113 @@ namespace jerome { namespace javascript {
 		static std::size_t currentArgumentCount();
 		static Value currentThisObject();
 		
-		template <typename R, typename ...Args, typename ...Args1>
-		R callJSCFunction(const String& inExceptionContext, R(* inFunction)(Args...), Args1 ...args) const {
-			JSValueRef	exception = nullptr;
-			R	result = inFunction(this->contextRef(), std::forward<Args1>(args)..., &exception);
-			if (exception) this->handleException(exception, inExceptionContext);
-			return result;
-		}
+    
+    // Note that you can achieve the same effect by defining a template
+    // function. However, that function would have to create the string
+    // context description every time you call it. The macros do not have
+    // that issue.
 
-		template <typename ...Args, typename ...Args1>
-		void callJSCFunction(const String& inExceptionContext, void(* inFunction)(Args...), Args1 ...args) const {
-			JSValueRef	exception = nullptr;
-			inFunction(this->contextRef(), std::forward<Args1>(args)..., &exception);
-			if (exception) this->handleException(exception, inExceptionContext);
-		}
+#define JEROME_CALL_JS_API(TYPE, F, R, CTX, ARGS...) \
+JSValueRef	exception = nullptr; \
+TYPE	result = F(this->contextRef(), ARGS, &exception); \
+if (exception) this->handleException(exception, CTX); \
+return R
 
-		template <typename R, typename ...Args, typename ...Args1>
-		Value callJSCFunctionReturnValue(const String& inExceptionContext,
-										 R(*inFunction)(Args...),
-										 Args1 ...args) const;
+#define JEROME_CALL_JS_API_RETURN(TYPE, F, CTX, ARGS...) \
+JSValueRef	exception = nullptr; \
+TYPE	result = F(this->contextRef(), ARGS, &exception); \
+if (exception) this->handleException(exception, CTX); \
+return result
 
-		typedef std::function<void(const Value& exception, const String& exceptionContext)> exception_handler_type;
+#define JEROME_CALL_JS_API_VOID(F, CTX, ARGS...) \
+JSValueRef	exception = nullptr; \
+F(this->contextRef(), ARGS, &exception); \
+if (exception) this->handleException(exception, CTX)
+
+    bool isEqual(JSValueRef a, JSValueRef b) const
+    {
+      JEROME_CALL_JS_API_RETURN(bool, JSValueIsEqual,
+                         "checking equality",
+                         a, b);
+    }
+
+    bool isInstanceOfConstructor(JSValueRef a, JSObjectRef b) const
+    {
+      JEROME_CALL_JS_API_RETURN(bool, JSValueIsInstanceOfConstructor,
+                         "checking if object is constructor",
+                         a, b);
+    }
+
+    detail::JSString createJSONString(JSValueRef value, unsigned indent) const
+    {
+      JEROME_CALL_JS_API(JSStringRef, JSValueCreateJSONString,
+                         detail::JSString(result),
+                         "converting to JSON",
+                         value, indent);
+    }
+    
+    bool deleteProperty(JSObjectRef a, const String& propertyName) const
+    {
+      JEROME_CALL_JS_API_RETURN(bool, JSObjectDeleteProperty,
+                         "deleting property " + propertyName,
+                         a, detail::JSString(propertyName).jsStringRef());
+    }
+    
+    JSValueRef getProperty(JSObjectRef a, const String& propertyName) const
+    {
+      JEROME_CALL_JS_API_RETURN(JSValueRef, JSObjectGetProperty,
+                         "getting property " + propertyName,
+                         a, detail::JSString(propertyName).jsStringRef());
+    }
+
+    void setProperty(JSObjectRef a, const String& propertyName,
+                           JSValueRef value) const
+    {
+      JEROME_CALL_JS_API_VOID(JSObjectSetProperty,
+                         "setting property " + propertyName,
+                         a, detail::JSString(propertyName).jsStringRef(),
+                              value, 0);
+    }
+
+    JSValueRef getPropertyAtIndex(JSObjectRef a, unsigned propertyIndex) const
+    {
+      JEROME_CALL_JS_API_RETURN(JSValueRef, JSObjectGetPropertyAtIndex,
+                         "getting property " + std::to_string(propertyIndex),
+                         a, propertyIndex);
+    }
+    
+    void setPropertyAtIndex(JSObjectRef a, unsigned propertyIndex,
+                     JSValueRef value) const
+    {
+      JEROME_CALL_JS_API_VOID(JSObjectSetPropertyAtIndex,
+                              "setting property " + std::to_string(propertyIndex),
+                              a, propertyIndex, value);
+    }
+
+    double toNumber(JSValueRef value) const
+    {
+      JEROME_CALL_JS_API_RETURN(double, JSValueToNumber,
+                         "converting to number",
+                         value);
+    }
+    
+    JSObjectRef makeArray(size_t argumentCount, const JSValueRef arguments[]) const
+    {
+      JEROME_CALL_JS_API_RETURN(JSObjectRef, JSObjectMakeArray,
+                         "making an array",
+                         argumentCount, arguments);
+    }
+    
+    detail::JSString toStringCopy(JSValueRef valueRef) const
+    {
+      JEROME_CALL_JS_API(JSStringRef, JSValueToStringCopy,
+                         detail::JSString(result),
+                         "making a string",
+                         valueRef);
+    }
+
+		typedef std::function<void(const Value& exception,
+                               const String& exceptionContext)> exception_handler_type;
 
 		exception_handler_type 	exceptionHandler() const;
 		detail::ExceptionHandlerProperty<Context> exceptionHandler();
@@ -196,7 +291,7 @@ namespace jerome { namespace javascript {
 		friend struct ContextGroup;
 		friend struct UserClass;
 		template <typename, typename> friend struct detail::from_valueRef;
-		template <typename, typename> friend struct detail::to_valueRef;
+		template <typename, typename> friend struct detail::to_value;
 		template <typename, typename> friend struct detail::AbstractValue;
 		template <typename> friend struct detail::ExceptionHandlerProperty;
 		
@@ -219,6 +314,12 @@ namespace jerome { namespace javascript {
 		const Context& context() const { return *this; }
 		JSObjectRef		objectRef() const { return JSContextGetGlobalObject(contextRef()); }
 		
+    template <typename ...As>
+    Value makeRegExp(As ...as);
+
+    template <typename ...As>
+    Value makeDate(As ...as);
+
 	protected:
 		Context(JSContextRef p)
 		: mData(const_cast<OpaqueJSContext*>(p), detail::null_deleter())

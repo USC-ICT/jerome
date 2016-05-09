@@ -319,8 +319,9 @@ namespace jerome {
 		// Accepts a variable number of string arguments and passes them to a platform-specific logging function.
 		// Internally, this is used by SCION to implement SCXML log.
 		void ScionPlatform::log() {
-			std::cout << "log(" << js::Context::currentArguments().size() << ") ";
-			for(auto v : js::Context::currentArguments()) {
+      auto args = js::Context::currentArguments();
+			std::cout << "log(" << args.size() << ") ";
+			for(auto v : args) {
 				try {
 					std::cout << v.toJSONString(1);
 				} catch (...) {
@@ -588,7 +589,7 @@ namespace jerome { namespace javascript {
 		{
 			xmlDocPtr	doc = ClassTraits<xmlDocPtr>::instance().representedObject(object);
 			detail::CallbackContext	context(ctx, exc);
-			return detail::to_valueRef<xmlNodePtr>::convert(context, xmlDocGetRootElement(doc));
+			return detail::to_value<xmlNodePtr>::convert(context, xmlDocGetRootElement(doc)).returnValueRef();
 		}
 		
 	};

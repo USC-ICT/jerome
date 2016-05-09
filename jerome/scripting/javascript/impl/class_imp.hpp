@@ -131,7 +131,7 @@ definition.x = &Callback<traits_type, decltype(&traits_type::x##Callback), &trai
 				}
 				detail::CallbackContext myContext(ctx, exc);
 				try {
-					return to_valueRef<value_type>::convert(myContext, ClassTraits<object_type>::instance().representedObject(object).*F);
+					return to_value<value_type>::convert(myContext, ClassTraits<object_type>::instance().representedObject(object).*F).returnValueRef();
 				} catch (const Exception& e) {
 					myContext.setException(e);
 					return nullptr;
@@ -182,7 +182,7 @@ definition.x = &Callback<traits_type, decltype(&traits_type::x##Callback), &trai
 				
 				detail::CallbackContext myContext(ctx, exc);
 				try {
-					return to_valueRef<value_type>::convert(myContext, *F);
+					return to_value<value_type>::convert(myContext, *F).returnValueRef();
 				} catch (const Exception& e) {
 					myContext.setException(e);
 					return nullptr;
@@ -225,17 +225,17 @@ definition.x = &Callback<traits_type, decltype(&traits_type::x##Callback), &trai
 	
 	inline bool UserClass::adaptHasPropertyCallback(JSContextRef ctx, JSObjectRef object, JSStringRef propertyName) {
 		Context myContext(ctx);
-		String	pname		= detail::JSString(propertyName);
+		String	pname		= detail::JSString(propertyName).string();
 		Value	myObject	= detail::from_valueRef<Value>::convert(myContext, object);
-		return hasProperty(myObject, pname.c_str());
+		return hasProperty(myObject, pname);
 	}
 	
 	inline JSValueRef UserClass::adaptGetPropertyCallback(JSContextRef ctx, JSObjectRef object, JSStringRef propertyName, JSValueRef* exc) {
 		detail::CallbackContext myContext(ctx, exc);
 		try {
-			String	pname		= detail::JSString(propertyName);
+			String	pname		= detail::JSString(propertyName).string();
 			Value	myObject	= detail::from_valueRef<Value>::convert(myContext, object);
-			return detail::to_valueRef<Value>::convert(myContext, getProperty(myObject, pname.c_str()));
+			return getProperty(myObject, pname).returnValueRef();
 		} catch (const Exception& e) {
 			myContext.setException(e);
 			return NULL;
@@ -245,10 +245,10 @@ definition.x = &Callback<traits_type, decltype(&traits_type::x##Callback), &trai
 	inline bool UserClass::adaptSetPropertyCallback(JSContextRef ctx, JSObjectRef object, JSStringRef propertyName, JSValueRef value, JSValueRef* exc) {
 		detail::CallbackContext myContext(ctx, exc);
 		try {
-			String	pname		= detail::JSString(propertyName);
+			String	pname		= detail::JSString(propertyName).string();
 			Value	myObject	= detail::from_valueRef<Value>::convert(myContext, object);
 			Value	myValue		= detail::from_valueRef<Value>::convert(myContext, value);
-			return setProperty(myObject, pname.c_str(), myValue);
+			return setProperty(myObject, pname, myValue);
 		} catch (const Exception& e) {
 			myContext.setException(e);
 			return false;
@@ -258,21 +258,24 @@ definition.x = &Callback<traits_type, decltype(&traits_type::x##Callback), &trai
 	inline bool UserClass::adaptDeletePropertyCallback(JSContextRef ctx, JSObjectRef object, JSStringRef propertyName, JSValueRef* exc) {
 		detail::CallbackContext myContext(ctx, exc);
 		try {
-			String	pname		= detail::JSString(propertyName);
+			String	pname		= detail::JSString(propertyName).string();
 			Value	myObject	= detail::from_valueRef<Value>::convert(myContext, object);
-			return deleteProperty(myObject, pname.c_str());
+			return deleteProperty(myObject, pname);
 		} catch (const Exception& e) {
 			myContext.setException(e);
 			return false;
 		}
 	}
 	
-	inline void UserClass::adaptGetPropertyNamesCallback(JSContextRef ctx, JSObjectRef object, JSPropertyNameAccumulatorRef propertyNames) {
+	inline void UserClass::adaptGetPropertyNamesCallback(JSContextRef ctx,
+                                                       JSObjectRef object,
+                                                       JSPropertyNameAccumulatorRef propertyNames)
+  {
 		Context myContext(ctx);
 		Value	myObject	= detail::from_valueRef<Value>::convert(myContext, object);
 		std::vector<std::string>	names	= getPropertyNames(myObject);
 		for(auto s : names) {
-			JSPropertyNameAccumulatorAddName(propertyNames, detail::JSString(s));
+			JSPropertyNameAccumulatorAddName(propertyNames, detail::JSString(s).jsStringRef());
 		}
 	}
 	
@@ -282,7 +285,7 @@ definition.x = &Callback<traits_type, decltype(&traits_type::x##Callback), &trai
 			std::vector<Value>	myArguments	= myContext.valueArrayWithValueRefArray(argumentCount, arguments);
 			Value	myFuncton	= detail::from_valueRef<Value>::convert(myContext, function);
 			Value	myObject	= detail::from_valueRef<Value>::convert(myContext, thisObject);
-			return detail::to_valueRef<Value>::convert(myContext, callAsFunction(myFuncton, myObject, myArguments));
+			return callAsFunction(myFuncton, myObject, myArguments).returnValueRef();
 		} catch (const Exception& e) {
 			myContext.setException(e);
 			return NULL;
@@ -294,7 +297,7 @@ definition.x = &Callback<traits_type, decltype(&traits_type::x##Callback), &trai
 		try {
 			std::vector<Value>	myArguments	= myContext.valueArrayWithValueRefArray(argumentCount, arguments);
 			Value	myFuncton	= detail::from_valueRef<Value>::convert(myContext, function);
-			return (JSObjectRef)detail::to_valueRef<Value>::convert(myContext, callAsConstructor(myFuncton, myArguments));
+			return (JSObjectRef)callAsConstructor(myFuncton, myArguments).returnValueRef();
 		} catch (const Exception& e) {
 			myContext.setException(e);
 			return NULL;
@@ -317,7 +320,7 @@ definition.x = &Callback<traits_type, decltype(&traits_type::x##Callback), &trai
 		detail::CallbackContext myContext(ctx, exc);
 		try {
 			Value	myObject	= detail::from_valueRef<Value>::convert(myContext, object);
-			return detail::to_valueRef<Value>::convert(myContext, convertToType(myObject, type));
+			return convertToType(myObject, type).returnValueRef();
 		} catch (const Exception& e) {
 			myContext.setException(e);
 			return NULL;

@@ -27,29 +27,47 @@ namespace jerome { namespace javascript { namespace detail {
 
 	template <typename Derived, typename Base>
 	template <typename ...Args>
-	Value	AbstractValue<Derived, Base>::operator () (Args ...args)
+	Value	AbstractValue<Derived, Base>::operator () (Args ...as)
 	{
 		if (!isFunction()) throw object_is_not_function();
-		return ObjectAsFunctionCallback::call(context(), this->objectRef(), nullptr, std::forward<Args>(args)...);
+
+    detail::ValueArray args(this->context(), {to_value<Args>::convert(this->context(), as)... });
+    
+    JEROME_CALL_JS_API(JSValueRef, JSObjectCallAsFunction,
+                       detail::from_valueRef<Value>::convert(this->contextRef(), result),
+                       "calling a function",
+                       this->objectRef(), nullptr,
+                       args.size(), args.data());
 	}
 	
 	template <typename Derived, typename Base>
 	template <typename THIS_T, typename ...Args>
-	Value	AbstractValue<Derived, Base>::call(THIS_T this_arg, Args ...args)
+	Value	AbstractValue<Derived, Base>::call(THIS_T this_arg, Args ...as)
 	{
 		if (!isFunction()) throw object_is_not_function();
-		return ObjectAsFunctionCallback::call(context(),
-											  this->objectRef(),
-											  (JSObjectRef)to_valueRef<THIS_T>::convert(context(), this_arg),
-											  std::forward<Args>(args)...);
+    
+    detail::ValueArray args(this->context(), {to_value<Args>::convert(this->context(), as)... });
+
+    JEROME_CALL_JS_API(JSValueRef, JSObjectCallAsFunction,
+                       detail::from_valueRef<Value>::convert(this->contextRef(), result),
+                       "calling a function",
+                       this->objectRef(),
+                       (JSObjectRef)to_value<THIS_T>::convert(context(), this_arg).valueRef(),
+                       args.size(), args.data());
 	}
 	
 	template <typename Derived, typename Base>
 	template <typename ...Args>
-	Value	AbstractValue<Derived, Base>::callAsConstructor(Args ...args)
+	Value	AbstractValue<Derived, Base>::callAsConstructor(Args ...as)
 	{
 		if (!isFunction()) throw object_is_not_constructor();
-		return ObjectAsConstructorCallback::call(context(), this->objectRef(), std::forward<Args>(args)...);
+    
+    detail::ValueArray args(this->context(), {to_value<Args>::convert(this->context(), as)... });
+
+    JEROME_CALL_JS_API(JSObjectRef, JSObjectCallAsConstructor,
+                       detail::from_valueRef<Value>::convert(this->contextRef(), result),
+                       "calling object as constructor",
+                       this->objectRef(), args.size(), args.data());
 	}
 		
 	template <typename Derived, typename Base>

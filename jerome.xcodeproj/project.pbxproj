@@ -1255,12 +1255,12 @@
 			);
 			projectRoot = "";
 			targets = (
+				627818B51CC831C300C344E4 /* Jerome */,
 				622EA2D11604D43600764667 /* jerome.osx */,
 				62262163198DAD7C00A0AA4E /* jerome.osx Tests */,
 				62FAE70E161154520065D358 /* jerome.ios */,
 				62CA480C1BB0859E00A2AA7B /* simple_jerome */,
 				62527B621BBB490500767BA7 /* vhmsg_jerome */,
-				627818B51CC831C300C344E4 /* Jerome */,
 			);
 		};
 /* End PBXProject section */
@@ -1334,7 +1334,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "source \"${SRCROOT}/scripts/copy_headers.sh\"\n";
+			shellScript = "#source \"${SRCROOT}/scripts/copy_headers.sh\"\n";
 		};
 		62B84DB51BB4B2AB009FD8E4 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1626,7 +1626,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
-					../build/osx/include,
+					"$(SRCROOT)/../build/osx/include",
 				);
 				PRODUCT_NAME = jerome;
 				SDKROOT = macosx;
@@ -1644,7 +1644,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
-					../build/osx/include,
+					"$(SRCROOT)/../build/osx/include",
 				);
 				PRODUCT_NAME = jerome;
 				SDKROOT = macosx;
@@ -1767,10 +1767,12 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)";
 				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -1815,10 +1817,12 @@
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)";
 				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -1869,6 +1873,8 @@
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DJEROME_INTERNAL_BASIC_REPORT",
+					"-DBOOST_UBLAS_NDEBUG",
+					"-DNDEBUG",
 				);
 				SYMROOT = "$(HOME)/Documents/Developer/Build/$(PROJECT_NAME)";
 			};

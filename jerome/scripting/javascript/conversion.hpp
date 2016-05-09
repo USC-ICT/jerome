@@ -28,6 +28,7 @@
 #include <array>
 
 #include <boost/optional.hpp>
+#include <boost/iterator/transform_iterator.hpp>
 
 #include <JavaScriptCore/JavaScriptCore.h>
 #include <jerome/scripting/javascript/exception.hpp>
@@ -44,23 +45,20 @@ namespace jerome { namespace javascript { namespace detail {
 		static JSValueRef convert(const Context& ctx, JSValueRef valueRef) { return valueRef; }
 	};
 
-	template <>
-	struct to_valueRef<JSValueRef> {
-		static JSValueRef convert(const Context& ctx, JSValueRef valueRef) { return valueRef; }
-	};
-
 #pragma mark bool
 	
 	template <>
 	struct from_valueRef<bool> {
-		static bool convert(const Context& ctx, JSValueRef valueRef)
-		{ return JSValueToBoolean(ctx.contextRef(), valueRef); }
+		static bool convert(const Context& ctx, JSValueRef valueRef) {
+      return JSValueToBoolean(ctx.contextRef(), valueRef);
+    }
 	};
 	
 	template <>
-	struct to_valueRef<bool>  {
-		static JSValueRef convert(Context& ctx, bool value)
-		{ return JSValueMakeBoolean(ctx.contextRef(), value); }
+	struct to_value<bool>  {
+		static Value convert(Context& ctx, bool value) {
+      return ctx.makeBoolean(value);
+    }
 	};
 	
 #pragma mark number (arithmetic)
@@ -68,26 +66,30 @@ namespace jerome { namespace javascript { namespace detail {
 	template <typename T>
 	struct from_valueRef<T, typename std::enable_if<std::is_arithmetic<T>::value >::type> {
 		static T convert(Context& ctx, JSValueRef valueRef) {
-			return ctx.callJSCFunction("converting to number", JSValueToNumber, valueRef);
+			return ctx.toNumber(valueRef);
 		}
 	};
 	
 	template <typename T>
-	struct to_valueRef<T, typename std::enable_if<std::is_arithmetic<T>::value >::type>  {
-		static JSValueRef convert(Context& ctx, T value) { return JSValueMakeNumber(ctx.contextRef(), value); }
+	struct to_value<T, typename std::enable_if<std::is_arithmetic<T>::value >::type>  {
+		static Value convert(Context& ctx, T value) {
+      return ctx.makeNumber(value);
+    }
 	};
 	
 #pragma mark String
 	
 	template <>
 	struct from_valueRef<String> {
-		static String convert(const Context& ctx, JSValueRef valueRef) { return JSString(ctx, valueRef); }
+		static String convert(const Context& ctx, JSValueRef valueRef) {
+      return ctx.toStringCopy(valueRef).string();
+    }
 	};
 
 	template <>
-	struct to_valueRef<String>  {
-		static JSValueRef convert(Context& ctx, const String& value) {
-			return JSValueMakeString(ctx.contextRef(), JSString(value));
+	struct to_value<String>  {
+		static Value convert(Context& ctx, const String& value) {
+			return ctx.makeString(value);
 		}
 	};
 	
@@ -116,22 +118,22 @@ namespace jerome { namespace javascript { namespace detail {
 				|| JSValueIsUndefined(ctx.contextRef(), valueRef)
 				|| JSValueIsNull(ctx.contextRef(), valueRef))
 				return CastableString();
-			return (String)JSString(ctx, valueRef);
+			return ctx.toStringCopy(valueRef).string();
 		}
 	};
 	
 	template <>
-	struct to_valueRef<const char*>  {
-		static JSValueRef convert(Context& ctx, const char* value) {
-			if (!value) return JSValueMakeUndefined(ctx.contextRef());
-			return JSValueMakeString(ctx.contextRef(), JSString(value));
+	struct to_value<const char*>  {
+		static Value convert(Context& ctx, const char* value) {
+      if (!value) return ctx.undefinedValue();
+			return ctx.makeString(value);
 		}
 	};
 	
 	template< std::size_t N >
-	struct to_valueRef<char[N]>  {
-		static JSValueRef convert(Context& ctx, const char* value) {
-			return to_valueRef<const char*>::convert(ctx, value);
+	struct to_value<char[N]>  {
+		static Value convert(Context& ctx, const char* value) {
+			return to_value<const char*>::convert(ctx, value);
 		}
 	};
 	
@@ -139,35 +141,32 @@ namespace jerome { namespace javascript { namespace detail {
 	
 	// vector and more
 	template <typename T>
-	struct to_valueRef<T, typename std::enable_if<
+	struct to_value<T, typename std::enable_if<
 	is_container<T>::value && !is_associative_container<T>::value
 	>::type> {
-		static JSValueRef convert(Context& ctx, const T& value) {
-			std::vector<JSValueRef>		jsArguments;
-			for(const auto& x : value)
-				jsArguments.push_back(to_valueRef<typename T::value_type>::convert(ctx, x));
-			return ctx.callJSCFunction("making an array", JSObjectMakeArray,
-									   jsArguments.size(), jsArguments.data());
+		static Value convert(Context& ctx, const T& value) {
+      auto f = [&](const typename T::value_type& x) {
+        return to_value<typename T::value_type>::convert(ctx, x); };
+      detail::ValueArray array(ctx,
+                       boost::make_transform_iterator(value.begin(), f),
+                       boost::make_transform_iterator(value.end(), f));
+      return array.array();
 		}
 	};
 
 	template <typename ...Args>
-	struct to_valueRef<std::tuple<Args...>> {
-		static JSValueRef convert(Context& ctx, const std::tuple<Args...>& value) {
-			std::array<JSValueRef, sizeof...(Args)>	args = to_array(ctx, value, index_sequence_for<Args...>{});
-			return ctx.callJSCFunction("making an array", JSObjectMakeArray,
-									   args.size(), args.data());
+	struct to_value<std::tuple<Args...>> {
+		static Value convert(Context& ctx, const std::tuple<Args...>& value) {
+			return to_array(ctx, value, index_sequence_for<Args...>{});
 		}
-		static JSValueRef convert(Context& ctx, Args ...as) {
-			std::array<JSValueRef, sizeof...(Args)>	args = to_valueRefArray(ctx, std::forward<Args>(as)...);
-			return ctx.callJSCFunction("making an array", JSObjectMakeArray,
-									   args.size(), args.data());
+		static Value convert(Context& ctx, Args ...as) {
+      return (detail::ValueArray ( ctx, {to_value<Args>::convert(ctx, as)... })).array();
 		}
 	private:
 		template <std::size_t ...Indices>
-		static std::array<JSValueRef, sizeof...(Args)>
+		static Value
 		to_array(Context& ctx, const std::tuple<Args...>& value, index_sequence<Indices...>) {
-			return { to_valueRef<Args>::convert(ctx, std::get<Indices>(value))... };
+      return (detail::ValueArray ( ctx, {to_value<Args>::convert(ctx, std::get<Indices>(value))... })).array();
 		}
 
 	};
@@ -180,11 +179,8 @@ namespace jerome { namespace javascript { namespace detail {
 			std::unordered_map<String, T>	result;
 			JSPropertyNameArrayRef	array	= JSObjectCopyPropertyNames(ctx.contextRef(), (JSObjectRef)valueRef);
 			for(size_t i = 0, n = JSPropertyNameArrayGetCount(array); i < n; ++i) {
-				JSString	stringRef = JSPropertyNameArrayGetNameAtIndex(array, i);
-				result[stringRef] = from_valueRef<T>::convert(ctx, ctx.callJSCFunction("converting to map",
-																					   JSObjectGetProperty,
-																					   (JSObjectRef)valueRef,
-																					   stringRef));
+        String	string = detail::JSString(JSPropertyNameArrayGetNameAtIndex(array, i)).string();
+        result[string] = from_valueRef<T>::convert(ctx, ctx.getProperty((JSObjectRef)valueRef, string));
 			}
 			JSPropertyNameArrayRelease(array);
 			return result;
@@ -192,15 +188,15 @@ namespace jerome { namespace javascript { namespace detail {
 	};
 	
 	template <typename T>
-	struct to_valueRef<T, typename std::enable_if<
+	struct to_value<T, typename std::enable_if<
 	is_container<T>::value && is_associative_container<T>::value
 	>::type> {
-		static JSValueRef convert(Context& ctx, const T& value) {
-			JSObjectRef	result	= JSObjectMake(ctx.contextRef(), NULL, NULL);
+		static Value convert(Context& ctx, const T& value) {
+			Value	result	= ctx.newObject();
 			for(auto i : value) {
-				ctx.callJSCFunction("making an object", JSObjectSetProperty, result, (JSStringRef)JSString(i.first),
-									to_valueRef<typename T::mapped_type>::convert(ctx, i.second),
-									kJSPropertyAttributeNone);
+        result[i.first] = to_value<typename T::mapped_type>::convert(ctx, i.second);
+//				ctx.setProperty(result, JSString(i.first),
+//									to_value<typename T::mapped_type>::convert(ctx, i.second));
 			}
 			return result;
 		}
@@ -209,26 +205,26 @@ namespace jerome { namespace javascript { namespace detail {
 #pragma mark nullptr = undefined
 
 	template <>
-	struct to_valueRef<std::nullptr_t>  {
-		static JSValueRef convert(Context& ctx, std::nullptr_t value) {
-			return JSValueMakeUndefined(ctx.contextRef());
+	struct to_value<std::nullptr_t>  {
+		static Value convert(Context& ctx, std::nullptr_t value) {
+      return ctx.undefinedValue();
 		}
 	};
 
 	template <>
-	struct to_valueRef<void>  {
+	struct to_value<void>  {
 		template <typename T>
-		static JSValueRef convert(Context& ctx, T) {
-			return JSValueMakeUndefined(ctx.contextRef());
+		static Value convert(Context& ctx, T) {
+      return ctx.undefinedValue();
 		}
 	};
 
 #pragma mark Null = null
 
 	template <>
-	struct to_valueRef<Null_t>  {
-		static JSValueRef convert(Context& ctx, const Null_t& value) {
-			return JSValueMakeNull(ctx.contextRef());
+	struct to_value<Null_t>  {
+		static Value convert(Context& ctx, const Null_t& value) {
+      return ctx.nullValue();
 		}
 	};
 	
@@ -236,28 +232,35 @@ namespace jerome { namespace javascript { namespace detail {
 	
 	template <>
 	struct from_valueRef<Value>  {
-		static Value convert(const Context& ctx, JSValueRef valueRef)
-		{ return valueRef ? Value(ctx, valueRef) : ctx.undefinedValue(); }
+		static Value convert(const Context& ctx, JSValueRef valueRef) {
+      return valueRef ? Value(ctx, valueRef) : ctx.undefinedValue();
+    }
 	};
-	
 	
 	template <>
-	struct to_valueRef<Value>  {
-		static JSValueRef convert(Context& ctx, const Value& value) { return value.valueRef(); }
+	struct to_value<Value>  {
+		static Value convert(Context& ctx, const Value& value) {
+      return value.context() == ctx ? value : Value(ctx, value.valueRef());
+    }
 	};
-	
-	
+		
 	template <typename P>
-	struct to_valueRef<PrototypeProperty<P>>  {
-		static JSValueRef convert(Context& ctx, const PrototypeProperty<P>& value) { return value.valueRef(); }
+	struct to_value<PrototypeProperty<P>>  {
+		static Value convert(Context& ctx, const PrototypeProperty<P>& value) {
+      return Value(ctx, value.valueRef());
+    }
 	};
 	template <typename P>
-	struct to_valueRef<NamedProperty<P>>  {
-		static JSValueRef convert(Context& ctx, const NamedProperty<P>& value) { return value.valueRef(); }
+	struct to_value<NamedProperty<P>>  {
+		static Value convert(Context& ctx, const NamedProperty<P>& value) {
+      return Value(ctx, value.valueRef());
+    }
 	};
 	template <typename P>
-	struct to_valueRef<IndexedProperty<P>>  {
-		static JSValueRef convert(Context& ctx, const IndexedProperty<P>& value) { return value.valueRef(); }
+	struct to_value<IndexedProperty<P>>  {
+		static Value convert(Context& ctx, const IndexedProperty<P>& value) {
+      return Value(ctx, value.valueRef());
+    }
 	};
 	
 #pragma mark C++ object with ClassTraits
@@ -281,13 +284,13 @@ namespace jerome { namespace javascript { namespace detail {
 	};
 	
 	template <typename T>
-	struct to_valueRef<T, typename std::enable_if<
+	struct to_value<T, typename std::enable_if<
 	__has_className<ClassTraits<T>>::value &&
 	!is_std_function<T>::value &&
 	!std::is_pointer<T>::value>::type
 	> {
-		static JSValueRef convert(Context& ctx, const T& value) {
-			return to_valueRef<Value>::convert(ctx, ctx.newObjectOfNativeClass(value));
+		static Value convert(Context& ctx, const T& value) {
+			return ctx.newObjectOfNativeClass(value);
 		}
 	};
 	
@@ -311,13 +314,13 @@ namespace jerome { namespace javascript { namespace detail {
 	};
 	
 	template <typename T>
-	struct to_valueRef<T, typename std::enable_if<
+	struct to_value<T, typename std::enable_if<
 	__has_className<ClassTraits<T>>::value &&
 	std::is_pointer<T>::value>::type
 	> {
-		static JSValueRef convert(Context& ctx, const T& value) {
-			if (!value) return JSValueMakeUndefined(ctx.contextRef());
-			return to_valueRef<Value>::convert(ctx, ctx.newObjectOfNativeClass(value));
+		static Value convert(Context& ctx, const T& value) {
+      if (!value) return ctx.undefinedValue();
+			return ctx.newObjectOfNativeClass(value);
 		}
 	};
 	
@@ -339,16 +342,17 @@ namespace jerome { namespace javascript { namespace detail {
 			if (JSValueIsObjectOfClass(ctx.contextRef(), valueRef, ClassTraits<function_type>::instance())) {
 				return (T)ClassTraits<T>::instance().representedObjectForRef((JSObjectRef)valueRef);
 			}
-			
-			return __wrap_value_as_std_function<signature_type>::wrap(ctx, (JSObjectRef)valueRef);
+      
+      Value v = from_valueRef<Value>::convert(ctx, valueRef);
+			return __wrap_value_as_std_function<signature_type>::wrap(v);
 		}
 	};
 	
 	template <typename T>
-	struct to_valueRef<T, typename std::enable_if<is_callable<T>::value>::type> {
-		static JSValueRef convert(Context& ctx, T value) {
+	struct to_value<T, typename std::enable_if<is_callable<T>::value>::type> {
+		static Value convert(Context& ctx, T value) {
 			typedef typename std::function<typename function_signature<T>::type> fp_type;
-			return to_valueRef<Value>::convert(ctx, ctx.newObjectOfNativeClass((fp_type)value));
+			return ctx.newObjectOfNativeClass((fp_type)value);
 		}
 	};
 
@@ -364,58 +368,30 @@ namespace jerome { namespace javascript { namespace detail {
 	};
 
 	template <typename T>
-	struct to_valueRef<boost::optional<T>> {
-		static JSValueRef convert(Context& ctx, const boost::optional<T>& value) {
-			return (value) ? to_valueRef<T>::convert(ctx, *value) : JSValueMakeUndefined(ctx.contextRef());
+	struct to_value<boost::optional<T>> {
+		static Value convert(Context& ctx, const boost::optional<T>& value) {
+			return (value) ? to_value<T>::convert(ctx, *value) : ctx.undefinedValue();
 		}
 	};
 	
-#pragma mark argument pack
-	
-	template<typename ...Args>
-	std::array<JSValueRef, sizeof...(Args)> to_valueRefArray(Context& ctx, Args ...args)
-	{
-		return { to_valueRef<Args>::convert(ctx, args)... };
-	}
-
 #pragma mark - callbacks
-
-	struct ObjectAsFunctionCallback {
-		template<typename ...As>
-		inline static Value call(Context& ctx, JSObjectRef function, JSObjectRef thisObject, As ...as)
-		{
-			std::array<JSValueRef, sizeof...(As)>	args = to_valueRefArray(ctx, std::forward<As>(as)...);
-			return ctx.callJSCFunctionReturnValue("calling object as function", JSObjectCallAsFunction,
-												  function, thisObject, args.size(), args.data());
-		}
-	};
-	
-	struct ObjectAsConstructorCallback {
-		template<typename ...As>
-		inline static Value call(Context& ctx, JSObjectRef function, As ...as)
-		{
-			std::array<JSValueRef, sizeof...(As)>	args = to_valueRefArray(ctx, std::forward<As>(as)...);
-			return ctx.callJSCFunctionReturnValue("calling object as constructor", JSObjectCallAsConstructor,
-												  function, args.size(), args.data());
-		}
-	};
 	
 	template<typename R>
 	struct __JSCCallback {
 		template<typename FunctionType, typename ...Arguments>
-		inline static JSValueRef call (FunctionType F, Context& ctx, Arguments ...args)
+		inline static Value call (FunctionType F, Context& ctx, Arguments ...args)
 		{
-			return to_valueRef<R>::convert(ctx, F (std::forward<Arguments>(args)...));
+			return to_value<R>::convert(ctx, F (std::forward<Arguments>(args)...));
 		}
 	};
 
 	template<>
 	struct __JSCCallback<void> {
 		template<typename FunctionType, typename ...Arguments>
-		inline static JSValueRef call (FunctionType F, Context& ctx, Arguments ...args)
+		inline static Value call (FunctionType F, Context& ctx, Arguments ...args)
 		{
 			F (std::forward<Arguments>(args)...);
-			return to_valueRef<std::nullptr_t>::convert(ctx, nullptr);
+			return to_value<std::nullptr_t>::convert(ctx, nullptr);
 		}
 	};
 
@@ -434,13 +410,13 @@ namespace jerome { namespace javascript { namespace detail {
 				for(std::size_t i = 0, n = std::min(valueRefArguments.size(), argumentCount); i < n; ++i)
 					valueRefArguments[i] = arguments[i];
 				for(std::size_t i = argumentCount, n = valueRefArguments.size(); i < n; ++i)
-					valueRefArguments[i] = to_valueRef<std::nullptr_t>::convert(myContext, nullptr);
+					valueRefArguments[i] = JSValueMakeUndefined(ctx);
 				
 				return call1(std::forward<FunctionType>(theFunction),
 							 myContext,
 							 valueRefArguments,
 							 index_sequence_for<CallbackArguments...>{},
-							 std::forward<AdditionalArguments>(additionalArguments)...);
+							 std::forward<AdditionalArguments>(additionalArguments)...).returnValueRef();
 				
 			} catch (const std::exception& ex) {
 				myContext.setException(ex);
@@ -449,7 +425,7 @@ namespace jerome { namespace javascript { namespace detail {
 		}
 	private:
 		template<typename FunctionType, typename ...AdditionalArguments, std::size_t ...Indices>
-		inline static JSValueRef call1(FunctionType&& F,
+		inline static Value call1(FunctionType&& F,
 									   Context& ctx,
 									   std::array<JSValueRef, sizeof...(CallbackArguments)>& callbackArguments,
 									   index_sequence<Indices...>,
@@ -465,24 +441,18 @@ namespace jerome { namespace javascript { namespace detail {
 
 	template <typename R, typename ...Args>
 	struct __wrap_value_as_std_function<R(Args...)> {
-		static std::function<R(Args...)> wrap(const Context& ctx, JSValueRef valueRef) {
-			// capture the Value by value
-			Value v = from_valueRef<Value>::convert(ctx, valueRef);
+		static std::function<R(Args...)> wrap(Value v) {
 			return [=](Args ...args) mutable -> R {
-				return ObjectAsFunctionCallback::call(v.context(), (JSObjectRef)v.valueRef(),
-													  nullptr, std::forward<Args>(args)...);
+				return v(std::forward<Args>(args)...);
 			};
 		}
 	};
 	
 	template <typename ...Args>
 	struct __wrap_value_as_std_function<void(Args...)> {
-		static std::function<void(Args...)> wrap(const Context& ctx, JSValueRef valueRef) {
-			// capture the Value by value
-			Value v = from_valueRef<Value>::convert(ctx, valueRef);
+		static std::function<void(Args...)> wrap(Value v) {
 			return [=](Args ...args) mutable {
-				ObjectAsFunctionCallback::call(v.context(), (JSObjectRef)v.valueRef(),
-											   nullptr, std::forward<Args>(args)...);
+				v(std::forward<Args>(args)...);
 			};
 		}
 	};

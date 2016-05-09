@@ -40,21 +40,9 @@ namespace jerome { namespace javascript {
 		return this->newObject(ClassTraits<C>::instance(), ClassTraits<C>::instance().newVoidPointer());
 	}
 	
-	template <typename R, typename ...Args, typename ...Args1>
-	Value Context::callJSCFunctionReturnValue(const String& inExceptionContext,
-											  R(*inFunction)(Args...),
-											  Args1 ...args) const
-	{
-		return detail::from_valueRef<Value>::convert(*this,
-													 callJSCFunction(inExceptionContext,
-																	 inFunction,
-																	 std::forward<Args1>(args)...));
-	}
-
 	template <typename T>
 	Value Context::newValue(T&& value) {
-		return detail::from_valueRef<Value>::convert(*this,
-					detail::to_valueRef<typename std::remove_reference<T>::type>::convert(*this, value));
+		return detail::to_value<typename std::remove_reference<T>::type>::convert(*this, value);
 	}
 
 	inline detail::NamedProperty<Context>		Context::operator[] (const String& propertyName)
@@ -121,33 +109,57 @@ namespace jerome { namespace javascript {
 	
 #define VALUE_WITH_REF(x)	detail::from_valueRef<Value>::convert(*this, x)
 	
-	inline Value Context::evaluateScript(const String& script, Value& thisObject, const String& sourceURL, int startingLineNumber)
+	inline Value Context::evaluateScript(const String& script, Value& thisObject,
+                                       const String& sourceURL,
+                                       int startingLineNumber)
 	{
 		//			std::cerr << s.substr(0,std::min(64ul, s.length())) << "\n";
-		return callJSCFunctionReturnValue("evaluating script", JSEvaluateScript,
-										  detail::JSString(script),
-										  (JSObjectRef)detail::to_valueRef<Value>::convert(*this, thisObject),
-										  detail::JSString(sourceURL),
-										  startingLineNumber);
+    JEROME_CALL_JS_API(JSValueRef, JSEvaluateScript,
+                       detail::from_valueRef<Value>::convert(*this, result),
+                       "evaluating script",
+                       detail::JSString(script).jsStringRef(),
+                       (JSObjectRef)detail::to_value<Value>::convert(*this, thisObject).valueRef(),
+                       detail::JSString(sourceURL).jsStringRef(),
+                       startingLineNumber);
 	}
 	
-	inline Value Context::evaluateScript(const String &script, const String& sourceURL, int startingLineNumber)
+	inline Value Context::evaluateScript(const String &script,
+                                       const String& sourceURL,
+                                       int startingLineNumber)
 	{
-		//			std::cerr << s.substr(0,std::min(64ul, s.length())) << "\n";
-		return callJSCFunctionReturnValue("evaluating script", JSEvaluateScript,
-										  detail::JSString(script),
-										  nullptr,
-										  detail::JSString(sourceURL),
-										  startingLineNumber);
+    //			std::cerr << s.substr(0,std::min(64ul, s.length())) << "\n";
+    JEROME_CALL_JS_API(JSValueRef, JSEvaluateScript,
+                       detail::from_valueRef<Value>::convert(*this, result),
+                       "evaluating script",
+                       detail::JSString(script).jsStringRef(),
+                       nullptr,
+                       detail::JSString(sourceURL).jsStringRef(),
+                       startingLineNumber);
 	}
 	
-	inline bool Context::checkScriptSyntax(const String& script, const String& sourceURL, int startingLineNumber) {
-		return callJSCFunction("checking script", JSCheckScriptSyntax,
-							   detail::JSString(script),
-							   detail::JSString(sourceURL),
-							   startingLineNumber);
+	inline bool Context::checkScriptSyntax(const String& script,
+                                         const String& sourceURL,
+                                         int startingLineNumber)
+  {
+    JEROME_CALL_JS_API_RETURN(bool, JSCheckScriptSyntax,
+                       "checking script",
+                       detail::JSString(script).jsStringRef(),
+                       detail::JSString(sourceURL).jsStringRef(),
+                       startingLineNumber);
 	}
 	
+  inline void Context::protect(JSValueRef valueRef) const
+  {
+    if (valueRef == nullptr) return;
+    JSValueProtect(contextRef(), valueRef);
+  }
+  
+  inline void Context::unprotect(JSValueRef valueRef) const
+  {
+    if (valueRef == nullptr) return;
+    JSValueUnprotect(contextRef(), valueRef);
+  }
+  
 	inline void Context::garbageCollect() {
 		JSGarbageCollect(mData.get());
 	}
@@ -156,7 +168,22 @@ namespace jerome { namespace javascript {
 		return VALUE_WITH_REF(JSContextGetGlobalObject(contextRef()));
 	}
 	
-	inline ContextGroup Context::group() {
+  inline Value Context::makeBoolean(bool value) const
+  {
+    return VALUE_WITH_REF(JSValueMakeBoolean(contextRef(), value));
+  }
+
+  inline Value Context::makeNumber(double value) const
+  {
+    return VALUE_WITH_REF(JSValueMakeNumber(contextRef(), value));
+  }
+  
+  inline Value Context::makeString(const String& value) const
+  {
+    return VALUE_WITH_REF(JSValueMakeString(contextRef(), detail::JSString(value).jsStringRef()));
+  }
+
+  inline ContextGroup Context::group() {
 		return JSContextGetGroup(this->contextRef());
 	}
 	
@@ -172,94 +199,133 @@ namespace jerome { namespace javascript {
 	
 	inline Value Context::valueFromJSONString(const String& value)
 	{
-		return VALUE_WITH_REF(JSValueMakeFromJSONString(contextRef(), detail::JSString(value)));
+		return VALUE_WITH_REF(JSValueMakeFromJSONString(contextRef(), detail::JSString(value).jsStringRef()));
 	}
-	
-	namespace detail {
-		template <typename ...As>
-		Value newDate(Context& ctx, As ...as)
-		{
-			std::array<JSValueRef, sizeof...(As)>	args = to_valueRefArray(ctx, std::forward<As>(as)...);
-			return ctx.callJSCFunctionReturnValue("creating new date", JSObjectMakeDate,
-												  args.size(), args.data());
-		}
+		
+  template <typename ...As>
+  inline Value
+  Context::makeDate(As ...as)
+  {
+    detail::ValueArray args( *this, {detail::to_value<As>::convert(*this, as)... });
+    JEROME_CALL_JS_API(JSObjectRef, JSObjectMakeDate,
+                       detail::from_valueRef<Value>::convert(*this, result),
+                       "making an date",
+                       args.size(), args.data());
+  }
 
-		template <typename ...As>
-		Value newRegExp(Context& ctx, As ...as)
-		{
-			std::array<JSValueRef, sizeof...(As)>	args = to_valueRefArray(ctx, std::forward<As>(as)...);
-			return ctx.callJSCFunctionReturnValue("creating new regex", JSObjectMakeRegExp,
-												  args.size(), args.data());
-		}
-	}
-	
-
-	inline Value Context::newDate()
+	inline Value
+  Context::newDate()
 	{
-		return detail::newDate(*this);
+		return makeDate();
 	}
 
-	inline Value Context::newDate(long milliseconds)
+	inline Value
+  Context::newDate(long milliseconds)
 	{
-		return detail::newDate(*this, milliseconds);
+		return makeDate(milliseconds);
 	}
 
-	inline Value Context::newDate(const String& inDateString)
+	inline Value
+  Context::newDate(const String& inDateString)
 	{
-		return detail::newDate(*this, inDateString);
+		return makeDate(inDateString);
 	}
 	
-	inline Value Context::newDate(int year, int month, int day, int hours, int minutes, int seconds, int milliseconds)
+	inline Value
+  Context::newDate(int year, int month, int day, int hours, int minutes,
+                   int seconds, int milliseconds)
 	{
-		return detail::newDate(*this, year, month, day, hours, minutes, seconds, milliseconds);
+		return makeDate(year, month, day, hours, minutes, seconds, milliseconds);
 	}
 
-	
-	inline Value Context::newRegExp(const String& pattern, const String& modifiers)
+  template <typename ...As>
+  inline Value
+  Context::makeRegExp(As ...as)
+  {
+    detail::ValueArray args( *this, {detail::to_value<As>::convert(*this, as)... });
+    JEROME_CALL_JS_API(JSObjectRef, JSObjectMakeRegExp,
+                       detail::from_valueRef<Value>::convert(*this, result),
+                       "making an regex",
+                       args.size(), args.data());
+  }
+
+	inline Value
+  Context::newRegExp(const String& pattern,
+                     const String& modifiers)
 	{
-		return detail::newRegExp(*this, pattern, modifiers);
+		return makeRegExp(pattern, modifiers);
 	}
 	
-	inline Value Context::newFunction(const String& name, const std::vector<String>& arguments, const String& body, const String& sourceURL, int startingLineNumber)
+	inline Value
+  Context::newFunction(const String& name,
+                       const std::vector<String>& arguments,
+                       const String& body,
+                       const String& sourceURL,
+                       int startingLineNumber)
 	{
 		detail::StringRefArray	jsArguments(arguments);
-		return callJSCFunctionReturnValue("creating new function " + name, JSObjectMakeFunction,
-										  detail::JSString(name),
-										  jsArguments.size(), jsArguments.strings(),
-										  detail::JSString(body),
-										  detail::JSString(sourceURL),
-										  startingLineNumber);
+
+    JEROME_CALL_JS_API(JSObjectRef, JSObjectMakeFunction,
+                       detail::from_valueRef<Value>::convert(*this, result),
+                       "creating new function " + name,
+                       detail::JSString(name).jsStringRef(),
+                       jsArguments.size(), jsArguments.strings(),
+                       detail::JSString(body).jsStringRef(),
+                       detail::JSString(sourceURL).jsStringRef(),
+                       startingLineNumber);
 	}
 	
-	inline Value Context::newAnonymousFunction(const std::vector<String>& arguments, const String& body, const String& sourceURL, int startingLineNumber)
+	inline Value
+  Context::newAnonymousFunction(const std::vector<String>& arguments,
+                                const String& body,
+                                const String& sourceURL,
+                                int startingLineNumber)
 	{
 		detail::StringRefArray	jsArguments(arguments);
-		return callJSCFunctionReturnValue("creating new anonymous function", JSObjectMakeFunction,
-										  nullptr, jsArguments.size(), jsArguments.strings(),
-										  detail::JSString(body), detail::JSString(sourceURL), startingLineNumber);
+
+    JEROME_CALL_JS_API(JSObjectRef, JSObjectMakeFunction,
+                       detail::from_valueRef<Value>::convert(*this, result),
+                       "creating new anonymous function",
+                       nullptr,
+                       jsArguments.size(), jsArguments.strings(),
+                       detail::JSString(body).jsStringRef(),
+                       detail::JSString(sourceURL).jsStringRef(),
+                       startingLineNumber);
 	}
 	
-	inline Value Context::newObject(const jerome::javascript::Class &clazz, void *data) {
+	inline Value
+  Context::newObject(const jerome::javascript::Class &clazz, void *data)
+  {
 		return VALUE_WITH_REF(JSObjectMake(contextRef(), clazz, data));
 	}
 	
-	inline Value Context::newObject() {
+	inline Value
+  Context::newObject()
+  {
 		return VALUE_WITH_REF(JSObjectMake(contextRef(), NULL, NULL));
 	}
 	
-	inline void Context::defaultExceptionHandler(const Value& inException, const String& exceptionContext)
+	inline void
+  Context::defaultExceptionHandler(const Value& inException,
+                                   const String& exceptionContext)
 	{
 		String exceptionAsString = (String)inException;
-		throw Exception("JavaScript exception: " + exceptionAsString + " while " + exceptionContext);
+		throw Exception("JavaScript exception: " + exceptionAsString
+                    + " while " + exceptionContext);
 	}
 	
-	inline void Context::handleException(JSValueRef inException, const String& context) const
+	inline void
+  Context::handleException(JSValueRef inException,
+                           const String& context) const
 	{
-		Value	exceptionValue = detail::from_valueRef<Value>::convert(*this, inException);
+		Value	exceptionValue = detail::from_valueRef<Value>::convert(*this,
+                                                                 inException);
 		this->exceptionHandler()(exceptionValue, context);
 	}
 	
-	inline std::vector<Value>	Context::valueArrayWithValueRefArray(size_t argumentCount, const JSValueRef inArguments[]) const
+	inline std::vector<Value>
+  Context::valueArrayWithValueRefArray(size_t argumentCount,
+                                       const JSValueRef inArguments[]) const
 	{
 		std::vector<Value>	result;
 		for(size_t i = 0; i < argumentCount; ++i) {
@@ -274,7 +340,7 @@ namespace jerome { namespace javascript {
 		inline void	CallbackContext::setException(const std::exception& ex)
 		{
 			if (mExceptionRef)
-				*mExceptionRef = detail::to_valueRef<String>::convert(*this, ex.what());
+				*mExceptionRef = detail::to_value<String>::convert(*this, ex.what()).returnRetainedValueRef();
 		}
 
 	}
@@ -309,7 +375,6 @@ namespace jerome { namespace javascript {
 		return detail::from_valueRef<Value>::convert(context, context.thisObject);
 	}
 	
-
 
 }}
 

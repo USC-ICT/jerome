@@ -46,30 +46,44 @@ namespace jerome { namespace javascript {
 		JSValueRef	mValueRef;
 	};
 	
+  namespace detail {
+    struct ValueArray;
+  }
+  
 	struct Value : public detail::AbstractValue<Value, ValueBase> {
 		typedef detail::AbstractValue<Value, ValueBase> parent_type;
 		
 		typedef JSType Type;
 		
 		friend struct detail::from_valueRef<Value>;
-		friend struct detail::to_valueRef<Value>;
+    friend struct detail::to_value<Value>;
 		
 		~Value()
 		{
-			if (mValueRef) JSValueUnprotect(contextRef(), mValueRef);
+      context().unprotect(mValueRef);
 		}
 		
 		const Context&	context() const		{ return mContext; }
 		Context&		context()			{ return mContext; }
 
 		JSValueRef		valueRef() const	{ return mValueRef; }
+    JSObjectRef   objectRef() const	{ return (JSObjectRef)valueRef(); }
+    
+    JSValueRef		returnValueRef() const	{
+      context().protect(mValueRef);
+      return mValueRef;
+    }
+    JSValueRef		returnRetainedValueRef() const	{
+      context().protect(mValueRef);
+      return mValueRef;
+    }
 
 		Value(const Value& inOther)
 		: parent_type(inOther.mValueRef)
 		, mContext(inOther.mContext)
 		{
 			assert(mValueRef);
-			JSValueProtect(contextRef(), mValueRef);
+      context().protect(mValueRef);
 		}
 
 		Value(Value&& inOther)
@@ -86,7 +100,7 @@ namespace jerome { namespace javascript {
 		, mContext(inOther.context())
 		{
 			assert(mValueRef);
-			JSValueProtect(contextRef(), mValueRef);
+      context().protect(mValueRef);
 		}
 
 		using parent_type::operator=;
@@ -136,6 +150,8 @@ namespace jerome { namespace javascript {
 		}
 
 	protected:
+    friend struct detail::ValueArray;
+    
 		template <typename, typename> friend struct detail::AbstractValue;
 
 		Value(const Context& inContext, JSValueRef inValueRef)
@@ -143,17 +159,15 @@ namespace jerome { namespace javascript {
 		, mContext(inContext)
 		{
 			assert(mValueRef);
-			JSValueProtect(contextRef(), mValueRef);
+      context().protect(mValueRef);
 		}
 		
 		void				setValueRef(JSValueRef inValueRef)
 		{
 			if (mValueRef != inValueRef) {
-				if (mValueRef)
-					JSValueUnprotect(contextRef(), mValueRef);
+        context().unprotect(mValueRef);
 				mValueRef 	= inValueRef;
-				if (mValueRef)
-					JSValueProtect(contextRef(), mValueRef);
+        context().protect(mValueRef);
 			}
 		}
 		
@@ -161,21 +175,63 @@ namespace jerome { namespace javascript {
 		
 		Value& assign(const Context& inContext, JSValueRef inValueRef)
 		{
-			if (mValueRef != inValueRef || mContext != inContext) {
-				if (mValueRef)
-					JSValueUnprotect(contextRef(), mValueRef);
-				mContext 	= inContext;
-				mValueRef 	= inValueRef;
-				if (mValueRef)
-					JSValueProtect(contextRef(), mValueRef);
-			}
+      if (mContext != inContext) {
+        if (mValueRef != inValueRef) {
+          context().unprotect(mValueRef);
+          mContext 	= inContext;
+          mValueRef 	= inValueRef;
+          context().protect(mValueRef);
+        } else {
+          inContext.protect(mValueRef);
+          mContext.unprotect(mValueRef);
+          mContext = inContext;
+        }
+      } else {
+        setValueRef(inValueRef);
+      }
 			return *this;
 		}
 		
 		Context		mContext;
 	};
 		
-	
+  namespace detail {
+    struct ValueArray {
+      ValueArray() = delete;
+      ValueArray(const ValueArray&) = delete;
+      
+      ~ValueArray() {
+        for(auto& x : mStorage) {
+          mContext.unprotect(x);
+        }
+      }
+      
+      template< class InputIt >
+      ValueArray(const Context& inContext, InputIt first, InputIt last)
+      {
+        mStorage.reserve(last-first);
+        for(; first != last; ++first) {
+          mStorage.push_back(first->returnRetainedValueRef());
+        }
+      }
+
+      ValueArray(const Context& inContext, std::initializer_list<Value> init)
+      {
+        mStorage.reserve(init.size());
+        for(const auto& x : init) {
+          mStorage.push_back(x.returnRetainedValueRef());
+        }
+      }
+
+      Value array() const { return Value(mContext, (JSValueRef)mContext.makeArray(size(), data())); }
+      std::size_t size() const { return mStorage.size(); }
+      const JSValueRef* data() const { return mStorage.data(); }
+
+    private:
+      Context		mContext;
+      std::vector<JSValueRef> mStorage;
+    };
+  }
 }}
 
 #endif // defined __jerome_scripting_javascript_value_hpp__

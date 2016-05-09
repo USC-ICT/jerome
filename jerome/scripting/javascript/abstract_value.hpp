@@ -81,64 +81,38 @@ namespace jerome { namespace javascript {
 			{ return JSValueIsObjectOfClass(contextRef(), this->valueRef(), inClass); }
 			template <typename T>
 			bool	isEqual(const AbstractValueRef<T>& b) const
-			{ return context().callJSCFunction("checking equality", JSValueIsEqual, this->valueRef(),
-											   b.valueRef()); }
+			{ return context().isEqual(this->valueRef(), b.valueRef()); }
 			template <typename T>
 			bool	isStrictEqual(const AbstractValueRef<T>& b) const
 			{ return JSValueIsStrictEqual(contextRef(), this->valueRef(), b.valueRef()); }
 			template <typename T>
 			bool	isInstanceOfConstructor(const AbstractValueRef<T>& b) const
-			{ return context().callJSCFunction("checking if object is constructor",
-											   JSValueIsInstanceOfConstructor,
-											   this->valueRef(), b.objectRef()); }
+			{ return context().isInstanceOfConstructor(this->valueRef(), b.objectRef()); }
 			String	toJSONString(unsigned indent) const
-			{ return (String)detail::JSString(context().callJSCFunction("converting to JSON",
-																		JSValueCreateJSONString,
-																		this->valueRef(),
-																		indent)); }
+			{ return context().createJSONString(this->valueRef(), indent).string(); }
 			bool	hasProperty(const String& propertyName) const
 			{ return JSObjectHasProperty(contextRef(), this->objectRef(),
 										 detail::JSString(propertyName)); }
 			void	deleteProperty(const String& propertyName)
-			{ context().callJSCFunction("deleting property " + propertyName, JSObjectDeleteProperty,
-										this->objectRef(), detail::JSString(propertyName)); }
+			{ context().deleteProperty(this->objectRef(), propertyName); }
 			
-			//			// ugly, but otherwise it will fail to find the specialization for String
-			//			// when the cast operator is not explicit
-			//			template < typename T
-			//				, typename Decayed = typename std::decay<T>::type
-			//				, typename = typename std::enable_if<
-			//					!std::is_same<
-			//						const char*
-			//						, Decayed
-			//					>::value
-			//					&& !std::is_same<
-			//						std::allocator<char>
-			//						, Decayed
-			//					>::value
-			//						&& !std::is_same<
-			//						std::initializer_list<char>
-			//						, Decayed
-			//					>::value
-			//				>::type
-			//			>
 			template <typename T>
 			explicit operator T()		const
 			{ return detail::from_valueRef<T>::convert(context(), this->valueRef()); }
 			
-			template <typename T>
-			AbstractValue& operator = (T&& x)
-			{ return this->operator=(detail::to_valueRef<T>::convert(context(), std::forward<T>(x))); }
-			
-			AbstractValue& operator = (JSValueRef inValueRef)
-			{ this->setValueRef(inValueRef); return *this; }
+//			template <typename T>
+//			AbstractValue& operator = (T&& x)
+//			{ return this->operator=(detail::to_value<T>::convert(context(), std::forward<T>(x))); }
+//			
+//			AbstractValue& operator = (JSValueRef inValueRef)
+//			{ this->setValueRef(inValueRef); return *this; }
 			
 			std::vector<String> propertyNames() const
 			{
 				::JSPropertyNameArrayRef	array	= JSObjectCopyPropertyNames(contextRef(), this->objectRef());
 				std::vector<String>		result;
 				for(size_t i = 0, n = JSPropertyNameArrayGetCount(array); i < n; ++i) {
-					result.push_back(detail::JSString(JSPropertyNameArrayGetNameAtIndex(array, i)));
+					result.push_back(detail::JSString(JSPropertyNameArrayGetNameAtIndex(array, i)).string());
 				}
 				JSPropertyNameArrayRelease(array);
 				return result;
@@ -175,6 +149,11 @@ namespace jerome { namespace javascript {
 
 			Context& context()			{ return this->derived()->context(); }
 
+      void handleException(JSValueRef exception, const String& ctx) const
+      {
+        context().handleException(exception, ctx);
+      }
+
 			JSContextRef		contextRef() const	{ return context().contextRef(); }
 			void				setValueRef(JSValueRef inValueRef)
 			{ this->derived()->setValueRef(inValueRef); }
@@ -186,11 +165,8 @@ namespace jerome { namespace javascript {
 			template <typename, typename> friend struct AbstractValue;
 			
 			using parent_type::parent_type;
-
-//			static constexpr const bool is_context_ref_const =
-//			std::is_const<typename std::remove_reference<Peer>::type>::value;
 			
-			Property(Peer& inSource)
+			explicit Property(Peer& inSource)
 			: mSource(inSource)
 			{}
 			
@@ -275,16 +251,11 @@ namespace jerome { namespace javascript {
 			
 			JSValueRef	valueRef() const
 			{
-				return this->context().callJSCFunction("getting property " + this->mSelector,
-													   JSObjectGetProperty,
-													   this->sourceRef(), JSString(this->mSelector));
+				return this->context().getProperty(this->sourceRef(), this->mSelector);
 			}
 			void		setValueRef(JSValueRef inValueRef)
 			{
-				this->context().callJSCFunction("setting property " + this->mSelector,
-												JSObjectSetProperty,
-												this->sourceRef(), JSString(this->mSelector),
-												inValueRef, 0);
+				this->context().setProperty(this->sourceRef(), this->mSelector, inValueRef);
 			}
 		};
 		
@@ -297,15 +268,13 @@ namespace jerome { namespace javascript {
 			
 			JSValueRef	valueRef() const
 			{
-				return this->context().callJSCFunction("getting property at index " + std::to_string(this->mSelector),
-													   JSObjectGetPropertyAtIndex,
-													   this->sourceRef(), this->mSelector);
+				return this->context().getPropertyAtIndex(this->sourceRef(),
+                                                  this->mSelector);
 			}
 			void		setValueRef(JSValueRef inValueRef)
 			{
-				this->context().callJSCFunction("setting property at index " + std::to_string(this->mSelector),
-										  JSObjectSetPropertyAtIndex, this->sourceRef(),
-												this->mSelector, inValueRef);
+				this->context().setPropertyAtIndex(this->sourceRef(), this->mSelector,
+                                           inValueRef);
 			}
 		};
 		
