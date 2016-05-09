@@ -109,6 +109,7 @@ namespace jerome {
                   //				row += the_log * af;
 
                   for (auto de = af.begin(), end = af.end(); de != end; ++de) {
+                    // TODO: This line is slow. 
                     ai_log_aj(i, de.index()) += the_log * af(de.index());
                   }
                 }

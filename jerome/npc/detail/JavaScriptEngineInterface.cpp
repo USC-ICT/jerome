@@ -138,7 +138,7 @@ namespace jerome {
       typedef DefaultClassTraits<jerome::npc::Utterance>  parent_type;
       ClassTraits();
 
-      bool  hasProperty(Value& object, const char* propertyName) override
+      bool  hasProperty(Value& object, const String& propertyName) override
       {
         const utterance_type& utt(representedObject(object));
         return utt.has(propertyName)
@@ -146,7 +146,7 @@ namespace jerome {
                : parent_type::hasProperty(object, propertyName);
       }
 
-      Value getProperty(Value& object, const char* propertyName) override
+      Value getProperty(Value& object, const String& propertyName) override
       {
         const utterance_type& utt(representedObject(object));
         return utt.has(propertyName)
@@ -155,7 +155,7 @@ namespace jerome {
       }
 
       bool  setProperty(Value& object,
-                        const char* propertyName,
+                        const String& propertyName,
                         const Value& value) override
       {
         utterance_type& utt(representedObject(object));
@@ -163,7 +163,7 @@ namespace jerome {
         return true;
       }
 
-      bool  deleteProperty(Value& object, const char* propertyName) override
+      bool  deleteProperty(Value& object, const String& propertyName) override
       {
         utterance_type& utt(representedObject(object));
         if (utt.has(propertyName)) {
