@@ -147,15 +147,19 @@ namespace jerome {
       void  Engine::loadDialogueManager(std::istream& is, const load_dialogue_manager_callback& cb)
       {
 				std::string s(std::istreambuf_iterator<char>(is), {});
+        auto weakSelf = std::weak_ptr<Engine>(shared_from_this());
         performBlock([=] () {
-					initializeScripting();
-					context()["initStateMachineWithString"] (s, [cb](const js::Value& inError, const String& inName){
-						if (js::Context::currentArguments().size() == 1) {
-							cb(Error((String)inError));
-						} else {
-							cb(inName);
-						}
-					});
+          if (auto self = weakSelf.lock()) {
+            self->initializeScripting();
+            self->context()["initStateMachineWithString"]
+              (s, [cb](const js::Value& inError, const String& inName) {
+              if (js::Context::currentArguments().size() == 1) {
+                cb(Error((String)inError));
+              } else {
+                cb(inName);
+              }
+            });
+          }
         });
       }
 
@@ -177,9 +181,12 @@ namespace jerome {
                               const StringStringMap& inData,
                               const String& inMachineName)
       {
+        auto weakSelf = std::weak_ptr<Engine>(shared_from_this());
         performBlock([=] () {
-					initializeScripting();
-          context()["postEventToStateMachine"] (inMachineName, inName, inData);
+          if (auto self = weakSelf.lock()) {
+            self->initializeScripting();
+            self->context()["postEventToStateMachine"] (inMachineName, inName, inData);
+          }
         });
       }
 
