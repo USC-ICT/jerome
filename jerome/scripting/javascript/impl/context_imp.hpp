@@ -310,8 +310,17 @@ namespace jerome { namespace javascript {
                                    const String& exceptionContext)
 	{
 		String exceptionAsString = (String)inException;
-		throw Exception("JavaScript exception: " + exceptionAsString
-                    + " while " + exceptionContext);
+    String location = "("
+    + (inException.hasProperty("sourceURL")? (String)inException["sourceURL"] : String("?"))
+    + ":"
+    + (inException.hasProperty("line")? (String)inException["line"] : String("?"))
+    + ":"
+    + (inException.hasProperty("column")? (String)inException["column"] : String("?"))
+    + ")";
+
+		throw Exception("JavaScript exception: " + exceptionAsString + " "
+                    + location + " "
+                    + "while " + exceptionContext);
 	}
 	
 	inline void

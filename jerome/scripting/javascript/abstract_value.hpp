@@ -92,7 +92,7 @@ namespace jerome { namespace javascript {
 			{ return context().createJSONString(this->valueRef(), indent).string(); }
 			bool	hasProperty(const String& propertyName) const
 			{ return JSObjectHasProperty(contextRef(), this->objectRef(),
-										 detail::JSString(propertyName)); }
+										 detail::JSString(propertyName).jsStringRef()); }
 			void	deleteProperty(const String& propertyName)
 			{ context().deleteProperty(this->objectRef(), propertyName); }
 			

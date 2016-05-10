@@ -123,7 +123,7 @@ function loadStateMachineCompleteBlock(cb)
              if (debugTrace) pm.log("failed reading model", err);
              if (cb) cb(err);
            } else {
-             if (debugTrace) pm.log("success reading model", model);
+             if (debugTrace) pm.log("success reading model", model.name);
              var sm = new scion.SCXML(model, { send: _send });
              stateMachines[model.name] = sm;
              if (cb) cb(null, model.name);
@@ -153,14 +153,14 @@ function initStateMachineWithString(str, cb, prefix)
 
 var engine;
 
-function triggerUtterance(inExternalID, inScript, cb)
+function triggerUtterance(inExternalID, inName, cb)
 {
   if (debugTrace) {
-    pm.log("triggerUtterance:", inExternalID, inScript);
+    pm.log("triggerUtterance:", inExternalID);
   }
 
   var callback = function() {
-    engine = new Compiler();
+    engine = new Compiler(inName);
     engine.schedule(inExternalID);
 
     if (debugTrace) {

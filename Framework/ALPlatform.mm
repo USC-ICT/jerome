@@ -30,6 +30,12 @@ using namespace jerome;
 @end
 
 @implementation ALPlatformEvent
+- (NSString*)description
+{
+  return [NSString stringWithFormat:@"PlatformEvent{name=\"%@\", type=\"%@\", "
+          "target=\"%@\", origin=\"%@\", data=%@}", self.name, self.type,
+          self.target, self.origin, self.data];
+}
 @end
 
 @interface ALPlatform ()

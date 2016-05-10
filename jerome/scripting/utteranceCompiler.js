@@ -1,12 +1,13 @@
-function Compiler()
+function Compiler(inName)
 {
   this._out = "";
   this.log = scion.ext.platformModule.platform.log;
-  this.name = "s" + new Date().getTime();
+  this.name = (inName) ? inName : ("s" + new Date().getTime());
   this._counter = 0;
   this._scxml = false;
   this.sendUtteranceEventName = "sendUtterance";
   this.sendCommandEventName = "sendCommand";
+  this.machineDoneEventName = "machineDone";
 }
 
 /*
@@ -137,10 +138,13 @@ Compiler.prototype = {
       '		<cancel sendid="$eventID"/>\n'+
       '	</onexit>\n' +
       '</state>\n' +
-      '\n').format({ thisID : thisID,
-                     nextID : this._nextID(), eventName : thisID + '.tr',
-                     delay : (Math.round(inDelaySeconds * 1000) +
-                              'ms'), eventID : thisID });
+      '\n').format({
+                   thisID : thisID,
+                   nextID : this._nextID(),
+                   eventName : thisID + '.tr',
+                   delay : (Math.round(inDelaySeconds * 1000) + 'ms'),
+                   eventID : thisID
+                   });
   },
 
   _escape : function(s) {
@@ -209,6 +213,8 @@ Compiler.prototype = {
                   '</state>\n' +
                   '\n').format({ thisID : thisID });
 
+    thisID  = this._thisID();
+
     return ('' +
             '<scxml\n' +
             '	xmlns="http://www.w3.org/2005/07/scxml"\n' +
@@ -229,12 +235,22 @@ Compiler.prototype = {
             '	</state>\n' +
             '	<state id="final">\n' +
             '		<onentry>\n'+
+            '     <send id="$eventID" event="$eventName"\n'+
+            '					type="$eventType" target="$eventTarget">\n'+
+            '       <param name="machineName" expr="\'$thisName\'"/>\n'+
+            '     </send>\n'+
             '			<script>\n'+
             '				deleteStateMachine("$thisName");\n'+
             '			</script>\n'+
             '		</onentry>\n'+
             '	</state>\n' +
             '</scxml>\n' +
-            '\n').format({ thisName : this.name });
+            '\n').format({
+                         eventID : thisID,
+                         eventName : this.machineDoneEventName,
+                         eventType : jeromeEventType,
+                         eventTarget : jeromeEventTarget,
+                         thisName : this.name
+                         });
   }
 };
