@@ -118,6 +118,8 @@
 		62E830E81B64752500847135 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62E830E51B64752400847135 /* engine.cpp */; };
 		62F5F8E11CE2C0CE00EECA12 /* npc_model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8DF1CE2C0CE00EECA12 /* npc_model.cpp */; };
 		62F5F8E21CE2C0CE00EECA12 /* npc_model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8DF1CE2C0CE00EECA12 /* npc_model.cpp */; };
+		62F5F8E91CE2C8D500EECA12 /* scripts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8E71CE2C8D500EECA12 /* scripts.cpp */; };
+		62F5F8EA1CE2C8D500EECA12 /* scripts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8E71CE2C8D500EECA12 /* scripts.cpp */; };
 		62FA58C01CC99DED00641E2C /* libjerome.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D21604D43600764667 /* libjerome.a */; };
 		62FA58C11CC99DFB00641E2C /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62262156198C9B6800A0AA4E /* JavaScriptCore.framework */; };
 		62FA58C21CC99E0800641E2C /* libxslt.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CA48201BB087A900A2AA7B /* libxslt.tbd */; };
@@ -452,6 +454,8 @@
 		62F2369F1B67616B00009DFF /* npc.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = npc.hpp; sourceTree = "<group>"; };
 		62F5F8DF1CE2C0CE00EECA12 /* npc_model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = npc_model.cpp; sourceTree = "<group>"; };
 		62F5F8E01CE2C0CE00EECA12 /* npc_model.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = npc_model.hpp; sourceTree = "<group>"; };
+		62F5F8E71CE2C8D500EECA12 /* scripts.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scripts.cpp; sourceTree = "<group>"; };
+		62F5F8E81CE2C8D500EECA12 /* scripts.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scripts.hpp; sourceTree = "<group>"; };
 		62FA58C31CC99E1600641E2C /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
 		62FA58CA1CCB344700641E2C /* kstem.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = kstem.xcodeproj; path = 3rdParty/kstem/kstem.xcodeproj; sourceTree = "<group>"; };
 		62FAE7061611488B0065D358 /* ranker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ranker.hpp; sourceTree = "<group>"; };
@@ -743,6 +747,8 @@
 				62AF79C316CB0C850005CC53 /* utteranceCompiler.js */,
 				62F5F8DF1CE2C0CE00EECA12 /* npc_model.cpp */,
 				62F5F8E01CE2C0CE00EECA12 /* npc_model.hpp */,
+				62F5F8E71CE2C8D500EECA12 /* scripts.cpp */,
+				62F5F8E81CE2C8D500EECA12 /* scripts.hpp */,
 			);
 			path = scripting;
 			sourceTree = "<group>";
@@ -1419,6 +1425,7 @@
 				6255E92A1B729A5200EA9402 /* parameters.cpp in Sources */,
 				622EA2EB1604F30400764667 /* weighting.cpp in Sources */,
 				6268B02E1A0579FC00287DF4 /* parsing_cf.cpp in Sources */,
+				62F5F8E91CE2C8D500EECA12 /* scripts.cpp in Sources */,
 				622EA2E61604F30400764667 /* model.cpp in Sources */,
 				620A3F08197E4EA8000400E3 /* matrix.cpp in Sources */,
 				62C4AA781B7D5BE500B8A47A /* HTMLReporter.cpp in Sources */,
@@ -1486,6 +1493,7 @@
 				62C327811B9AC258001EB593 /* model_impl.cpp in Sources */,
 				62FAE740161155500065D358 /* types.cpp in Sources */,
 				6211C3311B8016BF00F293DC /* document.cpp in Sources */,
+				62F5F8EA1CE2C8D500EECA12 /* scripts.cpp in Sources */,
 				6200F73E1B84772E00CA121E /* ModelReader.cpp in Sources */,
 				6288C8AF163B5C6200191972 /* js_engine.cpp in Sources */,
 				62C3277D1B998A71001EB593 /* ModelWriterText.cpp in Sources */,

@@ -28,25 +28,13 @@
 
 #include <jerome/scripting/async_js.hpp>
 #include <jerome/scripting/PlatformJSInterface.hpp>
+#include <jerome/scripting/scripts.hpp>
 
 #include "js_engine.hpp"
 
 namespace jerome {
 	namespace scripting {
 		
-		// this uses C++11 string literal
-		const char * kScionJS =
-#include "scion.js.inc"
-		;
-
-		const char * kStartupJS =
-#include "startup.js.inc"
-		;
-
-		const char * kCompilerJS =
-#include "utteranceCompiler.js.inc"
-		;
-
 		Engine::Engine()
       : mScriptingInited(false)
       , mEngineEventHandler([](const EngineEvent&){})
@@ -54,9 +42,14 @@ namespace jerome {
 			context()["__scionPlatform"]	=
         context().newObjectOfNativeClass<jerome::scripting::ScionPlatform>();
 
-			evaluateScript(kScionJS, "scxml.interpreter.js");
-			evaluateScript(kStartupJS, "scxml.startup.js");
-			evaluateScript(kCompilerJS, "scxml.utteranceCompiler.js");
+			evaluateScript(SCION_SCRIPT.source,
+                     SCION_SCRIPT.name);
+
+      evaluateScript(JEROME_STARTUP_SCRIPT.source,
+                     JEROME_STARTUP_SCRIPT.name);
+
+      evaluateScript(JEROME_UTTERANCE_COMPILER_SCRIPT.source,
+                     JEROME_UTTERANCE_COMPILER_SCRIPT.name);
 		}
 		
     Engine::~Engine()
