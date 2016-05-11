@@ -20,14 +20,14 @@
 //  along with Jerome.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef __jerome_npc_EngineEvent_hpp__
-#define __jerome_npc_EngineEvent_hpp__
+#ifndef __jerome_scripting_EngineEvent_hpp__
+#define __jerome_scripting_EngineEvent_hpp__
 
 #include <functional>
 #include <jerome/types.hpp>
 
 namespace jerome {
-  namespace npc {
+  namespace scripting {
 	
 		class EngineEvent {
 		public:
@@ -44,4 +44,4 @@ namespace jerome {
 	}
 }
 
-#endif // defined __jerome_npc_EngineEvent_hpp__
+#endif // defined __jerome_scripting_EngineEvent_hpp__
