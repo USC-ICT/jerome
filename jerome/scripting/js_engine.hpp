@@ -25,34 +25,60 @@
 
 
 #include <jerome/types.hpp>
+
+#include <jerome/npc/engine.hpp>
+
 #include <jerome/scripting/javascript.hpp>
+#include <jerome/scripting/EngineEvent.hpp>
 
 namespace jerome {
-	namespace scripting {
-		
-		namespace js = jerome::javascript;
-		
-		struct JEROME_SYMBOL_VISIBLE Engine {
-			
-			Engine();
+  namespace scripting {
+
+    namespace js = jerome::javascript;
+
+    struct JEROME_SYMBOL_VISIBLE Engine
+      : public jerome::npc::detail::Engine
+      , public std::enable_shared_from_this<Engine>
+    {
+      Engine();
       virtual ~Engine();
-			
-			void	evaluateScript(const String& script, const String& sourceURL = "",
-													 int startingLineNumber = 0,
-													 const std::function<void(const js::Value&)>& callback = [](const js::Value&){});
-			void	evaluateScriptWithFilePath(const String& sourcePath = "",
-																			 const std::function<void(const js::Value&)>& callback = [](const js::Value&){});
-			
-			void performBlock(const std::function<void(void)>& block);
-			static String argumentsDescription();
-			
-			js::Context&	context() { return mContext; }
-			
-		private:
-			js::Context		mContext;
-		};
-		
-	}
+
+      void evaluateScript(const String& script, const String& sourceURL = "",
+                          int startingLineNumber = 0,
+                          const std::function<void(const js::Value&)>&
+                              callback = [](const js::Value&) {});
+      
+      void evaluateScriptWithFilePath(
+          const String& sourcePath = "",
+          const std::function<void(const js::Value&)>& callback =
+              [](const js::Value&) {});
+
+      void performBlock(const std::function<void(void)>& block);
+      static String argumentsDescription();
+
+      js::Context& context() { return mContext; }
+
+      typedef std::function<void(const Result<String>&)> load_dialogue_manager_callback;
+      void	loadDialogueManager(std::istream& is, const load_dialogue_manager_callback&);
+      
+      void            postEvent(const String& inName,
+                                const StringStringMap& inData = StringStringMap(),
+                                const String& inMachineName = "");
+      
+      
+      void setEngineEventHandler(const EngineEventHandler& eventHandler);
+      void handleEngineEvent(const EngineEvent& event);
+      
+    private:
+      typedef std::enable_shared_from_this<Engine> my_shared_from_this_type;
+
+      js::Context mContext;
+      EngineEventHandler	mEngineEventHandler;
+      bool								mScriptingInited;
+
+      void initializeScripting();
+    };
+  }
 }
 
 #endif // defined __jerome_scripting_js_engine_hpp__

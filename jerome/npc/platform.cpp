@@ -23,7 +23,7 @@
 #include "platform.hpp"
 #include <jerome/npc/detail/Ranker.hpp>
 #include <jerome/npc/parsing.hpp>
-#include <jerome/npc/engine.hpp>
+#include <jerome/scripting/js_engine.hpp>
 
 namespace jerome {
 	namespace npc {
@@ -41,7 +41,7 @@ namespace jerome {
 		}
 		
 		Platform::Platform()
-		: parent_type(std::make_shared<detail::Engine>())
+		: parent_type(std::make_shared<scripting::Engine>())
 		{
 		}
 		
@@ -91,7 +91,7 @@ namespace jerome {
     }
 
     void Platform::setEngineEventHandler(
-      const EngineEventHandler& inEventHandler)
+      const scripting::EngineEventHandler& inEventHandler)
     {
       implementation().setEngineEventHandler(inEventHandler);
     }

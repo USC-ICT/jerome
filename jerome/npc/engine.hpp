@@ -27,24 +27,19 @@
 #include <jerome/npc/model.hpp>
 #include <jerome/npc/model_cpp.hpp>
 #include <jerome/npc/TrainingCallback.hpp>
-#include <jerome/npc/EngineEvent.hpp>
 
 #include <jerome/npc/detail/types_fwd.hpp>
 #include <jerome/npc/detail/Ranker.hpp>
 #include <jerome/npc/detail/Trainer.hpp>
-#include <jerome/scripting/js_engine.hpp>
 
 namespace jerome {
   namespace npc {
     namespace detail {
 
       class Engine
-        : public jerome::scripting::Engine
-				, public std::enable_shared_from_this<Engine>
+        : public std::enable_shared_from_this<Engine>
       {
-
       public:
-        typedef jerome::scripting::Engine parent_type;
 
         Engine();
 
@@ -83,27 +78,13 @@ namespace jerome {
 
         OptionalError evaluate(const String& stateName, const Data& inData);
 
-				typedef std::function<void(const Result<String>&)> load_dialogue_manager_callback;
-				void	loadDialogueManager(std::istream& is, const load_dialogue_manager_callback&);
-				
-        void            postEvent(const String& inName,
-                                  const StringStringMap& inData = StringStringMap(),
-                                  const String& inMachineName = "");
-
         static Utterance queryForString(const String& question);
-
-				void initializeScripting();
-				
-				void setEngineEventHandler(const EngineEventHandler& eventHandler);
-				void handleEngineEvent(const EngineEvent& event);
 
 				void collectionWasUpdated(const OptionalString& inStateName);
 
       private:
         Collection					mCollection;
         StringMap<Ranker>		mRankers;
-				EngineEventHandler	mEngineEventHandler;
-				bool								mScriptingInited;
 				
 				void stateWasUpdated(const State& inState);
       };

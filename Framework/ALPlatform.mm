@@ -124,7 +124,7 @@ using namespace jerome;
 - (void)setEngineEventHandler:(void (^_Nonnull)(ALPlatformEvent * _Nonnull))eventHandler
 {
   self->_platform.setEngineEventHandler(
-  [self, eventHandler](const npc::EngineEvent& event)
+  [self, eventHandler](const jerome::scripting::EngineEvent& event)
   {
     ALPlatformEvent* e = [ALPlatformEvent new];
     e.name = [NSString stringWithCPPString:event.name()];

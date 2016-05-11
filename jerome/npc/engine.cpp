@@ -31,7 +31,6 @@
 
 #include <jerome/npc/detail/Ranker_impl.hpp>
 #include <jerome/npc/detail/evaluation.hpp>
-#include <jerome/npc/detail/JavaScriptEngineInterface.hpp>
 #include <jerome/npc/factories/RankerFactory.hpp>
 
 #include "engine.hpp"
@@ -42,8 +41,6 @@ namespace jerome {
 
       Engine::Engine()
         : mCollection(cpp::ObjectFactory().makeNew<Collection>())
-				, mScriptingInited(false)
-				, mEngineEventHandler([](const EngineEvent&){})
       {
 
       }
@@ -151,24 +148,6 @@ namespace jerome {
             inUtteranceID);
       }
 
-      void  Engine::loadDialogueManager(std::istream& is, const load_dialogue_manager_callback& cb)
-      {
-				std::string s(std::istreambuf_iterator<char>(is), {});
-        auto weakSelf = std::weak_ptr<Engine>(shared_from_this());
-        performBlock([=] () {
-          if (auto self = weakSelf.lock()) {
-            self->initializeScripting();
-            self->context()["initStateMachineWithString"]
-              (s, [cb](const js::Value& inError, const String& inName) {
-              if (js::Context::currentArguments().size() == 1) {
-                cb(Error((String)inError));
-              } else {
-                cb(inName);
-              }
-            });
-          }
-        });
-      }
 
       OptionalError  Engine::loadCollection(std::istream& is,
                                             const ObjectFactory& inObjectFactory)
@@ -182,19 +161,6 @@ namespace jerome {
       OptionalError  Engine::saveCollection(std::ostream& os)
       {
         return jerome::npc::writeCollection(os, mCollection);
-      }
-
-      void  Engine::postEvent(const String& inName,
-                              const StringStringMap& inData,
-                              const String& inMachineName)
-      {
-        auto weakSelf = std::weak_ptr<Engine>(shared_from_this());
-        performBlock([=] () {
-          if (auto self = weakSelf.lock()) {
-            self->initializeScripting();
-            self->context()["postEventToStateMachine"] (inMachineName, inName, inData);
-          }
-        });
       }
 
 			class state_type_impl : public TrainingState {
@@ -281,23 +247,6 @@ namespace jerome {
 				return detail::evaluate(Record(), out, inData, xr);
 			}
 			
-			void Engine::initializeScripting()
-			{
-				if (mScriptingInited) return;
-				mScriptingInited = true;
-				context()["classifier"] = context().newObjectOfNativeClass(JavaScriptEngineInterface(shared_from_this()));
-			}
-			
-			void Engine::setEngineEventHandler(const EngineEventHandler& eventHandler)
-			{
-				mEngineEventHandler = eventHandler;
-			}
-		
-			void Engine::handleEngineEvent(const EngineEvent& event)
-			{
-				mEngineEventHandler(event);
-			}
-
 			void Engine::collectionWasUpdated(const OptionalString& inStateName)
 			{
 				if (inStateName) {

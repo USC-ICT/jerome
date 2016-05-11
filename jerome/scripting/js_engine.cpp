@@ -27,6 +27,7 @@
 #include <boost/range/algorithm/transform.hpp>
 
 #include <jerome/scripting/async_js.hpp>
+#include <jerome/scripting/PlatformJSInterface.hpp>
 
 #include "js_engine.hpp"
 
@@ -47,15 +48,17 @@ namespace jerome {
 		;
 
 		Engine::Engine()
+      : mScriptingInited(false)
+      , mEngineEventHandler([](const EngineEvent&){})
 		{
-			context()["__scionPlatform"]	= context().newObjectOfNativeClass<jerome::scripting::ScionPlatform>();
+			context()["__scionPlatform"]	=
+        context().newObjectOfNativeClass<jerome::scripting::ScionPlatform>();
 
 			evaluateScript(kScionJS, "scxml.interpreter.js");
 			evaluateScript(kStartupJS, "scxml.startup.js");
 			evaluateScript(kCompilerJS, "scxml.utteranceCompiler.js");
 		}
 		
-    
     Engine::~Engine()
     {
       
@@ -64,9 +67,12 @@ namespace jerome {
 		void Engine::evaluateScript(const String& script, const String& sourceURL,
                                 int startingLineNumber,
 									const std::function<void(const js::Value&)>& callback) {
-      js::Context theContext = context();
+      auto weakSelf = std::weak_ptr<Engine>(my_shared_from_this_type::shared_from_this());
 			performBlock([=]() mutable {
-				callback(theContext.evaluateScript(script, sourceURL, startingLineNumber));
+        if (auto self = weakSelf.lock()) {
+          callback(self->context().evaluateScript(script, sourceURL,
+                                                  startingLineNumber));
+        }
 			});
 		}
 
@@ -94,7 +100,59 @@ namespace jerome {
 			}
 			return result;
 		}
-		
+
+    void Engine::initializeScripting()
+    {
+      if (mScriptingInited) return;
+      mScriptingInited = true;
+      context()["classifier"] = context().newObjectOfNativeClass(
+        PlatformJSInterface(my_shared_from_this_type::shared_from_this()));
+    }
+    
+    void Engine::setEngineEventHandler(const EngineEventHandler& eventHandler)
+    {
+      mEngineEventHandler = eventHandler;
+    }
+    
+    void Engine::handleEngineEvent(const EngineEvent& event)
+    {
+      mEngineEventHandler(event);
+    }
+    
+    void  Engine::postEvent(const String& inName,
+                            const StringStringMap& inData,
+                            const String& inMachineName)
+    {
+      auto weakSelf = std::weak_ptr<Engine>(my_shared_from_this_type::shared_from_this());
+      performBlock([=] () {
+        if (auto self = weakSelf.lock()) {
+          self->initializeScripting();
+          self->context()["postEventToStateMachine"] (inMachineName,
+                                                      inName, inData);
+        }
+      });
+    }
+    
+    void  Engine::loadDialogueManager(std::istream& is,
+                                      const load_dialogue_manager_callback& cb)
+    {
+      std::string s(std::istreambuf_iterator<char>(is), {});
+      auto weakSelf = std::weak_ptr<Engine>(my_shared_from_this_type::shared_from_this());
+      performBlock([=] () {
+        if (auto self = weakSelf.lock()) {
+          self->initializeScripting();
+          self->context()["initStateMachineWithString"]
+          (s, [cb](const js::Value& inError, const String& inName) {
+            if (js::Context::currentArguments().size() == 1) {
+              cb(Error((String)inError));
+            } else {
+              cb(inName);
+            }
+          });
+        }
+      });
+    }
+
 	}
 }
 

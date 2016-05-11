@@ -25,7 +25,7 @@
 
 #include <jerome/types.hpp>
 #include <jerome/npc/TrainingCallback.hpp>
-#include <jerome/npc/EngineEvent.hpp>
+#include <jerome/scripting/EngineEvent.hpp>
 #include <jerome/npc/model_cpp.hpp>
 #include <jerome/npc/model.hpp>
 
@@ -34,17 +34,19 @@
 */
 
 namespace jerome {
+  
+  namespace scripting {
+    class Engine;
+  }
+
   namespace npc {
 
     class Collection;
     class Utterance;
 
-    namespace detail {
-      class Engine;
-    }
 
-    struct Platform : public ReferenceClassInterface<detail::Engine> {
-      typedef ReferenceClassInterface<detail::Engine> parent_type;
+    struct Platform : public ReferenceClassInterface<scripting::Engine> {
+      typedef ReferenceClassInterface<scripting::Engine> parent_type;
 
       /**
       * Initializes the API. Needs to be called once before using any of the
@@ -113,7 +115,7 @@ namespace jerome {
       * to handle the events. For example, the client may convert the event into
       * a VHMSG.
       */
-      void setEngineEventHandler(const EngineEventHandler& eventHandler);
+      void setEngineEventHandler(const scripting::EngineEventHandler& eventHandler);
 
       /**
       * Find the utterance with the given ID. Return nothing, if the utterance

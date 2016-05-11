@@ -39,8 +39,8 @@
 		62262175198DAE5900A0AA4E /* libjerome.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D21604D43600764667 /* libjerome.a */; };
 		62262176198DAE6500A0AA4E /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62AE719216FBE41C00547E42 /* boost.framework */; };
 		62262177198DB42C00A0AA4E /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62262156198C9B6800A0AA4E /* JavaScriptCore.framework */; };
-		622BF9941B82D472001588C7 /* JavaScriptEngineInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 622BF9921B82D472001588C7 /* JavaScriptEngineInterface.cpp */; };
-		622BF9951B82D472001588C7 /* JavaScriptEngineInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 622BF9921B82D472001588C7 /* JavaScriptEngineInterface.cpp */; };
+		622BF9941B82D472001588C7 /* PlatformJSInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 622BF9921B82D472001588C7 /* PlatformJSInterface.cpp */; };
+		622BF9951B82D472001588C7 /* PlatformJSInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 622BF9921B82D472001588C7 /* PlatformJSInterface.cpp */; };
 		622EA2D51604D43600764667 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D41604D43600764667 /* Foundation.framework */; };
 		622EA2E61604F30400764667 /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 622F89CF1512900600726296 /* model.cpp */; };
 		622EA2E81604F30400764667 /* collection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62457D8A144181A90084507E /* collection.cpp */; };
@@ -116,6 +116,8 @@
 		62E4E3A61B5DFA9A008440CC /* platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62E4E3A31B5DFA9A008440CC /* platform.cpp */; };
 		62E830E71B64752500847135 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62E830E51B64752400847135 /* engine.cpp */; };
 		62E830E81B64752500847135 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62E830E51B64752400847135 /* engine.cpp */; };
+		62F5F8E11CE2C0CE00EECA12 /* npc_model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8DF1CE2C0CE00EECA12 /* npc_model.cpp */; };
+		62F5F8E21CE2C0CE00EECA12 /* npc_model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8DF1CE2C0CE00EECA12 /* npc_model.cpp */; };
 		62FA58C01CC99DED00641E2C /* libjerome.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D21604D43600764667 /* libjerome.a */; };
 		62FA58C11CC99DFB00641E2C /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62262156198C9B6800A0AA4E /* JavaScriptCore.framework */; };
 		62FA58C21CC99E0800641E2C /* libxslt.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CA48201BB087A900A2AA7B /* libxslt.tbd */; };
@@ -282,8 +284,8 @@
 		6226218F1991DD8C00A0AA4E /* class.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = class.hpp; sourceTree = "<group>"; };
 		622621941991DFED00A0AA4E /* value.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = value.hpp; sourceTree = "<group>"; };
 		622621991991DFF800A0AA4E /* context.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = context.hpp; sourceTree = "<group>"; };
-		622BF9921B82D472001588C7 /* JavaScriptEngineInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JavaScriptEngineInterface.cpp; sourceTree = "<group>"; };
-		622BF9931B82D472001588C7 /* JavaScriptEngineInterface.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = JavaScriptEngineInterface.hpp; sourceTree = "<group>"; };
+		622BF9921B82D472001588C7 /* PlatformJSInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlatformJSInterface.cpp; sourceTree = "<group>"; };
+		622BF9931B82D472001588C7 /* PlatformJSInterface.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PlatformJSInterface.hpp; sourceTree = "<group>"; };
 		622BF9971B82D7A8001588C7 /* HTMLReporter.xslt */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = HTMLReporter.xslt; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.xml; };
 		622EA2D21604D43600764667 /* libjerome.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libjerome.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		622EA2D41604D43600764667 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -357,7 +359,7 @@
 		62A252AB1436613E0008E65F /* evaluation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = evaluation.hpp; sourceTree = "<group>"; };
 		62A252AD1436614A0008E65F /* parsing.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = parsing.hpp; sourceTree = "<group>"; };
 		62A4007416C72BD7000F5033 /* scion.tests.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = scion.tests.js; sourceTree = "<group>"; };
-		62A4007A16C7310A000F5033 /* scion.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = scion.js; path = ../../../3rd_party/SCION/dist/scion.js; sourceTree = "<group>"; };
+		62A4007A16C7310A000F5033 /* scion.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = scion.js; path = ../../3rdParty/SCION/dist/scion.js; sourceTree = "<group>"; };
 		62AC3BBC1BBC94C80067C540 /* string.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = string.cpp; sourceTree = "<group>"; };
 		62AC3BBE1BBC967F0067C540 /* error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = error.cpp; sourceTree = "<group>"; };
 		62AC3BBF1BBC967F0067C540 /* error.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = error.hpp; sourceTree = "<group>"; };
@@ -448,6 +450,8 @@
 		62E830E51B64752400847135 /* engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = engine.cpp; sourceTree = "<group>"; };
 		62E830E61B64752500847135 /* engine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = engine.hpp; sourceTree = "<group>"; };
 		62F2369F1B67616B00009DFF /* npc.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = npc.hpp; sourceTree = "<group>"; };
+		62F5F8DF1CE2C0CE00EECA12 /* npc_model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = npc_model.cpp; sourceTree = "<group>"; };
+		62F5F8E01CE2C0CE00EECA12 /* npc_model.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = npc_model.hpp; sourceTree = "<group>"; };
 		62FA58C31CC99E1600641E2C /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
 		62FA58CA1CCB344700641E2C /* kstem.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = kstem.xcodeproj; path = 3rdParty/kstem/kstem.xcodeproj; sourceTree = "<group>"; };
 		62FAE7061611488B0065D358 /* ranker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ranker.hpp; sourceTree = "<group>"; };
@@ -644,7 +648,6 @@
 				62E4E3A31B5DFA9A008440CC /* platform.cpp */,
 				62E4E3A41B5DFA9A008440CC /* platform.hpp */,
 				62CA48071BB0823600A2AA7B /* TrainingCallback.hpp */,
-				62527B5E1BBB06A700767BA7 /* EngineEvent.hpp */,
 			);
 			path = npc;
 			sourceTree = "<group>";
@@ -731,10 +734,15 @@
 				6288C8AC163B5C6200191972 /* js_engine.cpp */,
 				62092D5B16BB22E5003001AC /* scion.hpp */,
 				62092D5A16BB22E5003001AC /* scion.cpp */,
+				62527B5E1BBB06A700767BA7 /* EngineEvent.hpp */,
+				622BF9921B82D472001588C7 /* PlatformJSInterface.cpp */,
+				622BF9931B82D472001588C7 /* PlatformJSInterface.hpp */,
 				62092D5E16BBBD67003001AC /* startup.js */,
 				62A4007416C72BD7000F5033 /* scion.tests.js */,
 				62A4007A16C7310A000F5033 /* scion.js */,
 				62AF79C316CB0C850005CC53 /* utteranceCompiler.js */,
+				62F5F8DF1CE2C0CE00EECA12 /* npc_model.cpp */,
+				62F5F8E01CE2C0CE00EECA12 /* npc_model.hpp */,
 			);
 			path = scripting;
 			sourceTree = "<group>";
@@ -806,8 +814,6 @@
 		62990CC91B6B371F00DEB2E8 /* detail */ = {
 			isa = PBXGroup;
 			children = (
-				622BF9921B82D472001588C7 /* JavaScriptEngineInterface.cpp */,
-				622BF9931B82D472001588C7 /* JavaScriptEngineInterface.hpp */,
 				62C3277F1B9AC258001EB593 /* model_impl.cpp */,
 				6200F7411B883A5100CA121E /* model_impl.hpp */,
 				6200F7451B897D3100CA121E /* ModelIO.hpp */,
@@ -1389,7 +1395,7 @@
 				62AC3BBD1BBC94C80067C540 /* string.cpp in Sources */,
 				620C62831B75764A00FA2953 /* irregular_verbs.cpp in Sources */,
 				62C327771B998A38001EB593 /* ModelWriterXML.cpp in Sources */,
-				622BF9941B82D472001588C7 /* JavaScriptEngineInterface.cpp in Sources */,
+				622BF9941B82D472001588C7 /* PlatformJSInterface.cpp in Sources */,
 				62C327651B9631D4001EB593 /* RankerFactory.cpp in Sources */,
 				62AC3BC01BBC967F0067C540 /* error.cpp in Sources */,
 				620176281606850600FC583D /* model_cpp.cpp in Sources */,
@@ -1409,6 +1415,7 @@
 				6288C8AE163B5C6200191972 /* js_engine.cpp in Sources */,
 				62C3277C1B998A71001EB593 /* ModelWriterText.cpp in Sources */,
 				62E830E71B64752500847135 /* engine.cpp in Sources */,
+				62F5F8E11CE2C0CE00EECA12 /* npc_model.cpp in Sources */,
 				6255E92A1B729A5200EA9402 /* parameters.cpp in Sources */,
 				622EA2EB1604F30400764667 /* weighting.cpp in Sources */,
 				6268B02E1A0579FC00287DF4 /* parsing_cf.cpp in Sources */,
@@ -1466,7 +1473,8 @@
 				62C327781B998A38001EB593 /* ModelWriterXML.cpp in Sources */,
 				620C62841B75764A00FA2953 /* irregular_verbs.cpp in Sources */,
 				62C327661B9631D4001EB593 /* RankerFactory.cpp in Sources */,
-				622BF9951B82D472001588C7 /* JavaScriptEngineInterface.cpp in Sources */,
+				62F5F8E21CE2C0CE00EECA12 /* npc_model.cpp in Sources */,
+				622BF9951B82D472001588C7 /* PlatformJSInterface.cpp in Sources */,
 				6268B0361A057A1800287DF4 /* parsing.cpp in Sources */,
 				62C327721B96329E001EB593 /* WeightingFactory.cpp in Sources */,
 				62C4AA741B7D5B7C00B8A47A /* XMLReporter.cpp in Sources */,
@@ -1538,7 +1546,6 @@
 		62262172198DAD7C00A0AA4E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -1567,7 +1574,6 @@
 					"$(inherited)",
 					"/Users/leuski/Documents/Projects/jerome/3rd_party/nlopt-2.3/build/lib",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.ict.usc.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -1578,7 +1584,6 @@
 		62262173198DAD7C00A0AA4E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -1607,7 +1612,6 @@
 					"$(inherited)",
 					"/Users/leuski/Documents/Projects/jerome/3rd_party/nlopt-2.3/build/lib",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.ict.usc.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -1654,7 +1658,6 @@
 		62527B681BBB490500767BA7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -1698,7 +1701,6 @@
 		62527B691BBB490500767BA7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -1740,7 +1742,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -1763,10 +1764,6 @@
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1777,7 +1774,6 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../build/osx/lib";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = ../build/osx/lib/libnlopt_cxx.a;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
@@ -1793,7 +1789,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -1827,7 +1822,6 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../build/osx/lib";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = ../build/osx/lib/libnlopt_cxx.a;
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
@@ -1858,6 +1852,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 					"__ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES=0",
+					JEROME_INTERNAL_BASIC_REPORT,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1870,12 +1865,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CPLUSPLUSFLAGS = (
-					"$(OTHER_CFLAGS)",
-					"-DJEROME_INTERNAL_BASIC_REPORT",
-					"-DBOOST_UBLAS_NDEBUG",
-					"-DNDEBUG",
-				);
 				SYMROOT = "$(HOME)/Documents/Developer/Build/$(PROJECT_NAME)";
 			};
 			name = Debug;
@@ -1896,6 +1885,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					NDEBUG,
 					"__ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES=0",
+					BOOST_UBLAS_NDEBUG,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1907,7 +1897,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				SYMROOT = "$(HOME)/Documents/Developer/Build/$(PROJECT_NAME)";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1916,7 +1905,6 @@
 		62CA48111BB0859E00A2AA7B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -1949,7 +1937,6 @@
 		62CA48121BB0859E00A2AA7B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -1988,7 +1975,6 @@
 					/usr/include/libxml2,
 					../build/ios/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../3rd_party/libiOSJavaScriptCore-534.27\"",
@@ -2011,7 +1997,6 @@
 					/usr/include/libxml2,
 					../build/ios/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../3rd_party/libiOSJavaScriptCore-534.27\"",
