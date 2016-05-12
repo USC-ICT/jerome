@@ -1,16 +1,16 @@
 //
-//  ALPlatform.h
-//  NPCEditor
+//  ALEngine.h
+//  jerome
 //
-//  Created by Anton Leuski on 10/20/15.
-//  Copyright © 2015 Anton Leuski. All rights reserved.
+//  Created by Anton Leuski on 5/11/16.
+//  Copyright © 2016 Anton Leuski & ICT/USC. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <Jerome/model.h>
 
 JEROME_FRAMEWORK_SYMBOL_EXPORT
-@interface ALPlatform : NSObject
+@interface ALEngine : NSObject
 @property(nonatomic, strong, readonly) ALCollection* _Nullable colleciton;
 
 

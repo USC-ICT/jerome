@@ -10,33 +10,12 @@
 #include <fstream>
 #include <jerome/npc/platform.hpp>
 #import "ObjectiveC++.h"
+#import "model_private.h"
 #import "ALPlatform.h"
 
 using namespace jerome;
 
 
-@implementation ALUtterance
-
-+ (ALUtterance* _Nonnull)utteranceWithUtterance:(const npc::Utterance&)utterance
-{
-  return nil;
-}
-
-+ (ALUtterance* _Nullable)utteranceWithOptionalUtterance:(const optional<npc::Utterance>&)utterance
-{
-  return utterance ? [self utteranceWithUtterance:*utterance] : nil;
-}
-
-@end
-
-@implementation ALPlatformEvent
-- (NSString*)description
-{
-  return [NSString stringWithFormat:@"PlatformEvent{name=\"%@\", type=\"%@\", "
-          "target=\"%@\", origin=\"%@\", data=%@}", self.name, self.type,
-          self.target, self.origin, self.data];
-}
-@end
 
 @interface ALPlatform ()
 @property (nonatomic, assign) jerome::npc::Platform platform;

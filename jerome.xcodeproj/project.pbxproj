@@ -116,10 +116,18 @@
 		62E4E3A61B5DFA9A008440CC /* platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62E4E3A31B5DFA9A008440CC /* platform.cpp */; };
 		62E830E71B64752500847135 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62E830E51B64752400847135 /* engine.cpp */; };
 		62E830E81B64752500847135 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62E830E51B64752400847135 /* engine.cpp */; };
+		62EAF80B1CE3ABAF00A1BCA9 /* ALEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 62EAF8091CE3ABAF00A1BCA9 /* ALEngine.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		62EAF80C1CE3ABAF00A1BCA9 /* ALEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 62EAF80A1CE3ABAF00A1BCA9 /* ALEngine.mm */; };
+		62EAF8111CE3AE1600A1BCA9 /* model.h in Headers */ = {isa = PBXBuildFile; fileRef = 62EAF80F1CE3AE1600A1BCA9 /* model.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		62EAF8121CE3AE1600A1BCA9 /* model.mm in Sources */ = {isa = PBXBuildFile; fileRef = 62EAF8101CE3AE1600A1BCA9 /* model.mm */; };
 		62F5F8E11CE2C0CE00EECA12 /* npc_model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8DF1CE2C0CE00EECA12 /* npc_model.cpp */; };
 		62F5F8E21CE2C0CE00EECA12 /* npc_model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8DF1CE2C0CE00EECA12 /* npc_model.cpp */; };
 		62F5F8E91CE2C8D500EECA12 /* scripts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8E71CE2C8D500EECA12 /* scripts.cpp */; };
 		62F5F8EA1CE2C8D500EECA12 /* scripts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8E71CE2C8D500EECA12 /* scripts.cpp */; };
+		62F5F8F01CE304BE00EECA12 /* Scion.h in Headers */ = {isa = PBXBuildFile; fileRef = 62F5F8EE1CE304BE00EECA12 /* Scion.h */; };
+		62F5F8F11CE304BE00EECA12 /* Scion.m in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8EF1CE304BE00EECA12 /* Scion.m */; };
+		62F5F9011CE4564900EECA12 /* Macros.h in Headers */ = {isa = PBXBuildFile; fileRef = 62F5F9001CE4555900EECA12 /* Macros.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		62F5F9021CE4564F00EECA12 /* model_private.h in Headers */ = {isa = PBXBuildFile; fileRef = 62EAF8131CE3AF6700A1BCA9 /* model_private.h */; };
 		62FA58C01CC99DED00641E2C /* libjerome.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D21604D43600764667 /* libjerome.a */; };
 		62FA58C11CC99DFB00641E2C /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62262156198C9B6800A0AA4E /* JavaScriptCore.framework */; };
 		62FA58C21CC99E0800641E2C /* libxslt.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CA48201BB087A900A2AA7B /* libxslt.tbd */; };
@@ -451,11 +459,19 @@
 		62E4E3A41B5DFA9A008440CC /* platform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = platform.hpp; sourceTree = "<group>"; };
 		62E830E51B64752400847135 /* engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = engine.cpp; sourceTree = "<group>"; };
 		62E830E61B64752500847135 /* engine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = engine.hpp; sourceTree = "<group>"; };
+		62EAF8091CE3ABAF00A1BCA9 /* ALEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALEngine.h; sourceTree = "<group>"; };
+		62EAF80A1CE3ABAF00A1BCA9 /* ALEngine.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ALEngine.mm; sourceTree = "<group>"; };
+		62EAF80F1CE3AE1600A1BCA9 /* model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = model.h; sourceTree = "<group>"; };
+		62EAF8101CE3AE1600A1BCA9 /* model.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = model.mm; sourceTree = "<group>"; };
+		62EAF8131CE3AF6700A1BCA9 /* model_private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = model_private.h; sourceTree = "<group>"; };
 		62F2369F1B67616B00009DFF /* npc.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = npc.hpp; sourceTree = "<group>"; };
 		62F5F8DF1CE2C0CE00EECA12 /* npc_model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = npc_model.cpp; sourceTree = "<group>"; };
 		62F5F8E01CE2C0CE00EECA12 /* npc_model.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = npc_model.hpp; sourceTree = "<group>"; };
 		62F5F8E71CE2C8D500EECA12 /* scripts.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scripts.cpp; sourceTree = "<group>"; };
 		62F5F8E81CE2C8D500EECA12 /* scripts.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scripts.hpp; sourceTree = "<group>"; };
+		62F5F8EE1CE304BE00EECA12 /* Scion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scion.h; sourceTree = "<group>"; };
+		62F5F8EF1CE304BE00EECA12 /* Scion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Scion.m; sourceTree = "<group>"; };
+		62F5F9001CE4555900EECA12 /* Macros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
 		62FA58C31CC99E1600641E2C /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
 		62FA58CA1CCB344700641E2C /* kstem.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = kstem.xcodeproj; path = 3rdParty/kstem/kstem.xcodeproj; sourceTree = "<group>"; };
 		62FAE7061611488B0065D358 /* ranker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ranker.hpp; sourceTree = "<group>"; };
@@ -793,7 +809,15 @@
 				627818C01CC8322700C344E4 /* ObjectiveC++.h */,
 				627818C11CC8322700C344E4 /* ObjectiveC++.mm */,
 				627818B81CC831C300C344E4 /* Jerome.h */,
+				62F5F8EE1CE304BE00EECA12 /* Scion.h */,
+				62F5F8EF1CE304BE00EECA12 /* Scion.m */,
 				627818BA1CC831C300C344E4 /* Info.plist */,
+				62EAF8091CE3ABAF00A1BCA9 /* ALEngine.h */,
+				62EAF80A1CE3ABAF00A1BCA9 /* ALEngine.mm */,
+				62EAF80F1CE3AE1600A1BCA9 /* model.h */,
+				62EAF8101CE3AE1600A1BCA9 /* model.mm */,
+				62EAF8131CE3AF6700A1BCA9 /* model_private.h */,
+				62F5F9001CE4555900EECA12 /* Macros.h */,
 			);
 			name = Jerome;
 			path = Framework;
@@ -1105,7 +1129,12 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62F5F9021CE4564F00EECA12 /* model_private.h in Headers */,
 				627818C21CC8322700C344E4 /* ALPlatform.h in Headers */,
+				62EAF8111CE3AE1600A1BCA9 /* model.h in Headers */,
+				62F5F9011CE4564900EECA12 /* Macros.h in Headers */,
+				62EAF80B1CE3ABAF00A1BCA9 /* ALEngine.h in Headers */,
+				62F5F8F01CE304BE00EECA12 /* Scion.h in Headers */,
 				627818C41CC8322700C344E4 /* ObjectiveC++.h in Headers */,
 				627818B91CC831C300C344E4 /* Jerome.h in Headers */,
 			);
@@ -1232,6 +1261,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = AL;
+				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Anton Leuski & ICT/USC";
 				TargetAttributes = {
@@ -1448,8 +1478,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62F5F8F11CE304BE00EECA12 /* Scion.m in Sources */,
 				627818C31CC8322700C344E4 /* ALPlatform.mm in Sources */,
+				62EAF8121CE3AE1600A1BCA9 /* model.mm in Sources */,
 				627818C51CC8322700C344E4 /* ObjectiveC++.mm in Sources */,
+				62EAF80C1CE3ABAF00A1BCA9 /* ALEngine.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1772,12 +1805,14 @@
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)";
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)",
+					/usr/include/libxml2,
+				);
 				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
@@ -1788,6 +1823,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -1820,12 +1856,14 @@
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)";
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)",
+					/usr/include/libxml2,
+				);
 				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";

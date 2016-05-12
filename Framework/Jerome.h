@@ -15,5 +15,5 @@ FOUNDATION_EXPORT double JeromeVersionNumber;
 FOUNDATION_EXPORT const unsigned char JeromeVersionString[];
 
 #import <Jerome/ALPlatform.h>
-
+#import <Jerome/ALEngine.h>
 
