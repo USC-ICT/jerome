@@ -33,11 +33,20 @@
 #include <jerome/npc/detail/evaluation.hpp>
 #include <jerome/npc/factories/RankerFactory.hpp>
 
+#include <jerome/npc/parsing.hpp>
+
 #include "engine.hpp"
 
 namespace jerome {
   namespace npc {
     namespace detail {
+
+      void Engine::initialize(const String& locale)
+      {
+        jerome::ir::filter::KStem::init();
+        jerome::ir::filter::Dictionary::init();
+        jerome::Locale::global(locale);
+      }
 
       Engine::Engine()
         : mCollection(cpp::ObjectFactory().makeNew<Collection>())

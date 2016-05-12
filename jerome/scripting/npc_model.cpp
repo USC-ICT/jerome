@@ -81,7 +81,7 @@ namespace jerome {
       AL_JS_EXPORT_MEMBER_METHOD_OF_TYPE_AS(get,
                                             jerome::String (jerome::npc::Utterance::*)(const jerome::String&) const,
                                             "get");
-      // I want expose "put" as "set"
+      // I want to expose "put" as "set"
       AL_JS_EXPORT_MEMBER_METHOD_AS(put, "set");
     }
 

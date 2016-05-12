@@ -37,9 +37,11 @@ namespace jerome {
     namespace detail {
 
       class Engine
-        : public std::enable_shared_from_this<Engine>
+      //        : public std::enable_shared_from_this<Engine>
       {
       public:
+
+        static void initialize(const String& locale = "en_US.UTF8");
 
         Engine();
 

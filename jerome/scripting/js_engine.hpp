@@ -69,8 +69,10 @@ namespace jerome {
       void setEngineEventHandler(const EngineEventHandler& eventHandler);
       void handleEngineEvent(const EngineEvent& event);
       
+      void loadScripts();
+      
     private:
-      typedef std::enable_shared_from_this<Engine> my_shared_from_this_type;
+      typedef std::enable_shared_from_this<Engine> Me;
 
       js::Context mContext;
       EngineEventHandler	mEngineEventHandler;

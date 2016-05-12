@@ -39,17 +39,6 @@ namespace jerome {
       : mScriptingInited(false)
       , mEngineEventHandler([](const EngineEvent&){})
 		{
-			context()["__scionPlatform"]	=
-        context().newObjectOfNativeClass<jerome::scripting::ScionPlatform>();
-
-			evaluateScript(SCION_SCRIPT.source,
-                     SCION_SCRIPT.name);
-
-      evaluateScript(JEROME_STARTUP_SCRIPT.source,
-                     JEROME_STARTUP_SCRIPT.name);
-
-      evaluateScript(JEROME_UTTERANCE_COMPILER_SCRIPT.source,
-                     JEROME_UTTERANCE_COMPILER_SCRIPT.name);
 		}
 		
     Engine::~Engine()
@@ -57,10 +46,25 @@ namespace jerome {
       
     }
     
+    void Engine::loadScripts()
+    {
+      context()["__scionPlatform"]	=
+      context().newObjectOfNativeClass<jerome::scripting::ScionPlatform>();
+      
+      evaluateScript(SCION_SCRIPT.source,
+                     SCION_SCRIPT.name);
+      
+      evaluateScript(JEROME_STARTUP_SCRIPT.source,
+                     JEROME_STARTUP_SCRIPT.name);
+      
+      evaluateScript(JEROME_UTTERANCE_COMPILER_SCRIPT.source,
+                     JEROME_UTTERANCE_COMPILER_SCRIPT.name);
+    }
+    
 		void Engine::evaluateScript(const String& script, const String& sourceURL,
                                 int startingLineNumber,
 									const std::function<void(const js::Value&)>& callback) {
-      auto weakSelf = std::weak_ptr<Engine>(my_shared_from_this_type::shared_from_this());
+      auto weakSelf = std::weak_ptr<Engine>(Me::shared_from_this());
 			performBlock([=]() mutable {
         if (auto self = weakSelf.lock()) {
           callback(self->context().evaluateScript(script, sourceURL,
@@ -99,7 +103,7 @@ namespace jerome {
       if (mScriptingInited) return;
       mScriptingInited = true;
       context()["classifier"] = context().newObjectOfNativeClass(
-        PlatformJSInterface(my_shared_from_this_type::shared_from_this()));
+        PlatformJSInterface(Me::shared_from_this()));
     }
     
     void Engine::setEngineEventHandler(const EngineEventHandler& eventHandler)
@@ -116,7 +120,7 @@ namespace jerome {
                             const StringStringMap& inData,
                             const String& inMachineName)
     {
-      auto weakSelf = std::weak_ptr<Engine>(my_shared_from_this_type::shared_from_this());
+      auto weakSelf = std::weak_ptr<Engine>(Me::shared_from_this());
       performBlock([=] () {
         if (auto self = weakSelf.lock()) {
           self->initializeScripting();
@@ -130,7 +134,7 @@ namespace jerome {
                                       const load_dialogue_manager_callback& cb)
     {
       std::string s(std::istreambuf_iterator<char>(is), {});
-      auto weakSelf = std::weak_ptr<Engine>(my_shared_from_this_type::shared_from_this());
+      auto weakSelf = std::weak_ptr<Engine>(Me::shared_from_this());
       performBlock([=] () {
         if (auto self = weakSelf.lock()) {
           self->initializeScripting();

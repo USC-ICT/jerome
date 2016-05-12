@@ -31,18 +31,13 @@ namespace jerome {
 	
 		void Platform::initialize(const String& locale)
 		{
-			jerome::ir::filter::KStem::init();
-			jerome::ir::filter::Dictionary::init();
-#if !defined(__ANDROID__) // For some reason this line causes crash in Android.
-			jerome::Locale::global(locale);
-#else
-#warning "Please find the reason why it crashes"
-#endif
+      detail::Engine::initialize(locale);
 		}
 		
 		Platform::Platform()
 		: parent_type(std::make_shared<scripting::Engine>())
 		{
+      implementation().loadScripts();
 		}
 		
 		Platform::~Platform()
