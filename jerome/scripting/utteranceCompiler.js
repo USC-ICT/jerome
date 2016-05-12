@@ -1,7 +1,6 @@
 function Compiler(inName)
 {
   this._out = "";
-  this.log = scion.ext.platformModule.platform.log;
   this.name = (inName) ? inName : ("s" + new Date().getTime());
   this._counter = 0;
   this._scxml = false;
@@ -33,33 +32,35 @@ Compiler.prototype = {
 
   _assertOutIsNotSCXML : function() {
     if (this._scxml) {
-      this.log("Cannot combine SCXML and JS utterance code.");
+      pm.log("Cannot combine SCXML and JS utterance code.");
       return false;
     }
     return true;
   },
 
   begin : function() {
-    if (debugTrace) this.log("begin");
+    if (debugTrace) pm.log("begin");
 
   },
 
   end : function() {
-    if (debugTrace) this.log("end");
-
+    if (debugTrace) pm.log("end");
   },
 
   schedule : function(inUtteranceID, inEvent) {
-    if (debugTrace) this.log("schedule", inUtteranceID);
+
+    if (debugTrace) {
+      pm.log("schedule", inUtteranceID);
+    }
 
     if (inEvent != null) {
-      this.log("cannot schedule on non null event", inUtteranceID);
+      pm.log("cannot schedule on non null event", inUtteranceID);
       return;
     }
 
     var utt = classifier.utteranceWithID(inUtteranceID);
     if (utt == null) {
-      this.log("no utterance with ID", inUtteranceID);
+      pm.log("no utterance with ID", inUtteranceID);
       return;
     }
 
@@ -115,10 +116,10 @@ Compiler.prototype = {
   },
 
   rest : function(inDelaySeconds, inEvent) {
-    if (debugTrace) this.log("rest", inDelaySeconds);
+    if (debugTrace) pm.log("rest", inDelaySeconds);
 
     if (inEvent != null) {
-      this.log("cannot rest on non null event", inDelaySeconds);
+      pm.log("cannot rest on non null event", inDelaySeconds);
       return;
     }
 
@@ -159,10 +160,10 @@ Compiler.prototype = {
   },
 
   send : function(inCommand, inEvent) {
-    if (debugTrace) this.log("send", inCommand);
+    if (debugTrace) pm.log("send", inCommand);
 
     if (inEvent != null) {
-      this.log("cannot send on non null event", inCommand);
+      pm.log("cannot send on non null event", inCommand);
       return;
     }
 

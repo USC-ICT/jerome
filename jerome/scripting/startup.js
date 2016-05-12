@@ -160,12 +160,21 @@ function triggerUtterance(inExternalID, inName, cb)
   }
 
   var callback = function() {
+    if (debugTrace) {
+      pm.log("generating utterance FSA");
+    }
+
     engine = new Compiler(inName);
+
+    if (debugTrace) {
+      pm.log("got compiler");
+    }
+
     engine.schedule(inExternalID);
 
     if (debugTrace) {
       pm.log("output:", engine.output());
-      pm.log("asking the scion to read scxml from the output")
+      pm.log("asking the scion to read scxml from the output");
     }
 		
 		initStateMachineWithString(engine.output(), null, "_sm");
