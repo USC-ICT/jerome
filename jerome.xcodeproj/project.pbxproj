@@ -464,6 +464,8 @@
 		62EAF80F1CE3AE1600A1BCA9 /* model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = model.h; sourceTree = "<group>"; };
 		62EAF8101CE3AE1600A1BCA9 /* model.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = model.mm; sourceTree = "<group>"; };
 		62EAF8131CE3AF6700A1BCA9 /* model_private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = model_private.h; sourceTree = "<group>"; };
+		62EAF81E1CE6AD7900A1BCA9 /* matrix_boost.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = matrix_boost.hpp; sourceTree = "<group>"; };
+		62EAF8211CE6AD8F00A1BCA9 /* matrix_eigen.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = matrix_eigen.hpp; sourceTree = "<group>"; };
 		62F2369F1B67616B00009DFF /* npc.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = npc.hpp; sourceTree = "<group>"; };
 		62F5F8DF1CE2C0CE00EECA12 /* npc_model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = npc_model.cpp; sourceTree = "<group>"; };
 		62F5F8E01CE2C0CE00EECA12 /* npc_model.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = npc_model.hpp; sourceTree = "<group>"; };
@@ -472,6 +474,7 @@
 		62F5F8EE1CE304BE00EECA12 /* Scion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scion.h; sourceTree = "<group>"; };
 		62F5F8EF1CE304BE00EECA12 /* Scion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Scion.m; sourceTree = "<group>"; };
 		62F5F9001CE4555900EECA12 /* Macros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
+		62F5F9041CE6473500EECA12 /* EigenSparseVectorPlugin.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = EigenSparseVectorPlugin.hpp; sourceTree = "<group>"; };
 		62FA58C31CC99E1600641E2C /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
 		62FA58CA1CCB344700641E2C /* kstem.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = kstem.xcodeproj; path = 3rdParty/kstem/kstem.xcodeproj; sourceTree = "<group>"; };
 		62FAE7061611488B0065D358 /* ranker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ranker.hpp; sourceTree = "<group>"; };
@@ -565,6 +568,8 @@
 				62AC3BC21BBC98090067C540 /* macros.hpp */,
 				620A3F07197E4EA8000400E3 /* matrix.cpp */,
 				620A3F05197E4DDE000400E3 /* matrix.hpp */,
+				62EAF81E1CE6AD7900A1BCA9 /* matrix_boost.hpp */,
+				62EAF8211CE6AD8F00A1BCA9 /* matrix_eigen.hpp */,
 				62AC3BC11BBC971E0067C540 /* optional.hpp */,
 				62FF24891B90C5CB00C3504C /* ordered_multimap.hpp */,
 				620A3F0A197E50FC000400E3 /* random.hpp */,
@@ -572,6 +577,7 @@
 				62AC3BBC1BBC94C80067C540 /* string.cpp */,
 				620A3F06197E4DF9000400E3 /* string.hpp */,
 				62D8A8291BF699F9005355B0 /* regex.hpp */,
+				62F5F9041CE6473500EECA12 /* EigenSparseVectorPlugin.hpp */,
 			);
 			path = type;
 			sourceTree = "<group>";
@@ -1812,6 +1818,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
+					"$(SRCROOT)/../build/osx/include",
 				);
 				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1863,6 +1870,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
+					"$(SRCROOT)/../build/osx/include",
 				);
 				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";

@@ -57,9 +57,11 @@ namespace jerome {
               const Index&  index(inContext.index());
               const typename Index::Field&  field = index.findField(name());
               const typename Index::Field&  query = inQuery.findField(name());
-              const typename Index::Field::DocumentLengths::size_type ndocs =
-                field.documentLengths().size();
-              WeightMatrix  bw(ndocs, inQuery.documentCount(), 0);
+              const typename Index::Field::size_type ndocs = field.documentLengths().size();
+              MatrixSize size;
+              size.rowCount = ndocs;
+              size.columnCount = inQuery.documentCount();
+              WeightMatrix  bw = WeightMatrixZero(size);
 
               // noinspection StringEquality
               for (const auto& te : query.terms()) {
@@ -85,8 +87,9 @@ namespace jerome {
 
                 const typename Index::Term&       queryTermInfo(te.second);
                 SparseWeightVector    w =
-                  log_plus1(document_weight<Index>(ti, field) / wIndep);
-                bw += outer_prod(w, queryTermInfo.tfs());
+                  JEROME_MATRIX_ELEMENT_LOG_PLUS_1(document_weight<Index>(ti, field) / wIndep);
+                bw += JEROME_MATRIX_OUTER_PROD(w,
+                        JEROME_MATRIX_CAST(queryTermInfo.tfs(), WeightValue));
 
                 //			for(Term::Frequencies::const_iterator termDocIterator =
                 // ti.tfs().begin(), iend = ti.tfs().end(); termDocIterator !=
@@ -115,18 +118,25 @@ namespace jerome {
               const double  min_exp =
                 std::numeric_limits<double>::min_exponent * log(2) + 1;
 
-              for (WeightMatrix::size_type j = 0, n = bw.size2(); j < n; ++j) {
-                WeightMatrixColumn column(bw, j);
-                double  max   = *boost::max_element(column);
+              typedef traits<WeightMatrix>::size_type IndexType;
+              
+              for (IndexType j = 0, n = size.columnCount; j < n; ++j) {
+                auto theColumn = column(bw, j);
+
+                double  max   = JEROME_MATRIX_MAX_ELEMENT(theColumn);
+                
                 //		std::cout << max << " " << min_exp << " " <<
                 // std::numeric_limits<double>::min_exponent << " " << log(2) <<
                 // std::endl;
-                for (WeightVector::value_type& i : column) {
+                double sum = 0;
+                for (IndexType k = 0, nk = theColumn.size(); k < nk; ++k) {
                   //			std::cout << i << " ";
-                  double x = i - max;
-                  i = x < min_exp ? 0 : exp(x);
+                  double x = theColumn(k) - max;
+                  x = x < min_exp ? 0 : exp(x);
+                  theColumn(k) = x;
+                  sum += x;
                 }
-                column /= sum(column);
+                theColumn /= sum;
               }
 
               return bw;

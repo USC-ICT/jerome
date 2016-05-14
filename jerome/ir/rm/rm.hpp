@@ -234,7 +234,10 @@ namespace jerome { namespace ir { namespace rm {
 				mAffinityMatrix = jerome::shared_ptr<FastMatrix>(new FastMatrix(tmp.size1(), tmp.size2()));
 				viennacl::copy(tmp, *mAffinityMatrix);
 #else
-				auto x = std::make_shared<FastMatrix>(model().expandDocumentMatrix(document().weightings().computeAffinity(model().documentWeightingContext())));
+				auto x = std::make_shared<FastMatrix>(
+          model().expandDocumentMatrix(
+            document().weightings().computeAffinity(
+              model().documentWeightingContext())));
 				mAffinityMatrix = x;
 				return *x;
 #endif
@@ -243,7 +246,8 @@ namespace jerome { namespace ir { namespace rm {
 		}
 		
 		WeightMatrix	initialWeight(const WeightMatrix& inQueryModel) {
-			return document().weightings().computeAffinityInitialWeight(model().documentWeightingContext(), inQueryModel);
+			return document().weightings().computeAffinityInitialWeight(
+                      model().documentWeightingContext(), inQueryModel);
 		}
 
 				
@@ -256,7 +260,8 @@ namespace jerome { namespace ir { namespace rm {
 			const FastMatrix&				documentWeight	= this->documentWeight(inQueryModel);
 			const WeightMatrix&				initialWeight	= this->initialWeight(inQueryModel);
 			
-			result_type						ranked_list(inQueryModel.size2());
+      MatrixSize queryModelSize(inQueryModel);
+			result_type						ranked_list(queryModelSize.columnCount);
 			
 			//					std::cout << inQueryModel.size() << " " << documentWeight->size1() << " " << documentWeight->size2() << " " << initialWeight->size() << std::endl;
 			
@@ -271,13 +276,22 @@ namespace jerome { namespace ir { namespace rm {
 			WeightMatrix	scores(vcl_d.size1(), vcl_d.size2());
 			viennacl::copy(vcl_d, scores);
 #else
-			WeightMatrix	scores = prod(documentWeight, inQueryModel) + initialWeight;
+			WeightMatrix	scores = JEROME_MATRIX_PROD(documentWeight, inQueryModel) + initialWeight;
 #endif
+      std::cout << documentWeight(0,0) << " "
+        << documentWeight(0,1) << " "
+      << documentWeight(1,0) << std::endl;
+      std::cout << inQueryModel(0,0) << " "
+      << inQueryModel(1,0) << std::endl;
+      std::cout << initialWeight(0,0) << " "
+      << initialWeight(1,0) << std::endl;
+      
 			//					WeightVector	scores = prec_prod(documentWeight, inQueryModel) + initialWeight;
 			
-			for(std::size_t i = 0, n = scores.size1(); i < n; ++i) {
+      MatrixSize scoresSize(scores);
+			for(std::size_t i = 0, n = scoresSize.rowCount; i < n; ++i) {
 				auto theDoc(*inDocIterator++);
-				for(std::size_t j = 0, m = scores.size2(); j < m; ++j) {
+				for(std::size_t j = 0, m = scoresSize.columnCount; j < m; ++j) {
 					ranked_list[j].push_back(typename ranked_list_type::value_type(scores(i, j), theDoc));
 				}
 			}

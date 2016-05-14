@@ -69,30 +69,36 @@ struct Ranker : public jerome::ir::rm::Ranker<Q, A, Ranker<Q,A,L>> {
 	}
 	
 	WeightMatrix expandQueryMatrix(const WeightMatrix& queryMatrix) const {
-		WeightMatrix	result(links().size(), queryMatrix.size2());
-		for(size_t i = 0, n = links().size(); i < n; ++i) {
-			row(result, i) = row(queryMatrix, links()[i].queryIndex);
+    MatrixSize size(queryMatrix);
+    size.rowCount = links().size();
+    
+		WeightMatrix	result(size.rowCount, size.columnCount);
+		for(size_t i = 0, n = size.rowCount; i < n; ++i) {
+			JEROME_MATRIX_ROW(result, i) = JEROME_MATRIX_CONST_ROW(queryMatrix, links()[i].queryIndex);
 		}
-		for(std::size_t i = 0, n = result.size2(); i < n; ++i) {
-			WeightMatrixColumn c(result, i);
-			c /= sum(c);
+		for(std::size_t i = 0, n = size.columnCount; i < n; ++i) {
+			auto c = JEROME_MATRIX_COLUMN(result, i);
+			c /= JEROME_MATRIX_ELEMENT_SUM(c);
 		}
 		return result;
 	}
 	
 	WeightMatrix expandDocumentMatrix(const WeightMatrix& documentMatrix) const {
-		WeightMatrix result(documentMatrix.size1(), links().size());
-		for(size_t i = 0, n = links().size(); i < n; ++i) {
-			column(result, i) = column(documentMatrix, links()[i].documentIndex);
+    MatrixSize size(documentMatrix);
+    size.columnCount = links().size();
+
+    WeightMatrix result(size.rowCount, size.columnCount);
+		for(size_t i = 0, n = size.columnCount; i < n; ++i) {
+			JEROME_MATRIX_COLUMN(result, i) = JEROME_MATRIX_CONST_COLUMN(documentMatrix, links()[i].documentIndex);
 		}
 		return result;
 	}
 	
 	SparseWeightVector expandDocumentVector(const SparseWeightVector& documentVector) const {
 		SparseWeightVector	result(links().size());
-		for(auto i = documentVector.begin(), e = documentVector.end(); i != e; ++i) {
-			for(auto j : mIndexesOfQueriesLinkedToDocumentWithIndex[i.index()]) {
-				result[j] = *i;
+    JEROME_FOR_EACH_ELEMENT_OF_SPARSE_VECTOR(i, documentVector, SparseWeightVector) {
+			for(auto j : mIndexesOfQueriesLinkedToDocumentWithIndex[JEROME_SPARSE_VECTOR_ELEMENT_INDEX(i)]) {
+        JEROME_MATRIX_SET_VECTOR_ELEMENT_AT_INDEX_TO(result, j, JEROME_SPARSE_VECTOR_ELEMENT_VALUE(i));
 			}
 		}
 		return result;

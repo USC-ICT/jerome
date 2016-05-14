@@ -23,22 +23,31 @@
 #ifndef __jerome_type_matrix_hpp__
 #define __jerome_type_matrix_hpp__
 
+#define JEROME_MATRIX_BOOST 1
+#define JEROME_MATRIX_EIGEN 2
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wshorten-64-to-32"
+#ifndef JEROME_MATRIX
+#define JEROME_MATRIX JEROME_MATRIX_EIGEN
+//#define JEROME_MATRIX JEROME_MATRIX_BOOST
+#endif
 
+namespace jerome {
+  typedef double WeightValue;
+}
 
-#define BOOST_UBLAS_MOVE_SEMANTICS
+#if JEROME_MATRIX == JEROME_MATRIX_BOOST
 
-#include <boost/numeric/ublas/vector_sparse.hpp>
-#include <boost/numeric/ublas/vector.hpp>
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/matrix_proxy.hpp>
-#include <boost/numeric/ublas/operation.hpp>
-#include <boost/numeric/ublas/symmetric.hpp>
-#include <jerome/math/matrix_functions.hpp>
+#include <jerome/type/matrix_boost.hpp>
 
-#pragma clang diagnostic pop
+#elif JEROME_MATRIX == JEROME_MATRIX_EIGEN
+
+#include <jerome/type/matrix_eigen.hpp>
+
+#else
+
+#error "Use JEROME_MATRIX to select matrix implementation"
+
+#endif
 
 //#define VIENNACL_WITH_OPENCL
 
@@ -48,56 +57,14 @@
 #endif
 
 namespace jerome {
-
-	template<class T> using Vector = boost::numeric::ublas::vector<T>;
-	// sparse array
-	template<class T> using SparseVector = boost::numeric::ublas::compressed_vector<T>;
-
-	template<class T> using ScalarVector = boost::numeric::ublas::vector<T>;
-	
-	typedef boost::numeric::ublas::range												Range;
-	typedef boost::numeric::ublas::matrix<float, boost::numeric::ublas::column_major>	WeightMatrix;
-	typedef boost::numeric::ublas::matrix_range<WeightMatrix>							WeightMatrixRange;
-	typedef boost::numeric::ublas::matrix_row<WeightMatrix>								WeightMatrixRow;
-	typedef boost::numeric::ublas::matrix_row<const WeightMatrix>						WeightMatrixConstRow;
-	typedef boost::numeric::ublas::matrix_column<WeightMatrix>							WeightMatrixColumn;
-	typedef boost::numeric::ublas::matrix_column<const WeightMatrix>					WeightMatrixConstColumn;
-	typedef boost::numeric::ublas::vector<WeightMatrix::value_type>						WeightVector;
-	typedef boost::numeric::ublas::compressed_vector<WeightMatrix::value_type>			SparseWeightVector;
-	typedef boost::numeric::ublas::symmetric_matrix<WeightMatrix::value_type,
-	boost::numeric::ublas::upper>			SymmetricWeightMatrix;
-	typedef boost::numeric::ublas::matrix_range<SymmetricWeightMatrix>					SymmetricWeightMatrixRange;
-	typedef std::pair<WeightMatrix::size_type, WeightMatrix::size_type>					MatrixSize;
-
-	
 #ifdef VIENNACL_WITH_OPENCL
-	typedef	viennacl::matrix<float, viennacl::column_major>	FastMatrix;
-	typedef viennacl::vector<float>							FastVector;
+  typedef	viennacl::matrix<float, viennacl::column_major>	FastMatrix;
+  typedef viennacl::vector<float>							FastVector;
 #else
-	typedef	WeightMatrix	FastMatrix;
-	typedef WeightVector	FastVector;
+  typedef	WeightMatrix	FastMatrix;
+  typedef WeightVector	FastVector;
 #endif
-	
-	typedef boost::numeric::ublas::scalar_matrix<WeightMatrix::value_type>	WeightScalarMatrix;
-	// the vector of a constant.
-	typedef boost::numeric::ublas::scalar_vector<WeightMatrix::value_type>	WeightScalarVector;
-	
 }
-
-namespace boost { namespace numeric { namespace ublas {
-	
-	std::ostream& operator << (std::ostream& outs, const jerome::WeightMatrix& obj);
-	std::ostream& operator << (std::ostream& outs, const jerome::SymmetricWeightMatrix& obj);
-	std::ostream& operator << (std::ostream& outs, const jerome::SymmetricWeightMatrixRange& obj);
-	std::ostream& operator << (std::ostream& outs, const jerome::WeightVector& obj);
-	
-	// fascinating shit: when looking for an overloaded operator, compiler looks into the
-	// namespace of the object parameter. Aparently, if you have a typedef, the compiler
-	// ignores the namespace of the typedef and goes directly for the namespace of the class used
-	// in the typedef. in this case it's boost:numeric::ublas.
-	
-	// if you do not put the operator in the namespace, the compiler will not find it.
-}}}
 
 
 #endif // defined __jerome_type_matrix_hpp__

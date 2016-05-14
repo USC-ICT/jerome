@@ -53,13 +53,15 @@ namespace jerome {
             {
               const Index&  index(inContext.index());
               const typename Index::Field&  field = index.findField(name());
-              const typename Index::Field::DocumentLengths::size_type ndocs =
-                field.documentLengths().size();
+              const typename Index::Field::size_type ndocs = field.documentLengths().size();
 
-              WeightMatrix  ai_log_aj(ndocs, ndocs, 0);
+              MatrixSize size;
+              size.rowCount = ndocs;
+              size.columnCount = ndocs;
+              WeightMatrix  ai_log_aj = WeightMatrixZero(size);
 
               //		WeightVector	af(ndocs, 0.0);
-              WeightVector  cfs(ndocs, 0.0);
+              WeightVector  cfs = WeightVectorZero(ndocs);
 
               for (const auto& te : field.terms()) {
                 const typename Index::Term&   term(te.second);
@@ -95,27 +97,39 @@ namespace jerome {
                 //			ai_log_aj += outer_prod(col_stat_a_log_vector, af);
 
                 for (uint32_t i = 0; i < ndocs; ++i) {
-                  const double the_log = af(i) == 0 ? col_stat_a_log : log(af(
-                      i) + col_stat_a);
+                  cfs(i) += col_stat_a_log * col_stat_a;
 
+                  JEROME_FOR_EACH_ELEMENT_OF_SPARSE_VECTOR(de, af, SparseWeightVector) {
+                    ai_log_aj(i, JEROME_SPARSE_VECTOR_ELEMENT_INDEX(de)) +=
+                      col_stat_a_log * JEROME_SPARSE_VECTOR_ELEMENT_VALUE(de);
+                  }
+                }
+
+                JEROME_FOR_EACH_ELEMENT_OF_SPARSE_VECTOR(ee, af, SparseWeightVector) {
+                  const double ee_val = JEROME_SPARSE_VECTOR_ELEMENT_VALUE(ee);
+                  traits<WeightMatrix>::size_type ee_index = JEROME_SPARSE_VECTOR_ELEMENT_INDEX(ee);
+
+                  const double the_log = log(ee_val + col_stat_a) - col_stat_a_log;
+                  
                   // I'm storing the part which is j-independent in an array
                   // that way I need to only iterate thru documents that contain
                   // term te,
                   // and add the j-independent part at the end of the method
-
-                  cfs(i) += the_log * col_stat_a;
-
+                  
+                  cfs(ee_index) += the_log * col_stat_a;
+                  
                   //				WeightMatrixRow	row(ai_log_aj, i);
                   //				row += the_log * af;
 
-                  for (auto de = af.begin(), end = af.end(); de != end; ++de) {
-                    ai_log_aj(i, de.index()) += the_log * (*de);
+                  JEROME_FOR_EACH_ELEMENT_OF_SPARSE_VECTOR(de, af, SparseWeightVector) {
+                    ai_log_aj(ee_index, JEROME_SPARSE_VECTOR_ELEMENT_INDEX(de)) +=
+                      the_log * JEROME_SPARSE_VECTOR_ELEMENT_VALUE(de);
                   }
                 }
 
               }
 
-              ai_log_aj += outer_prod(cfs, WeightScalarVector(ndocs, 1));
+              ai_log_aj += JEROME_MATRIX_OUTER_PROD(cfs, WeightVectorOnes(ndocs));
 
               //		for(uint32_t i = 0; i < ndocs; ++i) {
               //			row(ai_log_aj, i) += WeightScalarVector(ndocs, cfs(i));
@@ -145,9 +159,10 @@ namespace jerome {
             {
               const Index&  index(inContext.index());
               const typename Index::Field&  field = index.findField(name());
-              const typename Index::Field::DocumentLengths::size_type ndocs =
-                field.documentLengths().size();
-              return WeightMatrix(ndocs, inModel.size2(), 0);
+              const typename Index::Field::size_type ndocs = field.documentLengths().size();
+              MatrixSize size(inModel);
+              size.rowCount = ndocs;
+              return WeightMatrixZero(size);
             }
 
           };

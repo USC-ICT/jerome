@@ -55,14 +55,6 @@ namespace jerome { namespace ir {
 		struct field_not_found_exception : public Exception { using Exception::Exception; };
 		struct cannot_insert_field : public Exception { using Exception::Exception; };
 		
-		Index::size_type	documentCount() const {
-			Index::size_type	count	= 0;
-			for(const typename Fields::value_type& i : fields()) {
-				count = std::max(count, i.second.documentCount());
-			}
-			return count;
-		}
-		
 		class Term {
 		public:
 			
@@ -71,8 +63,8 @@ namespace jerome { namespace ir {
 			// locations because it is easier to a. operate on, when frequencies are
 			// just a vector, b. customize -- avoid generating locations when they are not
 			// needed.
-			typedef SparseVector<freq_type>		Frequencies;
-			typedef Frequencies::size_type				size_type;
+			typedef SparseVector<freq_type>         Frequencies;
+			typedef traits<Frequencies>::size_type  size_type;
 			
 		private:
 			size_type		mCollectionCount; // SUM tf
@@ -84,7 +76,7 @@ namespace jerome { namespace ir {
 			Term() : mCollectionCount(0), mDocumentCount(0) {}
 			
 			explicit Term(size_type inDocumentID, const Token& inToken)
-			: mCollectionCount(0), mDocumentCount(0)
+			: mCollectionCount(0), mDocumentCount(0), mFrequencies(0)
 			{
 				add(inDocumentID, inToken);
 			}
@@ -103,26 +95,25 @@ namespace jerome { namespace ir {
 			
 			void	add(size_type inDocumentID, const Token& inToken) {
 				if (inDocumentID >= mFrequencies.size())
-					mFrequencies.resize(inDocumentID+1);
+					JEROME_MATRIX_VECTOR_RESIZE(mFrequencies, inDocumentID+1);
 				
-				if (mFrequencies[inDocumentID] == 0)
-					++mDocumentCount;
-				
-				mFrequencies[inDocumentID] = mFrequencies[inDocumentID] + 1;
+				freq_type count = (JEROME_MATRIX_INCREMENT_VECTOR_ELEMENT_AT_INDEX(mFrequencies, inDocumentID));
+        if (count == 1) ++mDocumentCount;
+        
 				++mCollectionCount;
 			}
 			
 			void	addTerm(const Term& inTerm, std::size_t inOffset, std::size_t inCount) {
-				mFrequencies.resize(inOffset+inCount);
 				mDocumentCount += inTerm.mDocumentCount;
 				mCollectionCount += inTerm.mCollectionCount;
-				for(auto i = inTerm.mFrequencies.begin(), e = inTerm.mFrequencies.end(); i != e; ++i) {
-					mFrequencies(i.index()+inOffset) = *i;
-				}
+
+        JEROME_MATRIX_VECTOR_RESIZE(mFrequencies, inOffset+inCount);
+        JEROME_MATRIX_APPEND_VECTOR_TO_VECTOR(inTerm.mFrequencies,
+                                              mFrequencies, inOffset);
 			}
 			
 			void	optimize(Index& inIndex, Field& inField) {
-				mFrequencies.resize(inIndex.documentCount());
+        JEROME_MATRIX_VECTOR_RESIZE(mFrequencies, (size_type)inIndex.documentCount());
 			}
 		};
 		
@@ -131,7 +122,7 @@ namespace jerome { namespace ir {
 		public:
 			typedef StringMap<Term>	Terms;
 			typedef Vector<uint32_t>	DocumentLengths;
-			typedef std::size_t				size_type;
+      typedef traits<DocumentLengths>::size_type			size_type;
 			
 		private:
 			Terms			mTerms;
@@ -141,7 +132,10 @@ namespace jerome { namespace ir {
 		public:
 			
 			explicit Field()
-			: mTotalTermCount(0) {}
+			: mTotalTermCount(0)
+      , mDocumentLengths((int)0)
+      {
+      }
 			
 			// all terms
 			const Terms&			terms()				const { return mTerms; }
@@ -168,10 +162,9 @@ namespace jerome { namespace ir {
 					}
 					p->second.addTerm(t.second, inOffset, inCount);
 				}
-				mDocumentLengths.resize(inOffset+inCount);
-				for(auto i = inField.mDocumentLengths.begin(), e = inField.mDocumentLengths.end(); i != e; ++i) {
-					mDocumentLengths(i.index()+inOffset) = *i;
-				}
+        JEROME_MATRIX_VECTOR_RESIZE(mDocumentLengths, inOffset+inCount);
+        JEROME_MATRIX_APPEND_VECTOR_TO_VECTOR(inField.mDocumentLengths,
+                                              mDocumentLengths, inOffset);
 				mTotalTermCount += inField.mTotalTermCount;
 			}
 			
@@ -185,19 +178,33 @@ namespace jerome { namespace ir {
 				} else {
 					p->second.add(inDocumentID, inToken);
 				}
-				if (inDocumentID >= mDocumentLengths.size())
-					mDocumentLengths.resize(inDocumentID+1);
-				mDocumentLengths[inDocumentID] = mDocumentLengths[inDocumentID] + 1;
-				++mTotalTermCount;
+
+        if (inDocumentID >= mDocumentLengths.size()) {
+          JEROME_MATRIX_VECTOR_RESIZE(mDocumentLengths, inDocumentID+1);
+          JEROME_MATRIX_SET_VECTOR_ELEMENT_AT_INDEX_TO(mDocumentLengths, inDocumentID, 0);
+        }
+        JEROME_MATRIX_INCREMENT_VECTOR_ELEMENT_AT_INDEX(mDocumentLengths,
+                                                        inDocumentID);
+        ++mTotalTermCount;
 			}
 			
 			typename Term::size_type	addDocument() {
-				mDocumentLengths.resize(mDocumentLengths.size()+1);
-				return mDocumentLengths.size()-1;
+        auto newDocumentIndex  = mDocumentLengths.size();
+        JEROME_MATRIX_VECTOR_RESIZE(mDocumentLengths, newDocumentIndex+1);
+        JEROME_MATRIX_SET_VECTOR_ELEMENT_AT_INDEX_TO(mDocumentLengths, newDocumentIndex, 0);
+				return (typename Term::size_type)newDocumentIndex;
 			}
 			
 		};
 		
+    typename Index::Field::size_type	documentCount() const {
+      typename Field::size_type	count	= 0;
+      for(const typename Fields::value_type& i : fields()) {
+        count = std::max(count, i.second.documentCount());
+      }
+      return count;
+    }
+    
 		void	optimize() {
 			for(typename Fields::value_type& f : mFields) {
 				f.second.optimize(*this);

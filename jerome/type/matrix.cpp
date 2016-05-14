@@ -22,11 +22,14 @@
 
 #include <jerome/type/matrix.hpp>
 
+#ifdef __jerome_type_matrix_boost_hpp__
+
 namespace boost { namespace numeric { namespace ublas {
 	
 	std::ostream& operator << (std::ostream& outs, const jerome::WeightMatrix& obj) {
-		for(std::size_t i = 0; i < obj.size1(); ++i) {
-			for(std::size_t j = 0; j < obj.size2(); ++j) {
+    jerome::MatrixSize size(obj);
+		for(std::size_t i = 0; i < size.rowCount; ++i) {
+			for(std::size_t j = 0; j < size.columnCount; ++j) {
 				outs << (obj(i,j)) << " ";
 			}
 			outs << std::endl;
@@ -57,13 +60,16 @@ namespace boost { namespace numeric { namespace ublas {
 	std::ostream& operator << (std::ostream& outs, const jerome::WeightVector& obj) {
 		outs << "{";
 		bool	f = false;
-		for(auto & v : obj) {
+    for(std::size_t i = 0; i < obj.size(); ++i) {
 			if (f) outs << ", ";
 			f = true;
-			outs << v;
+			outs << obj[i];
 		}
 		outs << "}";
 		return outs;
 	}
 	
 }}}
+
+#endif
+

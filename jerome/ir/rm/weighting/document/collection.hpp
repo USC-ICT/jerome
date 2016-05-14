@@ -94,12 +94,17 @@ namespace jerome { namespace ir { namespace rm { namespace weighting { namespace
 		template <class Index>
 		inline MatrixSize	affinityMatrixSize(const Context<Index>& inContext) {
 			auto ndocs = inContext.index().documentCount();
-			return MatrixSize(ndocs, ndocs);
+      MatrixSize size;
+      size.rowCount     = ndocs;
+      size.columnCount  = ndocs;
+			return size;
 		}
 		
 		template <class Index>
 		inline MatrixSize	affinityInitialWeightMatrixSize(const Context<Index>& inContext, const WeightMatrix& inModel) {
-			return MatrixSize(inContext.index().documentCount(), inModel.size2());
+      MatrixSize size(inModel);
+      size.rowCount = inContext.index().documentCount();
+			return size;
 		}
 		
 		template <int N, class this_type>
@@ -119,14 +124,12 @@ namespace jerome { namespace ir { namespace rm { namespace weighting { namespace
 		template <class this_type>
 		struct add_document_helper<0, this_type> {
 			template <class Index>
-			static WeightScalarMatrix computeAffinity(const this_type& sup, const Context<Index>& inContext) {
-				MatrixSize size = affinityMatrixSize(inContext);
-				return WeightScalarMatrix(size.first, size.second, 0);
+			static WeightMatrixScalar computeAffinity(const this_type& sup, const Context<Index>& inContext) {
+				return WeightMatrixZero(affinityMatrixSize(inContext));
 			}
 			template <class Index>
-			static WeightScalarMatrix computeAffinityInitialWeight(const this_type& sup, const Context<Index>& inContext, const WeightMatrix& inModel) {
-				MatrixSize size = affinityInitialWeightMatrixSize(inContext, inModel);
-				return WeightScalarMatrix(size.first, size.second, 0);
+			static WeightMatrixScalar computeAffinityInitialWeight(const this_type& sup, const Context<Index>& inContext, const WeightMatrix& inModel) {
+				return WeightMatrixZero(affinityInitialWeightMatrixSize(inContext, inModel));
 			}
 		};
 		
