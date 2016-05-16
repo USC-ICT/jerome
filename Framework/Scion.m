@@ -301,9 +301,16 @@ static NSString* xpathToNode(xmlNodePtr node) {
   return self;
 }
 
-//typedef void (^ALXMLDocCallback)(NSString* error, ALXMLDoc* doc);
-//typedef void (^ALStringRsrcCallback)(NSString* error, NSString* doc);
-//typedef void (^ALTimerCallback)();
+// this can be called from anywhere, we need to make sure we do not have
+// a race condition when claening up the timers
+- (void)dealloc {
+  NSMutableDictionary* retainedTimers = self.timers;
+  dispatch_async(self.queue, ^{
+    for(dispatch_source_t t in retainedTimers.allValues) {
+      dispatch_source_cancel(t);
+    }
+  });
+}
 
 - (void)getDocumentFromUrl:(NSString*)URL :(JSValue*)cb
 {
@@ -360,6 +367,7 @@ static NSString* xpathToNode(xmlNodePtr node) {
   }
 }
 
+// this will be called from JS queue, no need to worry about serialization
 - (uint32_t)setTimeout:(JSValue*)cb :(double)timeoutMilliSeconds
 {
   dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER,
@@ -391,8 +399,12 @@ static NSString* xpathToNode(xmlNodePtr node) {
   
   dispatch_source_set_event_handler(timer, ^{
     NSLog(@"calling timer callback");
-    [retainedCB.value callWithArguments:[NSArray array]];
-    [weakSelf _clearTimeout:identifier];
+    dispatch_source_cancel(timer);
+    ALScionPlatform* strongSelf = weakSelf;
+    if (strongSelf) {
+      [retainedCB.value callWithArguments:[NSArray array]];
+      [strongSelf _clearTimeout:identifier];
+    }
   });
   
   dispatch_resume(timer);
@@ -400,6 +412,7 @@ static NSString* xpathToNode(xmlNodePtr node) {
   return identifier;
 }
 
+// this will be called from JS queue, no need to worry about serialization
 - (void)clearTimeout:(uint32_t)timeoutID
 {
   [self _clearTimeout:timeoutID];
