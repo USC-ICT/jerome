@@ -22,6 +22,7 @@
 
 #include "async_js.hpp"
 #include <jerome/async.hpp>
+#include <jerome/scripting/javascript.hpp>
 
 namespace jerome {
 	namespace scripting {

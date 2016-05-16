@@ -63,28 +63,24 @@ namespace jerome {
   inline auto WeightMatrixZero(const MatrixSize& size)
   -> decltype(WeightMatrix::Zero(size.rowCount, size.columnCount))
   {
-    std::cout << "zero " << size.rowCount << "," << size.columnCount << std::endl;
     return WeightMatrix::Zero(size.rowCount, size.columnCount);
   }
   
   inline auto WeightMatrixOnes(const MatrixSize& size)
   -> decltype(WeightMatrix::Ones(size.rowCount, size.columnCount))
   {
-    std::cout << "ones " << size.rowCount << "," << size.columnCount << std::endl;
     return WeightMatrix::Ones(size.rowCount, size.columnCount);
   }
   
   inline auto WeightVectorZero(traits<WeightVector>::size_type size)
   -> decltype(WeightVector::Zero(size))
   {
-    std::cout << "zero " << size << std::endl;
     return WeightVector::Zero(size);
   }
   
   inline auto WeightVectorOnes(traits<WeightVector>::size_type size)
   -> decltype(WeightVector::Ones(size))
   {
-    std::cout << "ones " << size << std::endl;
     return WeightVector::Ones(size);
   }
 

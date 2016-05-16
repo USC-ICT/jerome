@@ -208,8 +208,6 @@ namespace jerome { namespace ir {
 			for(typename Fields::value_type& f : mFields) {
 				f.second.optimize(*this);
 			}
-			
-			//		std::cout << *this;
 		}
 		
 		const Field&	findField(const String& inFieldName) const {

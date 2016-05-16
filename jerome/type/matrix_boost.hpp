@@ -236,33 +236,23 @@ namespace jerome {
   
   inline WeightMatrixScalar WeightMatrixZero(const MatrixSize& size)
   {
-    std::cout << "zero " << size.rowCount << "," << size.columnCount << std::endl;
     return WeightMatrixScalar(size.rowCount, size.columnCount, 0);
   }
   
   inline WeightMatrixScalar WeightMatrixOnes(const MatrixSize& size)
   {
-    std::cout << "ones " << size.rowCount << "," << size.columnCount << std::endl;
     return WeightMatrixScalar(size.rowCount, size.columnCount, 1);
   }
   
   inline WeightVectorScalar WeightVectorZero(traits<WeightVector>::size_type size)
   {
-    std::cout << "zero " << size << std::endl;
     return WeightVectorScalar(size, 0);
   }
   
   inline WeightVectorScalar WeightVectorOnes(traits<WeightVector>::size_type size)
   {
-    std::cout << "ones " << size << std::endl;
     return WeightVectorScalar(size, 1);
   }
-  
-#define JEROME_FOR_EACH_ELEMENT_OF_SPARSE_VECTOR(E, V, T) \
-for (auto E = V.begin(), __end = V.end(); E != __end; ++E)
-  
-#define JEROME_SPARSE_VECTOR_ELEMENT_VALUE(E) (*E)
-#define JEROME_SPARSE_VECTOR_ELEMENT_INDEX(E) (E.index())
   
   template <typename M, typename C>
   inline auto column(M&& m, C c)

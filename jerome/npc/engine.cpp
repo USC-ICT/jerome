@@ -22,7 +22,6 @@
 
 #include <fstream>
 
-#include <jerome/scripting/javascript.hpp>
 #include <jerome/npc/model_cpp.hpp>
 #include <jerome/npc/detail/ModelReader.hpp>
 #include <jerome/npc/detail/ModelWriter.hpp>
@@ -131,11 +130,11 @@ namespace jerome {
         
         std::vector<Utterance>  result;
 
-        int count = 0;
+//        int count = 0;
         for (const Ranker::ranked_list_type::value_type& s : rl[0]) {
-          if (count++ < 3) {
-            std::cout << s.score() << " " << s.object().get("id") << std::endl;
-          }
+//          if (count++ < 3) {
+//            std::cout << s.score() << " " << s.object().get("id") << std::endl;
+//          }
           result.push_back(s.object());
         }
 

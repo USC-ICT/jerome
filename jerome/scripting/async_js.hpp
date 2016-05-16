@@ -23,10 +23,16 @@
 #ifndef __jerome_scripting_async_js_hpp__
 #define __jerome_scripting_async_js_hpp__
 
-#include <jerome/async.hpp>
-#include <jerome/scripting/javascript.hpp>
-
 namespace jerome {
+  
+  namespace dispatch {
+    class queue;
+  }
+
+  namespace javascript {
+    class Context;
+  }
+
 	namespace scripting {
 		
 		namespace js = jerome::javascript;

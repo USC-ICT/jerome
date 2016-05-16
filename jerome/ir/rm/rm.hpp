@@ -278,16 +278,7 @@ namespace jerome { namespace ir { namespace rm {
 #else
       WeightMatrix	scores = jerome::prod(documentWeight, inQueryModel) + initialWeight;
 #endif
-      std::cout << documentWeight(0,0) << " "
-        << documentWeight(0,1) << " "
-      << documentWeight(1,0) << std::endl;
-      std::cout << inQueryModel(0,0) << " "
-      << inQueryModel(1,0) << std::endl;
-      std::cout << initialWeight(0,0) << " "
-      << initialWeight(1,0) << std::endl;
       
-			//					WeightVector	scores = prec_prod(documentWeight, inQueryModel) + initialWeight;
-			
       MatrixSize scoresSize(scores);
 			for(std::size_t i = 0, n = scoresSize.rowCount; i < n; ++i) {
 				auto theDoc(*inDocIterator++);
@@ -295,9 +286,8 @@ namespace jerome { namespace ir { namespace rm {
 					ranked_list[j].push_back(typename ranked_list_type::value_type(scores(i, j), theDoc));
 				}
 			}
-			
-			//					std::cout << ranked_list.size() << " - " << ranked_list[0].size() << std::endl;
-			return ranked_list;
+      
+      return ranked_list;
 		}
 		
 		result_type	postRank(result_type inRankedList) {
