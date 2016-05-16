@@ -140,10 +140,12 @@ namespace jerome {
             struct add_query_helper<0, this_type>
             {
               template <class Index>
-              static WeightMatrixScalar computeQueryModelForQuery(
+              static auto computeQueryModelForQuery(
                 const this_type& sup,
                 const Context<Index>& inContext,
                 const Index& inQuery)
+              -> decltype(WeightMatrixZero(queryModelMatrixSizeForQuery(inContext,
+                                                                        inQuery)))
               {
                 return WeightMatrixZero(queryModelMatrixSizeForQuery(inContext,
                                                                      inQuery));
@@ -200,8 +202,8 @@ namespace jerome {
                 const Context<Index>& inContext,
                 const Index& inQuery)
               {
-                return JEROME_MATRIX_ELEMENT_PROD(
-                  JEROME_MATRIX_ELEMENT_POW(
+                return jerome::element_prod(
+                                                  jerome::element_pow(
                     std::get<this_type::size - N>(sup.weightings())
                       .computeQueryModelForQuery(inContext, inQuery),
                     sup.alphas()[this_type::size - N])
@@ -215,10 +217,12 @@ namespace jerome {
             struct mult_query_helper<0, this_type>
             {
               template <class Index>
-              static WeightMatrixScalar computeQueryModelForQuery(
+              static auto computeQueryModelForQuery(
                 const this_type& sup,
                 const Context<Index>& inContext,
                 const Index& inQuery)
+              -> decltype(WeightMatrixOnes(queryModelMatrixSizeForQuery(inContext,
+                                                                        inQuery)))
               {
                 return WeightMatrixOnes(queryModelMatrixSizeForQuery(inContext,
                                                                      inQuery));

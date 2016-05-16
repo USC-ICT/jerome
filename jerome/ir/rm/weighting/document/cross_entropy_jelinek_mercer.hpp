@@ -60,76 +60,39 @@ namespace jerome {
               size.columnCount = ndocs;
               WeightMatrix  ai_log_aj = WeightMatrixZero(size);
 
-              //		WeightVector	af(ndocs, 0.0);
-              WeightVector  cfs = WeightVectorZero(ndocs);
+              WeightVector  each_column = WeightVectorZero(ndocs);
+              WeightVector  each_row = WeightVectorZero(ndocs);
+              double cf_log_cf = 0;
 
               for (const auto& te : field.terms()) {
                 const typename Index::Term&   term(te.second);
-                const double  col_stat_a    = collection_weight<Index>(term,
+                const double  cf    = collection_weight<Index>(term,
                   field);
-                const double  col_stat_a_log  = log(col_stat_a);
+                const double  log_cf  = log(cf);
 
-                // I need to compute A[i][j] = a[j] * log(a[i]);
-                // A[i][j] =
-                // mle[j] * log(a[i]) + cf * log(a[i])
+                // I need to compute A[j][i] = a[i] * log(a[j])
+                // = sum_t (a[i](t) * log(a[j](t))) // depend on terms
+                // = sum_t (mle[i](t) * log(mle[j](t)+cf(t)) + cf(t) * log(mle[j](t)+cf(t)))
+                // ~ mle[i] * log(mle[j]+cf) + cf * log(mle[j]+cf) //dropping index t and sum
+                // = mle[i] * log(1+mle[j]/cf) + mle[i]*log(cf) + cf * log(1+mle[j]/cf) + cf*log(cf)
+                // =>
+                // A += outer_prod(log(1+mle/cf), mle)
+                //    + (mle * log(cf)).TR
+                //    + cf * log(1+mle/cf)
+                //    + cf*log(cf)
 
-                // compute mles
-                // af.clear();
-                // lamda inside the expression is required! It serves to convert
-                // integer tfs to double so
-                // division gives the expected result
-                // af = element_div(lambda * term.tfs(),
-                // field.documentLengths());
+                SparseWeightVector  mle     = document_weight<Index>(term, field);
+                SparseWeightVector  log_mle = sparse_log_plus1(mle/cf);
 
-                SparseWeightVector  af    = document_weight<Index>(term, field);
-                //			SparseWeightVector	log_af(af.size());
-                //			for(auto i = af.begin(), e = af.end(); i != e; ++i) {
-                //				log_af[i.index()] = log(*i + col_stat_a) -
-                // col_stat_a_log;
-                //			}
-
-                //			WeightScalarVector	col_stat_a_log_vector(ndocs,
-                // col_stat_a_log);
-                //
-                //			cfs += (log_af + col_stat_a_log_vector) * col_stat_a;
-                //
-                //			ai_log_aj += outer_prod(log_af, af);
-                //			ai_log_aj += outer_prod(col_stat_a_log_vector, af);
-
-                for (uint32_t i = 0; i < ndocs; ++i) {
-                  cfs(i) += col_stat_a_log * col_stat_a;
-
-                  JEROME_FOR_EACH_ELEMENT_OF_SPARSE_VECTOR(de, af, SparseWeightVector) {
-                    ai_log_aj(i, JEROME_SPARSE_VECTOR_ELEMENT_INDEX(de)) +=
-                      col_stat_a_log * JEROME_SPARSE_VECTOR_ELEMENT_VALUE(de);
-                  }
-                }
-
-                JEROME_FOR_EACH_ELEMENT_OF_SPARSE_VECTOR(ee, af, SparseWeightVector) {
-                  const double ee_val = JEROME_SPARSE_VECTOR_ELEMENT_VALUE(ee);
-                  traits<WeightMatrix>::size_type ee_index = JEROME_SPARSE_VECTOR_ELEMENT_INDEX(ee);
-
-                  const double the_log = log(ee_val + col_stat_a) - col_stat_a_log;
-                  
-                  // I'm storing the part which is j-independent in an array
-                  // that way I need to only iterate thru documents that contain
-                  // term te,
-                  // and add the j-independent part at the end of the method
-                  
-                  cfs(ee_index) += the_log * col_stat_a;
-                  
-                  //				WeightMatrixRow	row(ai_log_aj, i);
-                  //				row += the_log * af;
-
-                  JEROME_FOR_EACH_ELEMENT_OF_SPARSE_VECTOR(de, af, SparseWeightVector) {
-                    ai_log_aj(ee_index, JEROME_SPARSE_VECTOR_ELEMENT_INDEX(de)) +=
-                      the_log * JEROME_SPARSE_VECTOR_ELEMENT_VALUE(de);
-                  }
-                }
-
+                sparse_outer_prod_add_to(log_mle, mle, ai_log_aj);
+                sparse_scale_add_to(log_mle, cf, each_column);
+                sparse_scale_add_to(mle, log_cf, each_row);
+                cf_log_cf += cf * log_cf;
               }
 
-              ai_log_aj += JEROME_MATRIX_OUTER_PROD(cfs, WeightVectorOnes(ndocs));
+              ai_log_aj += cf_log_cf * WeightMatrixOnes(size)
+                + jerome::outer_prod(each_column, WeightVectorOnes(ndocs))
+                + jerome::outer_prod(WeightVectorOnes(ndocs), each_row);
 
               //		for(uint32_t i = 0; i < ndocs; ++i) {
               //			row(ai_log_aj, i) += WeightScalarVector(ndocs, cfs(i));

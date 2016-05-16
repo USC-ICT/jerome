@@ -23,8 +23,6 @@
 #ifndef __jerome_ir_rm_weighting_query_jelinek_mercer_hpp__
 #define __jerome_ir_rm_weighting_query_jelinek_mercer_hpp__
 
-#include <boost/range/algorithm/max_element.hpp>
-
 #include <jerome/ir/rm/weighting/query/collection.hpp>
 
 namespace jerome {
@@ -63,6 +61,9 @@ namespace jerome {
               size.columnCount = inQuery.documentCount();
               WeightMatrix  bw = WeightMatrixZero(size);
 
+              typedef traits<WeightMatrix>::size_type IndexType;
+              typedef traits<WeightMatrix>::value_type ValueType;
+
               // noinspection StringEquality
               for (const auto& te : query.terms()) {
 
@@ -86,10 +87,14 @@ namespace jerome {
                 // (\sum_j log(x_j)) \exp (\sum_j log(x_jk/x_j + 1))
 
                 const typename Index::Term&       queryTermInfo(te.second);
-                SparseWeightVector    w =
-                  JEROME_MATRIX_ELEMENT_LOG_PLUS_1(document_weight<Index>(ti, field) / wIndep);
-                bw += JEROME_MATRIX_OUTER_PROD(w,
-                        JEROME_MATRIX_CAST(queryTermInfo.tfs(), WeightValue));
+                
+                // we want a temporary before doing an outer product.
+                // so we compute the values ones. Ideally, the library
+                // should understand that, but, e.g., eigen fails here anyway.
+                SparseWeightVector  x = jerome::sparse_log_plus1(document_weight<Index>(ti, field) / wIndep);
+                SparseWeightVector  y = jerome::matrix_cast<ValueType>(queryTermInfo.tfs());
+
+                sparse_outer_prod_add_to(x, y, bw);
 
                 //			for(Term::Frequencies::const_iterator termDocIterator =
                 // ti.tfs().begin(), iend = ti.tfs().end(); termDocIterator !=
@@ -118,12 +123,11 @@ namespace jerome {
               const double  min_exp =
                 std::numeric_limits<double>::min_exponent * log(2) + 1;
 
-              typedef traits<WeightMatrix>::size_type IndexType;
               
               for (IndexType j = 0, n = size.columnCount; j < n; ++j) {
-                auto theColumn = column(bw, j);
+                auto theColumn = jerome::column(bw, j);
 
-                double  max   = JEROME_MATRIX_MAX_ELEMENT(theColumn);
+                double  max   = jerome::max_element(theColumn);
                 
                 //		std::cout << max << " " << min_exp << " " <<
                 // std::numeric_limits<double>::min_exponent << " " << log(2) <<

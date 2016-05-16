@@ -133,44 +133,15 @@ namespace jerome {
                    (field.cs() + epsilon().value() * field.vs());
           }
 
-          template <class Idx, typename INDEX_TYPE, typename VALUE_TYPE>
-          struct document_weight_functor {
-            document_weight_functor(double inLambda, const typename Idx::Field::DocumentLengths& inDocumentLength)
-            : mLambda(inLambda)
-            , mDocumentLength(inDocumentLength)
-            {}
-            
-            double operator() (const INDEX_TYPE& inIndex, const VALUE_TYPE& inValue)
-            {
-              return inValue * mLambda / mDocumentLength[inIndex];
-            }
-            
-          private:
-            double mLambda;
-            const typename Idx::Field::DocumentLengths& mDocumentLength;
-          };
-          
           template <class Index>
-          SparseWeightVector document_weight(const typename Index::Term& term,
-                                             const typename Index::Field& field)
+          auto document_weight(const typename Index::Term& term,
+                               const typename Index::Field& field)
           const
+          -> decltype(jerome::sparse_scale_div_by(matrix_cast<double>(term.tfs()), lambda().value(),
+                                          matrix_cast<double>(field.documentLengths())))
           {
-            SparseWeightVector  result((traits<SparseWeightVector>::size_type)field.documentCount());
-            document_weight_functor<Index,
-              typename traits<typename Index::Term::Frequencies>::size_type,
-              typename traits<typename Index::Term::Frequencies>::value_type
-            >  functor(lambda().value(), field.documentLengths());
-            
-            JEROME_FOR_EACH_ELEMENT_OF_SPARSE_VECTOR(i, term.tfs(), typename Index::Term::Frequencies) {
-              JEROME_MATRIX_SET_VECTOR_ELEMENT_AT_INDEX_TO(result,
-                                                           (JEROME_SPARSE_VECTOR_ELEMENT_INDEX(i)), functor(JEROME_SPARSE_VECTOR_ELEMENT_INDEX(i),
-                                                                                                            JEROME_SPARSE_VECTOR_ELEMENT_VALUE(i)));
-            }
-            return result;
-            // it causes divide by zero. I guess, it tries to compute 1/|Dl| for
-            // each document even for those that tf = 0.
-            // return element_div(term.tfs() * lambda().value(),
-            // field.documentLengths());
+            return jerome::sparse_scale_div_by(matrix_cast<double>(term.tfs()), lambda().value(),
+                                matrix_cast<double>(field.documentLengths()));
           }
 
           using parent_type::accept;

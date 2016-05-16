@@ -276,7 +276,7 @@ namespace jerome { namespace ir { namespace rm {
 			WeightMatrix	scores(vcl_d.size1(), vcl_d.size2());
 			viennacl::copy(vcl_d, scores);
 #else
-			WeightMatrix	scores = JEROME_MATRIX_PROD(documentWeight, inQueryModel) + initialWeight;
+      WeightMatrix	scores = jerome::prod(documentWeight, inQueryModel) + initialWeight;
 #endif
       std::cout << documentWeight(0,0) << " "
         << documentWeight(0,1) << " "

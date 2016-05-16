@@ -95,9 +95,9 @@ namespace jerome { namespace ir {
 			
 			void	add(size_type inDocumentID, const Token& inToken) {
 				if (inDocumentID >= mFrequencies.size())
-					JEROME_MATRIX_VECTOR_RESIZE(mFrequencies, inDocumentID+1);
+          jerome::resize(mFrequencies, inDocumentID+1);
 				
-				freq_type count = (JEROME_MATRIX_INCREMENT_VECTOR_ELEMENT_AT_INDEX(mFrequencies, inDocumentID));
+				freq_type count = (increment_value_at_index_in_vector(inDocumentID, mFrequencies));
         if (count == 1) ++mDocumentCount;
         
 				++mCollectionCount;
@@ -107,13 +107,13 @@ namespace jerome { namespace ir {
 				mDocumentCount += inTerm.mDocumentCount;
 				mCollectionCount += inTerm.mCollectionCount;
 
-        JEROME_MATRIX_VECTOR_RESIZE(mFrequencies, inOffset+inCount);
-        JEROME_MATRIX_APPEND_VECTOR_TO_VECTOR(inTerm.mFrequencies,
+        jerome::resize(mFrequencies, inOffset+inCount);
+        append_sparse_vector_to_sparse_vector(inTerm.mFrequencies,
                                               mFrequencies, inOffset);
 			}
 			
 			void	optimize(Index& inIndex, Field& inField) {
-        JEROME_MATRIX_VECTOR_RESIZE(mFrequencies, (size_type)inIndex.documentCount());
+        jerome::resize(mFrequencies, (size_type)inIndex.documentCount());
 			}
 		};
 		
@@ -162,9 +162,9 @@ namespace jerome { namespace ir {
 					}
 					p->second.addTerm(t.second, inOffset, inCount);
 				}
-        JEROME_MATRIX_VECTOR_RESIZE(mDocumentLengths, inOffset+inCount);
-        JEROME_MATRIX_APPEND_VECTOR_TO_VECTOR(inField.mDocumentLengths,
-                                              mDocumentLengths, inOffset);
+        jerome::resize(mDocumentLengths, inOffset+inCount);
+        append_vector_to_vector(inField.mDocumentLengths, mDocumentLengths,
+                                inOffset);
 				mTotalTermCount += inField.mTotalTermCount;
 			}
 			
@@ -180,18 +180,17 @@ namespace jerome { namespace ir {
 				}
 
         if (inDocumentID >= mDocumentLengths.size()) {
-          JEROME_MATRIX_VECTOR_RESIZE(mDocumentLengths, inDocumentID+1);
-          JEROME_MATRIX_SET_VECTOR_ELEMENT_AT_INDEX_TO(mDocumentLengths, inDocumentID, 0);
+          jerome::resize(mDocumentLengths, inDocumentID+1);
+          set_value_at_index_in_vector(0, inDocumentID, mDocumentLengths);
         }
-        JEROME_MATRIX_INCREMENT_VECTOR_ELEMENT_AT_INDEX(mDocumentLengths,
-                                                        inDocumentID);
+        increment_value_at_index_in_vector(inDocumentID, mDocumentLengths);
         ++mTotalTermCount;
 			}
 			
 			typename Term::size_type	addDocument() {
         auto newDocumentIndex  = mDocumentLengths.size();
-        JEROME_MATRIX_VECTOR_RESIZE(mDocumentLengths, newDocumentIndex+1);
-        JEROME_MATRIX_SET_VECTOR_ELEMENT_AT_INDEX_TO(mDocumentLengths, newDocumentIndex, 0);
+        jerome::resize(mDocumentLengths, newDocumentIndex+1);
+        set_value_at_index_in_vector(0, newDocumentIndex, mDocumentLengths);
 				return (typename Term::size_type)newDocumentIndex;
 			}
 			

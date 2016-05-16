@@ -74,11 +74,11 @@ struct Ranker : public jerome::ir::rm::Ranker<Q, A, Ranker<Q,A,L>> {
     
 		WeightMatrix	result(size.rowCount, size.columnCount);
 		for(size_t i = 0, n = size.rowCount; i < n; ++i) {
-			JEROME_MATRIX_ROW(result, i) = JEROME_MATRIX_CONST_ROW(queryMatrix, links()[i].queryIndex);
+      jerome::row(result, i) = jerome::row(queryMatrix, links()[i].queryIndex);
 		}
 		for(std::size_t i = 0, n = size.columnCount; i < n; ++i) {
-			auto c = JEROME_MATRIX_COLUMN(result, i);
-			c /= JEROME_MATRIX_ELEMENT_SUM(c);
+      auto c = jerome::column(result, i);
+      c /= jerome::sum(c);
 		}
 		return result;
 	}
@@ -89,18 +89,38 @@ struct Ranker : public jerome::ir::rm::Ranker<Q, A, Ranker<Q,A,L>> {
 
     WeightMatrix result(size.rowCount, size.columnCount);
 		for(size_t i = 0, n = size.columnCount; i < n; ++i) {
-			JEROME_MATRIX_COLUMN(result, i) = JEROME_MATRIX_CONST_COLUMN(documentMatrix, links()[i].documentIndex);
+      jerome::column(result, i) = jerome::column(documentMatrix, links()[i].documentIndex);
 		}
 		return result;
 	}
 	
+private:
+  struct expandDocumentVectorFunctor {
+    
+    typedef typename traits<SparseWeightVector>::size_type size_type;
+    typedef typename traits<SparseWeightVector>::value_type value_type;
+
+    expandDocumentVectorFunctor(SparseWeightVector& inResult, const std::vector<std::vector<std::size_t>>& inIndexesOfQueriesLinkedToDocumentWithIndex)
+    : mResult(inResult)
+    , mIndexesOfQueriesLinkedToDocumentWithIndex(inIndexesOfQueriesLinkedToDocumentWithIndex)
+    {}
+  
+    void operator() (const size_type& i, const value_type& v) {
+      for(auto j : mIndexesOfQueriesLinkedToDocumentWithIndex[i]) {
+        set_value_at_index_in_vector(v, j, mResult);
+      }
+    }
+    
+  private:
+    SparseWeightVector& mResult;
+    const std::vector<std::vector<std::size_t>>&		mIndexesOfQueriesLinkedToDocumentWithIndex;
+  };
+
+public:
 	SparseWeightVector expandDocumentVector(const SparseWeightVector& documentVector) const {
 		SparseWeightVector	result(links().size());
-    JEROME_FOR_EACH_ELEMENT_OF_SPARSE_VECTOR(i, documentVector, SparseWeightVector) {
-			for(auto j : mIndexesOfQueriesLinkedToDocumentWithIndex[JEROME_SPARSE_VECTOR_ELEMENT_INDEX(i)]) {
-        JEROME_MATRIX_SET_VECTOR_ELEMENT_AT_INDEX_TO(result, j, JEROME_SPARSE_VECTOR_ELEMENT_VALUE(i));
-			}
-		}
+    expandDocumentVectorFunctor functor(result, mIndexesOfQueriesLinkedToDocumentWithIndex);
+    jerome::for_each(documentVector, functor);
 		return result;
 	}
 	

@@ -453,7 +453,6 @@
 		62D56AF51987069400F09A32 /* jelinek_mercer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jelinek_mercer.cpp; sourceTree = "<group>"; };
 		62D56AF61987069400F09A32 /* jelinek_mercer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = jelinek_mercer.hpp; sourceTree = "<group>"; };
 		62D8A8291BF699F9005355B0 /* regex.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = regex.hpp; sourceTree = "<group>"; };
-		62DF0D0F18A8583500A5F2AF /* matrix_functions.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = matrix_functions.hpp; sourceTree = "<group>"; };
 		62DF0D1218ADC89400A5F2AF /* ranker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ranker.hpp; sourceTree = "<group>"; };
 		62E4E3A31B5DFA9A008440CC /* platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = platform.cpp; sourceTree = "<group>"; };
 		62E4E3A41B5DFA9A008440CC /* platform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = platform.hpp; sourceTree = "<group>"; };
@@ -1104,7 +1103,6 @@
 			children = (
 				6255E9251B7298E200EA9402 /* parameters */,
 				621FE8E3174E9FCF00C18F4F /* scored.hpp */,
-				62DF0D0F18A8583500A5F2AF /* matrix_functions.hpp */,
 				62778F3218FC8D07007F7FD2 /* functions.hpp */,
 			);
 			path = math;

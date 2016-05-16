@@ -20,7 +20,6 @@
 //  along with Jerome.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include <boost/range/algorithm/max_element.hpp>
 #include "jelinek_mercer.hpp"
 
 namespace jerome { namespace ir { namespace rm { namespace weighting { namespace query {
