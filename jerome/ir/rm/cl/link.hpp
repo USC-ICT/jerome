@@ -26,7 +26,7 @@
 
 namespace jerome { namespace ir { namespace rm { namespace cl {
 	
-	typedef uint16_t									index_type;
+	typedef uint32_t									index_type;
 	
 	struct BinaryLink {
 		index_type		queryIndex;
@@ -46,34 +46,40 @@ namespace jerome { namespace ir { namespace rm { namespace cl {
 		return outs << "(" << obj.queryIndex << "," << obj.documentIndex << ")";
 	}
 
-	template <class QueryRange, class DocumentRange, class LinkRange, typename L = BinaryLink>
+  template <typename Range>
+  Map<typename Range::value_type, index_type>
+  map_range(const Range& inRange)
+  {
+    typedef Map<typename Range::value_type, index_type> result_type;
+    index_type        index = 0;
+    result_type       omap;
+    for(const auto& o : inRange) {
+      omap.emplace(o, index++);
+    }
+    return omap;
+  }
+  
+	template <class QueryRange,
+    class DocumentRange,
+    class LinkRange,
+    typename L = BinaryLink>
 	List<L>
-	makeIndexedLinkList(const QueryRange& inQueries, const DocumentRange& inDocuments, const LinkRange& inLinks)
+	makeIndexedLinkList(const QueryRange& inQueries,
+                      const DocumentRange& inDocuments,
+                      const LinkRange& inLinks)
 	{
-		typedef Map<typename QueryRange::value_type, index_type>					query_map_type;
-		typedef Map<typename DocumentRange::value_type, index_type>					document_map_type;
-		
-		index_type			query_index = 0;
-		query_map_type		qmap;
-		for(const auto& q : inQueries) {
-			qmap.emplace(q, query_index++);
-		}
-		
-		index_type			document_index = 0;
-		document_map_type	dmap;
-		for(const auto& d : inDocuments) {
-			dmap.emplace(d, document_index++);
-		}
+		auto	qmap = map_range(inQueries);
+		auto	dmap = map_range(inDocuments);
 		
 		List<L>	result;
 		result.reserve(inLinks.size());
 		
 		for(const auto& l : inLinks) {
-			typename query_map_type::const_iterator		qiter = qmap.end();
-			typename document_map_type::const_iterator	diter = dmap.end();
+			auto	qiter = qmap.end();
+			auto	diter = dmap.end();
 			
 			for(const auto& x : l.utterances()) {
-				if (qiter == qmap.end()) qiter = qmap.find(x);
+        if (qiter == qmap.end()) qiter = qmap.find(x);
 				if (diter == dmap.end()) diter = dmap.find(x);
 			}
 			
@@ -81,12 +87,12 @@ namespace jerome { namespace ir { namespace rm { namespace cl {
 				result.push_back(L(qiter->second, diter->second));
 				//								std::cout << "good link " << qiter->second << " " << diter->second << "\n";
 			} else {
-				//								std::cout << "bad link\n";
+        // it's possible that one of the objects connected by the link
+        // is not in the corresponding object set
+        //        std::cout << "bad link" << std::endl;
 			}
 			
 		}
-//		std::cout << inLinks.size() << " " << result.size() << " " << result << std::endl;
-		
 		return result;
 	}
 }}}}

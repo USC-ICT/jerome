@@ -53,7 +53,7 @@ namespace jerome {
 
         virtual const ModelObjectImpl * baseThis() const
         {
-          return this;
+          return dynamic_cast<const ModelObjectImpl*>(this);
         }
       };
 
