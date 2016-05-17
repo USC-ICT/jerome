@@ -27,3 +27,4 @@
 *.out
 *.app
 .idea
+3rdParty/eigen-3.2.8
