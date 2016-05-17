@@ -68,66 +68,31 @@ struct Ranker : public jerome::ir::rm::Ranker<Q, A, Ranker<Q,A,L>> {
 		computeIndexesOfQueriesLinkedToDocumentWithIndex();
 	}
 	
-	WeightMatrix expandQueryMatrix(const WeightMatrix& queryMatrix) const {
-    MatrixSize size(queryMatrix);
-    size.rowCount = links().size();
+  template <typename DM, typename QM>
+  WeightMatrix prod(const DM& dm, const QM& qm) const
+  {
+    MatrixSize dm_size(dm);
+    MatrixSize qm_size(qm);
+    MatrixSize p_size;
+    p_size.rowCount = dm_size.rowCount;
+    p_size.columnCount = qm_size.columnCount;
     
-		WeightMatrix	result(size.rowCount, size.columnCount);
-		for(size_t i = 0, n = size.rowCount; i < n; ++i) {
-      jerome::row(result, i) = jerome::row(queryMatrix, links()[i].queryIndex);
-		}
-		for(std::size_t i = 0, n = size.columnCount; i < n; ++i) {
-      auto c = jerome::column(result, i);
-      c /= jerome::sum(c);
-		}
-		return result;
-	}
-	
-	WeightMatrix expandDocumentMatrix(const WeightMatrix& documentMatrix) const {
-    MatrixSize size(documentMatrix);
-    size.columnCount = links().size();
-
-    WeightMatrix result(size.rowCount, size.columnCount);
-		for(size_t i = 0, n = size.columnCount; i < n; ++i) {
-      jerome::column(result, i) = jerome::column(documentMatrix, links()[i].documentIndex);
-		}
-		return result;
-	}
-	
-private:
-  struct expandDocumentVectorFunctor {
+    WeightMatrix p = WeightMatrixZero(p_size);
     
-    typedef typename traits<SparseWeightVector>::size_type size_type;
-    typedef typename traits<SparseWeightVector>::value_type value_type;
-
-    expandDocumentVectorFunctor(SparseWeightVector& inResult, const std::vector<std::vector<std::size_t>>& inIndexesOfQueriesLinkedToDocumentWithIndex)
-    : mResult(inResult)
-    , mIndexesOfQueriesLinkedToDocumentWithIndex(inIndexesOfQueriesLinkedToDocumentWithIndex)
-    {}
-  
-    void operator() (const size_type& i, const value_type& v) {
-      for(auto j : mIndexesOfQueriesLinkedToDocumentWithIndex[i]) {
-        set_value_at_index_in_vector(v, j, mResult);
+    for(std::size_t i = 0, n = p_size.columnCount; i < n; ++i) {
+      double sum = 0;
+      for(const auto link : links()) {
+        sum += qm(link.queryIndex, i);
+      }
+      for(const auto link : links()) {
+        jerome::column(p, i) += jerome::column(dm, link.documentIndex)
+          * (qm(link.queryIndex, i) / sum);
       }
     }
     
-  private:
-    SparseWeightVector& mResult;
-    const std::vector<std::vector<std::size_t>>&		mIndexesOfQueriesLinkedToDocumentWithIndex;
-  };
-
-public:
-	SparseWeightVector expandDocumentVector(const SparseWeightVector& documentVector) const {
-		SparseWeightVector	result(links().size());
-    expandDocumentVectorFunctor functor(result, mIndexesOfQueriesLinkedToDocumentWithIndex);
-    jerome::for_each(documentVector, functor);
-		return result;
-	}
-	
-//	const AI&	documentIndex() const	{ return mDocumentModel.index(); }
-//	const QI&	queryIndex() const		{ return mQueryModel.index(); }
-//	AI&	documentIndex()					{ return mDocumentModel.index(); }
-//	QI&	queryIndex()					{ return mQueryModel.index(); }
+    return p;
+  }
+		
 	link_list_type& links()					{ return mLinks; }
 	const link_list_type& links() const		{ return mLinks; }
 	
@@ -136,9 +101,6 @@ public:
 	
 	std::size_t countOfDocuments() const { return this->document().index().documentCount(); }
 	std::size_t countOfQueries()   const { return this->query().index().documentCount(); }
-
-//	typedef typename DM::object_iterator_type	document_iterator_type;
-//	document_iterator_type documentIterator() const { return mDocumentModel.objectIterator(); }
 	
 private:
 	void computeIndexesOfQueriesLinkedToDocumentWithIndex() {

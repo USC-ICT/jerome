@@ -67,7 +67,6 @@ namespace jerome { namespace ir { namespace rm {
 			ioDelegate.setObjectCount(ndocs+nqrys);
 			
 			const WeightMatrix&	A		= inRanker.document().weightings().computeAffinity(inRanker.documentWeightingContext());
-			const WeightMatrix&	Ae		= inRanker.expandDocumentMatrix(A);
 			
 			if (!ioDelegate.noteProgress(progress += deltaProgress)) return false;
 			
@@ -114,7 +113,7 @@ namespace jerome { namespace ir { namespace rm {
 			
 			if (!ioDelegate.noteProgress(progress += deltaProgress)) return false;
 			
-			DQ = prod(Ae, B);
+			DQ = inRanker.prod(A, B);
 //			std::cout << "DQ ==========================================================" << std::endl << DQ << std::endl;
 			
 			//					std::cout << "Ae ==========================================================" << std::endl << Ae << std::endl;

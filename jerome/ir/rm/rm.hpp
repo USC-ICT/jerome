@@ -213,7 +213,8 @@ namespace jerome { namespace ir { namespace rm {
 
 		template <class Index>
 		WeightMatrix	queryModel(const Index& inQuery) {
-			return model().expandQueryMatrix(query().weightings().computeQueryModelForQuery(model().queryWeightingContext(), inQuery));
+			return query().weightings()
+        .computeQueryModelForQuery(model().queryWeightingContext(), inQuery);
 		}
 		
 		Q& query() { return mQuery; }
@@ -230,14 +231,13 @@ namespace jerome { namespace ir { namespace rm {
 		FastMatrix	documentWeight(const WeightMatrix& inQueryModel) {
 			if (nullptr == mAffinityMatrix.get()) {
 #ifdef VIENNACL_WITH_OPENCL
-				WeightMatrix	tmp = model().expandDocumentMatrix(documentWeightings().computeAffinity(model().documentWeightingContext()));
+				WeightMatrix	tmp = documentWeightings().computeAffinity(model().documentWeightingContext());
 				mAffinityMatrix = jerome::shared_ptr<FastMatrix>(new FastMatrix(tmp.size1(), tmp.size2()));
 				viennacl::copy(tmp, *mAffinityMatrix);
 #else
 				auto x = std::make_shared<FastMatrix>(
-          model().expandDocumentMatrix(
             document().weightings().computeAffinity(
-              model().documentWeightingContext())));
+              model().documentWeightingContext()));
 				mAffinityMatrix = x;
 				return *x;
 #endif
@@ -276,7 +276,7 @@ namespace jerome { namespace ir { namespace rm {
 			WeightMatrix	scores(vcl_d.size1(), vcl_d.size2());
 			viennacl::copy(vcl_d, scores);
 #else
-      WeightMatrix	scores = jerome::prod(documentWeight, inQueryModel) + initialWeight;
+      WeightMatrix	scores = model().prod(documentWeight, inQueryModel) + initialWeight;
 #endif
       
       MatrixSize scoresSize(scores);

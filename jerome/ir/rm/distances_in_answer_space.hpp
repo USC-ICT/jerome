@@ -52,7 +52,6 @@ namespace jerome { namespace ir { namespace rm {
 			if (!ioDelegate.noteProgress(progress)) return false;
 			
 			const WeightMatrix&	A		= inRanker.documentWeightings().computeAffinity(inRanker.documentWeightingContext());
-			const WeightMatrix&	Ae		= inRanker.expandDocumentMatrix(A);
 			
 			progress += stateProgressWeights[stateProgressStage++] / totalStateProgressWeights;
 			if (!ioDelegate.noteProgress(progress)) return false;
@@ -111,7 +110,7 @@ namespace jerome { namespace ir { namespace rm {
 			//						}
 			//					}
 			
-			DQ = outer_prod(diagA, Eq) - prod(Ae, B);
+			DQ = outer_prod(diagA, Eq) - inRanker.prod(A, B);
 			
 			//					for(std::size_t i = 0, n = nqrys; i < n; ++i) {
 			//						WeightMatrixConstColumn	column(B, i);
@@ -138,7 +137,9 @@ namespace jerome { namespace ir { namespace rm {
 				
 				SparseWeightVector	af	= documentWeighting.document_weight(term, field);
 				
-				axpy_prod(inRanker.expandDocumentVector(af), B, C, false); // C += afe x trans(B)
+        // TODO Broken!!! B is not expanded
+#error "Broken!!! we need to use inRanker.prod() here"
+				axpy_prod(af, B, C, false); // C += afe x trans(B)
 				
 				logC = log(C);
 				

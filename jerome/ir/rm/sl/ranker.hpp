@@ -52,11 +52,14 @@ struct Ranker : public jerome::ir::rm::Ranker<Q, A, Ranker<Q,A>> {
 		this->document().model().index(inDocuments, inDocumentAnalyzer);
 	}
 	
-	WeightMatrix expandQueryMatrix(const WeightMatrix& queryMatrix) const { return queryMatrix; }
-	WeightMatrix expandDocumentMatrix(const WeightMatrix& documentMatrix) const { return documentMatrix; }
-	SparseWeightVector expandDocumentVector(const SparseWeightVector& documentVector) const { return documentVector; }
-	
-	const typename A::context_type&	documentWeightingContext() 	const { return this->document().context(); }
+  template <typename DM, typename QM>
+  auto prod(const DM& dm, const QM& qm) const
+  -> decltype(jerome::prod(dm, qm))
+  {
+    return jerome::prod(dm, qm);
+  }
+  
+  const typename A::context_type&	documentWeightingContext() 	const { return this->document().context(); }
 	const typename A::context_type&	queryWeightingContext() 	const { return this->document().context(); }
 	
 	std::size_t countOfDocuments() const { return this->document().index().documentCount(); }
