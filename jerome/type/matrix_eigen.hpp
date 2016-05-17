@@ -26,7 +26,7 @@
 
 #include <iostream>
 
-#define EIGEN_SPARSEVECTOR_PLUGIN "EigenSparseVectorPlugin.hpp"
+#define EIGEN_SPARSEVECTOR_PLUGIN "matrix_eigen_sparse_vector_plugin.hpp"
 
 #include <Eigen/Dense>
 #include <Eigen/Sparse>

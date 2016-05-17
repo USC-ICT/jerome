@@ -1,5 +1,5 @@
 //
-//  EigenSparseVectorPlugin.hpp
+//  matrix_eigen_sparse_vector_plugin.hpp
 //  jerome
 //
 //  Created by Anton Leuski on 5/13/16.
