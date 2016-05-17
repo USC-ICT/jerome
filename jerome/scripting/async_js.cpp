@@ -29,10 +29,11 @@ namespace jerome {
 		
 		dispatch::queue&	strandFromContext(jerome::javascript::Context& inContext)
 		{
-			static Map<js::ContextGroup, dispatch::queue>	theMap;
-			auto iter = theMap.find(inContext.group());
-			if (iter == theMap.end()) {
-				iter = theMap.emplace(inContext.group(), dispatch::queue(dispatch::queue::SERIAL)).first;
+      // STATIC
+			static auto	theMap = new Map<js::ContextGroup, dispatch::queue>;
+			auto iter = theMap->find(inContext.group());
+			if (iter == theMap->end()) {
+				iter = theMap->emplace(inContext.group(), dispatch::queue(dispatch::queue::SERIAL)).first;
 			}
 			return iter->second;
 		}

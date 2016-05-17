@@ -140,8 +140,9 @@ namespace jerome { namespace javascript {
 	// JS makes a distinction between null and undefined. We map nullptr to undefined, we need something to map to null
 	static const struct Null_t {
 		static const Null_t&	instance() {
-			static Null_t shared;
-			return shared;
+      // STATIC
+			static auto shared = new Null_t;
+			return *shared;
 		}
 	private:
 		Null_t() {}

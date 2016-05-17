@@ -355,6 +355,7 @@ namespace jerome { namespace javascript {
 	}
 	
 	inline Context::context_stack_type& Context::stack() {
+    // STATIC
 		static boost::thread_specific_ptr<context_stack_type>	sCurrentContext;
 		if (!sCurrentContext.get())
 			sCurrentContext.reset(new context_stack_type);

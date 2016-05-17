@@ -33,6 +33,7 @@ extern "C" {
 
 namespace jerome { namespace ir {
 
+  // STATIC
 	static const String 	kNGramSeparator	= String("_");
 
 	namespace i {
@@ -236,6 +237,7 @@ namespace filter {
 	};
 
 	typedef StringMap<Dictionary::dictionary_ptr> dictionary_cache_type;
+  // STATIC
 	static dictionary_cache_type	sDictionaryCache;
 
 	static Dictionary::dictionary_ptr dictionaryWithName(const String& inName)
@@ -370,18 +372,26 @@ namespace filter {
 		}
 		return false;
 	}
+  
+  static Stopper::Stopwords* makeDefaultStopwords()
+  {
+    Stopper::Stopwords* stopwords = new Stopper::Stopwords;
+    stopwords->emplace("a");
+    stopwords->emplace("an");
+    stopwords->emplace("the");
+    return stopwords;
+  }
 	
 	const Stopper::Stopwords&
 	Stopper::defaultStopwords() {
-		static Stopper::Stopwords	kStopwords;
-	
-		if (kStopwords.size() == 0) {
-			kStopwords.emplace("a");
-			kStopwords.emplace("an");
-			kStopwords.emplace("the");
-		}
-	
-		return kStopwords;
+    // Something strange here: if I simply allocate (on global region)
+    // the app can crash on quit. The crash happens somewhere in the
+    // map<> accesing its elements. So, it looks like the static object
+    // is being destroyed before the processing ends. By putting the object
+    // on heap, I'll prevent this but leak memory.
+    // STATIC
+		static Stopper::Stopwords*	kStopwords = makeDefaultStopwords();
+		return *kStopwords;
 	}
 	
 }

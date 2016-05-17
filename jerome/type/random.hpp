@@ -31,8 +31,9 @@ namespace jerome {
 		typedef T	value_type;
 		inline value_type	rand_value()
 		{
-			static std::uniform_real_distribution<value_type> distribution(0.0,1.0);
-			return distribution(generator);
+      // STATIC
+			static auto distribution = new std::uniform_real_distribution<value_type>(0.0,1.0);
+			return (*distribution)(generator);
 		}
 		std::default_random_engine generator;
 	};

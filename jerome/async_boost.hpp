@@ -85,8 +85,9 @@ namespace jerome {
 
         static Service& sharedInstance()
         {
-          static Service service;
-          return service;
+          // STATIC
+          static Service* service = new Service;
+          return *service;
         }
 
         boost::asio::io_service::strand * makeStrand()

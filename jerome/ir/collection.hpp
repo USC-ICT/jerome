@@ -89,8 +89,9 @@ namespace jerome { namespace ir {
 			const Frequencies&	tfs() const { return mFrequencies; }
 			
 			static const Term& missing_term() {
-				static Term s_missing_term;
-				return s_missing_term;
+        // STATIC
+				static auto s_missing_term = new Term;
+				return *s_missing_term;
 			}
 			
 			void	add(size_type inDocumentID, const Token& inToken) {

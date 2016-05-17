@@ -119,8 +119,9 @@ namespace jerome {
 
     static Derived& sharedInstance()
     {
-      static Derived  theFactory;
-      return theFactory;
+      // STATIC
+      static auto theFactory = new Derived;
+      return *theFactory;
     }
 
 		OptionalString defaultProviderID() const { return mDefaultProviderID; }

@@ -374,20 +374,20 @@ namespace jerome {
       const String& field,
       const String& inValue) const
     {
-
-      static rgx::regex kImportPattern("<import\\s+(.*?)\\s*=\\s*\"(.*?)\".*?>",
+      // STATIC
+      static auto kImportPattern = new rgx::regex("<import\\s+(.*?)\\s*=\\s*\"(.*?)\".*?>",
         rgx::regex_constants::optimize
         | rgx::regex_constants::icase);
-      static rgx::regex kWhitespacePrefixPattern("^\\s.*",
+      static auto kWhitespacePrefixPattern = new rgx::regex("^\\s.*",
         rgx::regex_constants::optimize
         | rgx::regex_constants::icase);
-      static rgx::regex kWhitespaceSuffixPattern(".*\\s$",
+      static auto kWhitespaceSuffixPattern = new rgx::regex(".*\\s$",
         rgx::regex_constants::optimize
         | rgx::regex_constants::icase);
 
       rgx::smatch match;
       if (!rgx::regex_search(inValue, match,
-            kImportPattern) || match.empty()) return inValue;
+            *kImportPattern) || match.empty()) return inValue;
 
       String    text;
 
@@ -407,22 +407,22 @@ namespace jerome {
         if (match.prefix().length()
            && replacement.length()
            && !rgx::regex_match(match.prefix().str(),
-              kWhitespaceSuffixPattern)
+              *kWhitespaceSuffixPattern)
            && !rgx::regex_match(replacement,
-              kWhitespacePrefixPattern)) delim1 = " ";
+              *kWhitespacePrefixPattern)) delim1 = " ";
 
         if (match.suffix().length()
            && replacement.length()
            && !rgx::regex_match(match.suffix().str(),
-              kWhitespacePrefixPattern)
+              *kWhitespacePrefixPattern)
            && !rgx::regex_match(replacement,
-              kWhitespaceSuffixPattern)) delim2 = " ";
+              *kWhitespaceSuffixPattern)) delim2 = " ";
 
         text = match.prefix().str() + delim1 + replacement + delim2 +
                match.suffix().str();
 
         if (!rgx::regex_search(text, match,
-              kImportPattern) || match.empty()) return text;
+              *kImportPattern) || match.empty()) return text;
       }
     }
 

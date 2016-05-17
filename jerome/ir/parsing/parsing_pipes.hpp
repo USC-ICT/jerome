@@ -61,9 +61,8 @@ namespace jerome { namespace ir {
 				if (args[_stem | true]) 
 					stream	= new KStem(stream);
 					
-				const Stopper::Stopwords* stopwords 	= args[_stopwords | &Stopper::defaultStopwords()];	
-				if (stopwords)
-					stream	= new Stopper(stream, *stopwords);
+				const Stopper::Stopwords& stopwords 	= args[_stopwords | Stopper::defaultStopwords()];
+        stream	= new Stopper(stream, stopwords);
 					
 				typename Index::Field*				unigrams	= args[_unigram_field | ((typename Index::Field*)nullptr)];
 				if (unigrams) 

@@ -74,8 +74,9 @@ namespace jerome {
 			
 				static dispatch::queue& timerStrand()
 				{
-					static dispatch::queue queue(dispatch::queue::SERIAL);
-					return queue;
+          // STATIC
+					static auto queue = new dispatch::queue(dispatch::queue::SERIAL);
+					return *queue;
 				}
 			
 				// synchronized on sTimers
@@ -145,6 +146,7 @@ namespace jerome {
 				static	std::atomic<int>				sTimerCounter;
 			};
 			
+      // STATIC
 			Timeout::Timers		Timeout::sTimers;
 			std::atomic<int>	Timeout::sTimerCounter(0);
 		}
@@ -180,6 +182,7 @@ namespace jerome {
 		namespace js = jerome::javascript;
 		namespace det = jerome::scripting::detail;
 
+    // STATIC
 		static const rgx::regex	URL_REGEX("^(((\\w+)\\:\\/\\/)?([^\\/\\?\\#\\s]*))(\\/[^\\?\\#\\s]*)?((\\?([^\\s\\#]*))?(\\#([^\\s]*))?)");
 
 

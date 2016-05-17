@@ -44,6 +44,7 @@ namespace jerome {
   
   struct JEROME_SYMBOL_EXPORT Error : std::exception {
     
+    // STATIC
     static const OptionalError NO_ERROR;
     
     explicit Error(String inDescription, String inRecoverySuggestion = "")

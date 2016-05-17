@@ -113,6 +113,7 @@ namespace jerome {
 					while (getNextToken(tok));
 				}
 			private:
+        // STATIC
 				static const jerome::Locale	kDefaultLocale;
 			};
 			

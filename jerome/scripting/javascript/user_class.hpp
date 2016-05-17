@@ -203,8 +203,9 @@ adaptGetPropertyNamesCallback(ctx, object, propertyNames); \
 			template <typename, typename T, T> friend struct Callback;
 			
 			static traits_type& privateInstance() {
-				static traits_type	shared;
-				return shared;
+        // STATIC
+				static auto	shared = new traits_type;
+				return *shared;
 			}
 			
 			void init() {

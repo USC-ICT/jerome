@@ -49,6 +49,7 @@ namespace jerome { namespace javascript {
 		
 		template <class C, class CR>
 		std::shared_ptr<OpaqueJSClass>& ParameterizedClass<C,CR>::classDescriptionData() {
+      // STATIC
 			static std::shared_ptr<OpaqueJSClass>	sharedData;
 			if (!sharedData) {
 				JSClassDefinition	definition;
