@@ -65,9 +65,7 @@ int main(int argc, const char * argv[])
 
 		Platform::initialize();
 		
-		Platform * p1 = new Platform;
-		
-		Platform&	p(*p1);
+		Platform	p;
 
     // =================================
     // loading a database
@@ -95,11 +93,7 @@ int main(int argc, const char * argv[])
       });
 			
 			sleep(2);
-			
-			p.collectionWasUpdated();
-			p.postEvent("vrSpeech_asr_complete", { { String(Utterance::kFieldText), "hello"} }, machineName);
-
-			
+						
 		} else {
       
       // if you just care for a single answer
@@ -118,15 +112,6 @@ int main(int argc, const char * argv[])
         std::cout << "no response" << std::endl;
       }
       
-			p.collectionWasUpdated();
-
-			response = p.respond(classifierName, "hello");
-			if (response) {
-				jerome::npc::detail::ModelWriterText::write(std::cout, *response);
-			} else {
-				std::cout << "no response" << std::endl;
-			}
-			
 		}
 
 		
