@@ -81,6 +81,11 @@
 		62AC3BBD1BBC94C80067C540 /* string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62AC3BBC1BBC94C80067C540 /* string.cpp */; };
 		62AC3BC01BBC967F0067C540 /* error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62AC3BBE1BBC967F0067C540 /* error.cpp */; };
 		62AE719316FBE41C00547E42 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62AE719216FBE41C00547E42 /* boost.framework */; };
+		62B09AD31CECD18200A031CB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62B09AD21CECD18200A031CB /* main.cpp */; };
+		62B09AD91CECD1AA00A031CB /* libjerome.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D21604D43600764667 /* libjerome.a */; };
+		62B09ADA1CECD1BA00A031CB /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58C31CC99E1600641E2C /* libxml2.2.tbd */; };
+		62B09ADB1CECD1BF00A031CB /* libnlopt_cxx.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 62176AD11A54741A000F745D /* libnlopt_cxx.0.dylib */; };
+		62B09ADC1CECD1C200A031CB /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62AE719216FBE41C00547E42 /* boost.framework */; };
 		62C327651B9631D4001EB593 /* RankerFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62C327641B9631D4001EB593 /* RankerFactory.cpp */; };
 		62C327661B9631D4001EB593 /* RankerFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62C327641B9631D4001EB593 /* RankerFactory.cpp */; };
 		62C327691B96326E001EB593 /* AnalyzerFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62C327681B96326E001EB593 /* AnalyzerFactory.cpp */; };
@@ -172,6 +177,13 @@
 			remoteGlobalIDString = 622EA2D11604D43600764667;
 			remoteInfo = alib.osx;
 		};
+		62B09AD71CECD19900A031CB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62A2526E14365A860008E65F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 622EA2D11604D43600764667;
+			remoteInfo = jerome.osx;
+		};
 		62CA48161BB085FA00A2AA7B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 62A2526E14365A860008E65F /* Project object */;
@@ -206,6 +218,15 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		62527B611BBB490500767BA7 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		62B09ACE1CECD18200A031CB /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -381,6 +402,8 @@
 		62AC3BC71BBCBB2D0067C540 /* copyright.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = copyright.txt; sourceTree = "<group>"; };
 		62AE719216FBE41C00547E42 /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = Frameworks/boost.framework; sourceTree = "<group>"; };
 		62AF79C316CB0C850005CC53 /* utteranceCompiler.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = utteranceCompiler.js; sourceTree = "<group>"; };
+		62B09AD01CECD18200A031CB /* jerome */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jerome; sourceTree = BUILT_PRODUCTS_DIR; };
+		62B09AD21CECD18200A031CB /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		62BEF617153B4BF1009A9151 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		62C3275C1B9423A7001EB593 /* to_record.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = to_record.hpp; sourceTree = "<group>"; };
 		62C3275E1B962CFD001EB593 /* Factory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Factory.hpp; sourceTree = "<group>"; };
@@ -530,6 +553,17 @@
 				627818CE1CC8356C00C344E4 /* boost.framework in Frameworks */,
 				62FA58C11CC99DFB00641E2C /* JavaScriptCore.framework in Frameworks */,
 				62FA58C21CC99E0800641E2C /* libxslt.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		62B09ACD1CECD18200A031CB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				62B09AD91CECD1AA00A031CB /* libjerome.a in Frameworks */,
+				62B09ADA1CECD1BA00A031CB /* libxml2.2.tbd in Frameworks */,
+				62B09ADC1CECD1C200A031CB /* boost.framework in Frameworks */,
+				62B09ADB1CECD1BF00A031CB /* libnlopt_cxx.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -903,6 +937,7 @@
 				62262167198DAD7C00A0AA4E /* jerome.osx Tests */,
 				62CA480E1BB0859E00A2AA7B /* simple_jerome */,
 				62527B641BBB490500767BA7 /* vhmsg_jerome */,
+				62B09AD11CECD18200A031CB /* jerome_tool */,
 				62AC3BC31BBC9C830067C540 /* scripts */,
 				627818B71CC831C300C344E4 /* Jerome */,
 				622EA2D31604D43600764667 /* Frameworks */,
@@ -919,6 +954,7 @@
 				62CA480D1BB0859E00A2AA7B /* simple_jerome */,
 				62527B631BBB490500767BA7 /* vhmsg_jerome */,
 				627818B61CC831C300C344E4 /* Jerome.framework */,
+				62B09AD01CECD18200A031CB /* jerome */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -980,6 +1016,14 @@
 				627818CA1CC8341600C344E4 /* copy_headers.sh */,
 			);
 			path = scripts;
+			sourceTree = "<group>";
+		};
+		62B09AD11CECD18200A031CB /* jerome_tool */ = {
+			isa = PBXGroup;
+			children = (
+				62B09AD21CECD18200A031CB /* main.cpp */,
+			);
+			path = jerome_tool;
 			sourceTree = "<group>";
 		};
 		62C3275F1B962DBD001EB593 /* factories */ = {
@@ -1222,6 +1266,24 @@
 			productReference = 627818B61CC831C300C344E4 /* Jerome.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		62B09ACF1CECD18200A031CB /* jerome_tool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 62B09AD41CECD18200A031CB /* Build configuration list for PBXNativeTarget "jerome_tool" */;
+			buildPhases = (
+				62B09ACC1CECD18200A031CB /* Sources */,
+				62B09ACD1CECD18200A031CB /* Frameworks */,
+				62B09ACE1CECD18200A031CB /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				62B09AD81CECD19900A031CB /* PBXTargetDependency */,
+			);
+			name = jerome_tool;
+			productName = jerome_tool;
+			productReference = 62B09AD01CECD18200A031CB /* jerome */;
+			productType = "com.apple.product-type.tool";
+		};
 		62CA480C1BB0859E00A2AA7B /* simple_jerome */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 62CA48131BB0859E00A2AA7B /* Build configuration list for PBXNativeTarget "simple_jerome" */;
@@ -1278,6 +1340,9 @@
 					627818B51CC831C300C344E4 = {
 						CreatedOnToolsVersion = 7.3;
 					};
+					62B09ACF1CECD18200A031CB = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
 					62CA480C1BB0859E00A2AA7B = {
 						CreatedOnToolsVersion = 7.0;
 					};
@@ -1307,6 +1372,7 @@
 				62FAE70E161154520065D358 /* jerome.ios */,
 				62CA480C1BB0859E00A2AA7B /* simple_jerome */,
 				62527B621BBB490500767BA7 /* vhmsg_jerome */,
+				62B09ACF1CECD18200A031CB /* jerome_tool */,
 			);
 		};
 /* End PBXProject section */
@@ -1490,6 +1556,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		62B09ACC1CECD18200A031CB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				62B09AD31CECD18200A031CB /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		62CA48091BB0859E00A2AA7B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1568,6 +1642,11 @@
 			isa = PBXTargetDependency;
 			target = 622EA2D11604D43600764667 /* jerome.osx */;
 			targetProxy = 62A1279419A66AC500340BE9 /* PBXContainerItemProxy */;
+		};
+		62B09AD81CECD19900A031CB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 622EA2D11604D43600764667 /* jerome.osx */;
+			targetProxy = 62B09AD71CECD19900A031CB /* PBXContainerItemProxy */;
 		};
 		62CA48171BB085FA00A2AA7B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1954,6 +2033,71 @@
 			};
 			name = Release;
 		};
+		62B09AD51CECD18200A031CB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = jerome;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		62B09AD61CECD18200A031CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = jerome;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 		62CA48111BB0859E00A2AA7B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2106,6 +2250,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		62B09AD41CECD18200A031CB /* Build configuration list for PBXNativeTarget "jerome_tool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				62B09AD51CECD18200A031CB /* Debug */,
+				62B09AD61CECD18200A031CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		62CA48131BB0859E00A2AA7B /* Build configuration list for PBXNativeTarget "simple_jerome" */ = {
 			isa = XCConfigurationList;
