@@ -35,6 +35,14 @@ namespace jerome {
   typedef double WeightValue;
 }
 
+// While using boost::ublas as the linear algebra code is convinient,
+// I observe that it is not well suited for sparse vector/matrix operations.
+// It has the sparse type, however all operations over the sparse objects
+// attampt to touch every element, including the omitted zero ones. Which,
+// unsurprisingly, slows things down. Even when I optimize the sparse-related
+// code, boost is still slower than Eigen by about 2-2.5. I belive, Eigen
+// does some clever vectorization in the code to achive thise.
+
 #if JEROME_MATRIX == JEROME_MATRIX_BOOST
 
 #include <jerome/type/matrix_boost.hpp>
@@ -48,6 +56,11 @@ namespace jerome {
 #error "Use JEROME_MATRIX to select matrix implementation"
 
 #endif
+
+// These are some experiments with offloading model calculations to the GPU
+// It does not work extremely well: viennacl is limited in what it can do.
+// Also, moving matrices to GPU and back eats a lot of cycles. Ideally,
+// we need to rewrite the code for GPU...
 
 //#define VIENNACL_WITH_OPENCL
 

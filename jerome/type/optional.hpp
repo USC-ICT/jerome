@@ -23,8 +23,8 @@
 #ifndef __jerome_type_optional_hpp__
 #define __jerome_type_optional_hpp__
 
-// The reason for this file is that optional will be introduced in C++14. We are using
-// boost implementation meanwhile
+// The reason for this file is that optional will be introduced in C++14.
+// We are using boost implementation meanwhile
 
 #include <boost/optional.hpp>
 

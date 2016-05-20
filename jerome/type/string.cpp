@@ -34,7 +34,10 @@ namespace jerome {
   }
   
   void replaceAll(String& ioString, const String& inOld, const String& inNew) {
-    for(std::size_t pos = ioString.find(inOld, 0); pos != String::npos; pos = ioString.find(inOld, pos+inNew.length())) {
+    for(std::size_t pos = ioString.find(inOld, 0);
+        pos != String::npos;
+        pos = ioString.find(inOld, pos+inNew.length()))
+    {
       ioString.replace(pos, inOld.length(), inNew);
     }
   }

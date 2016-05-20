@@ -135,7 +135,8 @@ namespace jerome {
         typedef double split_size_type;
 
         template <class Range>
-        this_type subdata(const Range& inQuestionRange) const
+        this_type
+        subdata(const Range& inQuestionRange) const
         {
 
           question_set_type questions_set(std::begin(inQuestionRange), std::end(
@@ -158,7 +159,8 @@ namespace jerome {
           return newData;
         }
 
-        this_type dataByRemovingUnlinkedQuestions() const
+        this_type
+        dataByRemovingUnlinkedQuestions() const
         {
           question_set_type linked_questions_set; // all questions that have
                                                   // links
@@ -183,8 +185,9 @@ namespace jerome {
         //
 
         template <class RandomNumberGenerator>
-        std::pair<this_type, this_type> split(split_size_type inProportion,
-                                              RandomNumberGenerator& inRandomNumberGenerator)
+        std::pair<this_type, this_type>
+        split(split_size_type inProportion,
+              RandomNumberGenerator& inRandomNumberGenerator)
         const
         {
 
@@ -215,8 +218,8 @@ namespace jerome {
 
         }
 
-        std::pair<this_type,
-          this_type> split(split_size_type inProportion) const
+        std::pair<this_type, this_type>
+        split(split_size_type inProportion) const
         {
           ptrdiff_t (* p_myrandom)(ptrdiff_t) = myrandom;
           return split(inProportion, p_myrandom);
