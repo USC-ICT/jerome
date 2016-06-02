@@ -22,9 +22,12 @@ using namespace jerome;
   return self->_utterance.has(fieldName.cppString);
 }
 
-- (NSString* _Nonnull)get:(NSString* _Nonnull)fieldName
+- (NSString* _Nullable)get:(NSString* _Nonnull)fieldName
 {
-  return [NSString stringWithCPPString:self->_utterance.get(fieldName.cppString)];
+  auto name = fieldName.cppString;
+  return self->_utterance.has(name)
+    ? [NSString stringWithCPPString:self->_utterance.get(name)]
+    : nil;
 }
 
 - (void)set:(NSString* _Nonnull)fieldName :(NSString* _Nonnull)fieldValue

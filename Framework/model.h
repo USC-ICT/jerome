@@ -34,7 +34,7 @@ JEROME_FRAMEWORK_SYMBOL_EXPORT
 
 @protocol ALUtterance <JSExport>
 - (BOOL)has:(NSString* _Nonnull)fieldName;
-- (NSString* _Nonnull)get:(NSString* _Nonnull)fieldName;
+- (NSString* _Nullable)get:(NSString* _Nonnull)fieldName;
 - (void)set:(NSString* _Nonnull)fieldName :(NSString* _Nonnull)fieldValue;
 @end
 
