@@ -86,6 +86,29 @@
 		62B09ADA1CECD1BA00A031CB /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58C31CC99E1600641E2C /* libxml2.2.tbd */; };
 		62B09ADB1CECD1BF00A031CB /* libnlopt_cxx.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 62176AD11A54741A000F745D /* libnlopt_cxx.0.dylib */; };
 		62B09ADC1CECD1C200A031CB /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62AE719216FBE41C00547E42 /* boost.framework */; };
+		62B316C51D0F7B1100D2E4E4 /* Jerome.h in Headers */ = {isa = PBXBuildFile; fileRef = 62B316C41D0F7B1100D2E4E4 /* Jerome.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		62B316CC1D0F7B1100D2E4E4 /* Jerome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62B316C21D0F7B1100D2E4E4 /* Jerome.framework */; };
+		62B316D11D0F7B1100D2E4E4 /* Jerome_iosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62B316D01D0F7B1100D2E4E4 /* Jerome_iosTests.swift */; };
+		62B316DB1D0F7B4A00D2E4E4 /* ALEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 62EAF8091CE3ABAF00A1BCA9 /* ALEngine.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		62B316DC1D0F7B4A00D2E4E4 /* ALEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 62EAF80A1CE3ABAF00A1BCA9 /* ALEngine.mm */; };
+		62B316DD1D0F7B4A00D2E4E4 /* ALPlatform.h in Headers */ = {isa = PBXBuildFile; fileRef = 627818BE1CC8322700C344E4 /* ALPlatform.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		62B316DE1D0F7B4A00D2E4E4 /* ALPlatform.mm in Sources */ = {isa = PBXBuildFile; fileRef = 627818BF1CC8322700C344E4 /* ALPlatform.mm */; };
+		62B316E01D0F7B4A00D2E4E4 /* Macros.h in Headers */ = {isa = PBXBuildFile; fileRef = 62F5F9001CE4555900EECA12 /* Macros.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		62B316E11D0F7B4A00D2E4E4 /* model_private.h in Headers */ = {isa = PBXBuildFile; fileRef = 62EAF8131CE3AF6700A1BCA9 /* model_private.h */; };
+		62B316E21D0F7B4A00D2E4E4 /* model.h in Headers */ = {isa = PBXBuildFile; fileRef = 62EAF80F1CE3AE1600A1BCA9 /* model.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		62B316E31D0F7B4A00D2E4E4 /* model.mm in Sources */ = {isa = PBXBuildFile; fileRef = 62EAF8101CE3AE1600A1BCA9 /* model.mm */; };
+		62B316E41D0F7B4A00D2E4E4 /* ObjectiveC++.h in Headers */ = {isa = PBXBuildFile; fileRef = 627818C01CC8322700C344E4 /* ObjectiveC++.h */; };
+		62B316E51D0F7B4A00D2E4E4 /* ObjectiveC++.mm in Sources */ = {isa = PBXBuildFile; fileRef = 627818C11CC8322700C344E4 /* ObjectiveC++.mm */; };
+		62B316E61D0F7B4A00D2E4E4 /* Scion.h in Headers */ = {isa = PBXBuildFile; fileRef = 62F5F8EE1CE304BE00EECA12 /* Scion.h */; };
+		62B316E71D0F7B4A00D2E4E4 /* Scion.m in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8EF1CE304BE00EECA12 /* Scion.m */; };
+		62B316E91D0F7CD200D2E4E4 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62B316E81D0F7CD100D2E4E4 /* libxml2.2.tbd */; };
+		62B316EA1D0F7CDC00D2E4E4 /* libkstem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58D21CCB344800641E2C /* libkstem.a */; };
+		62B316ED1D0F7D0400D2E4E4 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62B316EC1D0F7D0400D2E4E4 /* JavaScriptCore.framework */; };
+		62B316EF1D0F7D2000D2E4E4 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62B316EE1D0F7D2000D2E4E4 /* boost.framework */; };
+		62B316F11D0F843900D2E4E4 /* libjerome.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FAE70F161154520065D358 /* libjerome.a */; };
+		62B316F31D0F8B5B00D2E4E4 /* string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62AC3BBC1BBC94C80067C540 /* string.cpp */; };
+		62B316F41D0F8B8800D2E4E4 /* evaluation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6200F5571BAA04AD009828A4 /* evaluation.cpp */; };
+		62B316F51D0F8BBC00D2E4E4 /* error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62AC3BBE1BBC967F0067C540 /* error.cpp */; };
 		62C327651B9631D4001EB593 /* RankerFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62C327641B9631D4001EB593 /* RankerFactory.cpp */; };
 		62C327661B9631D4001EB593 /* RankerFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62C327641B9631D4001EB593 /* RankerFactory.cpp */; };
 		62C327691B96326E001EB593 /* AnalyzerFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62C327681B96326E001EB593 /* AnalyzerFactory.cpp */; };
@@ -183,6 +206,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 622EA2D11604D43600764667;
 			remoteInfo = jerome.osx;
+		};
+		62B316B91D0F7AF500D2E4E4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62FA58CA1CCB344700641E2C /* kstem.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 620C625F1B75645D00FA2953;
+			remoteInfo = kstem.ios;
+		};
+		62B316CD1D0F7B1100D2E4E4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62A2526E14365A860008E65F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 62B316C11D0F7B1100D2E4E4;
+			remoteInfo = Jerome.ios;
+		};
+		62B316D91D0F7B2000D2E4E4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62A2526E14365A860008E65F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 62FAE70E161154520065D358;
+			remoteInfo = jerome.ios;
 		};
 		62CA48161BB085FA00A2AA7B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -404,6 +448,16 @@
 		62AF79C316CB0C850005CC53 /* utteranceCompiler.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = utteranceCompiler.js; sourceTree = "<group>"; };
 		62B09AD01CECD18200A031CB /* jerome */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jerome; sourceTree = BUILT_PRODUCTS_DIR; };
 		62B09AD21CECD18200A031CB /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		62B316C21D0F7B1100D2E4E4 /* Jerome.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Jerome.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		62B316C41D0F7B1100D2E4E4 /* Jerome.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Jerome.h; sourceTree = "<group>"; };
+		62B316C61D0F7B1100D2E4E4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		62B316CB1D0F7B1100D2E4E4 /* Jerome.iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Jerome.iosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		62B316D01D0F7B1100D2E4E4 /* Jerome_iosTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Jerome_iosTests.swift; sourceTree = "<group>"; };
+		62B316D21D0F7B1100D2E4E4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		62B316E81D0F7CD100D2E4E4 /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libxml2.2.tbd; sourceTree = DEVELOPER_DIR; };
+		62B316EC1D0F7D0400D2E4E4 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		62B316EE1D0F7D2000D2E4E4 /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ios/Frameworks/boost.framework; sourceTree = "<group>"; };
+		62B316F61D0FC01200D2E4E4 /* libnlopt_cxx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnlopt_cxx.a; path = ios/lib/libnlopt_cxx.a; sourceTree = "<group>"; };
 		62BEF617153B4BF1009A9151 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		62C3275C1B9423A7001EB593 /* to_record.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = to_record.hpp; sourceTree = "<group>"; };
 		62C3275E1B962CFD001EB593 /* Factory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Factory.hpp; sourceTree = "<group>"; };
@@ -567,6 +621,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		62B316BE1D0F7B1100D2E4E4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				62B316F11D0F843900D2E4E4 /* libjerome.a in Frameworks */,
+				62B316EF1D0F7D2000D2E4E4 /* boost.framework in Frameworks */,
+				62B316ED1D0F7D0400D2E4E4 /* JavaScriptCore.framework in Frameworks */,
+				62B316EA1D0F7CDC00D2E4E4 /* libkstem.a in Frameworks */,
+				62B316E91D0F7CD200D2E4E4 /* libxml2.2.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		62B316C81D0F7B1100D2E4E4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				62B316CC1D0F7B1100D2E4E4 /* Jerome.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		62CA480A1BB0859E00A2AA7B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -678,6 +752,10 @@
 		622EA2D31604D43600764667 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				62B316F61D0FC01200D2E4E4 /* libnlopt_cxx.a */,
+				62B316EE1D0F7D2000D2E4E4 /* boost.framework */,
+				62B316EC1D0F7D0400D2E4E4 /* JavaScriptCore.framework */,
+				62B316E81D0F7CD100D2E4E4 /* libxml2.2.tbd */,
 				62FA58C31CC99E1600641E2C /* libxml2.2.tbd */,
 				627818AF1CC825D800C344E4 /* ios */,
 				627818AE1CC8239700C344E4 /* osx */,
@@ -940,6 +1018,8 @@
 				62B09AD11CECD18200A031CB /* jerome_tool */,
 				62AC3BC31BBC9C830067C540 /* scripts */,
 				627818B71CC831C300C344E4 /* Jerome */,
+				62B316C31D0F7B1100D2E4E4 /* Jerome.ios */,
+				62B316CF1D0F7B1100D2E4E4 /* Jerome.iosTests */,
 				622EA2D31604D43600764667 /* Frameworks */,
 				62A2527814365A870008E65F /* Products */,
 			);
@@ -955,6 +1035,8 @@
 				62527B631BBB490500767BA7 /* vhmsg_jerome */,
 				627818B61CC831C300C344E4 /* Jerome.framework */,
 				62B09AD01CECD18200A031CB /* jerome */,
+				62B316C21D0F7B1100D2E4E4 /* Jerome.framework */,
+				62B316CB1D0F7B1100D2E4E4 /* Jerome.iosTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1024,6 +1106,24 @@
 				62B09AD21CECD18200A031CB /* main.cpp */,
 			);
 			path = jerome_tool;
+			sourceTree = "<group>";
+		};
+		62B316C31D0F7B1100D2E4E4 /* Jerome.ios */ = {
+			isa = PBXGroup;
+			children = (
+				62B316C41D0F7B1100D2E4E4 /* Jerome.h */,
+				62B316C61D0F7B1100D2E4E4 /* Info.plist */,
+			);
+			path = Jerome.ios;
+			sourceTree = "<group>";
+		};
+		62B316CF1D0F7B1100D2E4E4 /* Jerome.iosTests */ = {
+			isa = PBXGroup;
+			children = (
+				62B316D01D0F7B1100D2E4E4 /* Jerome_iosTests.swift */,
+				62B316D21D0F7B1100D2E4E4 /* Info.plist */,
+			);
+			path = Jerome.iosTests;
 			sourceTree = "<group>";
 		};
 		62C3275F1B962DBD001EB593 /* factories */ = {
@@ -1188,6 +1288,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		62B316BF1D0F7B1100D2E4E4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				62B316E41D0F7B4A00D2E4E4 /* ObjectiveC++.h in Headers */,
+				62B316E11D0F7B4A00D2E4E4 /* model_private.h in Headers */,
+				62B316E21D0F7B4A00D2E4E4 /* model.h in Headers */,
+				62B316C51D0F7B1100D2E4E4 /* Jerome.h in Headers */,
+				62B316E01D0F7B4A00D2E4E4 /* Macros.h in Headers */,
+				62B316E61D0F7B4A00D2E4E4 /* Scion.h in Headers */,
+				62B316DB1D0F7B4A00D2E4E4 /* ALEngine.h in Headers */,
+				62B316DD1D0F7B4A00D2E4E4 /* ALPlatform.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -1284,6 +1399,43 @@
 			productReference = 62B09AD01CECD18200A031CB /* jerome */;
 			productType = "com.apple.product-type.tool";
 		};
+		62B316C11D0F7B1100D2E4E4 /* Jerome.ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 62B316D31D0F7B1100D2E4E4 /* Build configuration list for PBXNativeTarget "Jerome.ios" */;
+			buildPhases = (
+				62B316BD1D0F7B1100D2E4E4 /* Sources */,
+				62B316BE1D0F7B1100D2E4E4 /* Frameworks */,
+				62B316BF1D0F7B1100D2E4E4 /* Headers */,
+				62B316C01D0F7B1100D2E4E4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				62B316DA1D0F7B2000D2E4E4 /* PBXTargetDependency */,
+			);
+			name = Jerome.ios;
+			productName = Jerome.ios;
+			productReference = 62B316C21D0F7B1100D2E4E4 /* Jerome.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		62B316CA1D0F7B1100D2E4E4 /* Jerome.iosTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 62B316D61D0F7B1100D2E4E4 /* Build configuration list for PBXNativeTarget "Jerome.iosTests" */;
+			buildPhases = (
+				62B316C71D0F7B1100D2E4E4 /* Sources */,
+				62B316C81D0F7B1100D2E4E4 /* Frameworks */,
+				62B316C91D0F7B1100D2E4E4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				62B316CE1D0F7B1100D2E4E4 /* PBXTargetDependency */,
+			);
+			name = Jerome.iosTests;
+			productName = Jerome.iosTests;
+			productReference = 62B316CB1D0F7B1100D2E4E4 /* Jerome.iosTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		62CA480C1BB0859E00A2AA7B /* simple_jerome */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 62CA48131BB0859E00A2AA7B /* Build configuration list for PBXNativeTarget "simple_jerome" */;
@@ -1314,6 +1466,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				62B316BA1D0F7AF500D2E4E4 /* PBXTargetDependency */,
 			);
 			name = jerome.ios;
 			productName = alib.ios;
@@ -1341,6 +1494,12 @@
 						CreatedOnToolsVersion = 7.3;
 					};
 					62B09ACF1CECD18200A031CB = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+					62B316C11D0F7B1100D2E4E4 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+					62B316CA1D0F7B1100D2E4E4 = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
 					62CA480C1BB0859E00A2AA7B = {
@@ -1373,6 +1532,8 @@
 				62CA480C1BB0859E00A2AA7B /* simple_jerome */,
 				62527B621BBB490500767BA7 /* vhmsg_jerome */,
 				62B09ACF1CECD18200A031CB /* jerome_tool */,
+				62B316C11D0F7B1100D2E4E4 /* Jerome.ios */,
+				62B316CA1D0F7B1100D2E4E4 /* Jerome.iosTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1404,6 +1565,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		627818B41CC831C300C344E4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		62B316C01D0F7B1100D2E4E4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		62B316C91D0F7B1100D2E4E4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1564,6 +1739,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		62B316BD1D0F7B1100D2E4E4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				62B316E31D0F7B4A00D2E4E4 /* model.mm in Sources */,
+				62B316E71D0F7B4A00D2E4E4 /* Scion.m in Sources */,
+				62B316DC1D0F7B4A00D2E4E4 /* ALEngine.mm in Sources */,
+				62B316DE1D0F7B4A00D2E4E4 /* ALPlatform.mm in Sources */,
+				62B316E51D0F7B4A00D2E4E4 /* ObjectiveC++.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		62B316C71D0F7B1100D2E4E4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				62B316D11D0F7B1100D2E4E4 /* Jerome_iosTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		62CA48091BB0859E00A2AA7B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1588,8 +1783,10 @@
 				62C3276E1B963286001EB593 /* ReporterFactory.cpp in Sources */,
 				6211C33D1B80717300F293DC /* stylesheet.cpp in Sources */,
 				6200F7381B84735F00CA121E /* reader.cpp in Sources */,
+				62B316F31D0F8B5B00D2E4E4 /* string.cpp in Sources */,
 				62C327781B998A38001EB593 /* ModelWriterXML.cpp in Sources */,
 				620C62841B75764A00FA2953 /* irregular_verbs.cpp in Sources */,
+				62B316F41D0F8B8800D2E4E4 /* evaluation.cpp in Sources */,
 				62C327661B9631D4001EB593 /* RankerFactory.cpp in Sources */,
 				62F5F8E21CE2C0CE00EECA12 /* npc_model.cpp in Sources */,
 				622BF9951B82D472001588C7 /* PlatformJSInterface.cpp in Sources */,
@@ -1606,6 +1803,7 @@
 				6211C3311B8016BF00F293DC /* document.cpp in Sources */,
 				62F5F8EA1CE2C8D500EECA12 /* scripts.cpp in Sources */,
 				6200F73E1B84772E00CA121E /* ModelReader.cpp in Sources */,
+				62B316F51D0F8BBC00D2E4E4 /* error.cpp in Sources */,
 				6288C8AF163B5C6200191972 /* js_engine.cpp in Sources */,
 				62C3277D1B998A71001EB593 /* ModelWriterText.cpp in Sources */,
 				62E830E81B64752500847135 /* engine.cpp in Sources */,
@@ -1647,6 +1845,21 @@
 			isa = PBXTargetDependency;
 			target = 622EA2D11604D43600764667 /* jerome.osx */;
 			targetProxy = 62B09AD71CECD19900A031CB /* PBXContainerItemProxy */;
+		};
+		62B316BA1D0F7AF500D2E4E4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = kstem.ios;
+			targetProxy = 62B316B91D0F7AF500D2E4E4 /* PBXContainerItemProxy */;
+		};
+		62B316CE1D0F7B1100D2E4E4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 62B316C11D0F7B1100D2E4E4 /* Jerome.ios */;
+			targetProxy = 62B316CD1D0F7B1100D2E4E4 /* PBXContainerItemProxy */;
+		};
+		62B316DA1D0F7B2000D2E4E4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 62FAE70E161154520065D358 /* jerome.ios */;
+			targetProxy = 62B316D91D0F7B2000D2E4E4 /* PBXContainerItemProxy */;
 		};
 		62CA48171BB085FA00A2AA7B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1900,9 +2113,8 @@
 				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../build/osx/lib";
 				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = ../build/osx/lib/libnlopt_cxx.a;
+				OTHER_LDFLAGS = "$(SRCROOT)/../build/osx/lib/libnlopt_cxx.a";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -1952,9 +2164,8 @@
 				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../build/osx/lib";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = ../build/osx/lib/libnlopt_cxx.a;
+				OTHER_LDFLAGS = "$(SRCROOT)/../build/osx/lib/libnlopt_cxx.a";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -2098,6 +2309,184 @@
 			};
 			name = Release;
 		};
+		62B316D41D0F7B1100D2E4E4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../build/ios/Frameworks";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)",
+					/usr/include/libxml2,
+					"$(SRCROOT)/../build/ios/include",
+				);
+				INFOPLIST_FILE = Jerome.ios/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "$(SRCROOT)/../build/ios/lib/libnlopt_cxx.a";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
+				PRODUCT_NAME = Jerome;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		62B316D51D0F7B1100D2E4E4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../build/ios/Frameworks";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)",
+					/usr/include/libxml2,
+					"$(SRCROOT)/../build/ios/include",
+				);
+				INFOPLIST_FILE = Jerome.ios/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "$(SRCROOT)/../build/ios/lib/libnlopt_cxx.a";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
+				PRODUCT_NAME = Jerome;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		62B316D71D0F7B1100D2E4E4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = Jerome.iosTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.usc.ict.Jerome-iosTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		62B316D81D0F7B1100D2E4E4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = Jerome.iosTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.usc.ict.Jerome-iosTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
 		62CA48111BB0859E00A2AA7B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2169,11 +2558,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
-					../build/ios/include,
-				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../3rd_party/libiOSJavaScriptCore-534.27\"",
+					"$(SRCROOT)/../build/ios/include",
 				);
 				PRODUCT_NAME = jerome;
 				SDKROOT = iphoneos;
@@ -2191,11 +2576,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
-					../build/ios/include,
-				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../3rd_party/libiOSJavaScriptCore-534.27\"",
+					"$(SRCROOT)/../build/ios/include",
 				);
 				PRODUCT_NAME = jerome;
 				SDKROOT = iphoneos;
@@ -2256,6 +2637,23 @@
 			buildConfigurations = (
 				62B09AD51CECD18200A031CB /* Debug */,
 				62B09AD61CECD18200A031CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		62B316D31D0F7B1100D2E4E4 /* Build configuration list for PBXNativeTarget "Jerome.ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				62B316D41D0F7B1100D2E4E4 /* Debug */,
+				62B316D51D0F7B1100D2E4E4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		62B316D61D0F7B1100D2E4E4 /* Build configuration list for PBXNativeTarget "Jerome.iosTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				62B316D71D0F7B1100D2E4E4 /* Debug */,
+				62B316D81D0F7B1100D2E4E4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};

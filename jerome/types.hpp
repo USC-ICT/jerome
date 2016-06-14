@@ -31,15 +31,15 @@
 #include <ostream>
 #include <stdint.h>
 
-#include <jerome/type/string.hpp>
-#include <jerome/type/error.hpp>
-
 
 #if !defined(_WIN32) && !defined(__WIN32__) && !defined(WIN32)
 #  define JEROME_SYMBOL_EXPORT __attribute__((__visibility__("default")))
 #  define JEROME_SYMBOL_IMPORT
 #  define JEROME_SYMBOL_VISIBLE __attribute__((__visibility__("default")))
 #endif
+
+#include <jerome/type/string.hpp>
+#include <jerome/type/error.hpp>
 
 namespace ptr = std;
 

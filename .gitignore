@@ -28,3 +28,4 @@
 *.app
 .idea
 3rdParty/eigen-3.2.8
+3rdParty/nlopt-2.3
