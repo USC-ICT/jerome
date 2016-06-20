@@ -46,7 +46,7 @@ JSExportAs(get,
 );
 
 JSExportAs(set,
-- (void)setValue:(NSString* _Nullable)value forKeyPath:(NSString* _Nonnull)keyPath
+- (void)setValue:(NSString* _Nullable)value forKey:(NSString* _Nonnull)key
 );
 
 #pragma clang diagnostic pop
