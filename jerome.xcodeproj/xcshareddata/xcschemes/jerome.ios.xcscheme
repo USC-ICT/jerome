@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0700"
+   LastUpgradeVersion = "0730"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "62FAE70E161154520065D358"
-               BuildableName = "libjerome.a"
-               BlueprintName = "libjerome.ios"
+               BlueprintIdentifier = "62B316C11D0F7B1100D2E4E4"
+               BuildableName = "Jerome.framework"
+               BlueprintName = "Jerome.ios"
                ReferencedContainer = "container:jerome.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,14 +28,24 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "62B316CA1D0F7B1100D2E4E4"
+               BuildableName = "Jerome.iosTests.xctest"
+               BlueprintName = "Jerome.iosTests"
+               ReferencedContainer = "container:jerome.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "62FAE70E161154520065D358"
-            BuildableName = "libalib.a"
-            BlueprintName = "alib.ios"
-            ReferencedContainer = "container:alib.xcodeproj">
+            BlueprintIdentifier = "62B316C11D0F7B1100D2E4E4"
+            BuildableName = "Jerome.framework"
+            BlueprintName = "Jerome.ios"
+            ReferencedContainer = "container:jerome.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -54,9 +64,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "62FAE70E161154520065D358"
-            BuildableName = "libjerome.a"
-            BlueprintName = "libjerome.ios"
+            BlueprintIdentifier = "62B316C11D0F7B1100D2E4E4"
+            BuildableName = "Jerome.framework"
+            BlueprintName = "Jerome.ios"
             ReferencedContainer = "container:jerome.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -69,6 +79,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "62B316C11D0F7B1100D2E4E4"
+            BuildableName = "Jerome.framework"
+            BlueprintName = "Jerome.ios"
+            ReferencedContainer = "container:jerome.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
