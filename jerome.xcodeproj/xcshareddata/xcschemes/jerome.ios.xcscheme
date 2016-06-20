@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "62FAE70E161154520065D358"
                BuildableName = "libjerome.a"
-               BlueprintName = "jerome.ios"
+               BlueprintName = "libjerome.ios"
                ReferencedContainer = "container:jerome.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -51,6 +51,15 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "62FAE70E161154520065D358"
+            BuildableName = "libjerome.a"
+            BlueprintName = "libjerome.ios"
+            ReferencedContainer = "container:jerome.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

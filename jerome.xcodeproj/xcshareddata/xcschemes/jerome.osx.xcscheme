@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "622EA2D11604D43600764667"
                BuildableName = "libjerome.a"
-               BlueprintName = "jerome.osx"
+               BlueprintName = "libjerome.osx"
                ReferencedContainer = "container:jerome.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -58,7 +58,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "622EA2D11604D43600764667"
             BuildableName = "libjerome.a"
-            BlueprintName = "jerome.osx"
+            BlueprintName = "libjerome.osx"
             ReferencedContainer = "container:jerome.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -81,7 +81,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "622EA2D11604D43600764667"
             BuildableName = "libjerome.a"
-            BlueprintName = "jerome.osx"
+            BlueprintName = "libjerome.osx"
             ReferencedContainer = "container:jerome.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -99,7 +99,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "622EA2D11604D43600764667"
             BuildableName = "libjerome.a"
-            BlueprintName = "jerome.osx"
+            BlueprintName = "libjerome.osx"
             ReferencedContainer = "container:jerome.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

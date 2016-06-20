@@ -68,6 +68,9 @@ namespace jerome {
               for (const auto& te : query.terms()) {
 
                 const typename Index::Term& ti      = field.findTerm(te.first);
+                if (ti.cf() == 0)
+                  continue;
+                
                 double    wIndep    = collection_weight<Index>(ti, field);
                 if (wIndep == 0)
                   throw Exception(
@@ -89,7 +92,7 @@ namespace jerome {
                 const typename Index::Term&       queryTermInfo(te.second);
                 
                 // we want a temporary before doing an outer product.
-                // so we compute the values ones. Ideally, the library
+                // so we compute the values once. Ideally, the library
                 // should understand that, but, e.g., eigen fails here anyway.
                 SparseWeightVector  x = jerome::sparse_log_plus1(document_weight<Index>(ti, field) / wIndep);
                 SparseWeightVector  y = jerome::matrix_cast<ValueType>(queryTermInfo.tfs());
