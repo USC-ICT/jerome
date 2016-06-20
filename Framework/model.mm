@@ -17,12 +17,13 @@ using namespace jerome;
 @end
 
 @implementation ALUtterance
-- (BOOL)has:(NSString* _Nonnull)fieldName
+
+- (BOOL)hasValueForKey:(NSString* _Nonnull)fieldName
 {
   return self->_utterance.has(fieldName.cppString);
 }
 
-- (NSString* _Nullable)get:(NSString* _Nonnull)fieldName
+- (NSString* _Nullable)valueForKey:(NSString* _Nonnull)fieldName
 {
   auto name = fieldName.cppString;
   return self->_utterance.has(name)
@@ -30,10 +31,21 @@ using namespace jerome;
     : nil;
 }
 
-- (void)set:(NSString* _Nonnull)fieldName :(NSString* _Nonnull)fieldValue
+- (void)setValue:(NSString* _Nullable)fieldValue forKey:(NSString* _Nonnull)fieldName
 {
   self->_utterance.put(fieldName.cppString, fieldValue.cppString);
 }
+
+- (NSString* _Nullable)objectForKeyedSubscript:(NSString* _Nonnull)key
+{
+  return [self valueForKey:key];
+}
+
+- (void)setObject:(NSString* _Nullable)obj forKeyedSubscript:(NSString* _Nonnull)key
+{
+  [self setValue:obj forKey:key];
+}
+
 @end
 
 @implementation ALUtterance (AL)

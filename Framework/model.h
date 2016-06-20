@@ -33,9 +33,27 @@ JEROME_FRAMEWORK_SYMBOL_EXPORT
 @end
 
 @protocol ALUtterance <JSExport>
-- (BOOL)has:(NSString* _Nonnull)fieldName;
-- (NSString* _Nullable)get:(NSString* _Nonnull)fieldName;
-- (void)set:(NSString* _Nonnull)fieldName :(NSString* _Nonnull)fieldValue;
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnullability-completeness"
+
+JSExportAs(has,
+- (BOOL)hasValueForKey:(NSString* _Nonnull)key
+);
+
+JSExportAs(get,
+- (NSString* _Nullable)valueForKey:(NSString* _Nonnull)key
+);
+
+JSExportAs(set,
+- (void)setValue:(NSString* _Nullable)value forKeyPath:(NSString* _Nonnull)keyPath
+);
+
+#pragma clang diagnostic pop
+
+- (NSString* _Nullable)objectForKeyedSubscript:(NSString* _Nonnull)key;
+- (void)setObject:(NSString* _Nullable)obj forKeyedSubscript:(NSString* _Nonnull)key;
+
 @end
 
 JEROME_FRAMEWORK_SYMBOL_EXPORT
