@@ -26,12 +26,19 @@
 
 #include <iostream>
 
+#ifdef EIGEN_SPARSEVECTOR_PLUGIN
+#define __jerome_had_no_EIGEN_SPARSEVECTOR_PLUGIN__ 0
+#else
+#define __jerome_had_no_EIGEN_SPARSEVECTOR_PLUGIN__ 1
 #define EIGEN_SPARSEVECTOR_PLUGIN "matrix_eigen_sparse_vector_plugin.hpp"
+#endif
 
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 
+#if __jerome_had_no_EIGEN_SPARSEVECTOR_PLUGIN__
 #undef EIGEN_SPARSEVECTOR_PLUGIN
+#endif
 
 namespace jerome {
   
