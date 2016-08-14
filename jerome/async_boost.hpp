@@ -147,7 +147,7 @@ namespace jerome {
         {
           static const std::size_t max_thread_count = hardware_concurrency();
 
-          long count = mCount;
+          long count = (long)mCount;
           std::size_t needed = count < (long)max_thread_count
                                ? max_thread_count
                                : (std::size_t)(max_thread_count *

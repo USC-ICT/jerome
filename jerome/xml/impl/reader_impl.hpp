@@ -60,7 +60,7 @@ namespace jerome {
         
         reader_impl(std::istream& is)
         : mBuffer(is)
-        , mReader(mBuffer.newReader(NULL, "utf-8", NULL))
+        , mReader(mBuffer.newReader(NULL, "utf-8", 0))
         , mThrow(true)
         , mTreatEmptyAsTwoTags(true)
         , mFakeEndElementTag(false)

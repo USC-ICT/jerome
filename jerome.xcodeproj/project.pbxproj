@@ -102,7 +102,6 @@
 		62B316E61D0F7B4A00D2E4E4 /* Scion.h in Headers */ = {isa = PBXBuildFile; fileRef = 62F5F8EE1CE304BE00EECA12 /* Scion.h */; };
 		62B316E71D0F7B4A00D2E4E4 /* Scion.m in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8EF1CE304BE00EECA12 /* Scion.m */; };
 		62B316E91D0F7CD200D2E4E4 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62B316E81D0F7CD100D2E4E4 /* libxml2.2.tbd */; };
-		62B316EA1D0F7CDC00D2E4E4 /* libkstem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58D21CCB344800641E2C /* libkstem.a */; };
 		62B316ED1D0F7D0400D2E4E4 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62B316EC1D0F7D0400D2E4E4 /* JavaScriptCore.framework */; };
 		62B316EF1D0F7D2000D2E4E4 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62B316EE1D0F7D2000D2E4E4 /* boost.framework */; };
 		62B316F31D0F8B5B00D2E4E4 /* string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62AC3BBC1BBC94C80067C540 /* string.cpp */; };
@@ -147,6 +146,8 @@
 		62EAF80C1CE3ABAF00A1BCA9 /* ALEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 62EAF80A1CE3ABAF00A1BCA9 /* ALEngine.mm */; };
 		62EAF8111CE3AE1600A1BCA9 /* model.h in Headers */ = {isa = PBXBuildFile; fileRef = 62EAF80F1CE3AE1600A1BCA9 /* model.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		62EAF8121CE3AE1600A1BCA9 /* model.mm in Sources */ = {isa = PBXBuildFile; fileRef = 62EAF8101CE3AE1600A1BCA9 /* model.mm */; };
+		62EBE0581D30119800CC87F8 /* libkstem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58D21CCB344800641E2C /* libkstem.a */; };
+		62EBE0591D3011A200CC87F8 /* libkstem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58D01CCB344800641E2C /* libkstem.a */; };
 		62F5F8E11CE2C0CE00EECA12 /* npc_model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8DF1CE2C0CE00EECA12 /* npc_model.cpp */; };
 		62F5F8E21CE2C0CE00EECA12 /* npc_model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8DF1CE2C0CE00EECA12 /* npc_model.cpp */; };
 		62F5F8E91CE2C8D500EECA12 /* scripts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8E71CE2C8D500EECA12 /* scripts.cpp */; };
@@ -159,7 +160,6 @@
 		62FA58C11CC99DFB00641E2C /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62262156198C9B6800A0AA4E /* JavaScriptCore.framework */; };
 		62FA58C21CC99E0800641E2C /* libxslt.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CA48201BB087A900A2AA7B /* libxslt.tbd */; };
 		62FA58C41CC99E1600641E2C /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58C31CC99E1600641E2C /* libxml2.2.tbd */; };
-		62FA58D31CCB347200641E2C /* libkstem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58D01CCB344800641E2C /* libkstem.a */; };
 		62FAE710161154520065D358 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D41604D43600764667 /* Foundation.framework */; };
 		62FAE71F161155500065D358 /* model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 622F89CF1512900600726296 /* model.cpp */; };
 		62FAE722161155500065D358 /* model_cpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620176271606850500FC583D /* model_cpp.cpp */; };
@@ -600,7 +600,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				62FA58D31CCB347200641E2C /* libkstem.a in Frameworks */,
+				62EBE0591D3011A200CC87F8 /* libkstem.a in Frameworks */,
 				62FA58C41CC99E1600641E2C /* libxml2.2.tbd in Frameworks */,
 				62FA58C01CC99DED00641E2C /* libjerome.a in Frameworks */,
 				627818CE1CC8356C00C344E4 /* boost.framework in Frameworks */,
@@ -624,9 +624,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62EBE0581D30119800CC87F8 /* libkstem.a in Frameworks */,
 				62B316EF1D0F7D2000D2E4E4 /* boost.framework in Frameworks */,
 				62B316ED1D0F7D0400D2E4E4 /* JavaScriptCore.framework in Frameworks */,
-				62B316EA1D0F7CDC00D2E4E4 /* libkstem.a in Frameworks */,
 				62B316E91D0F7CD200D2E4E4 /* libxml2.2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2321,7 +2321,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: leuski@ict.usc.edu (7KJNXK9UK3)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: leuski@ict.usc.edu (7KJNXK9UK3)";
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
@@ -2380,7 +2381,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: leuski@ict.usc.edu (7KJNXK9UK3)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: leuski@ict.usc.edu (7KJNXK9UK3)";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
