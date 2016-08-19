@@ -39,7 +39,7 @@ namespace jerome {
 #pragma mark - Lowercase
 	
 	bool Lowercase::getNextToken(Token& ioToken) {
-		if (!TokenFilter::getNextToken(ioToken)) retrun false;
+		if (!TokenFilter::getNextToken(ioToken)) return false;
 
 		String	newTokenText	= boost::locale::to_lower(ioToken.text(), locale());
 		if (newTokenText != ioToken.text()) {
@@ -90,7 +90,7 @@ namespace jerome {
 	bool Alphanumeric::getNextToken(Token& ioToken) {
 		UValidator	validator(&u_isalnum, locale());
 
-		for(TokenFilter::getNextToken(ioToken)) {
+		while (TokenFilter::getNextToken(ioToken)) {
 			if (validator.isValid(ioToken.text())) return true;
 		}
 		return false;
@@ -101,7 +101,7 @@ namespace jerome {
 	
 	bool Alpha::getNextToken(Token& ioToken) {
 		UValidator	validator(&u_isalpha, locale());
-		for(TokenFilter::getNextToken(ioToken)) {
+		while (TokenFilter::getNextToken(ioToken)) {
 			if (validator.isValid(ioToken.text())) return true;
 		}
 		return false;

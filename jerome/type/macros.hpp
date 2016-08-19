@@ -35,11 +35,10 @@
 
 
 #ifdef __ANDROID__
-#define JEROME_ANDROID
-#else
-#define JEROME_IOS
+# define JEROME_ANDROID
+#elif __APPLE__
+//# define JEROME_IOS
 #endif
-
 
 #if !defined(_WIN32) && !defined(__WIN32__) && !defined(WIN32)
 #  define JEROME_SYMBOL_EXPORT __attribute__((__visibility__("default")))
@@ -47,13 +46,21 @@
 #  define JEROME_SYMBOL_VISIBLE __attribute__((__visibility__("default")))
 #endif
 
-#ifdef __ANDROID__ 
-// Android does not have __has_feature macro. Thus we handle it separately here.
-#  define AL_NOEXCEPT noexcept
-#  define AL_NOEXCEPT_(x) noexcept(x)
-#  define AL_NOEXCEPT_OR_FALSE(x) noexcept(x)
-#else
-#if (__has_feature(cxx_noexcept))
+#ifndef CATCH_CPP11_OR_GREATER
+#	if (__cplusplus >= 201103L)
+#		define CATCH_CPP11_OR_GREATER 1
+#	elif defined(__clang__)
+#		if __has_feature(cxx_noexcept)
+#			define CATCH_CPP11_OR_GREATER 1
+#		endif
+#	elif defined(__ANDROID__)
+#		define CATCH_CPP11_OR_GREATER 1
+#	else
+#		define CATCH_CPP11_OR_GREATER 0
+#	endif
+#endif
+
+#if CATCH_CPP11_OR_GREATER
 #  define AL_NOEXCEPT noexcept
 #  define AL_NOEXCEPT_(x) noexcept(x)
 #  define AL_NOEXCEPT_OR_FALSE(x) noexcept(x)
@@ -62,5 +69,5 @@
 #  define AL_NOEXCEPT_(x)
 #  define AL_NOEXCEPT_OR_FALSE(x) false
 #endif
-#endif
+
 #endif // defined __jerome_type_macros_hpp__
