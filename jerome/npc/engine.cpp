@@ -21,6 +21,7 @@
 //
 
 #include <fstream>
+#include <chrono>
 
 #include <jerome/npc/model_cpp.hpp>
 #include <jerome/npc/detail/ModelReader.hpp>
