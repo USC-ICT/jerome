@@ -24,6 +24,9 @@
 
 #ifndef JEROME_IOS
 
+#include <boost/algorithm/algorithm.hpp>
+#include <boost/algorithm/string.hpp>
+
 namespace jerome { 
 
 	void Locale::global(const String& inLocaleString) {
@@ -52,46 +55,16 @@ namespace jerome {
 	// -----------------------------------------------------------------------------	
 #pragma mark - Alphanumeric
 	
-	struct UValidator {
-		typedef int32_t												my_wchar_t;
-		typedef boost::locale::utf::utf_traits<String::value_type>	inp_utf_traits_type;
-		typedef boost::locale::utf::utf_traits<my_wchar_t>			out_utf_traits_type;
-		typedef int8_t (*fn_type)(my_wchar_t inValue);
-		
-		UValidator(fn_type inFN, const jerome::Locale& inLocale) : mFN(inFN), mLocale(inLocale) {}
-		
-		bool isValid(const String& inString) {
-			String::const_iterator	b	= inString.begin();
-			String::const_iterator	e	= inString.end();
-			boost::locale::utf::code_point	cp;
-			my_wchar_t						out_buffer;
-			
-//			typedef	std::ctype<wchar_t>	ctype_type;			
-//			const ctype_type& ct = std::use_facet<ctype_type>(mLocale);
-//			ct.is(ctype_type::alpha, cp);
-// OK, after about 4 hours trying to find how to check unicode character class -- 
-// a feature that is standard in Java -- I found no good way but to use ICU library from IBM.
-// Aparently the standard C++ approach you see above only works for ASCII characters. Bummer.
-			
-			while (b != e) {
-				cp = inp_utf_traits_type::decode(b, e);
-				if (cp == boost::locale::utf::illegal || cp == boost::locale::utf::incomplete) break;
-				out_utf_traits_type::encode(cp, &out_buffer);
-				if ((*mFN)(out_buffer)) return true;
-			}
-			return false;
-		} 
-		
-	private:
-		fn_type					mFN;
-		const jerome::Locale&		mLocale;
-	};
-	
+  // a lot depends on how the locale is defined.
+  // note that
+  //    std::locale loc("en_US.UTF-8");
+  // works for utf8 encoding.
 	bool Alphanumeric::getNextToken(Token& ioToken) {
-		UValidator	validator(&u_isalnum, locale());
-
 		while (TokenFilter::getNextToken(ioToken)) {
-			if (validator.isValid(ioToken.text())) return true;
+      // we assume utf8 internal encoding
+      auto inp = boost::locale::conv::utf_to_utf<wchar_t>(ioToken.text());
+      if (boost::algorithm::all(inp, boost::algorithm::is_alnum(locale())))
+        return true;
 		}
 		return false;
 	}
@@ -100,9 +73,10 @@ namespace jerome {
 #pragma mark - Alpha
 	
 	bool Alpha::getNextToken(Token& ioToken) {
-		UValidator	validator(&u_isalpha, locale());
 		while (TokenFilter::getNextToken(ioToken)) {
-			if (validator.isValid(ioToken.text())) return true;
+      auto inp = boost::locale::conv::utf_to_utf<wchar_t>(ioToken.text());
+      if (boost::algorithm::all(inp, boost::algorithm::is_alpha(locale())))
+        return true;
 		}
 		return false;
 	}
