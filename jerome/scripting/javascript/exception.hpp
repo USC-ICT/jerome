@@ -23,7 +23,7 @@
 #ifndef __jerome_scripting_javascript_exception_hpp__
 #define __jerome_scripting_javascript_exception_hpp__
 #include <stdexcept>
-#include <JavaScriptCore/JavaScriptCore.h>
+#include <JavaScriptCore/JavaScript.h>
 
 namespace jerome { namespace javascript {
 

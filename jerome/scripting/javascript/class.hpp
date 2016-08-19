@@ -23,7 +23,7 @@
 #ifndef __jerome_scripting_javascript_class_hpp__
 #define __jerome_scripting_javascript_class_hpp__
 
-#include <JavaScriptCore/JavaScriptCore.h>
+#include <JavaScriptCore/JavaScript.h>
 
 namespace jerome { namespace javascript {
 

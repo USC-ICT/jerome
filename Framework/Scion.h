@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <JavaScriptCore/JavaScriptCore.h>
+#import <JavaScriptCore/JavaScript.h>
 #include <libxml/tree.h>
 
 @class ALXMLNode;

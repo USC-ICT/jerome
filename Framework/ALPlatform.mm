@@ -6,7 +6,7 @@
 //  Copyright © 2015 Anton Leuski. All rights reserved.
 //
 
-#import <JavaScriptCore/JavaScriptCore.h>
+#import <JavaScriptCore/JavaScript.h>
 #include <fstream>
 #include <jerome/npc/platform.hpp>
 #import "ObjectiveC++.h"
