@@ -28,38 +28,38 @@ static const char* oStateName	= "classifier-name";
 
 int main(int argc, const char * argv[])
 {
-	po::options_description desc("Allowed options");
-	desc.add_options()
-	(oHelp, "produce help message")
-	(oTrainData, 	po::value<std::string>(), "train data file")
-	(oDevData, 		po::value<std::string>(), "dev data file")
-	(oTestData, 	po::value<std::string>(), "test data file")
-	(oStateName, 	po::value<std::string>(), "classifier name in the data file")
-	(oDMScript, 	po::value<std::string>(), "dialogue manager scxml script file")
-	;
-	
-	po::variables_map vm;
-	po::store(po::parse_command_line(argc, argv, desc), vm);
-	po::notify(vm);
-	
-	if (vm.count(oHelp)) {
-		std::cout << desc << "\n";
-		return 1;
-	}
-	
-	if (!vm.count(oTrainData)) {
-		std::cerr << "train data file is required" << "\n";
-		return 1;
-	}
-	
-	if (!vm.count(oStateName)) {
-		std::cerr << "classifier name is required" << "\n";
-		return 1;
-	}
-	
-	String machineName;
-	
 	try {
+		po::options_description desc("Allowed options");
+		desc.add_options()
+		(oHelp, "produce help message")
+		(oTrainData, 	po::value<std::string>(), "train data file")
+		(oDevData, 		po::value<std::string>(), "dev data file")
+		(oTestData, 	po::value<std::string>(), "test data file")
+		(oStateName, 	po::value<std::string>(), "classifier name in the data file")
+		(oDMScript, 	po::value<std::string>(), "dialogue manager scxml script file")
+		;
+	
+		po::variables_map vm;
+		po::store(po::parse_command_line(argc, argv, desc), vm);
+		po::notify(vm);
+	
+		if (vm.count(oHelp)) {
+			std::cout << desc << "\n";
+			return 1;
+		}
+	
+		if (!vm.count(oTrainData)) {
+			std::cerr << "train data file is required" << "\n";
+			return 1;
+		}
+	
+		if (!vm.count(oStateName)) {
+			std::cerr << "classifier name is required" << "\n";
+			return 1;
+		}
+	
+		String machineName;
+	
     // =================================
     // initializing the library
 
@@ -147,6 +147,7 @@ int main(int argc, const char * argv[])
 			//		sleep(10);
 		
 	} catch (std::exception& e) {
+		std::cerr << "Exception:" << std::endl;
 		std::cerr << e.what() << std::endl;
 		return -1;
 	}

@@ -21,7 +21,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DEIGEN_SPARSEVECTOR_PLUGIN=\
 
 set(kstem_dir "${PROJECT_SOURCE_DIR}/3rdParty/kstem/source")
 file(GLOB_RECURSE kstem_source_files "${kstem_dir}/*.cpp" "${kstem_dir}/hash.c")
+
 add_library(kstem SHARED ${kstem_source_files})
+
 target_include_directories(kstem
         PUBLIC "${kstem_dir}"
         PUBLIC "${kstem_dir}/data"
@@ -58,43 +60,29 @@ set(jerome_libraries
 find_library(boost_lib boost PATHS "${PROJECT_SOURCE_DIR}/../build/osx/Frameworks")
 if (NOT boost_lib)
 
-	find_library(boost_lib boost_thread)
+	find_library(boost_lib boost_thread HINTS "/usr/local/lib" "/usr/lib")
 		
 	if (boost_lib)
 
+		macro (find_boost arg)
+			find_library(boost_${arg}_lib ${arg} HINTS "/usr/local/lib" "/usr/lib")
+			if (boost_${arg}_lib)
+				message( "${arg} found")
+				set(boost_lib ${boost_lib} ${boost_${arg}_lib})
+			else (boost_${arg}_lib)
+				message( "${arg} not found")			
+			endif (boost_${arg}_lib)
+		endmacro()
+
 		message( "boost_thread found")
-		find_library(boost1_lib boost_system)
-		if (boost1_lib)
-			message( "boost_system found")
-			set(boost_lib ${boost_lib} ${boost1_lib})
-		endif (boost1_lib)
-
-		find_library(boost1_lib boost_date_time)
-		if (boost1_lib)
-			message( "boost_date_time found")
-			set(boost_lib ${boost_lib} ${boost1_lib})
-		endif (boost1_lib)
-
-		find_library(boost1_lib boost_signals)
-		if (boost1_lib)
-			set(boost_lib ${boost_lib} ${boost1_lib})
-		endif (boost1_lib)
-
-		find_library(boost1_lib boost_filesystem)
-		if (boost1_lib)
-			set(boost_lib ${boost_lib} ${boost1_lib})
-		endif (boost1_lib)
-
-		find_library(boost1_lib boost_program_options)
-		if (boost1_lib)
-			set(boost_lib ${boost_lib} ${boost1_lib})
-		endif (boost1_lib)
-
-		find_library(boost1_lib boost_locale)
-		if (boost1_lib)
-			set(boost_lib ${boost_lib} ${boost1_lib})
-		endif (boost1_lib)
-
+		
+		find_boost(boost_system)
+		find_boost(boost_date_time)
+		find_boost(boost_signals)
+		find_boost(boost_filesystem)
+		find_boost(boost_program_options)
+		find_boost(boost_locale)
+		
 	endif (boost_lib)
 
 endif (NOT boost_lib)
@@ -116,7 +104,7 @@ endif (JavaScriptCore_lib)
 
 # find nlopt
 
-find_library(nlopt_lib nlopt_cxx "${PROJECT_SOURCE_DIR}/../build/osx/lib" NO_DEFAULT_PATH)
+find_library(nlopt_lib NAMES nlopt nlopt_cxx HINTS "${PROJECT_SOURCE_DIR}/../build/osx/lib"  "/usr/local/lib" "/usr/lib/x86_64-linux-gnu" "/usr/lib")
 
 if (nlopt_lib)
 	set(jerome_libraries ${jerome_libraries} ${nlopt_lib})
@@ -147,7 +135,7 @@ message("hello")
 
 file(GLOB_RECURSE jerome_source_files "${PROJECT_SOURCE_DIR}/jerome/*.cpp")
 
-add_library(jerome SHARED ${jerome_source_files}  "${jerome_GENERATED_OUTPUT_DIR}/startup.js.inc"
+add_library(jerome STATIC ${jerome_source_files}  "${jerome_GENERATED_OUTPUT_DIR}/startup.js.inc"
         "${jerome_GENERATED_OUTPUT_DIR}/utteranceCompiler.js.inc"
         "${jerome_GENERATED_OUTPUT_DIR}/scion.js.inc"
         "${jerome_GENERATED_OUTPUT_DIR}/HTMLReporter.xslt.inc")
@@ -165,9 +153,17 @@ target_link_libraries(jerome ${jerome_libraries})
 
 # simple_jerome example
 
+set(exec_libs jerome ${boost_lib})
+
+if (NOT APPLE)
+	find_library(pthread_lib pthread)
+	set(exec_libs ${exec_libs} ${pthread_lib})
+	
+endif (NOT APPLE)
+
 add_executable(simple_jerome
         examples/simple_jerome/main.cpp)
 
-target_link_libraries(simple_jerome LINK_PUBLIC jerome)
+target_link_libraries(simple_jerome ${exec_libs})
 
 

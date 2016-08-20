@@ -53,7 +53,7 @@ namespace jerome {
       * other
       * functions.
       */
-      static void initialize(const String& locale = "en_US.UTF8");
+      static void initialize(const String& locale = "en_US.UTF-8");
 
       Platform();
       virtual ~Platform();
