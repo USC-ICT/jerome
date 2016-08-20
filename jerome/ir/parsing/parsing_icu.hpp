@@ -41,7 +41,7 @@ namespace jerome {
 // Note that this tokenizer is different from the Java one, as it tokenizes
 // English on '-'.
 
-	class Tokenizer : public TokenStream {
+	class Tokenizer : public i::TokenStreamImpl {
 	private:
 		typedef boost::locale::boundary::sboundary_point_index	index_type;
 		
@@ -86,10 +86,10 @@ namespace jerome {
 		const jerome::Locale& locale() const { return mLocale; }
 	};
 
-	class NonTokenizer : public TokenStream {
+	class NonTokenizer : public i::TokenStreamImpl {
 		const jerome::Locale			mLocale;
 		Token						mToken;
-		bool						mHastToken;
+		bool						mHasToken;
 		
 	public:
 
@@ -99,14 +99,14 @@ namespace jerome {
 		template <class CharIterator>
 		NonTokenizer(CharIterator inBegin, CharIterator inEnd, jerome::Locale const & inLocale = jerome::Locale()) 
 		: mToken(String(inBegin, inEnd), 0, inEnd-inBegin)
-		, mLocale(inLocale),
+		, mLocale(inLocale)
 		, mHasToken(true)
 		{
 //		std::cout<< locale().name() << std::endl;
 		}
 		
 		NonTokenizer(const String* inString, jerome::Locale const & inLocale = jerome::Locale()) 
-		: mToken(*inString, 0, inString->length())
+    : mToken(*inString, 0, (Token::size_type)inString->length())
 		, mLocale(inLocale)
 		, mHasToken(true)
 		{

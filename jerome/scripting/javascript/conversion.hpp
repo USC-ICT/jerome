@@ -30,7 +30,7 @@
 #include <boost/optional.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 
-#include <JavaScriptCore/JavaScriptCore.h>
+#include <JavaScriptCore/JavaScript.h>
 #include <jerome/scripting/javascript/exception.hpp>
 #include <jerome/scripting/javascript/types.hpp>
 #include <jerome/scripting/javascript/string.hpp>

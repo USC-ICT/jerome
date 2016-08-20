@@ -26,7 +26,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <JavaScriptCore/JavaScriptCore.h>
+#include <JavaScriptCore/JavaScript.h>
 
 #include <jerome/scripting/javascript/exception.hpp>
 #include <jerome/scripting/javascript/string.hpp>

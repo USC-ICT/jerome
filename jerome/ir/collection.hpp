@@ -134,7 +134,7 @@ namespace jerome { namespace ir {
 			
 			explicit Field()
 			: mTotalTermCount(0)
-      , mDocumentLengths((int)0)
+      , mDocumentLengths((DocumentLengths::Index)0)
       {
       }
 			

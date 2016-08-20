@@ -25,7 +25,7 @@
 
 #include <vector>
 #include <stack>
-#include <JavaScriptCore/JavaScriptCore.h>
+#include <JavaScriptCore/JavaScript.h>
 
 #include <jerome/scripting/javascript/types.hpp>
 #include <jerome/scripting/javascript/exception.hpp>
