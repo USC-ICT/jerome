@@ -55,8 +55,13 @@ namespace jerome {
 	// -----------------------------------------------------------------------------	
 #pragma mark - Alphanumeric
 	
+  // a lot depends on how the locale is defined.
+  // note that
+  //    std::locale loc("en_US.UTF-8");
+  // works for utf8 encoding.
 	bool Alphanumeric::getNextToken(Token& ioToken) {
 		while (TokenFilter::getNextToken(ioToken)) {
+      // we assume utf8 internal encoding
       auto inp = boost::locale::conv::utf_to_utf<wchar_t>(ioToken.text());
       if (boost::algorithm::all(inp, boost::algorithm::is_alnum(locale())))
         return true;

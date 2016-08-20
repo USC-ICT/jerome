@@ -40,7 +40,6 @@
 # define JEROME_IOS
 #endif
 
-
 #if !defined(_WIN32) && !defined(__WIN32__) && !defined(WIN32)
 #  define JEROME_SYMBOL_EXPORT __attribute__((__visibility__("default")))
 #  define JEROME_SYMBOL_IMPORT

@@ -21,7 +21,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DEIGEN_SPARSEVECTOR_PLUGIN=\
 
 set(kstem_dir "${PROJECT_SOURCE_DIR}/3rdParty/kstem/source")
 file(GLOB_RECURSE kstem_source_files "${kstem_dir}/*.cpp" "${kstem_dir}/hash.c")
-add_library(kstem STATIC ${kstem_source_files})
+
+add_library(kstem SHARED ${kstem_source_files})
+
 target_include_directories(kstem
         PUBLIC "${kstem_dir}"
         PUBLIC "${kstem_dir}/data"
