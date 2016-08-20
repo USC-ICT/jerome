@@ -61,6 +61,27 @@
             ReferencedContainer = "container:jerome.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "--train-data $(SRCROOT)/examples/data/twins.plist.csxml"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--dm $(SRCROOT)/examples/data/dm.scxml"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--classifier-name &quot;Anyone - The Twins&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "DYLD_LIBRARY_PATH"
+            value = "${DYLD_LIBRARY_PATH}:$(SRCROOT)/../build/osx/lib"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

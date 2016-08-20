@@ -76,6 +76,8 @@
 		6288C8AF163B5C6200191972 /* js_engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8AC163B5C6200191972 /* js_engine.cpp */; };
 		6288C8BB1651DD0F00191972 /* async.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8B91651DD0E00191972 /* async.cpp */; };
 		6288C8BC1651DD0F00191972 /* async.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8B91651DD0E00191972 /* async.cpp */; };
+		628E31CB1D67CFEC0073F882 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 628E31CA1D67CFEB0073F882 /* libxml2.tbd */; };
+		628E31CC1D67D0520073F882 /* libkstem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58D01CCB344800641E2C /* libkstem.a */; };
 		62990CD21B6CCD5400DEB2E8 /* Trainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62990CD01B6CCD5400DEB2E8 /* Trainer.cpp */; };
 		62990CD31B6CCD5400DEB2E8 /* Trainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62990CD01B6CCD5400DEB2E8 /* Trainer.cpp */; };
 		62AC3BBD1BBC94C80067C540 /* string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62AC3BBC1BBC94C80067C540 /* string.cpp */; };
@@ -411,6 +413,7 @@
 		6288C8B91651DD0E00191972 /* async.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = async.cpp; sourceTree = "<group>"; };
 		6288C8BA1651DD0E00191972 /* async.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = async.hpp; sourceTree = "<group>"; };
 		628BEE271B8D28C200F18BC0 /* Ranker_impl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Ranker_impl.hpp; sourceTree = "<group>"; };
+		628E31CA1D67CFEB0073F882 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		628E7C5E1B81C0980077028A /* input_buffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = input_buffer.hpp; sourceTree = "<group>"; };
 		628F1564199164A70050F485 /* exception.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = exception.hpp; sourceTree = "<group>"; };
 		628F1565199168130050F485 /* types.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = types.hpp; sourceTree = "<group>"; };
@@ -643,6 +646,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				628E31CC1D67D0520073F882 /* libkstem.a in Frameworks */,
+				628E31CB1D67CFEC0073F882 /* libxml2.tbd in Frameworks */,
 				62CA48211BB087AA00A2AA7B /* libxslt.tbd in Frameworks */,
 				62CA481A1BB086DA00A2AA7B /* libjerome.a in Frameworks */,
 				62CA48191BB0869E00A2AA7B /* boost.framework in Frameworks */,
@@ -750,6 +755,7 @@
 		622EA2D31604D43600764667 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				628E31CA1D67CFEB0073F882 /* libxml2.tbd */,
 				62B316F61D0FC01200D2E4E4 /* libnlopt_cxx.a */,
 				62B316EE1D0F7D2000D2E4E4 /* boost.framework */,
 				62B316EC1D0F7D0400D2E4E4 /* JavaScriptCore.framework */,
@@ -2509,7 +2515,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../3rd_party/boost/osx/framework\"";
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../build/osx/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2520,7 +2526,8 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../3rd_party/nlopt-2.3/build/lib\"";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../build/osx/lib";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -2542,14 +2549,15 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../3rd_party/boost/osx/framework\"";
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../build/osx/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/../3rd_party/nlopt-2.3/build/lib\"";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../build/osx/lib";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

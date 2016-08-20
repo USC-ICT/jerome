@@ -37,7 +37,7 @@
 #ifdef __ANDROID__
 # define JEROME_ANDROID
 #elif __APPLE__
-//# define JEROME_IOS
+# define JEROME_IOS
 #endif
 
 #if !defined(_WIN32) && !defined(__WIN32__) && !defined(WIN32)

@@ -108,6 +108,7 @@ int main(int argc, const char * argv[])
       auto response = p.respond(classifierName, "hello");
       if (response) {
         jerome::npc::detail::ModelWriterText::write(std::cout, *response);
+        std::cout << std::endl;
       } else {
         std::cout << "no response" << std::endl;
       }
