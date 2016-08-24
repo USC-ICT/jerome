@@ -110,7 +110,7 @@
 	<transition target="regular" event="vrSpeech_asr_complete">
 		<script>
 			var response	= handleTextEvent(_event.data);
-			triggerUtterance(response.id, response.script);
+			triggerUtterance(response.id, _event.data.name);
 		</script>
 	</transition>
 

@@ -156,7 +156,7 @@ var engine;
 function triggerUtterance(inExternalID, inName, cb)
 {
   if (debugTrace) {
-    pm.log("triggerUtterance:", inExternalID);
+    pm.log("triggerUtterance:", inExternalID, inName);
   }
 
   var callback = function() {
