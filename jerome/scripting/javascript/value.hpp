@@ -195,6 +195,37 @@ namespace jerome { namespace javascript {
 		Context		mContext;
 	};
 		
+  
+  
+  inline std::ostream& operator << (std::ostream& outs, const Value& obj)
+  {
+    std::string t;
+    std::string v = "n/a";
+    switch (obj.type()) {
+      case kJSTypeUndefined : t = "undefined"; break;
+      case kJSTypeNull : t = "null"; v = "null"; break;
+      case kJSTypeBoolean : t = "boolean"; v = std::to_string((bool)obj); break;
+      case kJSTypeNumber : t = "number"; v = std::to_string((double)obj); break;
+      case kJSTypeString : t = "string"; v = (std::string)obj; break;
+      case kJSTypeObject :
+        if (obj.isFunction()) {
+          t = "function";
+        } else if (obj.isConstructor()) {
+          t = "constructor";
+        } else {
+          t = "object";
+        }
+        if (obj.isNull()) {
+          v = "NULL";
+        } else {
+          v = obj.toJSONString(1);
+        }
+        break;
+      default: t = "unknown";
+    }
+    return outs << "JSValue of type " << t << " = " << v;
+  }
+
   namespace detail {
     struct ValueArray {
       ValueArray() = delete;
@@ -208,6 +239,7 @@ namespace jerome { namespace javascript {
       
       template< class InputIt >
       ValueArray(const Context& inContext, InputIt first, InputIt last)
+      : mContext(inContext)
       {
         mStorage.reserve(last-first);
         for(; first != last; ++first) {
@@ -216,6 +248,7 @@ namespace jerome { namespace javascript {
       }
 
       ValueArray(const Context& inContext, std::initializer_list<Value> init)
+      : mContext(inContext)
       {
         mStorage.reserve(init.size());
         for(const auto& x : init) {
@@ -223,15 +256,20 @@ namespace jerome { namespace javascript {
         }
       }
 
-      Value array() const { return Value(mContext, (JSValueRef)mContext.makeArray(size(), data())); }
+      Value array() const {
+        return Value(mContext, (JSValueRef)mContext.makeArray(size(), data()));
+      }
       std::size_t size() const { return mStorage.size(); }
       const JSValueRef* data() const { return mStorage.data(); }
-
+      std::vector<JSValueRef>::const_iterator begin() const { return mStorage.begin(); }
+      std::vector<JSValueRef>::const_iterator end() const { return mStorage.end(); }
     private:
       Context		mContext;
       std::vector<JSValueRef> mStorage;
     };
   }
 }}
+
+
 
 #endif // defined __jerome_scripting_javascript_value_hpp__

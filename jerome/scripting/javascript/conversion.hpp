@@ -65,7 +65,7 @@ namespace jerome { namespace javascript { namespace detail {
 	
 	template <typename T>
 	struct from_valueRef<T, typename std::enable_if<std::is_arithmetic<T>::value >::type> {
-		static T convert(Context& ctx, JSValueRef valueRef) {
+		static T convert(const Context& ctx, JSValueRef valueRef) {
 			return ctx.toNumber(valueRef);
 		}
 	};

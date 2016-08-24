@@ -68,7 +68,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--dm $(SRCROOT)/examples/data/dm.scxml"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--classifier-name &quot;Anyone - The Twins&quot;"
