@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <JavaScriptCore/JavaScript.h>
+#import <JavaScriptCore/JavaScriptCore.h>
 #import <Jerome/Macros.h>
 
 JEROME_FRAMEWORK_SYMBOL_EXPORT
