@@ -68,6 +68,11 @@ namespace jerome {
       return implementation().train(stateName, callback);
     }
 
+    OptionalError Platform::train(const TrainingParameters<Utterance>& params)
+    {
+      return implementation().train(params);
+    }
+
     OptionalError Platform::saveCollection(std::ostream& os)
     {
       return implementation().saveCollection(os);

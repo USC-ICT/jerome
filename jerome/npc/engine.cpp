@@ -23,6 +23,8 @@
 #include <fstream>
 #include <chrono>
 
+#include <jerome/type/algorithm.hpp>
+
 #include <jerome/npc/model_cpp.hpp>
 #include <jerome/npc/detail/ModelReader.hpp>
 #include <jerome/npc/detail/ModelWriter.hpp>
@@ -229,33 +231,53 @@ namespace jerome {
       OptionalError Engine::train(const String& stateName,
                                   const TrainingCallback& callback)
       {
-        auto ranker_or_error = ranker(stateName);
-        if (!ranker_or_error) return ranker_or_error.error();
-
-        auto ranker = ranker_or_error.value();
-        auto trainer = Trainer::trainerFscore();
-
         auto optState = mCollection.states().optionalObjectWithName(stateName);
         if (!optState) {
           return undefined_state_error(stateName);
         }
 
-        auto data = dataFromState(*optState, mCollection.utterance_index());
+        typedef List<Utterance> UL;
+        std::pair<UL, UL>   testTrainSplit = jerome::split<UL, const Domain::utterances_type&>(optState->questions().utterances(), 0.05);
+        std::pair<UL, UL>   devTrainSplit = jerome::split<UL>(testTrainSplit.second, 0.3);
+        
+        TrainingParameters<Data::question_type> params;
+        params.stateName = stateName;
+        params.callback = callback;
+        params.developmentQuestions = devTrainSplit.first;
+        params.trainingQuestions = devTrainSplit.second;
+        params.trainer = Trainer::trainerFscore();
 
-        std::pair<Data, Data>   testTrainSplit = data.split(0.05);
-        std::pair<Data, Data>   devTrainSplit = testTrainSplit.second.split(0.5);
-        trainer.setData(devTrainSplit.second, devTrainSplit.first);
-
-//				std::cout << data.questions().size() << " " << data.answers().size();
-
-				ranker.train(trainer, [&callback, &stateName](Trainer::state_type& state){
-					state_type_impl	fakeState(stateName, state);
-					callback(fakeState);
-				});
-
-				return Error::NO_ERROR;
+				return train(params);
       }
-			
+
+      OptionalError Engine::train(const TrainingParameters<Utterance>& params)
+      {
+        auto ranker_or_error = ranker(params.stateName);
+        if (!ranker_or_error) return ranker_or_error.error();
+        
+        auto ranker = ranker_or_error.value();
+        auto trainer = params.trainer;
+        
+        auto optState = mCollection.states().optionalObjectWithName(params.stateName);
+        if (!optState) {
+          return undefined_state_error(params.stateName);
+        }
+        
+        auto data = dataFromState(*optState, mCollection.utterance_index());
+        
+        trainer.setData(data.subdata(params.trainingQuestions),
+                        data.subdata(params.developmentQuestions));
+        
+        //				std::cout << data.questions().size() << " " << data.answers().size();
+        
+        ranker.train(trainer, [&params](Trainer::state_type& state){
+          state_type_impl	fakeState(params.stateName, state);
+          params.callback(fakeState);
+        });
+        
+        return Error::NO_ERROR;
+      }
+
 			OptionalError Engine::evaluate(const String& stateName,
 																	const Data& inData)
 			{
@@ -264,8 +286,8 @@ namespace jerome {
 				
 				auto ranker = ranker_or_error.value();
 
-				auto rankerResult = RankerFactory::sharedInstance().make(ranker.state(),
-																																 inData, ranker.values());
+				auto rankerResult = RankerFactory::sharedInstance()
+          .make(ranker.state(), inData, ranker.values());
 				auto xr = rankerResult.value();
 				
 				std::fstream out("result.html");

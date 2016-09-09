@@ -23,6 +23,7 @@
 #include <sstream>
 #include <random>
 
+#include <jerome/type/random.hpp>
 #include <jerome/math/parameters/parameterized.hpp>
 #include <boost/range/algorithm/copy.hpp>
 
@@ -61,12 +62,10 @@ namespace parameters {
 	List<RangeDomain::value_type> random(const range_vector& ranges)
 	{
 		List<RangeDomain::value_type> result;
-		std::uniform_real_distribution<RangeDomain::value_type>	rand(0,1);
-		std::random_device rd;
-		std::default_random_engine gen(rd());
+    static jerome::random<RangeDomain::value_type> random_gen(0, 1);
 		
 		for(const auto& r : ranges) {
-			result.push_back(r.minimum() + (r.minimum()+r.maximum()) * rand(gen));
+			result.push_back(r.minimum() + (r.minimum()+r.maximum()) * random_gen());
 		}
 		return result;
 	}

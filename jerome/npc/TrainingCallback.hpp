@@ -25,6 +25,7 @@
 
 #include <functional>
 #include <jerome/math/parameters/types.hpp>
+#include <jerome/npc/detail/Trainer.hpp>
 
 namespace jerome {
   namespace npc {
@@ -38,9 +39,21 @@ namespace jerome {
 			virtual void stop() = 0;
 			virtual String name() const = 0;
 		};
-	
+    
 		typedef std::function<void (TrainingState&)> TrainingCallback;
-	}
+        
+    template <class Q>
+    struct TrainingParameters {
+      String            stateName;
+      TrainingCallback  callback;
+      List<Q>           developmentQuestions;
+      List<Q>           trainingQuestions;
+      detail::Trainer   trainer;
+      
+      
+    };
+
+  }
 }
 
 #endif // defined __jerome_npc_TrainingCallback_hpp__

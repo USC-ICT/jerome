@@ -23,13 +23,14 @@
 #ifndef __jerome_ir_training_Data_hpp__
 #define __jerome_ir_training_Data_hpp__
 
+#include <random>
+
 #include <boost/range/algorithm_ext/push_back.hpp>
 #include <boost/range/adaptor/filtered.hpp>
-#include <boost/range/adaptor/transformed.hpp>
-#include <boost/range/algorithm/random_shuffle.hpp>
 #include <boost/range/algorithm/find_if.hpp>
 
 #include <jerome/types.hpp>
+#include <jerome/type/algorithm.hpp>
 
 namespace jerome {
   namespace ir {
@@ -184,45 +185,15 @@ namespace jerome {
         // if the proportion is weird (< 0 or >= |Q|) then duplicate the set
         //
 
-        template <class RandomNumberGenerator>
+        template <class RNG = std::default_random_engine>
         std::pair<this_type, this_type>
-        split(split_size_type inProportion,
-              RandomNumberGenerator& inRandomNumberGenerator)
+        split(split_size_type inProportion, RNG&& inRandomNumberGenerator = RNG())
         const
         {
-
-          std::size_t maxCount  = questions().size();
-          std::size_t count   = (inProportion < 0 || inProportion >= maxCount)
-                                ? maxCount
-                                : (std::size_t)((inProportion < 1)
-                                                ? inProportion * maxCount
-                                                : inProportion);
-
-          if (count == maxCount) {
-            return std::pair<this_type, this_type>(*this, *this);
-          } else {
-            std::vector<question_type>  randomized_questions(
-              questions().begin(), questions().end());
-            boost::range::random_shuffle(randomized_questions,
-              inRandomNumberGenerator);
-
-            this_type firstData =
-              subdata(boost::make_iterator_range(randomized_questions.begin(),
-                  randomized_questions.begin() + count));
-            this_type secondData  =
-              subdata(boost::make_iterator_range(randomized_questions.begin() +
-                  count, randomized_questions.end()));
-
-            return std::pair<this_type, this_type>(firstData, secondData);
-          }
-
-        }
-
-        std::pair<this_type, this_type>
-        split(split_size_type inProportion) const
-        {
-          ptrdiff_t (* p_myrandom)(ptrdiff_t) = myrandom;
-          return split(inProportion, p_myrandom);
+          auto p = jerome::split<std::vector<question_type>>(questions(),
+                                        inProportion, inRandomNumberGenerator);
+          return std::pair<this_type, this_type>(subdata(p.first),
+                                                 subdata(p.second));
         }
 
       };

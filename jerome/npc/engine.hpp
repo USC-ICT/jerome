@@ -74,6 +74,7 @@ namespace jerome {
 
         OptionalError saveCollection(std::ostream& os);
 
+        OptionalError train(const TrainingParameters<Utterance>& params);
         OptionalError train(const String& stateName,
                             const TrainingCallback& callback = [] (
                               TrainingState&) {});

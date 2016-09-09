@@ -70,6 +70,7 @@ namespace jerome {
       OptionalError train(
           const String& stateName,
           const TrainingCallback& callback = [](TrainingState&) {});
+      OptionalError train(const TrainingParameters<Utterance>& params);
 
       /**
       * Saves the collection to a stream. Returns an error object if there is

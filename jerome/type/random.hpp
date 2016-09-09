@@ -26,20 +26,51 @@
 #include <random>
 
 namespace jerome {
-	template <class T>
+	template <class T, class D, class E>
 	struct rand_base {
-		typedef T	value_type;
-		inline value_type	rand_value()
-		{
-      // STATIC
-			static auto distribution = new std::uniform_real_distribution<value_type>(0.0,1.0);
-			return (*distribution)(generator);
-		}
-		std::default_random_engine generator;
-	};
+    typedef T	value_type;
+    typedef D	distribution_type;
+    typedef E	random_engine_type;
+    
+    rand_base(value_type inMin, value_type inMax)
+    : generator()
+    , distribution(inMin, inMax)
+    {
+    }
+    
+    rand_base(value_type inMin, value_type inMax, value_type inSeed)
+    : generator(inSeed)
+    , distribution(inMin, inMax)
+    {
+    }
+    
+    inline value_type	operator() ()
+    {
+      return distribution(generator);
+    }
+    
+  private:
+    distribution_type distribution;
+    random_engine_type generator;
+  };
 	
-	template <class T>
-	struct random : public rand_base<T> {};
+	template <typename, typename = void>
+	struct random;
+  
+  template <typename T>
+  struct random<T, typename std::enable_if<std::is_integral<T>::value>::type>
+    : public rand_base<T, std::uniform_int_distribution<T>, std::default_random_engine > {
+      typedef rand_base<T, std::uniform_int_distribution<T>, std::default_random_engine > parent_type;
+      using parent_type::parent_type;
+  };
+
+  template <typename T>
+  struct random<T, typename std::enable_if<std::is_floating_point<T>::value>::type>
+    : public rand_base<T, std::uniform_real_distribution<T>, std::default_random_engine > {
+      typedef rand_base<T, std::uniform_real_distribution<T>, std::default_random_engine > parent_type;
+      using parent_type::parent_type;
+  };
+
 }
 
 #endif // defined __jerome_type_random_hpp__

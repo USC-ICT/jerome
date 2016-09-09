@@ -72,8 +72,8 @@ namespace jerome {
 				Data::answer_type,
 				boost::accumulators::features<
 					tag::average_precision
-#ifndef JEROME_INTERNAL_BASIC_REPORT
 				, tag::accuracy
+#ifndef JEROME_INTERNAL_BASIC_REPORT
 				, tag::fmeasure
 				, tag::precision
 				, tag::recall
@@ -120,7 +120,9 @@ namespace jerome {
 				, tag::micro_average_of<tag::pfalsealarm>
 
 				, tag::macro_average_of<tag::average_precision>
+#endif
 				, tag::macro_average_of<tag::accuracy>
+#ifndef JEROME_INTERNAL_BASIC_REPORT
 				, tag::macro_average_of<tag::fmeasure>
 				, tag::macro_average_of<tag::precision>
 				, tag::macro_average_of<tag::recall>
