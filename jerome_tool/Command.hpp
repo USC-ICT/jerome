@@ -10,6 +10,7 @@
 #define Command_hpp
 
 #include <string>
+#include <jerome/types.hpp>
 #include <boost/program_options.hpp>
 
 namespace po = boost::program_options;
@@ -23,21 +24,6 @@ class Command : public std::enable_shared_from_this<Command> {
 
 public:
   virtual ~Command();
-  
-  virtual std::string name() const {
-    return mName;
-  }
-
-  virtual std::string description() const {
-    return "unknown command";
-  }
-
-  virtual void manual(std::ostream& os) const {
-  }
-
-  virtual void run(const std::vector<std::string>& args, po::variables_map& vm) {
-    
-  }
   
   template <class T>
   static void registerClass() {
@@ -63,13 +49,34 @@ public:
   static std::string executablePath();
   static void usage(std::ostream& out);
 
+  static jerome::shared_ptr<std::ostream> ostreamWithName(const std::string& name);
+  static jerome::shared_ptr<std::istream> istreamWithName(const std::string& name);
+  
+  std::string name() const {
+    return mName;
+  }
+
+  void printManual(std::ostream& os) const {
+    manual(os);
+  }
+  
 protected:
-  Command(const char* inName)
+  Command(const std::string& inName, const std::string& inOptionsCaption)
   : mName(inName)
+  , mOptions(inOptionsCaption)
   {}
+  
+  po::options_description& options() { return mOptions; }
+  const po::options_description& options() const { return mOptions; }
   
 private:
   std::string mName;
+  po::options_description mOptions;
+  
+  virtual std::string description() const = 0;
+  virtual void manual(std::ostream& os) const;
+  virtual void run(const po::variables_map& vm) = 0;
+  virtual void parseAndRun(const std::vector<std::string> args, po::variables_map& vm);
   
   static std::shared_ptr<Command> command_ptr(const std::string& inName);
   typedef std::vector<std::shared_ptr<Command>> Commands;

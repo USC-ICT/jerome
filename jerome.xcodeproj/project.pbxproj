@@ -74,6 +74,7 @@
 		6268B0321A0579FC00287DF4 /* parsing_icu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6268B02B1A0579FC00287DF4 /* parsing_icu.cpp */; };
 		6268B0351A057A1800287DF4 /* parsing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6268B0341A057A1800287DF4 /* parsing.cpp */; };
 		6268B0361A057A1800287DF4 /* parsing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6268B0341A057A1800287DF4 /* parsing.cpp */; };
+		62750A2E1D835BB2004ABECE /* Evaluate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62750A2C1D835BB2004ABECE /* Evaluate.cpp */; };
 		627818B91CC831C300C344E4 /* Jerome.h in Headers */ = {isa = PBXBuildFile; fileRef = 627818B81CC831C300C344E4 /* Jerome.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		627818C21CC8322700C344E4 /* ALPlatform.h in Headers */ = {isa = PBXBuildFile; fileRef = 627818BE1CC8322700C344E4 /* ALPlatform.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		627818C31CC8322700C344E4 /* ALPlatform.mm in Sources */ = {isa = PBXBuildFile; fileRef = 627818BF1CC8322700C344E4 /* ALPlatform.mm */; };
@@ -411,6 +412,8 @@
 		6268B0341A057A1800287DF4 /* parsing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = parsing.cpp; sourceTree = "<group>"; };
 		6268B0381A057A3800287DF4 /* token.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = token.hpp; sourceTree = "<group>"; };
 		6268B0391A057A5700287DF4 /* filters.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filters.hpp; sourceTree = "<group>"; };
+		62750A2C1D835BB2004ABECE /* Evaluate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Evaluate.cpp; sourceTree = "<group>"; };
+		62750A2D1D835BB2004ABECE /* Evaluate.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Evaluate.hpp; sourceTree = "<group>"; };
 		62778F3218FC8D07007F7FD2 /* functions.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = functions.hpp; sourceTree = "<group>"; };
 		6277C3CB1536105000F8C7B0 /* weighting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = weighting.cpp; sourceTree = "<group>"; };
 		6277C3CC1536105000F8C7B0 /* rm.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = rm.hpp; sourceTree = "<group>"; };
@@ -1138,6 +1141,8 @@
 				62461EE51D7DF86400F8E4F4 /* Train.hpp */,
 				62461EE71D7DFA6200F8E4F4 /* Help.cpp */,
 				62461EE81D7DFA6200F8E4F4 /* Help.hpp */,
+				62750A2C1D835BB2004ABECE /* Evaluate.cpp */,
+				62750A2D1D835BB2004ABECE /* Evaluate.hpp */,
 			);
 			path = jerome_tool;
 			sourceTree = "<group>";
@@ -1773,6 +1778,7 @@
 			files = (
 				62461EE61D7DF86400F8E4F4 /* Train.cpp in Sources */,
 				62B09AD31CECD18200A031CB /* main.cpp in Sources */,
+				62750A2E1D835BB2004ABECE /* Evaluate.cpp in Sources */,
 				62461EE01D7DF83C00F8E4F4 /* Command.cpp in Sources */,
 				62461EE31D7DF85800F8E4F4 /* Split.cpp in Sources */,
 				62461EE91D7DFA6200F8E4F4 /* Help.cpp in Sources */,

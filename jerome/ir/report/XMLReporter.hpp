@@ -43,6 +43,9 @@ namespace jerome {
         class XMLReporterBase
         {
         public:
+          static constexpr char const* IDENTIFIER
+            = "edu.usc.ict.jerome.reporter.xml";
+
           XMLReporterBase(std::ostream& os);
           virtual ~XMLReporterBase();
 
@@ -81,7 +84,6 @@ namespace jerome {
           , public XMLReporterBase
         {
         public:
-					static constexpr char const* IDENTIFIER = "edu.usc.ict.jerome.reporter.xml";
 
           typedef ReporterImplementation<Ranker, Report> parent_type;
           typedef typename parent_type::rank_type rank_type;

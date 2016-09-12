@@ -79,7 +79,7 @@ namespace jerome {
                             const TrainingCallback& callback = [] (
                               TrainingState&) {});
 
-        OptionalError evaluate(const String& stateName, const Data& inData);
+        Result<double> evaluate(const EvaluationParameters<Utterance>& params);
 
         static Utterance queryForString(const String& question);
 

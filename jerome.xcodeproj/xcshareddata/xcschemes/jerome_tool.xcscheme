@@ -67,12 +67,24 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "evaluate --input $(SRCROOT)/examples/data/twins.plist.csxml"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--test-split auto"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--classifier-name &quot;Anyone - The Twins&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "split $(SRCROOT)/examples/data/twins.plist.csxml"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "split"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
       <EnvironmentVariables>

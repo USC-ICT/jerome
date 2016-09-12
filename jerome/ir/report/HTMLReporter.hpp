@@ -37,6 +37,9 @@ namespace jerome {
         class HTMLReporterBase
         {
         public:
+          static constexpr char const* IDENTIFIER
+            = "edu.usc.ict.jerome.reporter.html";
+          
           HTMLReporterBase();
           ~HTMLReporterBase();
 
@@ -51,9 +54,6 @@ namespace jerome {
           , public HTMLReporterBase
         {
         public:
-          static constexpr char const* IDENTIFIER =
-            "edu.usc.ict.jerome.reporter.html";
-
           typedef ReporterImplementation<
             typename XMLRep::ranker_type,
             typename XMLRep::report_type> parent_type;

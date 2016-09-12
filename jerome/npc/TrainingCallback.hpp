@@ -24,6 +24,8 @@
 #define __jerome_npc_TrainingCallback_hpp__
 
 #include <functional>
+
+#include <jerome/type/Record.hpp>
 #include <jerome/math/parameters/types.hpp>
 #include <jerome/npc/detail/Trainer.hpp>
 
@@ -49,8 +51,14 @@ namespace jerome {
       List<Q>           developmentQuestions;
       List<Q>           trainingQuestions;
       detail::Trainer   trainer;
-      
-      
+    };
+
+    template <class Q>
+    struct EvaluationParameters {
+      String            stateName;
+      List<Q>           testQuestions;
+      Record            reporterModel;
+      shared_ptr<std::ostream>     report;
     };
 
   }

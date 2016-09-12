@@ -278,20 +278,26 @@ namespace jerome {
         return Error::NO_ERROR;
       }
 
-			OptionalError Engine::evaluate(const String& stateName,
-																	const Data& inData)
+			Result<double> Engine::evaluate(const EvaluationParameters<Utterance>& params)
 			{
-				auto ranker_or_error = ranker(stateName);
+				auto ranker_or_error = ranker(params.stateName);
 				if (!ranker_or_error) return ranker_or_error.error();
 				
 				auto ranker = ranker_or_error.value();
+        
+        auto optState = mCollection.states().optionalObjectWithName(params.stateName);
+        if (!optState) {
+          return undefined_state_error(params.stateName);
+        }
+
+        auto data = dataFromState(*optState, mCollection.utterance_index());
+        auto testData = data.subdata(params.testQuestions);
 
 				auto rankerResult = RankerFactory::sharedInstance()
-          .make(ranker.state(), inData, ranker.values());
+          .make(ranker.state(), testData, ranker.values());
 				auto xr = rankerResult.value();
-				
-				std::fstream out("result.html");
-				return detail::evaluate(Record(), out, inData, xr);
+
+				return detail::evaluate(params.reporterModel, *params.report, testData, xr);
 			}
 			
 			void Engine::collectionWasUpdated(const OptionalString& inStateName)

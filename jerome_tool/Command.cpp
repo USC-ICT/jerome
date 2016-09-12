@@ -6,6 +6,7 @@
 //  Copyright © 2016 Anton Leuski & ICT/USC. All rights reserved.
 //
 
+#include <fstream>
 #include <iostream>
 #include <iomanip>
 #include <boost/filesystem.hpp>
@@ -108,7 +109,27 @@ void Command::parseArguments(int argc, const char * argv[])
                                                            po::include_positional);
   opts.erase(opts.begin());
   
-  Command::command(commandName).run(opts, vm);
+  Command::command(commandName).parseAndRun(opts, vm);
+}
+
+void Command::parseAndRun(const std::vector<std::string> args, po::variables_map& vm)
+{
+  po::parsed_options parsed = po::command_line_parser(args)
+  .options(mOptions)
+  .run();
+  
+  po::store(parsed, vm);
+  po::notify(vm);
+
+  run(vm);
+}
+
+void Command::manual(std::ostream& out) const
+{
+  out << description() << std::endl
+  << "usage: " << Command::executable()
+  << " " << name() << " [<options>]" << std::endl;
+  out << options() << std::endl;
 }
 
 void Command::usage(std::ostream& out)
@@ -125,6 +146,18 @@ void Command::usage(std::ostream& out)
     << c->description()
     << std::endl;
   }
+}
+
+jerome::shared_ptr<std::ostream> Command::ostreamWithName(const std::string& name)
+{
+  return name == "-" ? jerome::shared_ptr<std::ostream>(&std::cout, [](std::ostream*){})
+  : jerome::shared_ptr<std::ostream>(new std::fstream(name));
+}
+
+jerome::shared_ptr<std::istream> Command::istreamWithName(const std::string& name)
+{
+  return name == "-" ? jerome::shared_ptr<std::istream>(&std::cin, [](std::istream*){})
+  : jerome::shared_ptr<std::istream>(new std::fstream(name));
 }
 
 

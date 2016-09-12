@@ -14,9 +14,12 @@
 class Help : public Command {
 public:
   Help();
+
+private:
   std::string description() const override;
   void manual(std::ostream& os) const override;
-  void run(const std::vector<std::string>& args, po::variables_map& vm) override;
+  void run(const po::variables_map& vm) override;
+  void parseAndRun(const std::vector<std::string> args, po::variables_map& vm) override;
 };
 
 #endif /* Help_hpp */

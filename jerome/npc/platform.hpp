@@ -71,6 +71,7 @@ namespace jerome {
           const String& stateName,
           const TrainingCallback& callback = [](TrainingState&) {});
       OptionalError train(const TrainingParameters<Utterance>& params);
+      Result<double> evaluate(const EvaluationParameters<Utterance>& params);
 
       /**
       * Saves the collection to a stream. Returns an error object if there is

@@ -15,10 +15,8 @@ class Split : public Command {
 public:
   Split();
   std::string description() const override;
-  void manual(std::ostream& os) const override;
-  void run(const std::vector<std::string>& args, po::variables_map& vm) override;
+  void run(const po::variables_map& vm) override;
 private:
-  po::options_description mOptions;
 };
 
 #endif /* Split_hpp */

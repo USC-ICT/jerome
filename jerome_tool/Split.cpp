@@ -21,9 +21,9 @@ static const char* oSplit	= "split";
 static const char* oSplit_default	= "auto";
 
 Split::Split()
-: Command("split")
+: Command("split", "Split options")
 {
-  mOptions.add_options()
+  options().add_options()
   (oInputFile, 	po::value<std::string>()->default_value("-"),
    "input file. If none specified, we will use stdin.")
   (o1stOutput,  po::value<std::string>()->default_value("-"),
@@ -41,14 +41,7 @@ Split::Split()
 using namespace jerome;
 using namespace jerome::npc;
 
-void Split::run(const std::vector<std::string>& args, po::variables_map& vm) {
-
-  po::parsed_options parsed = po::command_line_parser(args)
-  .options(mOptions)
-  .run();
-  
-  po::store(parsed, vm);
-  po::notify(vm);
+void Split::run(const po::variables_map& vm) {
 
   Platform::initialize();
   Platform	p;
@@ -57,15 +50,9 @@ void Split::run(const std::vector<std::string>& args, po::variables_map& vm) {
   // loading a database
   
   {
-    std::string filename = vm[oInputFile].as<std::string>();
-    if (filename == "-") {
-      auto error = p.loadCollection(std::cin);
-      if (error) throw *error;
-    } else {
-      std::ifstream file(filename);
-      auto error = p.loadCollection(file);
-      if (error) throw *error;
-    }
+    auto file = istreamWithName(vm[oInputFile].as<std::string>());
+    auto error = p.loadCollection(*file);
+    if (error) throw *error;
   }
 
   
@@ -74,13 +61,5 @@ void Split::run(const std::vector<std::string>& args, po::variables_map& vm) {
 std::string Split::description() const
 {
   return "split a data file";
-}
-
-void Split::manual(std::ostream& out) const
-{
-  out << description() << std::endl
-  << "usage: " << Command::executable()
-  << " " << name() << " [<options>]" << std::endl;
-  out << mOptions << std::endl;
 }
 

@@ -11,7 +11,7 @@
 #include "Help.hpp"
 
 Help::Help()
-: Command("help")
+: Command("help", "Help options")
 {}
 
 void Help::manual(std::ostream& out) const
@@ -24,7 +24,7 @@ void Help::manual(std::ostream& out) const
 static const char* oCommand     = "help-command";
 static const char* oCommandArgs = "help-command-args";
 
-void Help::run(const std::vector<std::string>& args, po::variables_map& vm) {
+void Help::parseAndRun(const std::vector<std::string> args, po::variables_map &vm) {
   po::options_description all_options("Allowed options");
   all_options.add_options()
   (oCommand, 		po::value<std::string>(), "command")
@@ -46,9 +46,15 @@ void Help::run(const std::vector<std::string>& args, po::variables_map& vm) {
   .positional(positional_options)
   .allow_unregistered()
   .run();
-
+  
   po::store(parsed, vm);
   po::notify(vm);
+
+  run(vm);
+}
+
+
+void Help::run(const po::variables_map& vm) {
 
   if (!vm.count(oCommand)) {
     Command::usage(std::cerr);
@@ -61,7 +67,7 @@ void Help::run(const std::vector<std::string>& args, po::variables_map& vm) {
     Command::usage(std::cerr);
   }
 
-  Command::command(commandName).manual(std::cout);
+  Command::command(commandName).printManual(std::cout);
 }
 
 std::string Help::description() const

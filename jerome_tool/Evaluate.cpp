@@ -1,45 +1,38 @@
 //
-//  Train.cpp
+//  Evaluate.cpp
 //  jerome
 //
-//  Created by Anton Leuski on 9/5/16.
+//  Created by Anton Leuski on 9/9/16.
 //  Copyright © 2016 Anton Leuski & ICT/USC. All rights reserved.
 //
 
 #include <fstream>
-#include "Train.hpp"
+
+#include "Evaluate.hpp"
 
 #include <jerome/type/algorithm.hpp>
+#include <jerome/type/Factory.hpp>
 #include <jerome/npc/npc.hpp>
 #include <jerome/npc/detail/ModelWriterText.hpp>
+#include <jerome/ir/report/HTMLReporter.hpp>
+#include <jerome/ir/report/XMLReporter.hpp>
 
 static const char* oInputFile   = "input";
-static const char* oOutputFile	= "output";
 static const char* oReportFile	= "report";
 static const char* oTestSplit   = "test-split";
-static const char* oDevSplit    = "dev-split";
 static const char* oStateName   = "classifier-name";
 
 using namespace jerome;
 using namespace jerome::npc;
 
-Train::Train()
-: Command("train", "Train options")
+Evaluate::Evaluate()
+: Command("evaluate", "Evaluate options")
 {
   options().add_options()
   (oInputFile, 	po::value<std::string>()->default_value("-"), "input file (default standard input)")
-  (oOutputFile, po::value<std::string>()->default_value("-"), "output file (default standard output)")
   (oReportFile, po::value<std::string>()->default_value("-"), "report file")
   (oTestSplit,  po::value<std::string>()->default_value("label"),
    (std::string("How to select test questions. Provide one of \n")
-    + "auto      \t\n"
-    + "label     \t\n"
-    + "<number>  \t\n"
-    + "<number>% \t\n"
-    )
-   .c_str())
-  (oDevSplit,   po::value<std::string>()->default_value("label"),
-   (std::string("How to select development questions. Provide one of \n")
     + "auto      \t\n"
     + "label     \t\n"
     + "<number>  \t\n"
@@ -52,22 +45,9 @@ Train::Train()
 
 static void run1(Platform& p, const std::string& classifierName, const po::variables_map& vm)
 {
-  double bestValue = 0;
-  
-  TrainingParameters<Utterance> params;
-  params.stateName = classifierName;
-  params.callback = [&bestValue](TrainingState& state) {
-    if (state.elapsedTimeInSeconds() > 5)
-      state.stop();
-    if (state.lastValue() > bestValue) {
-      bestValue = state.lastValue();
-      std::cout << state.name() << ": " << state.lastArgument() << " " << bestValue << std::endl;
-    }
-  };
-  
-  auto optState = p.collection().states().optionalObjectWithName(params.stateName);
+  auto optState = p.collection().states().optionalObjectWithName(classifierName);
   if (!optState) {
-    throw std::invalid_argument(params.stateName);
+    throw std::invalid_argument(classifierName);
   }
   
   typedef List<Utterance> UL;
@@ -93,44 +73,35 @@ static void run1(Platform& p, const std::string& classifierName, const po::varia
     testTrainSplit = jerome::split<UL, const Domain::utterances_type&>
     (optState->questions().utterances(), testProp);
   }
+
+  EvaluationParameters<Utterance> params;
+
+  Record args(jerome::detail::FactoryConst::PROVIDER_IDENTIFIER_KEY,
+              jerome::ir::evaluation::detail::XMLReporterBase::IDENTIFIER);
   
-  std::string devPropText = vm[oDevSplit].as<std::string>();
-  if (devPropText == "label") {
-    devTrainSplit = jerome::split<UL>
-    (testTrainSplit.second,
-     [](const Utterance& u) {
-       return u.get("train_test", "train") == "dev";
-     });
-  } else {
-    double devProp = 0.25;
-    if (devPropText == "auto") {
-    } else if (hasSuffix(devPropText, "%")) {
-      devProp = std::atof(devPropText.c_str()) / 100.0;
-    } else {
-      devProp = std::atof(devPropText.c_str());
-    }
-    devTrainSplit = jerome::split<UL>(testTrainSplit.second, devProp);
+  params.stateName = classifierName;
+  params.testQuestions = testTrainSplit.first;
+  params.report = Command::ostreamWithName(vm[oReportFile].as<std::string>());
+  params.reporterModel = args;
+  
+  auto acc_or_error = p.evaluate(params);
+  
+  if (!acc_or_error) {
+    throw acc_or_error.error();
   }
   
-  params.developmentQuestions = devTrainSplit.first;
-  params.trainingQuestions = devTrainSplit.second;
-  params.trainer = jerome::npc::detail::Trainer::trainerFscore();
-  
-  auto error = p.train(params);
-  if (error) throw *error;
-  
-  
+  std::cout << acc_or_error.value() << std::endl;
 }
 
-void Train::run(const po::variables_map& vm) {
+void Evaluate::run(const po::variables_map& vm) {
   
   Platform::initialize();
 		
   Platform	p;
-
+  
   // =================================
   // loading a database
-
+  
   {
     auto file = istreamWithName(vm[oInputFile].as<std::string>());
     auto error = p.loadCollection(*file);
@@ -138,27 +109,23 @@ void Train::run(const po::variables_map& vm) {
   }
   
   // =================================
-  // training a classifier
+  // evaluating a classifier
   
-  if (!vm.count(oStateName)) {
+  if (vm.count(oStateName)) {
     for(auto cn : vm[oStateName].as<std::vector<std::string>>()) {
       run1(p, cn, vm);
     }
+  } else {
+    for(const auto& cn : p.collection().states()) {
+      run1(p, cn.name(), vm);
+    }
   }
-
-  // =================================
-  // saving the database
   
-  {
-    auto file = ostreamWithName(vm[oOutputFile].as<std::string>());
-    auto error = p.saveCollection(*file);
-    if (error) throw *error;
-  }
-
+  
 }
 
-std::string Train::description() const
+std::string Evaluate::description() const
 {
-  return "train a classifier";
+  return "evaluate a classifier";
 }
 

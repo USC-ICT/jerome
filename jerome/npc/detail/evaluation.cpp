@@ -63,7 +63,7 @@ namespace jerome {
 		
 			using namespace jerome::ir::evaluation::accumulators;
 			
-			OptionalError evaluate(const Record& inReporterModel,
+			Result<double> evaluate(const Record& inReporterModel,
 														 std::ostream& os,
 														 const Data& inTestData,
 														 const Ranker& inRanker)
@@ -150,7 +150,7 @@ namespace jerome {
 				if (!r) return r.error();
 				
 				r.value().report(inRanker, y);
-				return Error::NO_ERROR;
+				return macro_average_of<tag::accuracy>(y);
 			}
 			
 		}

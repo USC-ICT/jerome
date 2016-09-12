@@ -73,6 +73,11 @@ namespace jerome {
       return implementation().train(params);
     }
 
+    Result<double> Platform::evaluate(const EvaluationParameters<Utterance>& params)
+    {
+      return implementation().evaluate(params);
+    }
+    
     OptionalError Platform::saveCollection(std::ostream& os)
     {
       return implementation().saveCollection(os);

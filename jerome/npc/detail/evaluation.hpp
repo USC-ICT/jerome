@@ -33,7 +33,7 @@ namespace jerome {
 	namespace npc {
 		namespace detail {
 		
-			OptionalError evaluate(const Record& inReporterModel,
+			Result<double> evaluate(const Record& inReporterModel,
 														 std::ostream& os,
 														 const Data& inTestData,
 														 const Ranker& inRanker);
