@@ -237,8 +237,10 @@ namespace jerome {
         }
 
         typedef List<Utterance> UL;
-        std::pair<UL, UL>   testTrainSplit = jerome::split<UL, const Domain::utterances_type&>(optState->questions().utterances(), 0.05);
-        std::pair<UL, UL>   devTrainSplit = jerome::split<UL>(testTrainSplit.second, 0.3);
+        std::pair<UL, UL>   testTrainSplit =
+          jerome::split<UL, const Domain::utterances_type&>(optState->questions().utterances(), 0.05);
+        std::pair<UL, UL>   devTrainSplit =
+          jerome::split<UL>(testTrainSplit.second, 0.3);
         
         TrainingParameters<Data::question_type> params;
         params.stateName = stateName;
@@ -292,9 +294,10 @@ namespace jerome {
 
         auto data = dataFromState(*optState, mCollection.utterance_index());
         auto testData = data.subdata(params.testQuestions);
+        auto trainData = data.subdata(params.trainingQuestions);
 
 				auto rankerResult = RankerFactory::sharedInstance()
-          .make(ranker.state(), testData, ranker.values());
+          .make(ranker.state(), trainData, ranker.values());
 				auto xr = rankerResult.value();
 
 				return detail::evaluate(params.reporterModel, *params.report, testData, xr);

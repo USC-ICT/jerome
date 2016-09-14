@@ -23,6 +23,8 @@
 #ifndef __jerome_type_error_hpp__
 #define __jerome_type_error_hpp__
 
+#include <iostream>
+
 #include <exception>
 #include <boost/variant.hpp>
 #include <jerome/type/macros.hpp>
@@ -127,6 +129,13 @@ namespace jerome {
     T& value() { return boost::get<T>(*this); }
   };
 
+  inline
+  std::ostream& operator << (std::ostream& os, const std::exception& error)
+  {
+    os << error.what();
+    return os;
+  }
+  
 }
 
 #endif // defined __jerome_type_error_hpp__

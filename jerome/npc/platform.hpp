@@ -130,6 +130,7 @@ namespace jerome {
       * the client side.
       */
       Collection& collection();
+      const Collection& collection() const;
 
       /**
       * Tell the platform that you made changes to the collection, so it can 

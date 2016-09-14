@@ -57,6 +57,77 @@ namespace jerome {
 
     };
 
+    class Untokenized
+    : public UtteranceAnalyzer
+    {
+      static constexpr char const* DEFAULT_NAME = "Untokenized";
+      static constexpr char const* DEFAULT_FIELD = "documentID";
+      
+      String  mIndexFieldName;
+      String  mTextFieldName;
+      
+    public:
+      Untokenized(const String& inName = DEFAULT_NAME, // the name of the analyzer
+              const String& inFieldName = DEFAULT_FIELD, // the index field name
+              const String& inTextName = Utterance::kFieldID) // the utterance field name
+      : UtteranceAnalyzer(inName)
+      , mIndexFieldName(inFieldName)
+      , mTextFieldName(inTextName)
+      {
+      }
+      
+    public:
+      Untokenized(const Record& inRecord)
+      : UtteranceAnalyzer(inRecord.at(NAME, DEFAULT_NAME))
+      , mIndexFieldName(inRecord.at(INDEX_FIELD_NAME, DEFAULT_FIELD))
+      , mTextFieldName(inRecord.at(UTTERANCE_FIELD_NAME, Utterance::kFieldID))
+      {
+        
+      }
+      
+      static constexpr char const* IDENTIFIER =
+      "edu.usc.ict.jerome.analyzer.untokenized";
+      static constexpr char const* NAME = "name";
+      static constexpr char const* INDEX_FIELD_NAME = "index.field.name";
+      static constexpr char const* UTTERANCE_FIELD_NAME =
+      "utterance.field.name";
+      
+      typedef UtteranceAnalyzer parent_type;
+      typedef typename parent_type::result_type result_type;
+      typedef typename parent_type::argument_type argument_type;
+      
+      const String& indexFieldName() const
+      {
+        return mIndexFieldName;
+      }
+      
+      Record model() const override
+      {
+        return {
+          NAME, name()
+          , INDEX_FIELD_NAME, indexFieldName()
+          , UTTERANCE_FIELD_NAME, mTextFieldName
+        };
+      }
+      
+      void parse(argument_type inObject, result_type& ioIndex) const override
+      {
+        String      empty;
+        
+        const String& textp     = inObject.get(mTextFieldName, empty);
+        typename result_type::Field* indexFieldPtr = &ioIndex.findField(indexFieldName(),
+                                                                        true);
+        
+        //		std::cout << textp << std::endl;
+        jerome::ir::TokenStream ts(new jerome::ir::NonTokenizingPipe<result_type>(
+          &textp
+          , jerome::ir::keyword::_field = indexFieldPtr));
+        ts.run();
+      }
+      
+    };
+    
+
     class Unigram
       : public UtteranceAnalyzer
     {
@@ -67,9 +138,9 @@ namespace jerome {
       String  mTextFieldName;
 
     public:
-      Unigram(const String& inName = DEFAULT_NAME,
-        const String& inFieldName = DEFAULT_FIELD,
-        const String& inTextName = Utterance::kFieldText)
+      Unigram(const String& inName = DEFAULT_NAME, // the name of the analyzer
+              const String& inFieldName = DEFAULT_FIELD, // the index field name
+              const String& inTextName = Utterance::kFieldText) // the utterance field name
         : UtteranceAnalyzer(inName)
         , mUnigramFieldName(inFieldName)
         , mTextFieldName(inTextName)
@@ -78,11 +149,9 @@ namespace jerome {
 
     public:
       Unigram(const Record& inRecord)
-        : UtteranceAnalyzer(inRecord.at(NAME, String(DEFAULT_NAME)))
-        , mUnigramFieldName(inRecord.at(INDEX_FIELD_NAME,
-            String(DEFAULT_FIELD)))
-        , mTextFieldName(inRecord.at(UTTERANCE_FIELD_NAME,
-            String(Utterance::kFieldText)))
+        : UtteranceAnalyzer(inRecord.at(NAME, DEFAULT_NAME))
+        , mUnigramFieldName(inRecord.at(INDEX_FIELD_NAME, DEFAULT_FIELD))
+        , mTextFieldName(inRecord.at(UTTERANCE_FIELD_NAME, Utterance::kFieldText))
       {
 
       }
@@ -157,11 +226,11 @@ namespace jerome {
       UnigramBigram(const Record& inRecord)
         : UtteranceAnalyzer(inRecord.at(NAME, String(DEFAULT_NAME)))
         , mUnigramFieldName(inRecord.at(INDEX_UNIGRAM_FIELD_NAME,
-            String(DEFAULT_UNIGRAM_FIELD)))
+            DEFAULT_UNIGRAM_FIELD))
         , mBigramFieldName(inRecord.at(INDEX_BIGRAM_FIELD_NAME,
-            String(DEFAULT_BIGRAM_FIELD)))
+            DEFAULT_BIGRAM_FIELD))
         , mTextFieldName(inRecord.at(UTTERANCE_FIELD_NAME,
-            String(Utterance::kFieldText)))
+            Utterance::kFieldText))
       {
       }
 

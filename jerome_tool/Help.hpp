@@ -12,14 +12,15 @@
 #include "Command.hpp"
 
 class Help : public Command {
-public:
-  Help();
-
 private:
+  po::options_description hiddenOptions() const override;
+  po::positional_options_description positionalOptions() const override;
+  po::command_line_parser optionsParser(const std::vector<std::string>& args) const override;
+
+  std::string name() const override;
   std::string description() const override;
   void manual(std::ostream& os) const override;
-  void run(const po::variables_map& vm) override;
-  void parseAndRun(const std::vector<std::string> args, po::variables_map& vm) override;
+  OptionalError run() override;
 };
 
 #endif /* Help_hpp */

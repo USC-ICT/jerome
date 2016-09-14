@@ -19,18 +19,25 @@
 
 static const char* oInputFile   = "input";
 static const char* oReportFile	= "report";
+static const char* oReportFormat= "report-format";
 static const char* oTestSplit   = "test-split";
-static const char* oStateName   = "classifier-name";
 
 using namespace jerome;
 using namespace jerome::npc;
 
-Evaluate::Evaluate()
-: Command("evaluate", "Evaluate options")
+po::options_description Evaluate::options(po::options_description inOptions) const
 {
-  options().add_options()
-  (oInputFile, 	po::value<std::string>()->default_value("-"), "input file (default standard input)")
-  (oReportFile, po::value<std::string>()->default_value("-"), "report file")
+  po::options_description options(parent_type::options(inOptions));
+  
+  options.add_options()
+  (oInputFile, 	po::value<std::string>()->default_value("-"),
+   "input file (default standard input)")
+  (oReportFile, po::value<std::string>(),
+   "report file name format string (default: none), e.g., \"report-%s.xml\". "\
+   "The file will be named by replacing the first argument in the format " \
+   "with the classifier name." )
+  (oReportFormat, po::value<std::string>()->default_value("html"),
+   "report file format. One of xml or html.")
   (oTestSplit,  po::value<std::string>()->default_value("label"),
    (std::string("How to select test questions. Provide one of \n")
     + "auto      \t\n"
@@ -39,20 +46,33 @@ Evaluate::Evaluate()
     + "<number>% \t\n"
     )
    .c_str())
-  (oStateName, 	po::value<std::vector<std::string>>()->composing(), "classifier names in the data file")
   ;
+  
+  return options;
 }
 
-static void run1(Platform& p, const std::string& classifierName, const po::variables_map& vm)
+OptionalError Evaluate::setup()
 {
-  auto optState = p.collection().states().optionalObjectWithName(classifierName);
+  return platform().loadCollection(*istreamWithName(variables()[oInputFile]));
+}
+
+OptionalError Evaluate::teardown()
+{
+  return Error::NO_ERROR;
+}
+
+OptionalError Evaluate::run1Classifier(const std::string& classifierName)
+{
+  auto optState = platform().collection().states()
+    .optionalObjectWithName(classifierName);
+
   if (!optState) {
-    throw std::invalid_argument(classifierName);
+    return Error(std::string("Invalid classifier name: ") + classifierName);
   }
   
   typedef List<Utterance> UL;
   
-  std::string testPropText = vm[oTestSplit].as<std::string>();
+  std::string testPropText = variables()[oTestSplit].as<std::string>();
   std::pair<UL, UL>   testTrainSplit;
   std::pair<UL, UL>   devTrainSplit;
   
@@ -73,59 +93,57 @@ static void run1(Platform& p, const std::string& classifierName, const po::varia
     testTrainSplit = jerome::split<UL, const Domain::utterances_type&>
     (optState->questions().utterances(), testProp);
   }
-
+  
   EvaluationParameters<Utterance> params;
-
+  
+  std::string reportFormatID =
+  jerome::ir::evaluation::detail::HTMLReporterBase::IDENTIFIER;
+  
+  if (variables().count(oReportFormat)) {
+    std::string format = variables()[oReportFormat].as<std::string>();
+    if (format == "xml") {
+      reportFormatID =
+      jerome::ir::evaluation::detail::XMLReporterBase::IDENTIFIER;
+    } else if (format == "html") {
+      
+    } else {
+      return Error("Unknown report format: \"" + format + "\"");
+    }
+  }
+  
   Record args(jerome::detail::FactoryConst::PROVIDER_IDENTIFIER_KEY,
-              jerome::ir::evaluation::detail::XMLReporterBase::IDENTIFIER);
+              reportFormatID);
   
   params.stateName = classifierName;
   params.testQuestions = testTrainSplit.first;
-  params.report = Command::ostreamWithName(vm[oReportFile].as<std::string>());
+  params.trainingQuestions = testTrainSplit.second;
+  if (variables()[oReportFile].empty()) {
+    params.report = Command::nullOStream();
+  } else {
+    params.report = Command::ostreamWithName(string_format(variables()[oReportFile].as<std::string>(),
+                                                           variables()[oInputFile].as<std::string>().c_str(),
+                                                           classifierName.c_str()));
+  }
   params.reporterModel = args;
   
-  auto acc_or_error = p.evaluate(params);
+  auto acc_or_error = platform().evaluate(params);
   
   if (!acc_or_error) {
-    throw acc_or_error.error();
+    return acc_or_error.error();
   }
   
   std::cout << acc_or_error.value() << std::endl;
-}
-
-void Evaluate::run(const po::variables_map& vm) {
   
-  Platform::initialize();
-		
-  Platform	p;
-  
-  // =================================
-  // loading a database
-  
-  {
-    auto file = istreamWithName(vm[oInputFile].as<std::string>());
-    auto error = p.loadCollection(*file);
-    if (error) throw *error;
-  }
-  
-  // =================================
-  // evaluating a classifier
-  
-  if (vm.count(oStateName)) {
-    for(auto cn : vm[oStateName].as<std::vector<std::string>>()) {
-      run1(p, cn, vm);
-    }
-  } else {
-    for(const auto& cn : p.collection().states()) {
-      run1(p, cn.name(), vm);
-    }
-  }
-  
-  
+  return Error::NO_ERROR;
 }
 
 std::string Evaluate::description() const
 {
   return "evaluate a classifier";
+}
+
+std::string Evaluate::name() const
+{
+  return "evaluate";
 }
 

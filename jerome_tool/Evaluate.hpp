@@ -9,14 +9,16 @@
 #ifndef Evaluate_hpp
 #define Evaluate_hpp
 
-#include "Command.hpp"
+#include "ClassifierCommand.hpp"
 
-class Evaluate : public Command {
-public:
-  Evaluate();
-private:
+class Evaluate : public ClassifierCommand {
+  typedef ClassifierCommand parent_type;
+  po::options_description options(po::options_description options) const override;
+  std::string name() const override;
   std::string description() const override;
-  void run(const po::variables_map& vm) override;
+  OptionalError setup() override;
+  OptionalError teardown() override;
+  OptionalError run1Classifier(const std::string& inName) override;
 };
 
 

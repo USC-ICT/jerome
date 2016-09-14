@@ -31,6 +31,7 @@ namespace jerome {
 		{
 			registerProvider<Unigram>();
 			registerProvider<UnigramBigram>();
+      registerProvider<Untokenized>();
 		}
 		
   }

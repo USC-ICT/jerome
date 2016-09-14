@@ -79,6 +79,14 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "--report-format html"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--report &quot;report-%s.html&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "split $(SRCROOT)/examples/data/twins.plist.csxml"
             isEnabled = "NO">
          </CommandLineArgument>

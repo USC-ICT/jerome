@@ -13,23 +13,33 @@
 #include <jerome/npc/npc.hpp>
 #include <jerome/npc/detail/ModelWriterText.hpp>
 
+#include <jerome/type/Factory.hpp>
+#include <jerome/ir/report/HTMLReporter.hpp>
+#include <jerome/ir/report/XMLReporter.hpp>
+
 static const char* oInputFile   = "input";
 static const char* oOutputFile	= "output";
 static const char* oReportFile	= "report";
 static const char* oTestSplit   = "test-split";
 static const char* oDevSplit    = "dev-split";
-static const char* oStateName   = "classifier-name";
+static const char* oMaxTime     = "max-time";
 
 using namespace jerome;
 using namespace jerome::npc;
 
-Train::Train()
-: Command("train", "Train options")
+po::options_description Train::options(po::options_description inOptions) const
 {
-  options().add_options()
-  (oInputFile, 	po::value<std::string>()->default_value("-"), "input file (default standard input)")
-  (oOutputFile, po::value<std::string>()->default_value("-"), "output file (default standard output)")
-  (oReportFile, po::value<std::string>()->default_value("-"), "report file")
+  po::options_description options(parent_type::options(inOptions));
+  
+  options.add_options()
+  (oInputFile, 	po::value<std::string>()->default_value("-"),
+   "input file (default: standard input)")
+  (oOutputFile, po::value<std::string>(),
+   "output file (default: none)")
+  (oReportFile, po::value<std::string>()->default_value("-"),
+   "report file")
+  (oMaxTime, po::value<int>(),
+   "maximum training time in seconds")
   (oTestSplit,  po::value<std::string>()->default_value("label"),
    (std::string("How to select test questions. Provide one of \n")
     + "auto      \t\n"
@@ -46,33 +56,39 @@ Train::Train()
     + "<number>% \t\n"
     )
    .c_str())
-  (oStateName, 	po::value<std::vector<std::string>>()->composing(), "classifier names in the data file")
   ;
+  
+  return options;
 }
 
-static void run1(Platform& p, const std::string& classifierName, const po::variables_map& vm)
+OptionalError Train::run1Classifier(const std::string& classifierName)
 {
   double bestValue = 0;
   
   TrainingParameters<Utterance> params;
   params.stateName = classifierName;
-  params.callback = [&bestValue](TrainingState& state) {
-    if (state.elapsedTimeInSeconds() > 5)
+  
+  int maxTime = 0;
+  if (!variables()[oMaxTime].empty())
+    maxTime = variables()[oMaxTime].as<int>();
+  
+  params.callback = [&bestValue,maxTime](TrainingState& state) {
+    if (maxTime > 0 && state.elapsedTimeInSeconds() > maxTime)
       state.stop();
     if (state.lastValue() > bestValue) {
       bestValue = state.lastValue();
-      std::cout << state.name() << ": " << state.lastArgument() << " " << bestValue << std::endl;
+      //      std::cout << state.name() << ": " << state.lastArgument() << " " << bestValue << std::endl;
     }
   };
   
-  auto optState = p.collection().states().optionalObjectWithName(params.stateName);
+  auto optState = platform().collection().states().optionalObjectWithName(params.stateName);
   if (!optState) {
-    throw std::invalid_argument(params.stateName);
+    return Error(std::string("Invalid classifier name: ") + classifierName);
   }
   
   typedef List<Utterance> UL;
   
-  std::string testPropText = vm[oTestSplit].as<std::string>();
+  std::string testPropText = variables()[oTestSplit].as<std::string>();
   std::pair<UL, UL>   testTrainSplit;
   std::pair<UL, UL>   devTrainSplit;
   
@@ -94,7 +110,7 @@ static void run1(Platform& p, const std::string& classifierName, const po::varia
     (optState->questions().utterances(), testProp);
   }
   
-  std::string devPropText = vm[oDevSplit].as<std::string>();
+  std::string devPropText = variables()[oDevSplit].as<std::string>();
   if (devPropText == "label") {
     devTrainSplit = jerome::split<UL>
     (testTrainSplit.second,
@@ -116,49 +132,49 @@ static void run1(Platform& p, const std::string& classifierName, const po::varia
   params.trainingQuestions = devTrainSplit.second;
   params.trainer = jerome::npc::detail::Trainer::trainerFscore();
   
-  auto error = p.train(params);
-  if (error) throw *error;
+  EvaluationParameters<Utterance> eparams;
   
+  Record eargs(jerome::detail::FactoryConst::PROVIDER_IDENTIFIER_KEY,
+              jerome::ir::evaluation::detail::HTMLReporterBase::IDENTIFIER);
   
+  eparams.stateName = classifierName;
+  eparams.testQuestions = testTrainSplit.first;
+  eparams.trainingQuestions = testTrainSplit.second;
+  eparams.report = Command::nullOStream();
+  eparams.reporterModel = eargs;
+  
+  auto acc_or_error_before = platform().evaluate(eparams);
+  if (!acc_or_error_before) return acc_or_error_before.error();
+  
+  auto error = platform().train(params);
+  if (error) return error;
+
+  auto acc_or_error_after = platform().evaluate(eparams);
+  if (!acc_or_error_after) return acc_or_error_after.error();
+
+  std::cout << acc_or_error_before.value() << " -> " << acc_or_error_after.value() << std::endl;
+  
+  return Error::NO_ERROR;
 }
 
-void Train::run(const po::variables_map& vm) {
-  
-  Platform::initialize();
-		
-  Platform	p;
+OptionalError Train::setup()
+{
+  return platform().loadCollection(*istreamWithName(variables()[oInputFile]));
+}
 
-  // =================================
-  // loading a database
-
-  {
-    auto file = istreamWithName(vm[oInputFile].as<std::string>());
-    auto error = p.loadCollection(*file);
-    if (error) throw *error;
-  }
-  
-  // =================================
-  // training a classifier
-  
-  if (!vm.count(oStateName)) {
-    for(auto cn : vm[oStateName].as<std::vector<std::string>>()) {
-      run1(p, cn, vm);
-    }
-  }
-
-  // =================================
-  // saving the database
-  
-  {
-    auto file = ostreamWithName(vm[oOutputFile].as<std::string>());
-    auto error = p.saveCollection(*file);
-    if (error) throw *error;
-  }
-
+OptionalError Train::teardown()
+{
+  return platform().saveCollection(*ostreamWithName(variables()[oOutputFile]));
 }
 
 std::string Train::description() const
 {
   return "train a classifier";
 }
+
+std::string Train::name() const
+{
+  return "train";
+}
+
 

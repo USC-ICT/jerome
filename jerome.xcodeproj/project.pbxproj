@@ -89,6 +89,8 @@
 		628E31CC1D67D0520073F882 /* libkstem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58D01CCB344800641E2C /* libkstem.a */; };
 		62990CD21B6CCD5400DEB2E8 /* Trainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62990CD01B6CCD5400DEB2E8 /* Trainer.cpp */; };
 		62990CD31B6CCD5400DEB2E8 /* Trainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62990CD01B6CCD5400DEB2E8 /* Trainer.cpp */; };
+		62A662B21D8799FC00299B42 /* PlatformCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62A662B01D8799FC00299B42 /* PlatformCommand.cpp */; };
+		62A662B51D879A0B00299B42 /* ClassifierCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62A662B31D879A0B00299B42 /* ClassifierCommand.cpp */; };
 		62AC3BBD1BBC94C80067C540 /* string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62AC3BBC1BBC94C80067C540 /* string.cpp */; };
 		62AC3BC01BBC967F0067C540 /* error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62AC3BBE1BBC967F0067C540 /* error.cpp */; };
 		62AE719316FBE41C00547E42 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62AE719216FBE41C00547E42 /* boost.framework */; };
@@ -457,6 +459,10 @@
 		62A4007416C72BD7000F5033 /* scion.tests.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = scion.tests.js; sourceTree = "<group>"; };
 		62A4007A16C7310A000F5033 /* scion.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = scion.js; path = ../../3rdParty/SCION/dist/scion.js; sourceTree = "<group>"; };
 		62A662AC1D82294800299B42 /* algorithm.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = algorithm.hpp; sourceTree = "<group>"; };
+		62A662B01D8799FC00299B42 /* PlatformCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlatformCommand.cpp; sourceTree = "<group>"; };
+		62A662B11D8799FC00299B42 /* PlatformCommand.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PlatformCommand.hpp; sourceTree = "<group>"; };
+		62A662B31D879A0B00299B42 /* ClassifierCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClassifierCommand.cpp; sourceTree = "<group>"; };
+		62A662B41D879A0B00299B42 /* ClassifierCommand.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ClassifierCommand.hpp; sourceTree = "<group>"; };
 		62AC3BBC1BBC94C80067C540 /* string.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = string.cpp; sourceTree = "<group>"; };
 		62AC3BBE1BBC967F0067C540 /* error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = error.cpp; sourceTree = "<group>"; };
 		62AC3BBF1BBC967F0067C540 /* error.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = error.hpp; sourceTree = "<group>"; };
@@ -1132,17 +1138,21 @@
 		62B09AD11CECD18200A031CB /* jerome_tool */ = {
 			isa = PBXGroup;
 			children = (
-				62B09AD21CECD18200A031CB /* main.cpp */,
+				62A662B31D879A0B00299B42 /* ClassifierCommand.cpp */,
+				62A662B41D879A0B00299B42 /* ClassifierCommand.hpp */,
 				62461EDE1D7DF83C00F8E4F4 /* Command.cpp */,
 				62461EDF1D7DF83C00F8E4F4 /* Command.hpp */,
+				62750A2C1D835BB2004ABECE /* Evaluate.cpp */,
+				62750A2D1D835BB2004ABECE /* Evaluate.hpp */,
+				62461EE71D7DFA6200F8E4F4 /* Help.cpp */,
+				62461EE81D7DFA6200F8E4F4 /* Help.hpp */,
+				62B09AD21CECD18200A031CB /* main.cpp */,
+				62A662B01D8799FC00299B42 /* PlatformCommand.cpp */,
+				62A662B11D8799FC00299B42 /* PlatformCommand.hpp */,
 				62461EE11D7DF85800F8E4F4 /* Split.cpp */,
 				62461EE21D7DF85800F8E4F4 /* Split.hpp */,
 				62461EE41D7DF86400F8E4F4 /* Train.cpp */,
 				62461EE51D7DF86400F8E4F4 /* Train.hpp */,
-				62461EE71D7DFA6200F8E4F4 /* Help.cpp */,
-				62461EE81D7DFA6200F8E4F4 /* Help.hpp */,
-				62750A2C1D835BB2004ABECE /* Evaluate.cpp */,
-				62750A2D1D835BB2004ABECE /* Evaluate.hpp */,
 			);
 			path = jerome_tool;
 			sourceTree = "<group>";
@@ -1778,9 +1788,11 @@
 			files = (
 				62461EE61D7DF86400F8E4F4 /* Train.cpp in Sources */,
 				62B09AD31CECD18200A031CB /* main.cpp in Sources */,
+				62A662B51D879A0B00299B42 /* ClassifierCommand.cpp in Sources */,
 				62750A2E1D835BB2004ABECE /* Evaluate.cpp in Sources */,
 				62461EE01D7DF83C00F8E4F4 /* Command.cpp in Sources */,
 				62461EE31D7DF85800F8E4F4 /* Split.cpp in Sources */,
+				62A662B21D8799FC00299B42 /* PlatformCommand.cpp in Sources */,
 				62461EE91D7DFA6200F8E4F4 /* Help.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2333,6 +2345,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../build/osx/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../build/osx/lib";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = jerome;
@@ -2348,6 +2361,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../build/osx/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)";
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../build/osx/lib";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = jerome;

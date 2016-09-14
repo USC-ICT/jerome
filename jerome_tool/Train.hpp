@@ -9,14 +9,16 @@
 #ifndef Train_hpp
 #define Train_hpp
 
-#include "Command.hpp"
+#include "ClassifierCommand.hpp"
 
-class Train : public Command {
-public:
-  Train();
-private:
+class Train : public ClassifierCommand {
+  typedef ClassifierCommand parent_type;
+  po::options_description options(po::options_description options) const override;
+  std::string name() const override;
   std::string description() const override;
-  void run(const po::variables_map& vm) override;
+  OptionalError setup() override;
+  OptionalError teardown() override;
+  OptionalError run1Classifier(const std::string& inName) override;
 };
 
 

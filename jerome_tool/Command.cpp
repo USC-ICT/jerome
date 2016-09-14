@@ -15,11 +15,7 @@
 
 namespace fs = boost::filesystem;
 
-Command::~Command()
-{
-}
-
-Command& Command::command(const std::string& inName)
+Command& Commander::command(const std::string& inName)
 {
   auto ptr = command_ptr(inName);
   if (!ptr) {
@@ -29,19 +25,19 @@ Command& Command::command(const std::string& inName)
   }
 }
 
-bool Command::hasCommandWithName(const std::string& inName)
+bool Commander::hasCommandWithName(const std::string& inName)
 {
   auto ptr = command_ptr(inName);
   return ptr != nullptr;
 }
 
-Command::Commands& Command::commands()
+Commander& Commander::shared()
 {
-  static Commands commands;
-  return commands;
+  static Commander commander;
+  return commander;
 }
 
-std::shared_ptr<Command> Command::command_ptr(const std::string& inName)
+std::shared_ptr<Command> Commander::command_ptr(const std::string& inName)
 {
   for(auto x : commands()) {
     if (inName == x->name()) {
@@ -51,29 +47,29 @@ std::shared_ptr<Command> Command::command_ptr(const std::string& inName)
   return std::shared_ptr<Command>();
 }
 
-static const char* oCommand     = "command";
-static const char* oCommandArgs = "command-args";
+static const char* oCommand     = "_command";
+static const char* oCommandArgs = "_command-args";
 static std::string sExecutable;
 
-std::string Command::executablePath()
+std::string Commander::executablePath()
 {
   return sExecutable;
 }
 
-std::string Command::executable()
+std::string Commander::executable()
 {
   fs::path e(sExecutable);
   return e.filename().string();
 }
 
-void Command::parseArguments(int argc, const char * argv[])
+OptionalError Commander::parseArguments(int argc, const char * argv[])
 {
   sExecutable = argv[0];
   
   po::options_description all_options("Allowed options");
   all_options.add_options()
   (oCommand, 		po::value<std::string>(), "command")
-  (oCommandArgs, 	po::value<std::vector<std::string>>(), "arguments for command")
+  (oCommandArgs, 	po::value<std::vector<std::string>>(), "command arguments")
   ;
   
   po::positional_options_description positional_options;
@@ -97,49 +93,81 @@ void Command::parseArguments(int argc, const char * argv[])
   po::notify(vm);
   
   if (!vm.count(oCommand)) {
-    throw invalid_argument_help("command name is required");
+    return Error("command name is required");
   }
   
   std::string commandName = vm[oCommand].as<std::string>();
-  if (!Command::hasCommandWithName(commandName)) {
-    throw invalid_argument_help("unknown command \"" + commandName + "\"");
+  if (!hasCommandWithName(commandName)) {
+    return Error("unknown command \"" + commandName + "\"");
   }
   
-  std::vector<std::string> opts = po::collect_unrecognized(parsed.options,
+  std::vector<std::string> args = po::collect_unrecognized(parsed.options,
                                                            po::include_positional);
-  opts.erase(opts.begin());
+  args.erase(args.begin()); // erase command from command arguments
   
-  Command::command(commandName).parseAndRun(opts, vm);
+  return command(commandName).parseArguments(args, vm);
 }
 
-void Command::parseAndRun(const std::vector<std::string> args, po::variables_map& vm)
-{
-  po::parsed_options parsed = po::command_line_parser(args)
-  .options(mOptions)
-  .run();
-  
-  po::store(parsed, vm);
-  po::notify(vm);
+// -----------------------------------------------------------------------------
 
-  run(vm);
+Command::~Command()
+{
+}
+
+po::command_line_parser Command::optionsParser(const std::vector<std::string>& args) const
+{
+  po::options_description all_options;
+  all_options
+  .add(options())
+  .add(hiddenOptions());
+  
+  return po::command_line_parser(args)
+  .options(all_options)
+  .positional(positionalOptions());
+}
+
+OptionalError Command::parseAndRun(const std::vector<std::string> args)
+{
+  po::options_description all_options;
+  all_options
+  .add(options())
+  .add(hiddenOptions());
+  
+  auto parser = po::command_line_parser(args)
+  .options(all_options)
+  .positional(positionalOptions());
+  
+  parser.allow_unregistered();
+  
+  po::parsed_options parsed = optionsParser(args).run();
+  
+  po::store(parsed, mVariables);
+  po::notify(mVariables);
+
+  return run();
 }
 
 void Command::manual(std::ostream& out) const
 {
   out << description() << std::endl
-  << "usage: " << Command::executable()
+  << "usage: " << Commander::shared().executable()
   << " " << name() << " [<options>]" << std::endl;
   out << options() << std::endl;
 }
 
-void Command::usage(std::ostream& out)
+void Commander::usage(std::ostream& out)
 {
-  out << "usage: " << Command::executable()
+  out << "usage: " << executable()
   << " <command> [<args>]"
   << std::endl;
   
-  out << "These are available commands:" << std::endl;
-  for(auto& c : Command::commands()) {
+  printCommandList(out);
+}
+
+void Commander::printCommandList(std::ostream& out)
+{
+  out << "These are the available commands:" << std::endl;
+  for(auto& c : commands()) {
     out << "   "
     << std::setw(10) << std::left << c->name()
     << " "
@@ -148,16 +176,62 @@ void Command::usage(std::ostream& out)
   }
 }
 
-jerome::shared_ptr<std::ostream> Command::ostreamWithName(const std::string& name)
+class NullBuffer : public std::streambuf
 {
-  return name == "-" ? jerome::shared_ptr<std::ostream>(&std::cout, [](std::ostream*){})
-  : jerome::shared_ptr<std::ostream>(new std::fstream(name));
+public:
+  int overflow(int c) { return c; }
+};
+
+class NullOStream : public std::ostream {
+public:
+  NullOStream() : std::ostream(&m_sb) {}
+private:
+  NullBuffer m_sb;
+};
+
+class NullIStream : public std::istream {
+public:
+  NullIStream() : std::istream(&m_sb) {}
+private:
+  NullBuffer m_sb;
+};
+
+ostream_ptr Command::nullOStream()
+{
+  return ostream_ptr(new NullOStream);
 }
 
-jerome::shared_ptr<std::istream> Command::istreamWithName(const std::string& name)
+istream_ptr Command::nullIStream()
 {
-  return name == "-" ? jerome::shared_ptr<std::istream>(&std::cin, [](std::istream*){})
-  : jerome::shared_ptr<std::istream>(new std::fstream(name));
+  return istream_ptr(new NullIStream);
+}
+
+ostream_ptr Command::ostreamWithName(const po::variable_value& value)
+{
+  return value.empty()
+  ? nullOStream()
+  : ostreamWithName(value.as<std::string>());
+}
+
+ostream_ptr Command::ostreamWithName(const std::string& name)
+{
+  return name == "-"
+  ? ostream_ptr(&std::cout, [](std::ostream*){})
+  : ostream_ptr(new std::ofstream(name));
+}
+
+istream_ptr Command::istreamWithName(const std::string& name)
+{
+  return name == "-"
+  ? istream_ptr(&std::cin, [](std::istream*){})
+  : istream_ptr(new std::ifstream(name));
+}
+
+istream_ptr Command::istreamWithName(const po::variable_value& value)
+{
+  return value.empty()
+  ? nullIStream()
+  : istreamWithName(value.as<std::string>());
 }
 
 

@@ -121,7 +121,14 @@ namespace jerome {
 			return inDefault;
 		}
 		
-		template <typename T>
+    String at(const key_type& inKey, const char* inDefault) const
+    {
+      auto opt = this->at<String>(inKey);
+      if (opt) return *opt;
+      return inDefault;
+    }
+
+    template <typename T>
 		optional<T> at(const key_type& inKey) const
 		{
 			auto opt = parent_type::at(inKey);

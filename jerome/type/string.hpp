@@ -62,6 +62,15 @@ namespace jerome {
   bool 	hasSuffix(const String& inS, const String& inSuffix);
   String 	dropSuffix(const String& inS, const String& inSuffix);
   void 	replaceAll(String& ioString, const String& inOld, const String& inNew);
+  
+  template<typename ... Args>
+  String string_format(const String& format, Args ... args)
+  {
+    size_t size = snprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
+    std::unique_ptr<char[]> buf(new char[size]);
+    snprintf(buf.get(), size, format.c_str(), args ...);
+    return String(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
+  }
 }
 
 #endif // defined __jerome_type_string_hpp__

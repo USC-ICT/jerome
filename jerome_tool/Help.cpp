@@ -10,67 +10,62 @@
 #include <iomanip>
 #include "Help.hpp"
 
-Help::Help()
-: Command("help", "Help options")
-{}
-
 void Help::manual(std::ostream& out) const
 {
   out << description() << std::endl
-  << "usage: " << Command::executable()
+  << "usage: " << Commander::shared().executable()
   << " " << name() << " <command>" << std::endl;
+  Commander::shared().printCommandList(out);
 }
 
-static const char* oCommand     = "help-command";
-static const char* oCommandArgs = "help-command-args";
+static const char* oCommand     = "_help-command";
+static const char* oCommandArgs = "_help-command-args";
 
-void Help::parseAndRun(const std::vector<std::string> args, po::variables_map &vm) {
-  po::options_description all_options("Allowed options");
-  all_options.add_options()
+po::options_description Help::hiddenOptions() const
+{
+  auto opts = Command::hiddenOptions();
+
+  opts.add_options()
   (oCommand, 		po::value<std::string>(), "command")
-  (oCommandArgs, 	po::value<std::vector<std::string>>(), "arguments for command")
-  ;
+  (oCommandArgs, 	po::value<std::vector<std::string>>(), "arguments for command");
   
-  po::positional_options_description positional_options;
-  positional_options
+  return opts;
+}
+
+po::positional_options_description Help::positionalOptions() const
+{
+  return Command::positionalOptions()
   .add(oCommand, 1)
   .add(oCommandArgs, -1);
-  
-  po::options_description global_options;
-  global_options.add_options()
-  ;
-  all_options.add(global_options);
-  
-  po::parsed_options parsed = po::command_line_parser(args)
-  .options(all_options)
-  .positional(positional_options)
-  .allow_unregistered()
-  .run();
-  
-  po::store(parsed, vm);
-  po::notify(vm);
-
-  run(vm);
 }
 
+po::command_line_parser Help::optionsParser(const std::vector<std::string>& args) const
+{
+  return Command::optionsParser(args).allow_unregistered();
+}
 
-void Help::run(const po::variables_map& vm) {
+OptionalError Help::run() {
 
-  if (!vm.count(oCommand)) {
-    Command::usage(std::cerr);
-    return;
+  if (!variables()[oCommand].empty()) {
+    Commander::shared().usage(std::cout);
+    return Error::NO_ERROR;
   }
   
-  std::string commandName = vm[oCommand].as<std::string>();
-  if (!Command::hasCommandWithName(commandName)) {
-    std::cerr << "unknown command \"" + commandName + "\"" << std::endl;
-    Command::usage(std::cerr);
+  std::string commandName = variables()[oCommand].as<std::string>();
+  if (!Commander::shared().hasCommandWithName(commandName)) {
+    return Error("unknown command \"" + commandName + "\"");
   }
 
-  Command::command(commandName).printManual(std::cout);
+  Commander::shared().command(commandName).printManual(std::cout);
+  return Error::NO_ERROR;
 }
 
 std::string Help::description() const
 {
   return "description of the commands";
+}
+
+std::string Help::name() const
+{
+  return "help";
 }

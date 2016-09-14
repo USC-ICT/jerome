@@ -68,6 +68,11 @@ namespace jerome {
           return mCollection;
         }
 
+        const Collection& collection() const
+        {
+          return mCollection;
+        }
+
         OptionalError loadCollection(std::istream& is,
                                      const ObjectFactory& inObjectFactory =
                                        jerome::npc::cpp::ObjectFactory());

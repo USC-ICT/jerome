@@ -57,6 +57,7 @@ namespace jerome {
     struct EvaluationParameters {
       String            stateName;
       List<Q>           testQuestions;
+      List<Q>           trainingQuestions;
       Record            reporterModel;
       shared_ptr<std::ostream>     report;
     };

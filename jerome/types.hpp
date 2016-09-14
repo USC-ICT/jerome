@@ -195,4 +195,14 @@ namespace std {
   }
 }
 
+template <typename T>
+std::ostream& operator << (std::ostream& os, const jerome::optional<T>& x)
+{
+  if (x) {
+    return os << "Optional(" << *x << ")";
+  } else {
+    return os << "Optional(none)";
+  }
+}
+
 #endif // defined __jerome_types_hpp__

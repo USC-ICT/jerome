@@ -154,7 +154,7 @@ namespace jerome {
           ir::range_vector  ranges = inRanker.ranges();
 
           optimizer_type gopt(nlopt::GN_DIRECT_L_RAND, ranges);
-          gopt.set_ftol_rel(5.0e-3);
+          gopt.set_ftol_rel(5.0e-4);
 					
           gopt.set_max_objective(obj);
           gopt.set_callback([&callback] (optimizer_type& opt) {

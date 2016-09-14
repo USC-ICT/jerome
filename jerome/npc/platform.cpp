@@ -111,6 +111,11 @@ namespace jerome {
 			return implementation().collection();
 		}
 
+    const Collection& Platform::collection() const
+    {
+      return implementation().collection();
+    }
+
 		void Platform::collectionWasUpdated(const OptionalString& inStateName)
 		{
 			implementation().collectionWasUpdated(inStateName);

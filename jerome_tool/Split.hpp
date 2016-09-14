@@ -9,14 +9,16 @@
 #ifndef Split_hpp
 #define Split_hpp
 
-#include "Command.hpp"
+#include "ClassifierCommand.hpp"
 
-class Split : public Command {
-public:
-  Split();
+class Split : public ClassifierCommand {
+  typedef ClassifierCommand parent_type;
+  po::options_description options(po::options_description options) const override;
+  std::string name() const override;
   std::string description() const override;
-  void run(const po::variables_map& vm) override;
-private:
+  OptionalError setup() override;
+  OptionalError teardown() override;
+  OptionalError run1Classifier(const std::string& inName) override;
 };
 
 #endif /* Split_hpp */

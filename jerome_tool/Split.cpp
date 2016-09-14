@@ -20,10 +20,11 @@ static const char* o2ndOutput	= "2nd-output";
 static const char* oSplit	= "split";
 static const char* oSplit_default	= "auto";
 
-Split::Split()
-: Command("split", "Split options")
+po::options_description Split::options(po::options_description inOptions) const
 {
-  options().add_options()
+  po::options_description options(parent_type::options(inOptions));
+  
+  options.add_options()
   (oInputFile, 	po::value<std::string>()->default_value("-"),
    "input file. If none specified, we will use stdin.")
   (o1stOutput,  po::value<std::string>()->default_value("-"),
@@ -36,30 +37,35 @@ Split::Split()
     + "<number>  \tuse at most <number> in the first file; place the rest into the second file\n"
     + "<number>% \tuse at most <number> percent of the questions in the first file; place the rest into the second file").c_str())
   ;
+  
+  return options;
 }
 
 using namespace jerome;
 using namespace jerome::npc;
 
-void Split::run(const po::variables_map& vm) {
+OptionalError Split::setup()
+{
+  return platform().loadCollection(*istreamWithName(variables()[oInputFile]));
+}
 
-  Platform::initialize();
-  Platform	p;
-  
-  // =================================
-  // loading a database
-  
-  {
-    auto file = istreamWithName(vm[oInputFile].as<std::string>());
-    auto error = p.loadCollection(*file);
-    if (error) throw *error;
-  }
+OptionalError Split::teardown()
+{
+  return Error::NO_ERROR;
+}
 
-  
+OptionalError Split::run1Classifier(const std::string& inName)
+{
+  return Error::NO_ERROR;
 }
 
 std::string Split::description() const
 {
   return "split a data file";
+}
+
+std::string Split::name() const
+{
+  return "split";
 }
 
