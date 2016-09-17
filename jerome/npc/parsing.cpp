@@ -30,7 +30,7 @@ namespace jerome {
     {
       if (mAnalyzers) return *mAnalyzers;
       
-      Record models = model().at(ANALYZERS, Record());
+      Record models = model().at(ANALYZERS_KEY, Record());
       MakeAnalyzersVisitor visitor;
       for(const auto& v : models) {
         boost::apply_visitor(visitor, v.second);
@@ -53,8 +53,9 @@ namespace jerome {
       using namespace jerome::ir;
       
       String  empty;
-      String  utteranceFieldName = model().at(UTTERANCE_FIELD, Utterance::kFieldText);
-      String  indexFieldName = model().at(INDEX_FIELD, "untokenized");
+      String  utteranceFieldName = model().at(UTTERANCE_FIELD_KEY,
+                                              Utterance::kFieldText);
+      String  indexFieldName = model().at(INDEX_FIELD_KEY, "untokenized");
       
       const String& textp     = inObject.get(utteranceFieldName, empty);
       typename result_type::Field* indexFieldPtr =
@@ -71,9 +72,10 @@ namespace jerome {
       using namespace jerome::ir;
 
       String  empty;
-      String  utteranceFieldName = model().at(UTTERANCE_FIELD, Utterance::kFieldText);
-      String  unigramFieldName = model().at(INDEX_FIELD, "unigram");
-      auto  bigramFieldName = model().at<String>(INDEX_FIELD);
+      String  utteranceFieldName = model().at(UTTERANCE_FIELD_KEY,
+                                              Utterance::kFieldText);
+      String  unigramFieldName = model().at(INDEX_FIELD_KEY, "unigram");
+      auto  bigramFieldName = model().at<String>(INDEX_FIELD_KEY);
       
       const String& textp     = inObject.get(utteranceFieldName, empty);
       typename result_type::Field* unigramFieldPtr =

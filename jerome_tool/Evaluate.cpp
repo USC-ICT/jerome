@@ -111,7 +111,7 @@ OptionalError Evaluate::run1Classifier(const std::string& classifierName)
     }
   }
   
-  Record args(jerome::detail::FactoryConst::PROVIDER_IDENTIFIER_KEY,
+  Record args(jerome::detail::FactoryConst::PROVIDER_KEY,
               reportFormatID);
   
   params.stateName = classifierName;

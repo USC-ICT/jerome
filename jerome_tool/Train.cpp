@@ -152,7 +152,7 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
   
   EvaluationParameters<Utterance> eparams;
   
-  Record eargs(jerome::detail::FactoryConst::PROVIDER_IDENTIFIER_KEY,
+  Record eargs(jerome::detail::FactoryConst::PROVIDER_KEY,
               jerome::ir::evaluation::detail::HTMLReporterBase::IDENTIFIER);
   
   eparams.stateName = classifierName;

@@ -242,7 +242,7 @@ namespace jerome {
 
         auto ranker = ranker_or_error.value();
         auto rankerModel = ranker.model();
-        auto KEY = jerome::detail::FactoryConst::PROVIDER_IDENTIFIER_KEY;
+        auto KEY = jerome::detail::FactoryConst::PROVIDER_KEY;
         auto targetRankerID = params.rankerModel.at<String>(KEY);
         if (targetRankerID) {
           ParametersParsingVisitor  visitor;

@@ -44,12 +44,12 @@ namespace jerome {
       typedef typename parent_type::result_type result_type;
       typedef typename parent_type::argument_type argument_type;
 
-      static constexpr char const* NAME = "name";
+      static constexpr char const* NAME_KEY = "name";
 
       UtteranceAnalyzer() = delete;
       
       UtteranceAnalyzer(const Record& inModel)
-      : parent_type(inModel.at(NAME, "UtteranceAnalyzer"))
+      : parent_type(inModel.at(NAME_KEY, "UtteranceAnalyzer"))
       , mModel(inModel)
       {
       }
@@ -66,7 +66,7 @@ namespace jerome {
       typedef UtteranceAnalyzer parent_type;
     public:
       static constexpr char const* IDENTIFIER = "jerome.analyzer.multi";
-      static constexpr char const* ANALYZERS = "analyzers";
+      static constexpr char const* ANALYZERS_KEY = "analyzers";
 
       MultiAnalyzer(const Record& inModel)
       : parent_type(inModel)
@@ -91,8 +91,8 @@ namespace jerome {
       }
       
       static constexpr char const* IDENTIFIER = "jerome.analyzer.untokenized";
-      static constexpr char const* INDEX_FIELD = "index.field";
-      static constexpr char const* UTTERANCE_FIELD = "utterance.field";
+      static constexpr char const* INDEX_FIELD_KEY = "index.field";
+      static constexpr char const* UTTERANCE_FIELD_KEY = "utterance.field";
       
       void parse(argument_type inObject, result_type& ioIndex) const override;
     };
@@ -109,9 +109,9 @@ namespace jerome {
       }
 
       static constexpr char const* IDENTIFIER = "jerome.analyzer.tokenized";
-      static constexpr char const* INDEX_FIELD = "unigram.index.field";
-      static constexpr char const* BIGRAM_INDEX_FIELD = "bigram.index.field";
-      static constexpr char const* UTTERANCE_FIELD = "utterance.field";
+      static constexpr char const* INDEX_FIELD_KEY = "unigram.index.field";
+      static constexpr char const* BIGRAM_INDEX_FIELD_KEY = "bigram.index.field";
+      static constexpr char const* UTTERANCE_FIELD_KEY = "utterance.field";
 
       void parse(argument_type inObject, result_type& ioIndex) const override;
     };

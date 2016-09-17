@@ -32,36 +32,36 @@ namespace jerome {
       
       // text unigram
       analyzers.emplace(std::make_pair<String, Record>(std::move(inDefaultKey), {
-        AnalyzerFactory::PROVIDER_IDENTIFIER_KEY, Tokenized::IDENTIFIER
-        , Tokenized::NAME, "Unigram"
-        , Tokenized::INDEX_FIELD, "unigram"
-        , Tokenized::UTTERANCE_FIELD, Utterance::kFieldText
+        AnalyzerFactory::PROVIDER_KEY, Tokenized::IDENTIFIER
+        , Tokenized::NAME_KEY, "Unigram"
+        , Tokenized::INDEX_FIELD_KEY, "unigram"
+        , Tokenized::UTTERANCE_FIELD_KEY, Utterance::kFieldText
       }));
       
       // text bigram
       analyzers.emplace(std::make_pair<String, Record>("text-bigram", {
-        AnalyzerFactory::PROVIDER_IDENTIFIER_KEY, Tokenized::IDENTIFIER
-        , Tokenized::NAME, "Unigram-Bigram"
-        , Tokenized::INDEX_FIELD, "unigram"
-        , Tokenized::BIGRAM_INDEX_FIELD, "bigram"
-        , Tokenized::UTTERANCE_FIELD, Utterance::kFieldText
+        AnalyzerFactory::PROVIDER_KEY, Tokenized::IDENTIFIER
+        , Tokenized::NAME_KEY, "Unigram-Bigram"
+        , Tokenized::INDEX_FIELD_KEY, "unigram"
+        , Tokenized::BIGRAM_INDEX_FIELD_KEY, "bigram"
+        , Tokenized::UTTERANCE_FIELD_KEY, Utterance::kFieldText
       }));
       
       // text unigram + id
       analyzers.emplace(std::make_pair<String, Record>("text-unigram+id", {
-        AnalyzerFactory::PROVIDER_IDENTIFIER_KEY, MultiAnalyzer::IDENTIFIER
-        , MultiAnalyzer::ANALYZERS, Record {
+        AnalyzerFactory::PROVIDER_KEY, MultiAnalyzer::IDENTIFIER
+        , MultiAnalyzer::ANALYZERS_KEY, Record {
           "0", Record {
-            AnalyzerFactory::PROVIDER_IDENTIFIER_KEY, Tokenized::IDENTIFIER
-            , Tokenized::NAME, "Unigram"
-            , Tokenized::INDEX_FIELD, "unigram"
-            , Tokenized::UTTERANCE_FIELD, Utterance::kFieldText
+            AnalyzerFactory::PROVIDER_KEY, Tokenized::IDENTIFIER
+            , Tokenized::NAME_KEY, "Unigram"
+            , Tokenized::INDEX_FIELD_KEY, "unigram"
+            , Tokenized::UTTERANCE_FIELD_KEY, Utterance::kFieldText
           },
           "1", Record {
-            AnalyzerFactory::PROVIDER_IDENTIFIER_KEY, Untokenized::IDENTIFIER
-            , Untokenized::NAME, "Untokenized"
-            , Untokenized::INDEX_FIELD, "externalID"
-            , Untokenized::UTTERANCE_FIELD, Utterance::kFieldID
+            AnalyzerFactory::PROVIDER_KEY, Untokenized::IDENTIFIER
+            , Untokenized::NAME_KEY, "Untokenized"
+            , Untokenized::INDEX_FIELD_KEY, "externalID"
+            , Untokenized::UTTERANCE_FIELD_KEY, Utterance::kFieldID
           },
         }
       }));

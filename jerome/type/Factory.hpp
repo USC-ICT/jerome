@@ -31,7 +31,7 @@ namespace jerome {
 
 	namespace detail {
 		struct FactoryConst {
-			static constexpr const char* PROVIDER_IDENTIFIER_KEY = "provider.identifier";
+			static constexpr const char* PROVIDER_KEY = "provider";
 		};
 	}
 
@@ -50,8 +50,8 @@ namespace jerome {
 		Record model() const
 		{
 			Record m = parent_type::model();
-      if (!m.at<String>(PROVIDER_IDENTIFIER_KEY) && mProviderID)
-				m.emplace_front(PROVIDER_IDENTIFIER_KEY, *mProviderID);
+      if (!m.at<String>(PROVIDER_KEY) && mProviderID)
+				m.emplace_front(PROVIDER_KEY, *mProviderID);
 			return m;
 		}
 		
@@ -97,7 +97,7 @@ namespace jerome {
 
 		Result<object_type> make(const Record& record, Args&& ... args)
 		{
-			return make(record.at<String>(PROVIDER_IDENTIFIER_KEY),
+			return make(record.at<String>(PROVIDER_KEY),
 									std::forward<Args>(args) ...);
 		}
 
