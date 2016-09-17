@@ -20,10 +20,6 @@ JEROME_FRAMEWORK_SYMBOL_EXPORT
 - (BOOL)writeCollectionToURL:(NSURL* _Nonnull)url
                        error:(NSError * _Nullable * _Nullable)outError;
 
-- (BOOL)trainClassifierAtState:(NSString* _Nonnull)stateName
-              completionHandle:(ALTrainingStateHandler _Nonnull)completionHandle
-                         error:(NSError * _Nullable * _Nullable)outError;
-
 - (ALUtterance* _Nullable)classifier:(NSString* _Nonnull)stateName
                            respondTo:(NSString* _Nonnull)question;
 

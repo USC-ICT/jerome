@@ -85,11 +85,6 @@ using namespace jerome;
 	});
 }
 
-- (BOOL)trainClassifierAtState:(NSString* _Nonnull)stateName completionHandle:(void (^_Nonnull)(ALTrainingState * _Nonnull))completionHandle error:(NSError * _Nullable * _Nullable)outError
-{
-  return false;
-}
-
 - (ALUtterance* _Nullable)classifier:(NSString* _Nonnull)stateName respondTo:(NSString* _Nonnull)question
 {
   return [ALUtterance utteranceWithOptionalUtterance:self->_platform.respond(stateName.cppString, question.cppString)];

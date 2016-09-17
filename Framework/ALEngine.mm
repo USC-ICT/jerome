@@ -113,13 +113,6 @@ using namespace jerome::npc;
   });
 }
 
-- (BOOL)trainClassifierAtState:(NSString* _Nonnull)stateName
-              completionHandle:(ALTrainingStateHandler _Nonnull)completionHandle
-                         error:(NSError * _Nullable * _Nullable)outError
-{
-  return false;
-}
-
 - (ALUtterance* _Nullable)classifier:(NSString* _Nonnull)stateName
                            respondTo:(NSString* _Nonnull)question
 {
