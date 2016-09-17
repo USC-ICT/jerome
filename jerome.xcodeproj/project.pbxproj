@@ -15,6 +15,8 @@
 		6200F73D1B84772E00CA121E /* ModelReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6200F73B1B84772E00CA121E /* ModelReader.cpp */; };
 		6200F73E1B84772E00CA121E /* ModelReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6200F73B1B84772E00CA121E /* ModelReader.cpp */; };
 		620176281606850600FC583D /* model_cpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620176271606850500FC583D /* model_cpp.cpp */; };
+		620346741D8C9996008C7608 /* parsing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620346731D8C9996008C7608 /* parsing.cpp */; };
+		620346751D8C9996008C7608 /* parsing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620346731D8C9996008C7608 /* parsing.cpp */; };
 		6206DD281CB5D422003CD514 /* parsing_std.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6206DD261CB5D422003CD514 /* parsing_std.cpp */; };
 		62092D5C16BB22E5003001AC /* scion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62092D5A16BB22E5003001AC /* scion.cpp */; };
 		62092D5D16BB22E5003001AC /* scion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62092D5A16BB22E5003001AC /* scion.cpp */; };
@@ -328,6 +330,7 @@
 		6200F7451B897D3100CA121E /* ModelIO.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ModelIO.hpp; sourceTree = "<group>"; };
 		620175FE1605AB1F00FC583D /* model_cpp.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = model_cpp.hpp; sourceTree = "<group>"; };
 		620176271606850500FC583D /* model_cpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = model_cpp.cpp; sourceTree = "<group>"; };
+		620346731D8C9996008C7608 /* parsing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = parsing.cpp; sourceTree = "<group>"; };
 		620663F319A506CD00FEC1C5 /* string.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = string.hpp; sourceTree = "<group>"; };
 		620663F519A506F200FEC1C5 /* abstract_value.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = abstract_value.hpp; sourceTree = "<group>"; };
 		6206DD261CB5D422003CD514 /* parsing_std.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = parsing_std.cpp; sourceTree = "<group>"; };
@@ -817,6 +820,7 @@
 				622F89D01512900600726296 /* model.hpp */,
 				62F2369F1B67616B00009DFF /* npc.hpp */,
 				62503FFA160CD13900F0AAAC /* parsing.hpp */,
+				620346731D8C9996008C7608 /* parsing.cpp */,
 				62E4E3A31B5DFA9A008440CC /* platform.cpp */,
 				62E4E3A41B5DFA9A008440CC /* platform.hpp */,
 				62CA48071BB0823600A2AA7B /* TrainingCallback.hpp */,
@@ -1714,6 +1718,7 @@
 			files = (
 				622EA2F01604F30400764667 /* types.cpp in Sources */,
 				62D56AF91987069400F09A32 /* jelinek_mercer.cpp in Sources */,
+				620346741D8C9996008C7608 /* parsing.cpp in Sources */,
 				62FF248C1B94AD2E00C3504C /* record_writer.cpp in Sources */,
 				6255E91A1B6C51AC00EA9402 /* Ranker.cpp in Sources */,
 				6268B0351A057A1800287DF4 /* parsing.cpp in Sources */,
@@ -1855,6 +1860,7 @@
 				62C3276A1B96326E001EB593 /* AnalyzerFactory.cpp in Sources */,
 				62FAE733161155500065D358 /* weighting.cpp in Sources */,
 				6268B0321A0579FC00287DF4 /* parsing_icu.cpp in Sources */,
+				620346751D8C9996008C7608 /* parsing.cpp in Sources */,
 				62D56AF81987069400F09A32 /* cross_entropy_jelinek_mercer.cpp in Sources */,
 				62C327811B9AC258001EB593 /* model_impl.cpp in Sources */,
 				62FAE740161155500065D358 /* types.cpp in Sources */,
@@ -2017,11 +2023,15 @@
 		622EA2DE1604D43600764667 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_LINK_OBJC_RUNTIME = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../build/osx/Frameworks\"",
 				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
@@ -2029,17 +2039,22 @@
 				);
 				PRODUCT_NAME = jerome;
 				SDKROOT = macosx;
+				USE_HEADERMAP = NO;
 			};
 			name = Debug;
 		};
 		622EA2DF1604D43600764667 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_LINK_OBJC_RUNTIME = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../build/osx/Frameworks\"",
 				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
@@ -2047,6 +2062,7 @@
 				);
 				PRODUCT_NAME = jerome;
 				SDKROOT = macosx;
+				USE_HEADERMAP = NO;
 			};
 			name = Release;
 		};
@@ -2341,31 +2357,47 @@
 		62B09AD51CECD18200A031CB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_LINK_OBJC_RUNTIME = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../build/osx/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)";
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)",
+					"$(SRCROOT)/../build/osx/include",
+				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../build/osx/lib";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = jerome;
 				SDKROOT = macosx;
+				USE_HEADERMAP = NO;
 			};
 			name = Debug;
 		};
 		62B09AD61CECD18200A031CB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_LINK_OBJC_RUNTIME = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../build/osx/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)";
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)",
+					"$(SRCROOT)/../build/osx/include",
+				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../build/osx/lib";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = jerome;
 				SDKROOT = macosx;
+				USE_HEADERMAP = NO;
 			};
 			name = Release;
 		};

@@ -23,6 +23,7 @@
 #ifndef __jerome_npc_factories_AnalyzerFactory_hpp__
 #define __jerome_npc_factories_AnalyzerFactory_hpp__
 
+#include <jerome/ir/analysis.hpp>
 #include <jerome/npc/factories/RecordFactory.hpp>
 
 namespace jerome {
@@ -53,6 +54,11 @@ namespace jerome {
 			
 			template <typename AnalyzerImplementation>
 			void registerProvider();
+      
+      const StringMap<Record> predefinedAnalyzers;
+      Record defaultAnalyzerModel() const;
+    private:
+      String mDefaultAnalyzerModelKey;      
     };
 
 		namespace detail {
@@ -62,7 +68,7 @@ namespace jerome {
       {
 				static constexpr const char* IDENTIFIER = Impl::IDENTIFIER;
 				
-        Result<AnalyzerFactory::object_type> operator () (const Record& inRecord) override
+        Result<AnalyzerFactory::object_type> provide(const Record& inRecord) override
         {
 					return Analyzer::make<Providable<Impl>>(String(IDENTIFIER), inRecord);
         }

@@ -18,8 +18,8 @@ void Help::manual(std::ostream& out) const
   Commander::shared().printCommandList(out);
 }
 
-static const char* oCommand     = "_help-command";
-static const char* oCommandArgs = "_help-command-args";
+static const char* oCommand     = "help-command";
+static const char* oCommandArgs = "help-command-args";
 
 po::options_description Help::hiddenOptions() const
 {
@@ -39,14 +39,35 @@ po::positional_options_description Help::positionalOptions() const
   .add(oCommandArgs, -1);
 }
 
-po::command_line_parser Help::optionsParser(const std::vector<std::string>& args) const
+OptionalError Help::parseAndRun(const std::vector<std::string>& args)
 {
-  return Command::optionsParser(args).allow_unregistered();
+  po::options_description all_options;
+  all_options
+  .add(options())
+  .add(hiddenOptions());
+  
+  // I must make it a variable because the parser will store a pointer
+  // to this object
+  auto positional_options = positionalOptions();
+  
+  // note that I cannot break this instructions into seprate files for
+  // customization because both command_line_parser and parsed_options
+  // store pointers to options_description. An attempt to copy eithoer one
+  // of them will lead to a crash. Blame boost program_option library design.
+  po::parsed_options parsed = po::command_line_parser(args)
+  .options(all_options)
+  .positional(positional_options)
+  .allow_unregistered() // because of this line I have reimplement the function
+  .run();
+  
+  storeParsedResults(parsed);
+  
+  return run();
 }
 
 OptionalError Help::run() {
 
-  if (!variables()[oCommand].empty()) {
+  if (variables()[oCommand].empty()) {
     Commander::shared().usage(std::cout);
     return Error::NO_ERROR;
   }

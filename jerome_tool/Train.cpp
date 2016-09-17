@@ -9,20 +9,25 @@
 #include <fstream>
 #include "Train.hpp"
 
+#include <boost/algorithm/string/join.hpp>
+
 #include <jerome/type/algorithm.hpp>
 #include <jerome/npc/npc.hpp>
 #include <jerome/npc/detail/ModelWriterText.hpp>
+#include <jerome/npc/factories/AnalyzerFactory.hpp>
 
 #include <jerome/type/Factory.hpp>
 #include <jerome/ir/report/HTMLReporter.hpp>
 #include <jerome/ir/report/XMLReporter.hpp>
 
-static const char* oInputFile   = "input";
-static const char* oOutputFile	= "output";
-static const char* oReportFile	= "report";
-static const char* oTestSplit   = "test-split";
-static const char* oDevSplit    = "dev-split";
-static const char* oMaxTime     = "max-time";
+static const char* oInputFile           = "input";
+static const char* oOutputFile          = "output";
+static const char* oReportFile          = "report";
+static const char* oTestSplit           = "test-split";
+static const char* oDevSplit            = "dev-split";
+static const char* oMaxTime             = "max-time";
+static const char* oQuestionAnalyzer    = "question-analyzer";
+static const char* oAnswerAnalyzer      = "answer-analyzer";
 
 using namespace jerome;
 using namespace jerome::npc;
@@ -31,6 +36,11 @@ po::options_description Train::options(po::options_description inOptions) const
 {
   po::options_description options(parent_type::options(inOptions));
   
+  auto analyzerModels = AnalyzerFactory::sharedInstance().predefinedAnalyzers;
+  auto analyzerModelNames = keys(analyzerModels);
+  auto analyzerModelNamesString = boost::algorithm::join(analyzerModelNames, "\n  ");
+  auto defaultAnalyzerModelName = analyzerModelNames.front();
+
   options.add_options()
   (oInputFile, 	po::value<std::string>()->default_value("-"),
    "input file (default: standard input)")
@@ -42,20 +52,28 @@ po::options_description Train::options(po::options_description inOptions) const
    "maximum training time in seconds")
   (oTestSplit,  po::value<std::string>()->default_value("label"),
    (std::string("How to select test questions. Provide one of \n")
-    + "auto      \t\n"
-    + "label     \t\n"
-    + "<number>  \t\n"
-    + "<number>% \t\n"
+    + "  auto      \t\n"
+    + "  label     \t\n"
+    + "  <number>  \t\n"
+    + "  <number>% \t\n"
     )
    .c_str())
   (oDevSplit,   po::value<std::string>()->default_value("label"),
    (std::string("How to select development questions. Provide one of \n")
-    + "auto      \t\n"
-    + "label     \t\n"
-    + "<number>  \t\n"
-    + "<number>% \t\n"
+    + "  auto      \t\n"
+    + "  label     \t\n"
+    + "  <number>  \t\n"
+    + "  <number>% \t\n"
     )
    .c_str())
+  (oQuestionAnalyzer, po::value<std::string>()
+    ->default_value(defaultAnalyzerModelName),
+   (std::string("question analyzer. One of\n  ")
+    + analyzerModelNamesString).c_str())
+  (oAnswerAnalyzer, po::value<std::string>()
+    ->default_value(defaultAnalyzerModelName),
+   (std::string("answer analyzer. One of\n  ")
+    + analyzerModelNamesString).c_str())
   ;
   
   return options;

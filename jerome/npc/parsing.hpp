@@ -31,268 +31,90 @@
 namespace jerome {
   namespace npc {
 
-    //	using namespace jerome::ir;
-
     class UtteranceAnalyzer
       : public jerome::ir::detail::AnalyzerImplementation<Utterance,
         jerome::ir::HeapIndex>
     {
       typedef jerome::ir::detail::AnalyzerImplementation<Utterance,
         jerome::ir::HeapIndex> parent_type;
-      String  mIDFieldName;
+
+      Record mModel;
 
     public:
       typedef typename parent_type::result_type result_type;
       typedef typename parent_type::argument_type argument_type;
 
-      UtteranceAnalyzer(const String& inName) : parent_type(inName),
-        mIDFieldName("ID")
+      static constexpr char const* NAME = "name";
+
+      UtteranceAnalyzer() = delete;
+      
+      UtteranceAnalyzer(const Record& inModel)
+      : parent_type(inModel.at(NAME, "UtteranceAnalyzer"))
+      , mModel(inModel)
       {
       }
 
-      const String& idFieldName() const
+      Record model() const override
       {
-        return mIDFieldName;
+        return mModel;
       }
-
     };
 
+    class MultiAnalyzer
+      : public UtteranceAnalyzer
+    {
+      typedef UtteranceAnalyzer parent_type;
+    public:
+      static constexpr char const* IDENTIFIER = "jerome.analyzer.multi";
+      static constexpr char const* ANALYZERS = "analyzers";
+
+      MultiAnalyzer(const Record& inModel)
+      : parent_type(inModel)
+      {
+      }
+
+      void parse(argument_type inObject, result_type& ioIndex) const override;
+      
+    private:
+      mutable optional<List<Analyzer>>  mAnalyzers;
+      const List<Analyzer>& analyzers() const;
+    };
+    
     class Untokenized
     : public UtteranceAnalyzer
     {
-      static constexpr char const* DEFAULT_NAME = "Untokenized";
-      static constexpr char const* DEFAULT_FIELD = "documentID";
-      
-      String  mIndexFieldName;
-      String  mTextFieldName;
-      
-    public:
-      Untokenized(const String& inName = DEFAULT_NAME, // the name of the analyzer
-              const String& inFieldName = DEFAULT_FIELD, // the index field name
-              const String& inTextName = Utterance::kFieldID) // the utterance field name
-      : UtteranceAnalyzer(inName)
-      , mIndexFieldName(inFieldName)
-      , mTextFieldName(inTextName)
-      {
-      }
-      
+      typedef UtteranceAnalyzer parent_type;
     public:
       Untokenized(const Record& inRecord)
-      : UtteranceAnalyzer(inRecord.at(NAME, DEFAULT_NAME))
-      , mIndexFieldName(inRecord.at(INDEX_FIELD_NAME, DEFAULT_FIELD))
-      , mTextFieldName(inRecord.at(UTTERANCE_FIELD_NAME, Utterance::kFieldID))
+      : parent_type(inRecord)
       {
-        
       }
       
-      static constexpr char const* IDENTIFIER =
-      "edu.usc.ict.jerome.analyzer.untokenized";
-      static constexpr char const* NAME = "name";
-      static constexpr char const* INDEX_FIELD_NAME = "index.field.name";
-      static constexpr char const* UTTERANCE_FIELD_NAME =
-      "utterance.field.name";
+      static constexpr char const* IDENTIFIER = "jerome.analyzer.untokenized";
+      static constexpr char const* INDEX_FIELD = "index.field";
+      static constexpr char const* UTTERANCE_FIELD = "utterance.field";
       
-      typedef UtteranceAnalyzer parent_type;
-      typedef typename parent_type::result_type result_type;
-      typedef typename parent_type::argument_type argument_type;
-      
-      const String& indexFieldName() const
-      {
-        return mIndexFieldName;
-      }
-      
-      Record model() const override
-      {
-        return {
-          NAME, name()
-          , INDEX_FIELD_NAME, indexFieldName()
-          , UTTERANCE_FIELD_NAME, mTextFieldName
-        };
-      }
-      
-      void parse(argument_type inObject, result_type& ioIndex) const override
-      {
-        String      empty;
-        
-        const String& textp     = inObject.get(mTextFieldName, empty);
-        typename result_type::Field* indexFieldPtr = &ioIndex.findField(indexFieldName(),
-                                                                        true);
-        
-        //		std::cout << textp << std::endl;
-        jerome::ir::TokenStream ts(new jerome::ir::NonTokenizingPipe<result_type>(
-          &textp
-          , jerome::ir::keyword::_field = indexFieldPtr));
-        ts.run();
-      }
-      
+      void parse(argument_type inObject, result_type& ioIndex) const override;
     };
     
 
-    class Unigram
+    class Tokenized
       : public UtteranceAnalyzer
     {
-      static constexpr char const* DEFAULT_NAME = "Unigram";
-      static constexpr char const* DEFAULT_FIELD = "unigram";
-
-      String  mUnigramFieldName;
-      String  mTextFieldName;
-
-    public:
-      Unigram(const String& inName = DEFAULT_NAME, // the name of the analyzer
-              const String& inFieldName = DEFAULT_FIELD, // the index field name
-              const String& inTextName = Utterance::kFieldText) // the utterance field name
-        : UtteranceAnalyzer(inName)
-        , mUnigramFieldName(inFieldName)
-        , mTextFieldName(inTextName)
-      {
-      }
-
-    public:
-      Unigram(const Record& inRecord)
-        : UtteranceAnalyzer(inRecord.at(NAME, DEFAULT_NAME))
-        , mUnigramFieldName(inRecord.at(INDEX_FIELD_NAME, DEFAULT_FIELD))
-        , mTextFieldName(inRecord.at(UTTERANCE_FIELD_NAME, Utterance::kFieldText))
-      {
-
-      }
-
-      static constexpr char const* IDENTIFIER =
-        "edu.usc.ict.jerome.analyzer.unigram";
-      static constexpr char const* NAME = "name";
-      static constexpr char const* INDEX_FIELD_NAME = "index.field.name";
-      static constexpr char const* UTTERANCE_FIELD_NAME =
-        "utterance.field.name";
-
       typedef UtteranceAnalyzer parent_type;
-      typedef typename parent_type::result_type result_type;
-      typedef typename parent_type::argument_type argument_type;
-
-      const String& unigramFieldName() const
-      {
-        return mUnigramFieldName;
-      }
-
-      Record model() const override
-      {
-        return {
-                 NAME, name()
-                 , INDEX_FIELD_NAME, unigramFieldName()
-                 , UTTERANCE_FIELD_NAME, mTextFieldName
-        };
-      }
-
-      void parse(argument_type inObject, result_type& ioIndex) const override
-      {
-        String      empty;
-
-        const String& textp     = inObject.get(mTextFieldName, empty);
-        typename result_type::Field* unigramFieldPtr = &ioIndex.findField(
-          unigramFieldName(),
-          true);
-
-        //		std::cout << textp << std::endl;
-        jerome::ir::TokenStream ts(new jerome::ir::UniversalTokenPipe<result_type>(
-						&textp
-					, jerome::ir::keyword::_unigram_field = unigramFieldPtr
-				));
-        ts.run();
-      }
-
-    };
-
-    class UnigramBigram
-      : public UtteranceAnalyzer
-    {
-      String  mUnigramFieldName;
-      String  mBigramFieldName;
-      String  mTextFieldName;
-
-      static constexpr char const* DEFAULT_NAME = "Unigram-Bigram";
-      static constexpr char const* DEFAULT_UNIGRAM_FIELD = "unigram";
-      static constexpr char const* DEFAULT_BIGRAM_FIELD = "bigram";
-
     public:
-      UnigramBigram(const String& inName = DEFAULT_NAME,
-        const String& inUnigramFieldName = DEFAULT_UNIGRAM_FIELD,
-        const String& inBigramFieldName = DEFAULT_BIGRAM_FIELD,
-        const String& inTextName = Utterance::kFieldText)
-        : UtteranceAnalyzer(inName)
-        , mUnigramFieldName(inUnigramFieldName)
-        , mBigramFieldName(inBigramFieldName)
-        , mTextFieldName(inTextName)
+      Tokenized(const Record& inRecord)
+      : parent_type(inRecord)
       {
       }
 
-      UnigramBigram(const Record& inRecord)
-        : UtteranceAnalyzer(inRecord.at(NAME, String(DEFAULT_NAME)))
-        , mUnigramFieldName(inRecord.at(INDEX_UNIGRAM_FIELD_NAME,
-            DEFAULT_UNIGRAM_FIELD))
-        , mBigramFieldName(inRecord.at(INDEX_BIGRAM_FIELD_NAME,
-            DEFAULT_BIGRAM_FIELD))
-        , mTextFieldName(inRecord.at(UTTERANCE_FIELD_NAME,
-            Utterance::kFieldText))
-      {
-      }
+      static constexpr char const* IDENTIFIER = "jerome.analyzer.tokenized";
+      static constexpr char const* INDEX_FIELD = "unigram.index.field";
+      static constexpr char const* BIGRAM_INDEX_FIELD = "bigram.index.field";
+      static constexpr char const* UTTERANCE_FIELD = "utterance.field";
 
-      static constexpr char const* IDENTIFIER =
-        "edu.usc.ict.jerome.analyzer.bigram";
-
-      static constexpr char const* NAME = "name";
-      static constexpr char const* INDEX_UNIGRAM_FIELD_NAME =
-        "index.unigram.field.name";
-      static constexpr char const* INDEX_BIGRAM_FIELD_NAME =
-        "index.bigram.field.name";
-      static constexpr char const* UTTERANCE_FIELD_NAME =
-        "utterance.field.name";
-
-      typedef UtteranceAnalyzer parent_type;
-      typedef typename parent_type::result_type result_type;
-      typedef typename parent_type::argument_type argument_type;
-
-      const String& unigramFieldName() const
-      {
-        return mUnigramFieldName;
-      }
-
-      const String& bigramFieldName() const
-      {
-        return mBigramFieldName;
-      }
-
-      Record model() const override
-      {
-        return {
-                 NAME, name()
-                 , INDEX_UNIGRAM_FIELD_NAME, unigramFieldName()
-                 , INDEX_BIGRAM_FIELD_NAME, bigramFieldName()
-                 , UTTERANCE_FIELD_NAME, mTextFieldName
-        };
-      }
-
-      void parse(argument_type inObject, result_type& ioIndex) const override
-      {
-        String      empty;
-
-        const String& textp     = inObject.get(mTextFieldName, empty);
-        typename result_type::Field *      unigramFieldPtr = &ioIndex.findField(
-          unigramFieldName(),
-          true);
-        typename result_type::Field *      bigramFieldPtr  = &ioIndex.findField(
-          bigramFieldName(),
-          true);
-
-        //		std::cout << textp << std::endl;
-        jerome::ir::TokenStream ts(
-					new jerome::ir::UniversalTokenPipe<result_type>(
-							&textp
-            , jerome::ir::keyword::_unigram_field = unigramFieldPtr
-            , jerome::ir::keyword::_bigram_field = bigramFieldPtr
-            ));
-        ts.run();
-      }
-
+      void parse(argument_type inObject, result_type& ioIndex) const override;
     };
-
   }
 }
 

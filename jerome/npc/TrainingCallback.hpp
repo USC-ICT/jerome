@@ -51,6 +51,7 @@ namespace jerome {
       List<Q>           developmentQuestions;
       List<Q>           trainingQuestions;
       detail::Trainer   trainer;
+      Record            rankerModel;
     };
 
     template <class Q>

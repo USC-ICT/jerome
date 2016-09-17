@@ -38,39 +38,94 @@ public:
     manual(os);
   }
   
-  OptionalError parseArguments(const std::vector<std::string> args,
-                               po::variables_map& vm)
+  OptionalError parseArguments(const std::vector<std::string>& args,
+                               po::variables_map vm)
   {
     mVariables = vm;
     return parseAndRun(args);
   }
   
 protected:
-  Command() = default;
+  Command() = default; // cannot create base class
   
+  /**
+   returns the visible opton descriptions. Sublcasses must call 
+   superclass implementation.
+
+   @param ::options_description reuse the passed in value
+
+   @return visible opton descriptions
+   */
   virtual po::options_description options(po::options_description options =
                                           po::options_description()) const
   { return options; }
+  
+  /**
+   returns the hidden options. Sublcasses must call superclass implementation.
 
+   @return hidden option descriptions
+   */
   virtual po::options_description hiddenOptions() const
   { return po::options_description(); }
 
+  /**
+   returns positional options. Sublcasses must call superclass implementation.
+
+   @return psitional option descriptions
+   */
   virtual po::positional_options_description positionalOptions() const
   { return po::positional_options_description(); }
-  
-  virtual po::command_line_parser optionsParser(const std::vector<std::string>& args) const;
-  
+   
+  /**
+   option values collected from the command line
+
+   @return option values
+   */
   const po::variables_map& variables() const
   { return mVariables; }
 
+  void storeParsedResults(const po::parsed_options& parsed);
+  
 private:
   po::variables_map mVariables;
   
+  /**
+   returns command name option. Subclasses must implement.
+
+   @return command name
+   */
   virtual std::string name() const = 0;
+
+  /**
+   returns short command summary. Subclasses must implement.
+   
+   @return command name
+   */
   virtual std::string description() const = 0;
+
+  /**
+   Prints details command manual into the given stream.
+
+   @param os output stream
+   */
   virtual void manual(std::ostream& os) const;
+  
+  /**
+   Executes the command. Assume that command line has been parsed and all options
+   are collected in variables().
+
+   @return an error if any
+   */
   virtual OptionalError run() = 0;
-  virtual OptionalError parseAndRun(const std::vector<std::string> args);
+
+  /**
+   Parses command arguments and executes the command.
+
+   @param args command arguments
+
+   @return an error if any.
+   */
+  virtual OptionalError parseAndRun(const std::vector<std::string>& args);
   
   friend class Commander;
 };

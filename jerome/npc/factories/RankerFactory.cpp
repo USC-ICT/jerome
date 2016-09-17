@@ -50,55 +50,48 @@ namespace jerome {
 
       class UtteranceCLRanker
         : public UtteranceRanker<UtteranceCLRankerBase>
+        , public UtteranceCLRankerModel
       {
       public:
-        static constexpr const char* IDENTIFIER = "edu.usc.ict.jerome.ranker.cl";
-        static constexpr const char* ANSWER_WEIGHTING_KEY = "answer.weighting";
-        static constexpr const char* QUESTION_WEIGHTING_KEY = "question.weighting";
-        static constexpr const char* ANSWER_ANALYZER_KEY = "answer.analyzer";
-        static constexpr const char* QUESTION_ANALYZER_KEY = "question.analyzer";
-
         UtteranceCLRanker() = default;
         UtteranceCLRanker(const State::ranker_model_type& inModel,
           const Data& data)
         {
-          auto doc_weigh = AnswerWeightingFactory::sharedInstance().make(inModel.at(
-              ANSWER_WEIGHTING_KEY,
-              Record()));
+          auto doc_weigh = AnswerWeightingFactory::sharedInstance()
+            .make(inModel.at(ANSWER_WEIGHTING_KEY, Record()));
 					mModel.emplace(ANSWER_WEIGHTING_KEY, doc_weigh.value().model());
 
-          auto qry_weigh = QuestionWeightingFactory::sharedInstance().make(inModel.at(
-              QUESTION_WEIGHTING_KEY,
-              Record()));
+          auto qry_weigh = QuestionWeightingFactory::sharedInstance()
+            .make(inModel.at(QUESTION_WEIGHTING_KEY, Record()));
 					mModel.emplace(QUESTION_WEIGHTING_KEY, qry_weigh.value().model());
 
-          auto doc_analyzer =
-            AnalyzerFactory::sharedInstance().make(inModel.at(ANSWER_ANALYZER_KEY,
-                Record()));
+          auto doc_analyzer = AnalyzerFactory::sharedInstance()
+            .make(inModel.at(ANSWER_ANALYZER_KEY,
+                             AnalyzerFactory::sharedInstance().defaultAnalyzerModel()));
 					mModel.emplace(ANSWER_ANALYZER_KEY, doc_analyzer.value().model());
 
-          auto qry_analyzer =
-            AnalyzerFactory::sharedInstance().make(inModel.at(QUESTION_ANALYZER_KEY,
-                Record()));
+          auto qry_analyzer = AnalyzerFactory::sharedInstance()
+            .make(inModel.at(QUESTION_ANALYZER_KEY,
+                             AnalyzerFactory::sharedInstance().defaultAnalyzerModel()));
 					mModel.emplace(QUESTION_ANALYZER_KEY, qry_analyzer.value().model());
 
           this->index(
-            qry_weigh.value()
-                     , doc_weigh.value()
-                     , data.questions()
-                     , data.answers()
-                     , data.links()
-                     , qry_analyzer.value()
-                     , doc_analyzer.value()
-            );
+                      qry_weigh.value()
+                      , doc_weigh.value()
+                      , data.questions()
+                      , data.answers()
+                      , data.links()
+                      , qry_analyzer.value()
+                      , doc_analyzer.value()
+                      );
           this->analyzer() = qry_analyzer.value();
         }
 				
-				Record model() const { return mModel; }
+				Record model() const
+        { return mModel; }
 				
 			private:
 				Record mModel;
-
       };
 
     }
@@ -108,9 +101,10 @@ namespace jerome {
 			registerProvider<detail::UtteranceCLRanker>();
     }
 
-    Result<RankerFactory::object_type> RankerFactory::make(const State& inState,
-                                                           const detail::Data& inData,
-                                                           const math::parameters::value_vector& inParams)
+    Result<RankerFactory::object_type>
+    RankerFactory::make(const State& inState,
+                        const detail::Data& inData,
+                        const math::parameters::value_vector& inParams)
     {
 			return parent_type::make(inState.rankerModel(), inState, inData, inParams);
     }

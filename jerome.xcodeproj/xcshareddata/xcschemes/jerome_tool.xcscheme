@@ -63,32 +63,36 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "help split"
+            argument = "help train"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "help"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "evaluate --input $(SRCROOT)/examples/data/twins.plist.csxml"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--test-split auto"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--classifier-name &quot;Anyone - The Twins&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--report-format html"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--report &quot;report-%s.html&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "split $(SRCROOT)/examples/data/twins.plist.csxml"
-            isEnabled = "NO">
+            argument = "train --max-time 1 --input $(SRCROOT)/examples/data/twins.plist.csxml --output test.csxml"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "split"

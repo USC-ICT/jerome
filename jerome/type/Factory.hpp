@@ -25,6 +25,7 @@
 
 #include <jerome/types.hpp>
 #include <jerome/type/Record.hpp>
+#include <jerome/type/algorithm.hpp>
 
 namespace jerome {
 
@@ -35,7 +36,7 @@ namespace jerome {
 	}
 
 	template <typename Base>
-	struct Providable : public Base, detail::FactoryConst {
+	struct Providable : public Base, public detail::FactoryConst {
 		typedef Base parent_type;
 		
 		Providable() = default;
@@ -49,7 +50,7 @@ namespace jerome {
 		Record model() const
 		{
 			Record m = parent_type::model();
-			if (mProviderID)
+      if (!m.at<String>(PROVIDER_IDENTIFIER_KEY) && mProviderID)
 				m.emplace_front(PROVIDER_IDENTIFIER_KEY, *mProviderID);
 			return m;
 		}
@@ -59,7 +60,7 @@ namespace jerome {
 	};
 	
   template <typename Derived, typename Object, typename ... Args>
-	class Factory : detail::FactoryConst
+	class Factory : public detail::FactoryConst
   {
   public:
     struct Provider
@@ -68,7 +69,7 @@ namespace jerome {
       {
       }
 
-      virtual Result<Object> operator () (Args ... args) = 0;
+      virtual Result<Object> provide(Args ... args) = 0;
     };
 		
 		typedef Object object_type;
@@ -79,12 +80,16 @@ namespace jerome {
 		{
 			if (identifier) {
 				auto provider = providerWithID(*identifier);
-				return provider ? provider.value()(std::forward<Args>(args) ...) : provider.error();
+				return provider
+          ? provider.value().provide(std::forward<Args>(args) ...)
+          : provider.error();
 			}
 			
 			if (defaultProviderID()) {
 				auto provider = providerWithID(*defaultProviderID());
-				return provider ? provider.value()(std::forward<Args>(args) ...) : provider.error();
+				return provider
+          ? provider.value().provide(std::forward<Args>(args) ...)
+          : provider.error();
 			}
 			
 			return Error("no provider id specified and no default provider defined");
@@ -126,6 +131,10 @@ namespace jerome {
 
 		OptionalString defaultProviderID() const { return mDefaultProviderID; }
 
+    List<String> providerIDs() const {
+      return keys(mProviders);
+    }
+    
   private:
     typedef StringMap<provider_pointer>  providers_type;
     providers_type  mProviders;

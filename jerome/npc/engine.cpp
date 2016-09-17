@@ -227,45 +227,40 @@ namespace jerome {
 				Trainer::state_type& mSource;
 			};
 
-
-      OptionalError Engine::train(const String& stateName,
-                                  const TrainingCallback& callback)
-      {
-        auto optState = mCollection.states().optionalObjectWithName(stateName);
-        if (!optState) {
-          return undefined_state_error(stateName);
-        }
-
-        typedef List<Utterance> UL;
-        std::pair<UL, UL>   testTrainSplit =
-          jerome::split<UL, const Domain::utterances_type&>(optState->questions().utterances(), 0.05);
-        std::pair<UL, UL>   devTrainSplit =
-          jerome::split<UL>(testTrainSplit.second, 0.3);
-        
-        TrainingParameters<Data::question_type> params;
-        params.stateName = stateName;
-        params.callback = callback;
-        params.developmentQuestions = devTrainSplit.first;
-        params.trainingQuestions = devTrainSplit.second;
-        params.trainer = Trainer::trainerFscore();
-
-				return train(params);
-      }
-
       OptionalError Engine::train(const TrainingParameters<Utterance>& params)
       {
         auto ranker_or_error = ranker(params.stateName);
         if (!ranker_or_error) return ranker_or_error.error();
         
-        auto ranker = ranker_or_error.value();
-        auto trainer = params.trainer;
-        
         auto optState = mCollection.states().optionalObjectWithName(params.stateName);
         if (!optState) {
           return undefined_state_error(params.stateName);
         }
-        
         auto data = dataFromState(*optState, mCollection.utterance_index());
+
+        bool madeNewRanker = false;
+
+        auto ranker = ranker_or_error.value();
+        auto rankerModel = ranker.model();
+        auto KEY = jerome::detail::FactoryConst::PROVIDER_IDENTIFIER_KEY;
+        auto targetRankerID = params.rankerModel.at<String>(KEY);
+        if (targetRankerID) {
+          ParametersParsingVisitor  visitor;
+          auto record = params.rankerModel.at(State::PARAMETERS_KEY, Record());
+          record.visit(visitor);
+          
+          auto rankerResult = RankerFactory::sharedInstance()
+            .make(*optState, data, visitor.params);
+          
+          if (!rankerResult) {
+            return rankerResult.error();
+          }
+
+          madeNewRanker = true;
+          ranker = rankerResult.value();
+        }
+        
+        auto trainer = params.trainer;
         
         trainer.setData(data.subdata(params.trainingQuestions),
                         data.subdata(params.developmentQuestions));
@@ -277,6 +272,10 @@ namespace jerome {
           params.callback(fakeState);
         });
         
+        if (madeNewRanker) {
+          mRankers.emplace(optState->name(), ranker);
+        }
+      
         return Error::NO_ERROR;
       }
 

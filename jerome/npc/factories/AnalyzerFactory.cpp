@@ -26,13 +26,64 @@
 namespace jerome {
   namespace npc {
 		
-		
+		static StringMap<Record> makePredefinedAnalyzers(String inDefaultKey)
+    {
+      StringMap<Record> analyzers;
+      
+      // text unigram
+      analyzers.emplace(std::make_pair<String, Record>(std::move(inDefaultKey), {
+        AnalyzerFactory::PROVIDER_IDENTIFIER_KEY, Tokenized::IDENTIFIER
+        , Tokenized::NAME, "Unigram"
+        , Tokenized::INDEX_FIELD, "unigram"
+        , Tokenized::UTTERANCE_FIELD, Utterance::kFieldText
+      }));
+      
+      // text bigram
+      analyzers.emplace(std::make_pair<String, Record>("text-bigram", {
+        AnalyzerFactory::PROVIDER_IDENTIFIER_KEY, Tokenized::IDENTIFIER
+        , Tokenized::NAME, "Unigram-Bigram"
+        , Tokenized::INDEX_FIELD, "unigram"
+        , Tokenized::BIGRAM_INDEX_FIELD, "bigram"
+        , Tokenized::UTTERANCE_FIELD, Utterance::kFieldText
+      }));
+      
+      // text unigram + id
+      analyzers.emplace(std::make_pair<String, Record>("text-unigram+id", {
+        AnalyzerFactory::PROVIDER_IDENTIFIER_KEY, MultiAnalyzer::IDENTIFIER
+        , MultiAnalyzer::ANALYZERS, Record {
+          "0", Record {
+            AnalyzerFactory::PROVIDER_IDENTIFIER_KEY, Tokenized::IDENTIFIER
+            , Tokenized::NAME, "Unigram"
+            , Tokenized::INDEX_FIELD, "unigram"
+            , Tokenized::UTTERANCE_FIELD, Utterance::kFieldText
+          },
+          "1", Record {
+            AnalyzerFactory::PROVIDER_IDENTIFIER_KEY, Untokenized::IDENTIFIER
+            , Untokenized::NAME, "Untokenized"
+            , Untokenized::INDEX_FIELD, "externalID"
+            , Untokenized::UTTERANCE_FIELD, Utterance::kFieldID
+          },
+        }
+      }));
+      
+      return analyzers;
+    }
+    
+    static const char* DEFAULT_KEY = "text-unigram";
+    
 		AnalyzerFactory::AnalyzerFactory()
+    : mDefaultAnalyzerModelKey(DEFAULT_KEY)
+    , predefinedAnalyzers(makePredefinedAnalyzers(DEFAULT_KEY))
 		{
-			registerProvider<Unigram>();
-			registerProvider<UnigramBigram>();
+      registerProvider<Tokenized>();
       registerProvider<Untokenized>();
+      registerProvider<MultiAnalyzer>();
 		}
 		
+    Record AnalyzerFactory::defaultAnalyzerModel() const
+    {
+      return predefinedAnalyzers.find(mDefaultAnalyzerModelKey)->second;
+    }
+    
   }
 }

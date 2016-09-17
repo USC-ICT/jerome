@@ -62,12 +62,6 @@ namespace jerome {
       implementation().postEvent(inName, inData, inMachineName);
     }
 
-    OptionalError Platform::train(const String& stateName,
-                                  const TrainingCallback& callback)
-    {
-      return implementation().train(stateName, callback);
-    }
-
     OptionalError Platform::train(const TrainingParameters<Utterance>& params)
     {
       return implementation().train(params);

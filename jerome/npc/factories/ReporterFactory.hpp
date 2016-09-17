@@ -84,7 +84,7 @@ namespace jerome {
       {
 				static constexpr const char* IDENTIFIER = Impl::IDENTIFIER;
 			
-        Result<typename ReporterFactory<Report>::object_type> operator () (
+        Result<typename ReporterFactory<Report>::object_type> provide(
           const Record& inRecord,
           std::ostream& os) override
         {

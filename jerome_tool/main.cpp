@@ -27,7 +27,7 @@ int main(int argc, const char * argv[])
     jerome::npc::Platform::initialize();
     auto error = Commander::shared().parseArguments(argc, argv);
     if (!error) return 0;
-    std::cerr << error << std::endl;
+    std::cerr << *error << std::endl;
   } catch (const std::exception& error) {
     std::cerr << error << std::endl;
   }

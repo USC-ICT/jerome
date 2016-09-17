@@ -14,9 +14,8 @@
 
 #include "Split.hpp"
 
-static const char* oInputFile	= "input";
-static const char* o1stOutput	= "1st-output";
-static const char* o2ndOutput	= "2nd-output";
+static const char* oInputFile   = "input";
+static const char* oOutputFile  = "output";
 static const char* oSplit	= "split";
 static const char* oSplit_default	= "auto";
 
@@ -27,10 +26,8 @@ po::options_description Split::options(po::options_description inOptions) const
   options.add_options()
   (oInputFile, 	po::value<std::string>()->default_value("-"),
    "input file. If none specified, we will use stdin.")
-  (o1stOutput,  po::value<std::string>()->default_value("-"),
-   "1st output file. If none specified, we will use stdout.")
-  (o2ndOutput, 	po::value<std::string>()->default_value("-"),
-   "2nd output file. If none specified, we will use stdout.")
+  (oOutputFile,  po::value<std::string>()->default_value("-"),
+   "output file. If none specified, we will use stdout.")
   (oSplit, 	po::value<std::string>()->default_value(oSplit_default),
    (std::string("How to split the questions. Provide one of \n")
     + "\"" + std::string(oSplit_default) +"\"    \tdetermine split boundary automatically\n"
@@ -51,7 +48,7 @@ OptionalError Split::setup()
 
 OptionalError Split::teardown()
 {
-  return Error::NO_ERROR;
+  return platform().saveCollection(*ostreamWithName(variables()[oOutputFile]));
 }
 
 OptionalError Split::run1Classifier(const std::string& inName)

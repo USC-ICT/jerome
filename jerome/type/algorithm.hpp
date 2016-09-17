@@ -26,8 +26,13 @@
 
 #include <vector>
 #include <random>
+
 #include <boost/range/algorithm/random_shuffle.hpp>
 #include <boost/range/adaptor/transformed.hpp>
+#include <boost/iterator/transform_iterator.hpp>
+
+#include <jerome/types.hpp>
+
 
 namespace jerome {
 
@@ -78,6 +83,24 @@ namespace jerome {
     }
     
     return std::pair<Result, Result>(first, second);
+  }
+  
+  // for iterating over map keys.
+  template <typename Iter>
+  boost::transform_iterator<KeyGetter<Iter>, Iter,
+  const typename Iter::value_type::first_type&> KeyIterator(Iter iterator)
+  {
+    return boost::transform_iterator<
+    KeyGetter<Iter>,
+    Iter,
+    const typename Iter::value_type::first_type&>
+    (iterator, KeyGetter<Iter>());
+  }
+  
+  template <typename T>
+  std::vector<typename T::key_type> keys(const T& map) {
+    return std::vector<typename T::key_type>(KeyIterator(map.begin()),
+                       KeyIterator(map.end()));
   }
   
 }

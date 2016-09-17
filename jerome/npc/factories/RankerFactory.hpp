@@ -68,9 +68,9 @@ namespace jerome {
       {
 				static constexpr const char* IDENTIFIER = BaseRanker::IDENTIFIER;
 			
-        Result<Ranker> operator () (const State& inState,
-                                    const Data& inData,
-                                    const ir::value_vector& inParams) override
+        Result<Ranker> provide(const State& inState,
+                               const Data& inData,
+                               const ir::value_vector& inParams) override
         {
 					typedef Providable<ClassifierImplementationTemplate<BaseRanker>> Impl;
 					auto impl = std::make_shared<Impl>(String(IDENTIFIER), inState, inData);
@@ -91,6 +91,15 @@ namespace jerome {
 			registerProviderClass<detail::DefaultRankerProvider<BaseRanker>>();
 		}
 
+    struct UtteranceCLRankerModel
+    {
+      static constexpr const char* IDENTIFIER = "jerome.ranker.cl";
+      static constexpr const char* ANSWER_WEIGHTING_KEY = "answer.weighting";
+      static constexpr const char* QUESTION_WEIGHTING_KEY = "question.weighting";
+      static constexpr const char* ANSWER_ANALYZER_KEY = "answer.analyzer";
+      static constexpr const char* QUESTION_ANALYZER_KEY = "question.analyzer";
+    };
+    
 	}
 }
 

@@ -127,13 +127,12 @@ namespace jerome {
       {
 
         static constexpr const char* IDENTIFIER =
-          "edu.usc.ict.jerome.weighting.document.addCrossEntropyJelinekMercer";
+          "jerome.weighting.document.addCrossEntropyJelinekMercer";
 
-        Result<AnswerWeightingFactory::object_type> operator () (
+        Result<AnswerWeightingFactory::object_type> provide(
           const Record& inRecord) override
         {
-          WeightingParsingVisitor visitor("answer",
-            "unigram");
+          WeightingParsingVisitor visitor("answer", "unigram");
           inRecord.visit(visitor);
 
           return visitor.parseRecord<AnswerWeightingFactory::object_type,
@@ -147,13 +146,12 @@ namespace jerome {
         : public QuestionWeightingFactory::provider_type
       {
         static constexpr const char* IDENTIFIER =
-          "edu.usc.ict.jerome.weighting.query.multiplyJelinekMercer";
+          "jerome.weighting.query.multiplyJelinekMercer";
 
-        Result<QuestionWeightingFactory::object_type> operator () (
+        Result<QuestionWeightingFactory::object_type> provide(
           const Record& inRecord) override
         {
-          WeightingParsingVisitor visitor("question",
-            "unigram");
+          WeightingParsingVisitor visitor("question", "unigram");
           inRecord.visit(visitor);
 
           return visitor.parseRecord<QuestionWeightingFactory::object_type,

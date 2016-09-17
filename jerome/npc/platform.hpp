@@ -40,72 +40,96 @@ namespace jerome {
   }
 
   namespace npc {
-
     class Collection;
     class Utterance;
-
 
     struct Platform : public ReferenceClassInterface<scripting::Engine> {
       typedef ReferenceClassInterface<scripting::Engine> parent_type;
 
       /**
-      * Initializes the API. Needs to be called once before using any of the
-      * other
-      * functions.
-      */
+       Initializes the API. Needs to be called once before using any of the
+       other functions.
+
+       @param locale locale specification
+       */
       static void initialize(const String& locale = "en_US.UTF-8");
 
       Platform();
       virtual ~Platform();
 
       /**
-      * Loads the collection and the classfier parameters from the stream is.
-      * Returns an error object if there is a problem during the load.
-      */
+       Loads the collection and the classfier parameters from the stream is.
+       Returns an error object if there is a problem during the load.
+
+       @param is source stream
+
+       @return error if any
+       */
       OptionalError loadCollection(std::istream& is);
 
       /**
-      * Trains the classifier corresponding to the state stateName.
-      */
-      OptionalError train(
-          const String& stateName,
-          const TrainingCallback& callback = [](TrainingState&) {});
+       Trains the classifier.
+
+       @param params parameters to customize the training process.
+
+       @return an error if any
+       */
       OptionalError train(const TrainingParameters<Utterance>& params);
+
+      /**
+       Evaluates the classifier
+
+       @param params parameters to customize the evaluation process.
+
+       @return classifier accuracy or error
+       */
       Result<double> evaluate(const EvaluationParameters<Utterance>& params);
 
       /**
-      * Saves the collection to a stream. Returns an error object if there is
-      * a problem during the save.
-      */
+       Saves the collection to a stream. Returns an error object if there is
+       a problem during the save.
+
+       @param os target stream
+
+       @return error if any
+       */
       OptionalError saveCollection(std::ostream& os);
 
       /**
-      * Asks the classifier with name stateName to select the best response to
-      * the utterance question. Returns the best reponse or nothing if no
-      * response
-      * score above the classifier threshold.
-      */
+       Asks the classifier with name stateName to select the best response to
+       the utterance question. Returns the best reponse or nothing if no
+       response score above the classifier threshold.
+
+       @param stateName classifier name
+       @param question  question text
+
+       @return the best reponse if exists
+       */
       optional<Utterance> respond(const String& stateName,
                                   const String& question);
 
       // DM-related API
       /**
-      * Loads an scxml file with the dialogue manager script. Potentially the
-      * load
-      * is happening on a different thread. The callback function is called with
-      * either the DM state machine name or, in case of the failure, with the
-      * error
-      * object describing the problem.
-      */
+       Loads an scxml file with the dialogue manager script. Potentially the
+       load is happening on a different thread. The callback function is called 
+       with either the DM state machine name or, in case of the failure, with 
+       the error object describing the problem.
+
+       @param is  source stream
+       @param cb  callback function to call when the script is loaded
+       */
       void loadDialogueManager(std::istream& is,
                                const std::function<void(const Result<String>&)>&
                                    cb = [](const Result<String>&) {});
 
       /**
-      * Posts an event with name inName and data inData to the state machine
-      * with
-      * the name inMachineName. Returns immediately.
-      */
+       Posts an SCXML event with the given name and data to the state machine
+       with the name inMachineName. Returns immediately.
+
+       @param inName event name
+       @param inData event data
+       @param inMachineName state machine name
+       */
       void postEvent(const String& inName,
                      const StringStringMap& inData = StringStringMap(),
                      const String& inMachineName = "");

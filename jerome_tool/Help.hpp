@@ -15,8 +15,8 @@ class Help : public Command {
 private:
   po::options_description hiddenOptions() const override;
   po::positional_options_description positionalOptions() const override;
-  po::command_line_parser optionsParser(const std::vector<std::string>& args) const override;
-
+  OptionalError parseAndRun(const std::vector<std::string>& args) override;
+  
   std::string name() const override;
   std::string description() const override;
   void manual(std::ostream& os) const override;

@@ -47,8 +47,8 @@ std::shared_ptr<Command> Commander::command_ptr(const std::string& inName)
   return std::shared_ptr<Command>();
 }
 
-static const char* oCommand     = "_command";
-static const char* oCommandArgs = "_command-args";
+static const char* oCommand     = "command";
+static const char* oCommandArgs = "command-args";
 static std::string sExecutable;
 
 std::string Commander::executablePath()
@@ -114,35 +114,33 @@ Command::~Command()
 {
 }
 
-po::command_line_parser Command::optionsParser(const std::vector<std::string>& args) const
+void Command::storeParsedResults(const po::parsed_options &parsed)
 {
-  po::options_description all_options;
-  all_options
-  .add(options())
-  .add(hiddenOptions());
-  
-  return po::command_line_parser(args)
-  .options(all_options)
-  .positional(positionalOptions());
-}
-
-OptionalError Command::parseAndRun(const std::vector<std::string> args)
-{
-  po::options_description all_options;
-  all_options
-  .add(options())
-  .add(hiddenOptions());
-  
-  auto parser = po::command_line_parser(args)
-  .options(all_options)
-  .positional(positionalOptions());
-  
-  parser.allow_unregistered();
-  
-  po::parsed_options parsed = optionsParser(args).run();
-  
   po::store(parsed, mVariables);
   po::notify(mVariables);
+}
+
+OptionalError Command::parseAndRun(const std::vector<std::string>& args)
+{
+  po::options_description all_options;
+  all_options
+  .add(options())
+  .add(hiddenOptions());
+
+  // I must make it a variable because the parser will store a pointer
+  // to this object
+  auto positional_options = positionalOptions();
+  
+  // note that I cannot break this instructions into seprate files for
+  // customization because both command_line_parser and parsed_options
+  // store pointers to options_description. An attempt to copy eithoer one
+  // of them will lead to a crash. Blame boost program_option library design.
+  po::parsed_options parsed = po::command_line_parser(args)
+  .options(all_options)
+  .positional(positional_options)
+  .run();
+  
+  storeParsedResults(parsed);
 
   return run();
 }
