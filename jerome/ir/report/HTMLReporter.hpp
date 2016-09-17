@@ -38,7 +38,7 @@ namespace jerome {
         {
         public:
           static constexpr char const* IDENTIFIER
-            = "edu.usc.ict.jerome.reporter.html";
+            = "jerome.reporter.html";
           
           HTMLReporterBase();
           ~HTMLReporterBase();

@@ -63,7 +63,7 @@ namespace jerome { namespace ir { namespace rm { namespace weighting { namespace
 	template <class... Args>
 	struct AddDocumentProbabilities : public DocumentCollection<Args...> {
 		static constexpr const char* IDENTIFIER =
-			"edu.usc.ict.jerome.weighting.document.add";
+			"jerome.weighting.document.add";
 
 		typedef AddDocumentProbabilities<Args...>	this_type;
 		typedef DocumentCollection<Args...>			parent_type;
@@ -73,7 +73,7 @@ namespace jerome { namespace ir { namespace rm { namespace weighting { namespace
 	template <class Arg1>
 	struct AddDocumentProbabilities<Arg1> : public DocumentCollection<Arg1> {
 		static constexpr const char* IDENTIFIER =
-			"edu.usc.ict.jerome.weighting.document.add";
+			"jerome.weighting.document.add";
 
 		typedef AddDocumentProbabilities<Arg1>	this_type;
 		typedef DocumentCollection<Arg1>			parent_type;
@@ -148,7 +148,7 @@ namespace jerome { namespace ir { namespace rm { namespace weighting { namespace
 		const static std::size_t size = parent_type::size;
 
 		static constexpr const char* IDENTIFIER =
-			"edu.usc.ict.jerome.weighting.document.add";
+			"jerome.weighting.document.add";
 		
 		Record model() const
 		{

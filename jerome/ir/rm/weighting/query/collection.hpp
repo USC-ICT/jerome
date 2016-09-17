@@ -87,7 +87,7 @@ namespace jerome {
             : public QueryCollection<Arg1>
           {
             static constexpr const char* IDENTIFIER =
-              "edu.usc.ict.jerome.weighting.query.add";
+              "jerome.weighting.query.add";
 
             typedef AddQueryProbabilities<Arg1> this_type;
             typedef QueryCollection<Arg1>     parent_type;
@@ -160,7 +160,7 @@ namespace jerome {
             : public QueryCollection<Arg1, Arg2, Args ...>
           {
             static constexpr const char* IDENTIFIER =
-              "edu.usc.ict.jerome.weighting.query.add";
+              "jerome.weighting.query.add";
 
             typedef AddQueryProbabilities<Arg1, Arg2, Args ...>  this_type;
             typedef QueryCollection<Arg1, Arg2, Args ...>    parent_type;
@@ -240,7 +240,7 @@ namespace jerome {
             : public QueryCollection<Arg1>
           {
             static constexpr const char* IDENTIFIER =
-              "edu.usc.ict.jerome.weighting.query.multiply";
+              "jerome.weighting.query.multiply";
 
             typedef MultiplyQueryProbabilities<Arg1>  this_type;
             typedef QueryCollection<Arg1>     parent_type;
@@ -261,7 +261,7 @@ namespace jerome {
             : public QueryCollection<Arg1, Arg2, Args ...>
           {
             static constexpr const char* IDENTIFIER =
-              "edu.usc.ict.jerome.weighting.query.multiply";
+              "jerome.weighting.query.multiply";
 
             typedef MultiplyQueryProbabilities<Arg1, Arg2, Args ...> this_type;
             typedef QueryCollection<Arg1, Arg2, Args ...>    parent_type;

@@ -36,7 +36,7 @@ namespace jerome {
             , public Query
           {
             static constexpr const char* IDENTIFIER =
-              "edu.usc.ict.jerome.weighting.query.JelinekMercer ";
+              "jerome.weighting.query.JelinekMercer ";
 
             Record model() const
             {

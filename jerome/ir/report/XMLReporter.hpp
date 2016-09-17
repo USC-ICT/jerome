@@ -44,7 +44,7 @@ namespace jerome {
         {
         public:
           static constexpr char const* IDENTIFIER
-            = "edu.usc.ict.jerome.reporter.xml";
+            = "jerome.reporter.xml";
 
           XMLReporterBase(std::ostream& os);
           virtual ~XMLReporterBase();

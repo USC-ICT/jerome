@@ -157,6 +157,24 @@ namespace jerome {
 			}
 		}
 		
+    template <typename V>
+    void visit(const V& visitor)
+    {
+      for (auto& p : * this) {
+        detail::FieldVisitor<V> v(p.first, visitor);
+        boost::apply_visitor(v, p.second);
+      }
+    }
+    
+    template <typename V>
+    void visit(const V& visitor) const
+    {
+      for (auto& p : * this) {
+        detail::FieldVisitor<V> v(p.first, visitor);
+        boost::apply_visitor(v, p.second);
+      }
+    }
+    
 		struct Visitor {
 			
 			template <typename T>

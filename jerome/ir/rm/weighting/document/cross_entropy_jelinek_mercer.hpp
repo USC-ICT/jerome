@@ -37,7 +37,7 @@ namespace jerome {
           {
 
             static constexpr const char* IDENTIFIER =
-              "edu.usc.ict.jerome.weighting.document.CrossEntropyJelinekMercer";
+              "jerome.weighting.document.CrossEntropyJelinekMercer";
 
             Record model() const
             {
