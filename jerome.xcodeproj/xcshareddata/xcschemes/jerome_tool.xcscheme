@@ -42,7 +42,7 @@
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Release"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -92,6 +92,10 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "train --max-time 1 --input $(SRCROOT)/examples/data/twins.plist.csxml --output test.csxml"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "train --test-split label --dev-split auto --max-time 6000 --input &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Examples/AnnotatedTranscripts+/Fritzie/fritzieAnnSFAAdd.plist.csxml&quot; --output test.csxml"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

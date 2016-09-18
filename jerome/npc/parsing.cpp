@@ -76,7 +76,7 @@ namespace jerome {
       String  utteranceFieldName = model().at(UTTERANCE_FIELD_KEY,
                                               Utterance::kFieldText);
       String  unigramFieldName = model().at(INDEX_FIELD_KEY, "unigram");
-      auto  bigramFieldName = model().at<String>(INDEX_FIELD_KEY);
+      auto  bigramFieldName = model().at<String>(BIGRAM_INDEX_FIELD_KEY);
       
       const String& textp     = inObject.get(utteranceFieldName, empty);
       typename result_type::Field* unigramFieldPtr =
