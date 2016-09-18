@@ -207,6 +207,15 @@ namespace jerome {
               visit_collection_helper<N - 1, this_type>::visit(visitor, sup);
             }
 
+            static void visit(GetTitle& visitor, this_type& sup)
+            {
+              GetTitle  prefixVisitor(&visitor, std::get<this_type::size - N>
+                                      (sup.weightings()).name() + " ");
+              sup.alphas()[this_type::size - N].accept(prefixVisitor);
+              std::get<this_type::size - N>(sup.weightings()).accept(visitor);
+              visit_collection_helper<N - 1, this_type>::visit(visitor, sup);
+            }
+
           };
 
           template <class this_type>
