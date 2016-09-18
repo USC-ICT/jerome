@@ -59,7 +59,7 @@ namespace jerome {
         {
           auto doc_weigh = AnswerWeightingFactory::sharedInstance()
           .make(inModel.at(ANSWER_WEIGHTING_KEY,
-                           AnswerWeightingFactory::sharedInstance().defaultModel()));
+                           AnswerWeightingFactory::sharedInstance().predefinedModels.find("unigram+id")->second));
 					mModel.emplace(ANSWER_WEIGHTING_KEY, doc_weigh.value().model());
 
           auto qry_weigh = QuestionWeightingFactory::sharedInstance()
@@ -69,7 +69,7 @@ namespace jerome {
 
           auto doc_analyzer = AnalyzerFactory::sharedInstance()
             .make(inModel.at(ANSWER_ANALYZER_KEY,
-                             AnalyzerFactory::sharedInstance().defaultModel()));
+                             AnalyzerFactory::sharedInstance().predefinedModels.find("text-unigram+id")->second));
 					mModel.emplace(ANSWER_ANALYZER_KEY, doc_analyzer.value().model());
 
           auto qry_analyzer = AnalyzerFactory::sharedInstance()
