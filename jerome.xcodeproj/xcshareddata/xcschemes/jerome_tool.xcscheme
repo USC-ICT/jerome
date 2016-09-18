@@ -95,7 +95,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "train --test-split label --dev-split auto --max-time 6000 --input &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Examples/AnnotatedTranscripts+/Fritzie/fritzieAnnSFAAdd.plist.csxml&quot; --output test.csxml"
+            argument = "train --test-split label --dev-split auto --max-time 6000 --input &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Examples/AnnotatedTranscripts+/Fritzie/fritzieAnnSFAAddWiz.plist.csxml&quot; --output test.csxml"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

@@ -37,7 +37,7 @@ namespace jerome {
       : public Factory<
         RankerFactory,
 				detail::Ranker,
-				const State&,
+				const Record&,
         const detail::Data&,
         const math::parameters::value_vector&>
     {
@@ -45,14 +45,14 @@ namespace jerome {
 			typedef Factory<
         RankerFactory,
 				detail::Ranker,
-				const State&,
+				const Record&,
         const detail::Data&,
         const math::parameters::value_vector&> parent_type;
 		
 			static constexpr const char* CLASSIFIER_RECORD = "classifier";
 		
       RankerFactory();
-			Result<object_type> make(const State&,
+			Result<object_type> make(const Record&,
         const detail::Data&,
         const math::parameters::value_vector&);
 			
@@ -68,17 +68,15 @@ namespace jerome {
       {
 				static constexpr const char* IDENTIFIER = BaseRanker::IDENTIFIER;
 			
-        Result<Ranker> provide(const State& inState,
+        Result<Ranker> provide(const Record& inModel,
                                const Data& inData,
                                const ir::value_vector& inParams) override
         {
 					typedef Providable<ClassifierImplementationTemplate<BaseRanker>> Impl;
-					auto impl = std::make_shared<Impl>(String(IDENTIFIER), inState, inData);
+					auto impl = std::make_shared<Impl>(String(IDENTIFIER), inModel, inData);
 					if (!impl) return Error("failed to instantiate ranker");
 					auto ranker = Ranker(impl);
 					ranker.setValues(inParams);
-					// make sure the ranker model stored in the state matches the actual ranker 
-					ranker.state().setRankerModel(ranker.model());
 					return ranker;
         }
 

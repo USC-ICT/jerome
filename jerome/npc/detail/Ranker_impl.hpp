@@ -50,27 +50,17 @@ namespace jerome {
 
         using parent_type::parent_type;
 
-        RankerImplementation(const State& inState)
-          : mState(inState)
-        {
-        }
+//        RankerImplementation(const State& inState)
+//          : mState(inState)
+//        {
+//        }
 
         virtual void train(Trainer& inTrainer,
                            const Trainer::progress_callback_type& callback) = 0;
         virtual test_set_type testSetWithData(const Data& data) const = 0;
 
-        State state() const
-        {
-          return mState;
-        }
+        virtual Record model() const = 0;
 
-				virtual Record model() const
-				{
-					return Record();
-				}
-
-      private:
-        State mState;
       };
 
       template <typename R, typename QT = typename R::query_type>
@@ -88,10 +78,9 @@ namespace jerome {
 
         typedef R ranker_type;
 
-        RankerImplementationTemplate(const State& inState,
+        RankerImplementationTemplate(const Record& inModel,
           const Data& inData)
-          : parent_type(inState)
-          , mRanker(inState.rankerModel(), inData)
+          : mRanker(inModel, inData)
         {
           // note that we do not want to pass parameters to the base ranker constructor,
           // because if the actual ranker is classifier, the classifier template does not
@@ -132,7 +121,6 @@ namespace jerome {
         void setParameters(const value_vector& inValues)
         {
           this->base_ranker().setValues(inValues);
-					this->state().setRankerModel(model());
         }
 				
 				Record model() const override
@@ -156,9 +144,9 @@ namespace jerome {
         typedef typename parent_type::test_set_type test_set_type;
         using parent_type::parent_type;
 
-        IndexedRankerImplementationTemplate(const State& inState,
+        IndexedRankerImplementationTemplate(const Record& inModel,
           const Data& inData)
-          : parent_type(inState, inData)
+          : parent_type(inModel, inData)
         {
         }
 
@@ -206,7 +194,7 @@ namespace jerome {
 
           IndexedRanker rankerToTrain = IndexedRanker(
             std::make_shared<indexed_base_ranker_impl_type>(
-              this->state(),
+              this->model(),
               inTrainer.trainData()));
 					rankerToTrain.setValues(values);
 

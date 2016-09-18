@@ -104,13 +104,12 @@ namespace jerome {
     }
 
     Result<RankerFactory::object_type>
-    RankerFactory::make(const State& inState,
+    RankerFactory::make(const Record& inModel,
                         const detail::Data& inData,
                         const math::parameters::value_vector& inParams)
     {
-      return parent_type::make(inState.rankerModel()
-                               .at<String>(parent_type::PROVIDER_KEY),
-                               inState, inData, inParams);
+      return parent_type::make(inModel.at<String>(parent_type::PROVIDER_KEY),
+                               inModel, inData, inParams);
     }
 
 

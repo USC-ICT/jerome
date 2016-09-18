@@ -62,11 +62,6 @@ namespace jerome {
           return parent_type::values();
         }
 
-        State state() const
-        {
-          return this->implementation().state();
-        }
-				
 				Record model() const
 				{
 					return this->implementation().model();

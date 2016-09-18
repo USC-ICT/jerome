@@ -121,7 +121,7 @@ namespace jerome {
 
 				void reportRanker(const ranker_type& inRanker) override
 				{
-					ModelWriterXML::write(this->stream(), inRanker.state().rankerModel());
+					ModelWriterXML::write(this->stream(), inRanker.model());
 				}
 				
 			};

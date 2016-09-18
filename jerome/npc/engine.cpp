@@ -90,7 +90,7 @@ namespace jerome {
         record.visit(visitor);
 
         auto rankerResult = RankerFactory::sharedInstance().make(
-          state, data, visitor.params);
+          state.rankerModel(), data, visitor.params);
 
         if (rankerResult) {
           auto pair = mRankers.emplace(inStateName, rankerResult.value());
@@ -250,7 +250,7 @@ namespace jerome {
           record.visit(visitor);
           
           auto rankerResult = RankerFactory::sharedInstance()
-            .make(*optState, data, visitor.params);
+            .make(optState->rankerModel(), data, visitor.params);
           
           if (!rankerResult) {
             return rankerResult.error();
@@ -271,6 +271,7 @@ namespace jerome {
           state_type_impl	fakeState(params.stateName, state);
           params.callback(fakeState);
         });
+        optState->setRankerModel(ranker.model());
         
         if (madeNewRanker) {
           mRankers.emplace(optState->name(), ranker);
@@ -296,7 +297,7 @@ namespace jerome {
         auto trainData = data.subdata(params.trainingQuestions);
 
 				auto rankerResult = RankerFactory::sharedInstance()
-          .make(ranker.state(), trainData, ranker.values());
+          .make(ranker.model(), trainData, ranker.values());
 				auto xr = rankerResult.value();
 
 				return detail::evaluate(params.reporterModel, *params.report, testData, xr);
