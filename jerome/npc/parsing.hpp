@@ -66,7 +66,7 @@ namespace jerome {
       typedef UtteranceAnalyzer parent_type;
     public:
       static constexpr char const* IDENTIFIER = "jerome.analyzer.multi";
-      static constexpr char const* ANALYZERS_KEY = "analyzers";
+      static constexpr char const* ANALYZER_KEY = "analyzer";
 
       MultiAnalyzer(const Record& inModel)
       : parent_type(inModel)

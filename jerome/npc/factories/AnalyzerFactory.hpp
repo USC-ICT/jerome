@@ -45,20 +45,19 @@ namespace jerome {
         AnalyzerFactory,
 				Analyzer>
     {
+      typedef RecordFactory<
+      AnalyzerFactory,
+      Analyzer> parent_type;
     public:
-			typedef RecordFactory<
-        AnalyzerFactory,
-				Analyzer> parent_type;
-		
       AnalyzerFactory();
 			
 			template <typename AnalyzerImplementation>
 			void registerProvider();
       
-      const StringMap<Record> predefinedAnalyzers;
-      Record defaultAnalyzerModel() const;
+      const StringMap<Record> predefinedModels;
+      Record defaultModel() const;
     private:
-      String mDefaultAnalyzerModelKey;      
+      String mDefaultModelKey;
     };
 
 		namespace detail {

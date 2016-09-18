@@ -58,21 +58,23 @@ namespace jerome {
           const Data& data)
         {
           auto doc_weigh = AnswerWeightingFactory::sharedInstance()
-            .make(inModel.at(ANSWER_WEIGHTING_KEY, Record()));
+          .make(inModel.at(ANSWER_WEIGHTING_KEY,
+                           AnswerWeightingFactory::sharedInstance().defaultModel()));
 					mModel.emplace(ANSWER_WEIGHTING_KEY, doc_weigh.value().model());
 
           auto qry_weigh = QuestionWeightingFactory::sharedInstance()
-            .make(inModel.at(QUESTION_WEIGHTING_KEY, Record()));
+            .make(inModel.at(QUESTION_WEIGHTING_KEY,
+                             QuestionWeightingFactory::sharedInstance().defaultModel()));
 					mModel.emplace(QUESTION_WEIGHTING_KEY, qry_weigh.value().model());
 
           auto doc_analyzer = AnalyzerFactory::sharedInstance()
             .make(inModel.at(ANSWER_ANALYZER_KEY,
-                             AnalyzerFactory::sharedInstance().defaultAnalyzerModel()));
+                             AnalyzerFactory::sharedInstance().defaultModel()));
 					mModel.emplace(ANSWER_ANALYZER_KEY, doc_analyzer.value().model());
 
           auto qry_analyzer = AnalyzerFactory::sharedInstance()
             .make(inModel.at(QUESTION_ANALYZER_KEY,
-                             AnalyzerFactory::sharedInstance().defaultAnalyzerModel()));
+                             AnalyzerFactory::sharedInstance().defaultModel()));
 					mModel.emplace(QUESTION_ANALYZER_KEY, qry_analyzer.value().model());
 
           this->index(
@@ -106,7 +108,9 @@ namespace jerome {
                         const detail::Data& inData,
                         const math::parameters::value_vector& inParams)
     {
-			return parent_type::make(inState.rankerModel(), inState, inData, inParams);
+      return parent_type::make(inState.rankerModel()
+                               .at<String>(parent_type::PROVIDER_KEY),
+                               inState, inData, inParams);
     }
 
 

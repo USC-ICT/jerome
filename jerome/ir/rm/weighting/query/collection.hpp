@@ -82,13 +82,16 @@ namespace jerome {
           struct AddQueryProbabilities
             : public QueryCollection<Args ...> {};
 
+          struct AddQueryProbabilitiesConst {
+            static constexpr const char* IDENTIFIER =
+            "jerome.weighting.query.add";
+          };
+          
           template <class Arg1>
           struct AddQueryProbabilities<Arg1>
             : public QueryCollection<Arg1>
+            , public AddQueryProbabilitiesConst
           {
-            static constexpr const char* IDENTIFIER =
-              "jerome.weighting.query.add";
-
             typedef AddQueryProbabilities<Arg1> this_type;
             typedef QueryCollection<Arg1>     parent_type;
             using parent_type::parent_type;
@@ -158,10 +161,8 @@ namespace jerome {
           template <class Arg1, class Arg2, class ... Args>
           struct AddQueryProbabilities<Arg1, Arg2, Args ...>
             : public QueryCollection<Arg1, Arg2, Args ...>
+            , public AddQueryProbabilitiesConst
           {
-            static constexpr const char* IDENTIFIER =
-              "jerome.weighting.query.add";
-
             typedef AddQueryProbabilities<Arg1, Arg2, Args ...>  this_type;
             typedef QueryCollection<Arg1, Arg2, Args ...>    parent_type;
             using parent_type::parent_type;
@@ -231,6 +232,11 @@ namespace jerome {
             };
           }
 
+          struct MultiplyQueryProbabilitiesConst {
+            static constexpr const char* IDENTIFIER =
+            "jerome.weighting.query.multiply";
+          };
+          
           template <class ... Args>
           struct MultiplyQueryProbabilities
             : public QueryCollection<Args ...> {};
@@ -238,10 +244,8 @@ namespace jerome {
           template <class Arg1>
           struct MultiplyQueryProbabilities<Arg1>
             : public QueryCollection<Arg1>
+            , public MultiplyQueryProbabilitiesConst
           {
-            static constexpr const char* IDENTIFIER =
-              "jerome.weighting.query.multiply";
-
             typedef MultiplyQueryProbabilities<Arg1>  this_type;
             typedef QueryCollection<Arg1>     parent_type;
             using parent_type::parent_type;
@@ -259,10 +263,8 @@ namespace jerome {
           template <class Arg1, class Arg2, class ... Args>
           struct MultiplyQueryProbabilities<Arg1, Arg2, Args ...>
             : public QueryCollection<Arg1, Arg2, Args ...>
+            , public MultiplyQueryProbabilitiesConst
           {
-            static constexpr const char* IDENTIFIER =
-              "jerome.weighting.query.multiply";
-
             typedef MultiplyQueryProbabilities<Arg1, Arg2, Args ...> this_type;
             typedef QueryCollection<Arg1, Arg2, Args ...>    parent_type;
             using parent_type::parent_type;

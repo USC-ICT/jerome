@@ -79,26 +79,14 @@ namespace jerome {
 		Result<object_type> make(const optional<String>& identifier, Args&& ... args)
 		{
 			if (identifier) {
-				auto provider = providerWithID(*identifier);
-				return provider
-          ? provider.value().provide(std::forward<Args>(args) ...)
-          : provider.error();
+        return make(*identifier, std::forward<Args>(args) ...);
 			}
 			
 			if (defaultProviderID()) {
-				auto provider = providerWithID(*defaultProviderID());
-				return provider
-          ? provider.value().provide(std::forward<Args>(args) ...)
-          : provider.error();
+        return make(*defaultProviderID(), std::forward<Args>(args) ...);
 			}
 			
 			return Error("no provider id specified and no default provider defined");
-		}
-
-		Result<object_type> make(const Record& record, Args&& ... args)
-		{
-			return make(record.at<String>(PROVIDER_KEY),
-									std::forward<Args>(args) ...);
 		}
 
     Result<provider_type&> providerWithID(const String& identifier)
@@ -140,6 +128,14 @@ namespace jerome {
     providers_type  mProviders;
 		OptionalString mDefaultProviderID;
 
+    Result<object_type> make(const String& identifier, Args&& ... args)
+    {
+      auto provider = providerWithID(identifier);
+      return provider
+      ? provider.value().provide(std::forward<Args>(args) ...)
+      : provider.error();
+    }
+    
   };
 
 }

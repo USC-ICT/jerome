@@ -70,7 +70,8 @@ namespace jerome {
 
       Result<object_type> make(const Record& inRecord, std::ostream& os)
       {
-        return parent_type::make(inRecord, inRecord, os);
+        return parent_type::make(inRecord.at<String>(parent_type::PROVIDER_KEY),
+                                 inRecord, os);
       }
 
       template <typename ReporterImplementation>

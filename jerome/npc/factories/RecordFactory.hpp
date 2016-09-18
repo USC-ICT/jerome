@@ -50,7 +50,8 @@ namespace jerome {
 			
 			Result<object_type> make(const Record& inRecord)
 			{
-				return parent_type::make(inRecord, inRecord);
+        return parent_type::make(inRecord.at<String>(parent_type::PROVIDER_KEY),
+          inRecord);
 			}
 			
     };

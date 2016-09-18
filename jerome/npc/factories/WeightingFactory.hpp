@@ -25,6 +25,7 @@
 
 #include <jerome/npc/factories/RecordFactory.hpp>
 #include <jerome/npc/detail/types_fwd.hpp>
+#include <jerome/ir/rm/AnyWeighting.hpp>
 
 namespace jerome {
 
@@ -36,22 +37,28 @@ namespace jerome {
 
 			template <template <typename,typename> class Any>
 			class ProvidableWeighting
-			: public Providable<Any<ProvidableWeighting<Any>, ir::HeapIndex>>
+        : public Providable<Any<ProvidableWeighting<Any>, ir::HeapIndex>>
 			{
-				typedef Providable<Any<ProvidableWeighting<Any>, ir::HeapIndex>> parent_type;
+				typedef Providable<Any<ProvidableWeighting<Any>,
+          ir::HeapIndex>> parent_type;
 				
 			public:
 				using parent_type::parent_type;
 				
 				template <template <typename ...> class W, typename ... Args>
-				static ProvidableWeighting make(const String& inProviderID, const String& inName, Args&& ... args)
+				static ProvidableWeighting make(const String& inProviderID,
+                                        const String& inName, Args&& ... args)
 				{
-					return ProvidableWeighting(inProviderID, parent_type::template make_impl<W>(inName, std::forward<Args>(args) ...));
+					return ProvidableWeighting
+            (inProviderID, parent_type::template make_impl<W>
+              (inName, std::forward<Args>(args) ...));
 				}
 			};
 
-			typedef ProvidableWeighting<jerome::ir::rm::AnyDocumentWeighting> AnswerWeighting;
-			typedef ProvidableWeighting<jerome::ir::rm::AnyQueryWeighting> QuestionWeighting;
+			typedef ProvidableWeighting<
+        jerome::ir::rm::AnyDocumentWeighting> AnswerWeighting;
+			typedef ProvidableWeighting<
+        jerome::ir::rm::AnyQueryWeighting> QuestionWeighting;
 
     }
 
@@ -68,6 +75,10 @@ namespace jerome {
       QuestionWeightingFactory();
 
       using parent_type::make;
+      const StringMap<Record> predefinedModels;
+      Record defaultModel() const;
+    private:
+      String mDefaultModelKey;
     };
 
     class AnswerWeightingFactory
@@ -83,7 +94,11 @@ namespace jerome {
       AnswerWeightingFactory();
 
       using parent_type::make;
-    };
+      const StringMap<Record> predefinedModels;
+      Record defaultModel() const;
+    private:
+      String mDefaultModelKey;
+   };
 		
   }
 }

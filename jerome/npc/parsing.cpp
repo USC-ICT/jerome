@@ -30,10 +30,11 @@ namespace jerome {
     {
       if (mAnalyzers) return *mAnalyzers;
       
-      Record models = model().at(ANALYZERS_KEY, Record());
       MakeAnalyzersVisitor visitor;
-      for(const auto& v : models) {
-        boost::apply_visitor(visitor, v.second);
+      for(const auto& v : model()) {
+        if (v.first == ANALYZER_KEY) {
+          boost::apply_visitor(visitor, v.second);
+        }
       }
       
       mAnalyzers = optional<List<Analyzer>>(visitor.analyzers);

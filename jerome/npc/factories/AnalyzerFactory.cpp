@@ -26,12 +26,12 @@
 namespace jerome {
   namespace npc {
 		
-		static StringMap<Record> makePredefinedAnalyzers(String inDefaultKey)
+		static StringMap<Record> makePredefinedModels()
     {
-      StringMap<Record> analyzers;
+      StringMap<Record> models;
       
       // text unigram
-      analyzers.emplace(std::make_pair<String, Record>(std::move(inDefaultKey), {
+      models.emplace(std::make_pair<String, Record>("text-unigram", {
         AnalyzerFactory::PROVIDER_KEY, Tokenized::IDENTIFIER
         , Tokenized::NAME_KEY, "Unigram"
         , Tokenized::INDEX_FIELD_KEY, "unigram"
@@ -39,7 +39,7 @@ namespace jerome {
       }));
       
       // text bigram
-      analyzers.emplace(std::make_pair<String, Record>("text-bigram", {
+      models.emplace(std::make_pair<String, Record>("text-bigram", {
         AnalyzerFactory::PROVIDER_KEY, Tokenized::IDENTIFIER
         , Tokenized::NAME_KEY, "Unigram-Bigram"
         , Tokenized::INDEX_FIELD_KEY, "unigram"
@@ -48,41 +48,37 @@ namespace jerome {
       }));
       
       // text unigram + id
-      analyzers.emplace(std::make_pair<String, Record>("text-unigram+id", {
+      models.emplace(std::make_pair<String, Record>("text-unigram+id", {
         AnalyzerFactory::PROVIDER_KEY, MultiAnalyzer::IDENTIFIER
-        , MultiAnalyzer::ANALYZERS_KEY, Record {
-          "0", Record {
-            AnalyzerFactory::PROVIDER_KEY, Tokenized::IDENTIFIER
-            , Tokenized::NAME_KEY, "Unigram"
-            , Tokenized::INDEX_FIELD_KEY, "unigram"
-            , Tokenized::UTTERANCE_FIELD_KEY, Utterance::kFieldText
-          },
-          "1", Record {
-            AnalyzerFactory::PROVIDER_KEY, Untokenized::IDENTIFIER
-            , Untokenized::NAME_KEY, "Untokenized"
-            , Untokenized::INDEX_FIELD_KEY, "externalID"
-            , Untokenized::UTTERANCE_FIELD_KEY, Utterance::kFieldID
-          },
+        , MultiAnalyzer::ANALYZER_KEY, Record {
+          AnalyzerFactory::PROVIDER_KEY, Tokenized::IDENTIFIER
+          , Tokenized::NAME_KEY, "Unigram"
+          , Tokenized::INDEX_FIELD_KEY, "unigram"
+          , Tokenized::UTTERANCE_FIELD_KEY, Utterance::kFieldText
+        },
+        MultiAnalyzer::ANALYZER_KEY, Record {
+          AnalyzerFactory::PROVIDER_KEY, Untokenized::IDENTIFIER
+          , Untokenized::NAME_KEY, "Untokenized"
+          , Untokenized::INDEX_FIELD_KEY, "id"
+          , Untokenized::UTTERANCE_FIELD_KEY, Utterance::kFieldID
         }
       }));
       
-      return analyzers;
+      return models;
     }
     
-    static const char* DEFAULT_KEY = "text-unigram";
-    
 		AnalyzerFactory::AnalyzerFactory()
-    : mDefaultAnalyzerModelKey(DEFAULT_KEY)
-    , predefinedAnalyzers(makePredefinedAnalyzers(DEFAULT_KEY))
+    : mDefaultModelKey("text-unigram")
+    , predefinedModels(makePredefinedModels())
 		{
       registerProvider<Tokenized>();
       registerProvider<Untokenized>();
       registerProvider<MultiAnalyzer>();
 		}
 		
-    Record AnalyzerFactory::defaultAnalyzerModel() const
+    Record AnalyzerFactory::defaultModel() const
     {
-      return predefinedAnalyzers.find(mDefaultAnalyzerModelKey)->second;
+      return predefinedModels.find(mDefaultModelKey)->second;
     }
     
   }

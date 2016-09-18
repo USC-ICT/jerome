@@ -60,21 +60,26 @@ namespace jerome { namespace ir { namespace rm { namespace weighting { namespace
 
 #pragma mark - AddDocumentProbabilities
 	
+  struct AddDocumentProbabilitiesConst {
+    static constexpr const char* IDENTIFIER =
+    "jerome.weighting.document.add";
+  };
+  
 	template <class... Args>
-	struct AddDocumentProbabilities : public DocumentCollection<Args...> {
-		static constexpr const char* IDENTIFIER =
-			"jerome.weighting.document.add";
-
+	struct AddDocumentProbabilities
+    : public DocumentCollection<Args...>
+    , public AddDocumentProbabilitiesConst
+  {
 		typedef AddDocumentProbabilities<Args...>	this_type;
 		typedef DocumentCollection<Args...>			parent_type;
 		using parent_type::parent_type;
 	};
 	
 	template <class Arg1>
-	struct AddDocumentProbabilities<Arg1> : public DocumentCollection<Arg1> {
-		static constexpr const char* IDENTIFIER =
-			"jerome.weighting.document.add";
-
+	struct AddDocumentProbabilities<Arg1>
+    : public DocumentCollection<Arg1>
+    , public AddDocumentProbabilitiesConst
+  {
 		typedef AddDocumentProbabilities<Arg1>	this_type;
 		typedef DocumentCollection<Arg1>			parent_type;
 		using parent_type::parent_type;

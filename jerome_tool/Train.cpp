@@ -15,6 +15,7 @@
 #include <jerome/npc/npc.hpp>
 #include <jerome/npc/detail/ModelWriterText.hpp>
 #include <jerome/npc/factories/AnalyzerFactory.hpp>
+#include <jerome/npc/factories/WeightingFactory.hpp>
 
 #include <jerome/type/Factory.hpp>
 #include <jerome/ir/report/HTMLReporter.hpp>
@@ -28,18 +29,27 @@ static const char* oDevSplit            = "dev-split";
 static const char* oMaxTime             = "max-time";
 static const char* oQuestionAnalyzer    = "question-analyzer";
 static const char* oAnswerAnalyzer      = "answer-analyzer";
+static const char* oQuestionWeighting   = "question-weighting";
+static const char* oAnswerWeighting     = "answer-weighting";
 
 using namespace jerome;
 using namespace jerome::npc;
+
+static std::pair<std::string, std::string> modelNames(const StringMap<Record>& models)
+{
+  auto modelNames = keys(models);
+  auto modelNamesString = boost::algorithm::join(modelNames, "\n  ");
+  auto defaultModelName = modelNames.front();
+  return std::make_pair(modelNamesString, defaultModelName);
+}
 
 po::options_description Train::options(po::options_description inOptions) const
 {
   po::options_description options(parent_type::options(inOptions));
   
-  auto analyzerModels = AnalyzerFactory::sharedInstance().predefinedAnalyzers;
-  auto analyzerModelNames = keys(analyzerModels);
-  auto analyzerModelNamesString = boost::algorithm::join(analyzerModelNames, "\n  ");
-  auto defaultAnalyzerModelName = analyzerModelNames.front();
+  auto analyzerModels = modelNames(AnalyzerFactory::sharedInstance().predefinedModels);
+  auto qwModels = modelNames(QuestionWeightingFactory::sharedInstance().predefinedModels);
+  auto awModels = modelNames(AnswerWeightingFactory::sharedInstance().predefinedModels);
 
   options.add_options()
   (oInputFile, 	po::value<std::string>()->default_value("-"),
@@ -67,13 +77,21 @@ po::options_description Train::options(po::options_description inOptions) const
     )
    .c_str())
   (oQuestionAnalyzer, po::value<std::string>()
-    ->default_value(defaultAnalyzerModelName),
+    ->default_value(analyzerModels.second),
    (std::string("question analyzer. One of\n  ")
-    + analyzerModelNamesString).c_str())
+    + analyzerModels.first).c_str())
   (oAnswerAnalyzer, po::value<std::string>()
-    ->default_value(defaultAnalyzerModelName),
+    ->default_value(analyzerModels.second),
    (std::string("answer analyzer. One of\n  ")
-    + analyzerModelNamesString).c_str())
+    + analyzerModels.first).c_str())
+  (oQuestionWeighting, po::value<std::string>()
+   ->default_value(qwModels.second),
+   (std::string("question weighting. One of\n  ")
+    + qwModels.first).c_str())
+  (oAnswerWeighting, po::value<std::string>()
+   ->default_value(awModels.second),
+   (std::string("answer weighting. One of\n  ")
+    + awModels.first).c_str())
   ;
   
   return options;
