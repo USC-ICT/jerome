@@ -53,11 +53,6 @@ namespace jerome {
 			
 			template <typename AnalyzerImplementation>
 			void registerProvider();
-      
-      const StringMap<Record> predefinedModels;
-      Record defaultModel() const;
-    private:
-      String mDefaultModelKey;
     };
 
 		namespace detail {

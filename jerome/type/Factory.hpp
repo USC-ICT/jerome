@@ -74,7 +74,8 @@ namespace jerome {
 		
 		typedef Object object_type;
     typedef Provider provider_type;
-    typedef std::unique_ptr<provider_type> provider_pointer;
+    typedef std::unique_ptr<provider_type>  provider_pointer;
+    typedef StringMap<Record>               models_type;
 
 		Result<object_type> make(const optional<String>& identifier, Args&& ... args)
 		{
@@ -123,10 +124,46 @@ namespace jerome {
       return keys(mProviders);
     }
     
+    const models_type& predefinedModels() const
+    {
+      return mPredefinedModels;
+    }
+    
+    void registerModel(String inKey, Record inModel)
+    {
+      mPredefinedModels.emplace(std::make_pair(std::move(inKey),
+                                               std::move(inModel)));
+    }
+    
+    String defaultModelKey() const
+    {
+      return mDefaultModelKey;
+    }
+    
+    Record defaultModel() const
+    {
+      auto x = predefinedModels().find(mDefaultModelKey);
+      if (x != predefinedModels().end()) {
+        return x->second;
+      }
+      x = predefinedModels().begin();
+      if (x != predefinedModels().end()) {
+        return x->second;
+      }
+      return Record();
+    }
+
+    void setDefaultModelKey(const String& inKey)
+    {
+      mDefaultModelKey = inKey;
+    }
+    
   private:
-    typedef StringMap<provider_pointer>  providers_type;
+    typedef StringMap<provider_pointer> providers_type;
     providers_type  mProviders;
-		OptionalString mDefaultProviderID;
+		OptionalString  mDefaultProviderID;
+    String          mDefaultModelKey;
+    models_type     mPredefinedModels;
 
     Result<object_type> make(const String& identifier, Args&& ... args)
     {

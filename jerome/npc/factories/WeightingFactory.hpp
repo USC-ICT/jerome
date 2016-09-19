@@ -75,10 +75,6 @@ namespace jerome {
       QuestionWeightingFactory();
 
       using parent_type::make;
-      const StringMap<Record> predefinedModels;
-      Record defaultModel() const;
-    private:
-      String mDefaultModelKey;
     };
 
     class AnswerWeightingFactory
@@ -94,10 +90,6 @@ namespace jerome {
       AnswerWeightingFactory();
 
       using parent_type::make;
-      const StringMap<Record> predefinedModels;
-      Record defaultModel() const;
-    private:
-      String mDefaultModelKey;
    };
 		
   }

@@ -163,59 +163,24 @@ namespace jerome {
 
     }
 
-    static StringMap<Record> makePredefinedQueryWeightings()
+    AnswerWeightingFactory::AnswerWeightingFactory()
     {
-      StringMap<Record> models;
-
-      using namespace jerome::ir::rm::weighting;
-      
-      // text unigram
-      models.emplace(std::make_pair<String, Record>("unigram", {
-        AnswerWeightingFactory::PROVIDER_KEY, detail::DefaultQueryWeightingProvider::IDENTIFIER
-        , Weighting::IDENTIFIER_KEY, query::MultiplyQueryProbabilitiesConst::IDENTIFIER
-        , Weighting::NAME_KEY, "question"
-        , Weighting::SUB_WEIGHTING_KEY, Record {
-            Weighting::IDENTIFIER_KEY, query::JelinekMercer::IDENTIFIER
-          , Weighting::NAME_KEY, "unigram"
-        }
-      }));
-      
-      // text unigram
-      models.emplace(std::make_pair<String, Record>("bigram", {
-        AnswerWeightingFactory::PROVIDER_KEY, detail::DefaultQueryWeightingProvider::IDENTIFIER
-        , Weighting::IDENTIFIER_KEY, query::MultiplyQueryProbabilitiesConst::IDENTIFIER
-        , Weighting::NAME_KEY, "question"
-        , Weighting::SUB_WEIGHTING_KEY, Record {
-          Weighting::IDENTIFIER_KEY, query::JelinekMercer::IDENTIFIER
-          , Weighting::NAME_KEY, "unigram"
-        }
-        , Weighting::SUB_WEIGHTING_KEY, Record {
-            Weighting::IDENTIFIER_KEY, query::JelinekMercer::IDENTIFIER
-          , Weighting::NAME_KEY, "bigram"
-        }
-      }));
-      
-      return models;
-    }
-
-    static StringMap<Record> makePredefinedDocumentWeightings()
-    {
-      StringMap<Record> models;
+      registerProviderClass<detail::DefaultDocumentWeightingProvider>();
       
       using namespace jerome::ir::rm::weighting;
       
       // text unigram
-      models.emplace(std::make_pair<String, Record>("unigram", {
+      registerModel("unigram", {
         AnswerWeightingFactory::PROVIDER_KEY, detail::DefaultDocumentWeightingProvider::IDENTIFIER
         , Weighting::IDENTIFIER_KEY, document::AddDocumentProbabilitiesConst::IDENTIFIER
         , Weighting::NAME_KEY, "answer"
         , Weighting::SUB_WEIGHTING_KEY, Record {
-            Weighting::IDENTIFIER_KEY, document::CrossEntropyJelinekMercer::IDENTIFIER
+          Weighting::IDENTIFIER_KEY, document::CrossEntropyJelinekMercer::IDENTIFIER
           , Weighting::NAME_KEY, "unigram"
         }
-      }));
+      });
       
-      models.emplace(std::make_pair<String, Record>("bigram", {
+      registerModel("bigram", {
         AnswerWeightingFactory::PROVIDER_KEY, detail::DefaultDocumentWeightingProvider::IDENTIFIER
         , Weighting::IDENTIFIER_KEY, document::AddDocumentProbabilitiesConst::IDENTIFIER
         , Weighting::NAME_KEY, "answer"
@@ -227,9 +192,9 @@ namespace jerome {
           Weighting::IDENTIFIER_KEY, document::CrossEntropyJelinekMercer::IDENTIFIER
           , Weighting::NAME_KEY, "bigram"
         }
-      }));
-
-      models.emplace(std::make_pair<String, Record>("unigram+id", {
+      });
+      
+      registerModel("unigram+id", {
         AnswerWeightingFactory::PROVIDER_KEY, detail::DefaultDocumentWeightingProvider::IDENTIFIER
         , Weighting::IDENTIFIER_KEY, document::AddDocumentProbabilitiesConst::IDENTIFIER
         , Weighting::NAME_KEY, "answer"
@@ -241,33 +206,46 @@ namespace jerome {
           Weighting::IDENTIFIER_KEY, document::CrossEntropyJelinekMercer::IDENTIFIER
           , Weighting::NAME_KEY, "id"
         }
-      }));
-      
-      return models;
-    }
-
-    AnswerWeightingFactory::AnswerWeightingFactory()
-    : mDefaultModelKey("unigram")
-    , predefinedModels(makePredefinedDocumentWeightings())
-    {
-      registerProviderClass<detail::DefaultDocumentWeightingProvider>();
-    }
-
-    Record AnswerWeightingFactory::defaultModel() const
-    {
-      return predefinedModels.find(mDefaultModelKey)->second;
+      });
+     
+      setDefaultModelKey("unigram");
     }
 
     QuestionWeightingFactory::QuestionWeightingFactory()
-    : mDefaultModelKey("unigram")
-    , predefinedModels(makePredefinedQueryWeightings())
     {
 			registerProviderClass<detail::DefaultQueryWeightingProvider>();
+
+      using namespace jerome::ir::rm::weighting;
+      
+      // text unigram
+      registerModel("unigram", {
+        AnswerWeightingFactory::PROVIDER_KEY, detail::DefaultQueryWeightingProvider::IDENTIFIER
+        , Weighting::IDENTIFIER_KEY, query::MultiplyQueryProbabilitiesConst::IDENTIFIER
+        , Weighting::NAME_KEY, "question"
+        , Weighting::SUB_WEIGHTING_KEY, Record {
+          Weighting::IDENTIFIER_KEY, query::JelinekMercer::IDENTIFIER
+          , Weighting::NAME_KEY, "unigram"
+        }
+      });
+      
+      // text unigram
+      registerModel("bigram", {
+        AnswerWeightingFactory::PROVIDER_KEY, detail::DefaultQueryWeightingProvider::IDENTIFIER
+        , Weighting::IDENTIFIER_KEY, query::MultiplyQueryProbabilitiesConst::IDENTIFIER
+        , Weighting::NAME_KEY, "question"
+        , Weighting::SUB_WEIGHTING_KEY, Record {
+          Weighting::IDENTIFIER_KEY, query::JelinekMercer::IDENTIFIER
+          , Weighting::NAME_KEY, "unigram"
+        }
+        , Weighting::SUB_WEIGHTING_KEY, Record {
+          Weighting::IDENTIFIER_KEY, query::JelinekMercer::IDENTIFIER
+          , Weighting::NAME_KEY, "bigram"
+        }
+      });
+      
+      setDefaultModelKey("unigram");
+
     }
 
-    Record QuestionWeightingFactory::defaultModel() const
-    {
-      return predefinedModels.find(mDefaultModelKey)->second;
-    }
   }
 }

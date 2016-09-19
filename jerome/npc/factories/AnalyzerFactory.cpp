@@ -26,29 +26,31 @@
 namespace jerome {
   namespace npc {
 		
-		static StringMap<Record> makePredefinedModels()
-    {
-      StringMap<Record> models;
-      
+		AnalyzerFactory::AnalyzerFactory()
+		{
+      registerProvider<Tokenized>();
+      registerProvider<Untokenized>();
+      registerProvider<MultiAnalyzer>();
+
       // text unigram
-      models.emplace(std::make_pair<String, Record>("text-unigram", {
+      registerModel("text-unigram", {
         AnalyzerFactory::PROVIDER_KEY, Tokenized::IDENTIFIER
         , Tokenized::NAME_KEY, "Unigram"
         , Tokenized::INDEX_FIELD_KEY, "unigram"
         , Tokenized::UTTERANCE_FIELD_KEY, Utterance::kFieldText
-      }));
+      });
       
       // text bigram
-      models.emplace(std::make_pair<String, Record>("text-bigram", {
+     registerModel("text-bigram", {
         AnalyzerFactory::PROVIDER_KEY, Tokenized::IDENTIFIER
         , Tokenized::NAME_KEY, "Unigram-Bigram"
         , Tokenized::INDEX_FIELD_KEY, "unigram"
         , Tokenized::BIGRAM_INDEX_FIELD_KEY, "bigram"
         , Tokenized::UTTERANCE_FIELD_KEY, Utterance::kFieldText
-      }));
+      });
       
       // text unigram + id
-      models.emplace(std::make_pair<String, Record>("text-unigram+id", {
+      registerModel("text-unigram+id", {
         AnalyzerFactory::PROVIDER_KEY, MultiAnalyzer::IDENTIFIER
         , MultiAnalyzer::ANALYZER_KEY, Record {
           AnalyzerFactory::PROVIDER_KEY, Tokenized::IDENTIFIER
@@ -62,24 +64,10 @@ namespace jerome {
           , Untokenized::INDEX_FIELD_KEY, "id"
           , Untokenized::UTTERANCE_FIELD_KEY, Utterance::kFieldID
         }
-      }));
-      
-      return models;
+      });
+
+      setDefaultModelKey("text-unigram");
     }
-    
-		AnalyzerFactory::AnalyzerFactory()
-    : mDefaultModelKey("text-unigram")
-    , predefinedModels(makePredefinedModels())
-		{
-      registerProvider<Tokenized>();
-      registerProvider<Untokenized>();
-      registerProvider<MultiAnalyzer>();
-		}
 		
-    Record AnalyzerFactory::defaultModel() const
-    {
-      return predefinedModels.find(mDefaultModelKey)->second;
-    }
-    
   }
 }

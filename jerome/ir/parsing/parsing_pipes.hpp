@@ -49,26 +49,31 @@ namespace jerome { namespace ir {
 			
 				using namespace jerome::ir::keyword;
 
-				TokenStream	stream(new Tokenizer(args[_string], args[_locale | jerome::Locale()]));
+				TokenStream	stream(new Tokenizer(args[_string],
+                                         args[_locale | jerome::Locale()]));
 				stream	= new Alphanumeric(stream);
 				stream	= new Lowercase(stream);
 				stream	= new Apostrophe(stream);
 				
-				String dictionaryPath				= args[_dictionary | Dictionary::defaultDictionaryName()];
+				String dictionaryPath				=
+          args[_dictionary | Dictionary::defaultDictionaryName()];
 				if (dictionaryPath.length())
 					stream 	= new Dictionary(stream, dictionaryPath);
 				
 				if (args[_stem | true]) 
 					stream	= new KStem(stream);
 					
-				const Stopper::Stopwords& stopwords 	= args[_stopwords | Stopper::defaultStopwords()];
+				const Stopper::Stopwords& stopwords =
+          args[_stopwords | Stopper::defaultStopwords()];
         stream	= new Stopper(stream, stopwords);
 					
-				typename Index::Field*				unigrams	= args[_unigram_field | ((typename Index::Field*)nullptr)];
+				typename Index::Field*		unigrams =
+          args[_unigram_field | ((typename Index::Field*)nullptr)];
 				if (unigrams) 
 					stream	= new IndexWriter<Index>(stream, *unigrams);
 
-				typename Index::Field*				bigrams		= args[_bigram_field | ((typename Index::Field*)nullptr)];
+				typename Index::Field*		bigrams =
+          args[_bigram_field | ((typename Index::Field*)nullptr)];
 				if (bigrams) {
 					stream	= new NGram(stream);
 					stream	= new IndexWriter<Index>(stream, *bigrams);
@@ -78,7 +83,9 @@ namespace jerome { namespace ir {
 			}	
 		public:
 			template <class ArgumentPack>
-			TokenPipe(ArgumentPack const& args) : TokenFilter(make_stream(args)) {}
+			TokenPipe(ArgumentPack const& args)
+      : TokenFilter(make_stream(args))
+      {}
 		};
 	
 	}
@@ -109,15 +116,19 @@ namespace jerome { namespace ir {
 			static TokenStream make_stream(ArgumentPack const& args) {
 			
 				using namespace jerome::ir::keyword;
-				TokenStream	stream(new NonTokenizer(args[_string], args[_locale | jerome::Locale()]));
-				typename Index::Field*				field	= args[_field | ((typename Index::Field*)nullptr)];
+				TokenStream	stream(new NonTokenizer(args[_string],
+                                            args[_locale | jerome::Locale()]));
+				typename Index::Field* field	=
+          args[_field | ((typename Index::Field*)nullptr)];
 				if (field) 
 					stream	= new IndexWriter<Index>(stream, *field);
 				return stream;
 			}	
 		public:
 			template <class ArgumentPack>
-			NonTokenizingPipe(ArgumentPack const& args) : TokenFilter(make_stream(args)) {}
+			NonTokenizingPipe(ArgumentPack const& args)
+      : TokenFilter(make_stream(args))
+      {}
 		};		
 	}
 	

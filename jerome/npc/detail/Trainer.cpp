@@ -62,9 +62,9 @@ namespace jerome {
         {
         }
 
-        virtual Result<Trainer::result_type> train(IndexedRanker& inRanker,
-                                                   const Trainer::progress_callback_type& callback)
-          = 0;
+        virtual Result<Trainer::result_type>
+        train(IndexedRanker& inRanker,
+              const Trainer::progress_callback_type& callback) = 0;
 
         void setData(const Data& trainData, const Data& devData)
         {
@@ -153,7 +153,8 @@ namespace jerome {
 
           ir::range_vector  ranges = inRanker.ranges();
 
-          optimizer_type gopt(nlopt::GN_DIRECT_L_RAND, ranges);
+          //          optimizer_type gopt(nlopt::GN_DIRECT_L_RAND, ranges);
+          optimizer_type gopt(nlopt::GN_CRS2_LM, ranges);
           gopt.set_ftol_rel(5.0e-4);
 					
           gopt.set_max_objective(obj);
@@ -196,7 +197,7 @@ namespace jerome {
         // one algorithm for a long time with high precision termination
         // conditions
         // or even time condition, and then run the other algorithms with the
-        // discovered value as the "stopval" termaination criteria and count
+        // discovered value as the "stopval" term ination criteria and count
         // the number of function evaluations needed to reach that goal.
         //
         // on the basic twins data, 50% dev set, GN_DIRECT_L_RAND is the
