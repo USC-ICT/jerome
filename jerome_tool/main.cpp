@@ -11,16 +11,18 @@
 
 #include <jerome/npc/npc.hpp>
 
-#include "Split.hpp"
 #include "Evaluate.hpp"
-#include "Train.hpp"
 #include "Help.hpp"
+#include "Info.hpp"
+#include "Split.hpp"
+#include "Train.hpp"
 
 int main(int argc, const char * argv[])
 {
   Commander::shared().registerClass<Help>();
-  Commander::shared().registerClass<Split>();
   Commander::shared().registerClass<Evaluate>();
+  Commander::shared().registerClass<Info>();
+  Commander::shared().registerClass<Split>();
   Commander::shared().registerClass<Train>();
   
   try {

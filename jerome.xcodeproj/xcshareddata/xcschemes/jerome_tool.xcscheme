@@ -42,7 +42,7 @@
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Release"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -63,7 +63,11 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "help train"
+            argument = "help info"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "info --input &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Examples/AnnotatedTranscripts+/Fritzie/fritzieAnnSFAAddWiz.plist.csxml&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
