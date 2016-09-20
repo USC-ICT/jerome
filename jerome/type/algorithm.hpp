@@ -103,6 +103,18 @@ namespace jerome {
                        KeyIterator(map.end()));
   }
   
+  template <typename M>
+  optional<typename M::mapped_type> map_value_at(const M& map,
+                                                 const typename M::key_type& key)
+  {
+    auto x = map.find(key);
+    if (x == map.end()) {
+      return optional<typename M::mapped_type>();
+    } else {
+      return x->second;
+    }
+  }
+  
 }
 
 #endif // __jerome_algorithm_h__

@@ -90,6 +90,14 @@ namespace jerome {
 			return Error("no provider id specified and no default provider defined");
 		}
 
+    Result<object_type> make(const String& identifier, Args&& ... args)
+    {
+      auto provider = providerWithID(identifier);
+      return provider
+      ? provider.value().provide(std::forward<Args>(args) ...)
+      : provider.error();
+    }
+
     Result<provider_type&> providerWithID(const String& identifier)
     {
       auto p = mProviders.find(identifier);
@@ -105,12 +113,18 @@ namespace jerome {
 			if (!mDefaultProviderID) mDefaultProviderID = identifier;
     }
 
-		template <typename T>
-		void registerProviderClass()
-		{
-			registerProviderForID(provider_pointer(new T), T::IDENTIFIER);
-		}
-
+    template <typename T>
+    void registerProviderClassForID(const String& id)
+    {
+      registerProviderForID(provider_pointer(new T), id);
+    }
+    
+    template <typename T>
+    void registerProviderClass()
+    {
+      registerProviderClassForID<T>(T::IDENTIFIER);
+    }
+    
     static Derived& sharedInstance()
     {
       // STATIC
@@ -127,6 +141,15 @@ namespace jerome {
     const models_type& predefinedModels() const
     {
       return mPredefinedModels;
+    }
+    
+    optional<Record> modelAt(const String& inKey) const
+    {
+      auto x = predefinedModels().find(inKey);
+      if (x != predefinedModels().end()) {
+        return x->second;
+      }
+      return optional<Record>();
     }
     
     void registerModel(String inKey, Record inModel)
@@ -165,13 +188,6 @@ namespace jerome {
     String          mDefaultModelKey;
     models_type     mPredefinedModels;
 
-    Result<object_type> make(const String& identifier, Args&& ... args)
-    {
-      auto provider = providerWithID(identifier);
-      return provider
-      ? provider.value().provide(std::forward<Args>(args) ...)
-      : provider.error();
-    }
     
   };
 

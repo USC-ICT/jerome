@@ -41,7 +41,13 @@ namespace jerome {
         detail::Trainer> parent_type;
     public:
       TrainerFactory();
+
+      using parent_type::make;
       
+      Result<object_type> make(const String& identifier)
+      {
+        return parent_type::make(identifier, Record());
+      }
     };
         
   }

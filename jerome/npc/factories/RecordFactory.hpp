@@ -48,6 +48,8 @@ namespace jerome {
       RecordFactory()
 			{}
 			
+      using parent_type::make;
+      
 			Result<object_type> make(const Record& inRecord)
 			{
         return parent_type::make(inRecord.at<String>(parent_type::PROVIDER_KEY),

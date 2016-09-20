@@ -57,6 +57,9 @@ namespace jerome {
       {
       public:
         TrainerImplementation() = default;
+        TrainerImplementation(const Record& inModel)
+        : mModel(inModel)
+        {}
 
         virtual ~TrainerImplementation()
         {
@@ -82,11 +85,105 @@ namespace jerome {
           return mDevData;
         }
 
+        const Record& model() const { return mModel; }
+        void setModel(const Record& inModel) { mModel = inModel; }
+
       private:
         Data mTrainData;
         Data mDevData;
+        Record mModel;
       };
 
+#define COPY_VAL(KEY, OPT, FUN) \
+{ auto optional_double = this->model().template at<double>(Trainer::KEY); \
+if (optional_double) OPT.set_##FUN(*optional_double); \
+}
+#define MAP_ASSIGN(X) \
+map[ #X ] = nlopt::X
+      
+      static StringMap<nlopt::algorithm> makeGlobalAlgorithms()
+      {
+        StringMap<nlopt::algorithm> map;
+        MAP_ASSIGN(GN_DIRECT_L_RAND);
+        MAP_ASSIGN(GN_DIRECT_L);
+        MAP_ASSIGN(GN_DIRECT);
+        MAP_ASSIGN(GN_DIRECT_NOSCAL);
+        MAP_ASSIGN(GN_DIRECT_L_NOSCAL);
+        MAP_ASSIGN(GN_DIRECT_L_RAND_NOSCAL);
+        //      MAP_ASSIGN(GN_ORIG_DIRECT);
+        //      MAP_ASSIGN(GN_ORIG_DIRECT_L);
+        MAP_ASSIGN(GN_CRS2_LM);
+        //      MAP_ASSIGN(GN_MLSL);
+        //      MAP_ASSIGN(GN_MLSL_LDS);
+        MAP_ASSIGN(GN_ISRES);
+        MAP_ASSIGN(AUGLAG);
+        MAP_ASSIGN(AUGLAG_EQ);
+        MAP_ASSIGN(G_MLSL);
+        MAP_ASSIGN(G_MLSL_LDS);
+        return map;
+      }
+      
+      static const StringMap<nlopt::algorithm>& globalAlgorithmsMap()
+      {
+        static StringMap<nlopt::algorithm> globalAlgorithmsMap =
+        makeGlobalAlgorithms();
+        return globalAlgorithmsMap;
+      }
+      
+      static StringMap<nlopt::algorithm> makeLocalAlgorithms()
+      {
+        StringMap<nlopt::algorithm> map;
+        MAP_ASSIGN(LN_BOBYQA);
+        MAP_ASSIGN(LN_COBYLA);
+        MAP_ASSIGN(LN_PRAXIS);
+        MAP_ASSIGN(LN_NEWUOA);
+        MAP_ASSIGN(LN_NEWUOA_BOUND);
+        MAP_ASSIGN(LN_NELDERMEAD);
+        MAP_ASSIGN(LN_SBPLX);
+        MAP_ASSIGN(LN_AUGLAG);
+        MAP_ASSIGN(LN_AUGLAG_EQ);
+        return map;
+      }
+      
+      static const StringMap<nlopt::algorithm>& localAlgorithmsMap()
+      {
+        static StringMap<nlopt::algorithm> localAlgorithmsMap =
+        makeLocalAlgorithms();
+        return localAlgorithmsMap;
+      }
+      
+      static StringMap<nlopt::algorithm> makeGlobalAlgorithms1()
+      {
+        StringMap<nlopt::algorithm> map;
+        MAP_ASSIGN(AUGLAG);
+        MAP_ASSIGN(AUGLAG_EQ);
+        MAP_ASSIGN(G_MLSL);
+        MAP_ASSIGN(G_MLSL_LDS);
+        return map;
+      }
+      
+      static const StringMap<nlopt::algorithm>& globalAlgorithmsMap1()
+      {
+        static StringMap<nlopt::algorithm> globalAlgorithmsMap =
+        makeGlobalAlgorithms1();
+        return globalAlgorithmsMap;
+      }
+      
+      List<String> Trainer::globalAlgorithms()
+      {
+        return keys(globalAlgorithmsMap());
+      }
+      
+      List<String> Trainer::localAlgorithms()
+      {
+        return keys(localAlgorithmsMap());
+      }
+      
+      List<String> Trainer::globalAlgorithmsRequiringLocalOptimizer()
+      {
+        return keys(globalAlgorithmsMap1());
+      }
+      
       template <typename F>
       class TrainerImplementationTemplate
         : public TrainerImplementation
@@ -141,9 +238,9 @@ namespace jerome {
 					optimizer_type& mSource;
 				};
 
-        Result<Trainer::result_type> train(IndexedRanker& inRanker,
-                                           const Trainer::progress_callback_type& callback)
-        override
+        Result<Trainer::result_type>
+        train(IndexedRanker& inRanker,
+              const Trainer::progress_callback_type& callback) override
         {
           typedef IndexedRanker ranker_type;
           typedef typename ranker_type::test_set_type test_set_type;
@@ -153,10 +250,53 @@ namespace jerome {
 
           ir::range_vector  ranges = inRanker.ranges();
 
-          //          optimizer_type gopt(nlopt::GN_DIRECT_L_RAND, ranges);
-          optimizer_type gopt(nlopt::GN_CRS2_LM, ranges);
-          gopt.set_ftol_rel(5.0e-4);
+          nlopt::algorithm  algorithm = nlopt::GN_DIRECT_L_RAND;
+          auto global_alg_name = this->model()
+            .template at<String>(Trainer::G_ALGORITHM);
+          if (global_alg_name) {
+            auto optional_algorithm = map_value_at(globalAlgorithmsMap(),
+                                                   *global_alg_name);
+            if (!optional_algorithm) {
+              return Error("Unknown global optimization algorithm "
+                           + *global_alg_name);
+            }
+            algorithm = *optional_algorithm;
+          }
+          
+          optimizer_type gopt(algorithm, ranges);
+          
+          COPY_VAL(G_FTOL_REL, gopt, ftol_rel);
+          COPY_VAL(G_FTOL_ABS, gopt, ftol_abs);
+          COPY_VAL(G_XTOL_REL, gopt, xtol_rel);
+          COPY_VAL(G_XTOL_ABS, gopt, xtol_abs);
 					
+          auto local_alg_name = this->model()
+            .template at<String>(Trainer::L_ALGORITHM);
+          if (local_alg_name) {
+            auto optional_algorithm = map_value_at(localAlgorithmsMap(),
+                                                   *local_alg_name);
+            if (!optional_algorithm) {
+              return Error("Unknown local optimization algorithm "
+                           + *local_alg_name);
+            }
+            
+            optimizer_type lopt(*optional_algorithm, ranges);
+            COPY_VAL(L_FTOL_REL, lopt, ftol_rel);
+            COPY_VAL(L_FTOL_ABS, lopt, ftol_abs);
+            COPY_VAL(L_XTOL_REL, lopt, xtol_rel);
+            COPY_VAL(L_XTOL_ABS, gopt, xtol_abs);
+            lopt.set_max_objective(obj);
+            
+            gopt.set_local_optimizer(lopt);
+          } else {
+            for(const auto& a : globalAlgorithmsMap1()) {
+              if (algorithm == a.second) {
+                return Error("Local optimization algorithm is required for "
+                             + *global_alg_name);
+              }
+            }
+          }
+          
           gopt.set_max_objective(obj);
           gopt.set_callback([&callback] (optimizer_type& opt) {
 						state_type_impl state(opt);
@@ -210,59 +350,21 @@ namespace jerome {
             inRanker.testSetWithData(
               this->devData());
 
-          std::vector<nlopt::algorithm> globalAlgoithms = {
-            nlopt::GN_DIRECT_L,
-            nlopt::GN_DIRECT,
-            nlopt::GN_DIRECT_L_RAND,
-            nlopt::GN_DIRECT_NOSCAL,
-            nlopt::GN_DIRECT_L_NOSCAL,
-            nlopt::GN_DIRECT_L_RAND_NOSCAL,
-//      nlopt::GN_ORIG_DIRECT,
-//      nlopt::GN_ORIG_DIRECT_L,
-            nlopt::GN_CRS2_LM,
-//      nlopt::GN_MLSL,
-//      nlopt::GN_MLSL_LDS,
-            nlopt::GN_ISRES,
-            nlopt::AUGLAG,
-            nlopt::AUGLAG_EQ,
-            nlopt::G_MLSL,
-            nlopt::G_MLSL_LDS
-          };
-
-          std::set<nlopt::algorithm> algorithmRequiresLocalOptimizer = {
-            nlopt::AUGLAG,
-            nlopt::AUGLAG_EQ,
-            nlopt::G_MLSL,
-            nlopt::G_MLSL_LDS
-          };
-
-          std::vector<nlopt::algorithm> localAlgoithms = {
-            nlopt::LN_BOBYQA,
-            nlopt::LN_COBYLA,
-            nlopt::LN_PRAXIS,
-            nlopt::LN_NEWUOA,
-            nlopt::LN_NEWUOA_BOUND,
-            nlopt::LN_NELDERMEAD,
-            nlopt::LN_SBPLX,
-            nlopt::LN_AUGLAG,
-            nlopt::LN_AUGLAG_EQ
-          };
-
           std::vector<double> o = math::parameters::mean(ranges);
 
 //          double stop_value = 0.381;
 
-          for (auto galg : globalAlgoithms) {
+          for (auto galg : globalAlgorithmsMap()) {
 
-            optimizer_type gopt(galg, ranges);
+            optimizer_type gopt(galg.second, ranges);
 
 //      gopt.set_xtol_abs(1e-2);
             gopt.set_ftol_abs(1e-3);
 
 //			gopt.set_stopval(stop_value);
 
-            if (algorithmRequiresLocalOptimizer.find(galg) ==
-                algorithmRequiresLocalOptimizer.end()) {
+            if (globalAlgorithmsMap1().find(galg.first) ==
+                globalAlgorithmsMap1().end()) {
 
               objective_type obj(inRanker, devSet);
 
@@ -281,11 +383,11 @@ namespace jerome {
 
             } else {
 
-              for (auto lalg : localAlgoithms) {
+              for (auto lalg : localAlgorithmsMap()) {
 
                 objective_type obj(inRanker, devSet);
 
-                optimizer_type lopt(lalg, ranges);
+                optimizer_type lopt(lalg.second, ranges);
 
 //					lopt.set_stopval(stop_value);
 //          lopt.set_xtol_abs(1e-4);
@@ -331,29 +433,94 @@ namespace jerome {
         return this->implementation().devData();
       }
 
-      Trainer Trainer::trainerFscore()
-      {
-        return Trainer(
-          std::make_shared<TrainerImplementationTemplate<acc::tag::fmeasure>>());
-      }
-
-      Trainer Trainer::trainerAveragePrecision()
-      {
-        return Trainer(std::make_shared<TrainerImplementationTemplate<acc::tag::
-               average_precision>>());
-      }
-
-      Trainer Trainer::trainerAccuracy()
-      {
-        return Trainer(
-          std::make_shared<TrainerImplementationTemplate<acc::tag::accuracy>>());
-      }
-
       void Trainer::setData(const Data& trainData, const Data& devData)
       {
         this->implementation().setData(trainData, devData);
       }
 
+      Record Trainer::model() const
+      {
+        return this->implementation().model();
+      }
+      
+      void Trainer::setModel(const Record& inModel)
+      {
+        this->implementation().setModel(inModel);
+      }
+
     }
+  }
+}
+
+#include <jerome/npc/factories/TrainerFactory.hpp>
+#include <jerome/ir/evaluation/accumulators/statistics_fwd.hpp>
+#include <jerome/ir/evaluation/accumulators/statistics_names.hpp>
+
+namespace jerome {
+  namespace npc {
+    
+    namespace acc = jerome::ir::evaluation::accumulators;
+    
+    namespace detail {
+      
+      template <typename F>
+      struct DefaultTrainerProvider
+      : public TrainerFactory::provider_type
+      {
+        static String identifier()
+        {
+          return String("jerome.trainer.") + acc::accumulator_name<F>::name();
+        }
+        
+        Result<TrainerFactory::object_type>
+        provide(const Record& inRecord) override
+        {
+          return Trainer(std::make_shared<TrainerImplementationTemplate<F>>(inRecord));
+        }
+      };
+      
+      template <typename F>
+      static void registerProvider(TrainerFactory& factory)
+      {
+        factory.registerProviderClassForID<DefaultTrainerProvider<F>>
+          (DefaultTrainerProvider<F>::identifier());
+      }
+
+      String Trainer::trainerFscoreID()
+      {
+        return DefaultTrainerProvider<acc::tag::fmeasure>::identifier();
+      }
+      
+      String Trainer::trainerAveragePrecisionID()
+      {
+        return DefaultTrainerProvider<acc::tag::average_precision>::identifier();
+      }
+      
+      String Trainer::trainerAccuracyID()
+      {
+        return DefaultTrainerProvider<acc::tag::accuracy>::identifier();
+      }
+      
+    }
+    
+    TrainerFactory::TrainerFactory()
+    {
+      detail::registerProvider<acc::tag::average_precision>(*this);
+      detail::registerProvider<acc::tag::accuracy>(*this);
+      detail::registerProvider<acc::tag::fmeasure>(*this);
+      
+      registerModel("fscore", {
+        TrainerFactory::PROVIDER_KEY, detail::Trainer::trainerFscoreID()
+      });
+      registerModel("average-precision", {
+        TrainerFactory::PROVIDER_KEY, detail::Trainer::trainerAveragePrecisionID()
+      });
+      registerModel("accuracy", {
+        TrainerFactory::PROVIDER_KEY, detail::Trainer::trainerAccuracyID()
+      });
+
+      setDefaultModelKey("fscore");
+    }
+    
   }
 }

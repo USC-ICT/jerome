@@ -23,6 +23,7 @@
 #ifndef __jerome_npc_factories_RankerFactory_hpp__
 #define __jerome_npc_factories_RankerFactory_hpp__
 
+#include <jerome/npc/detail/Ranker_impl.hpp>
 #include <jerome/type/Factory.hpp>
 #include <jerome/npc/detail/types_fwd.hpp>
 #include <jerome/math/parameters/types.hpp>

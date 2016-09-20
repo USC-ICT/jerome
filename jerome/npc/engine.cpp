@@ -31,7 +31,6 @@
 
 #include <jerome/ir/training/Data.hpp>
 
-#include <jerome/npc/detail/Ranker_impl.hpp>
 #include <jerome/npc/detail/evaluation.hpp>
 #include <jerome/npc/factories/RankerFactory.hpp>
 

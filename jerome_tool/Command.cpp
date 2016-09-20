@@ -108,6 +108,27 @@ OptionalError Commander::parseArguments(int argc, const char * argv[])
   return command(commandName).parseArguments(args, vm);
 }
 
+void Commander::usage(std::ostream& out)
+{
+  out << "usage: " << executable()
+  << " <command> [<args>]"
+  << std::endl;
+  
+  printCommandList(out);
+}
+
+void Commander::printCommandList(std::ostream& out)
+{
+  out << "These are the available commands:" << std::endl;
+  for(auto& c : commands()) {
+    out << "   "
+    << std::setw(10) << std::left << c->name()
+    << " "
+    << c->description()
+    << std::endl;
+  }
+}
+
 // -----------------------------------------------------------------------------
 
 Command::~Command()
@@ -151,27 +172,6 @@ void Command::manual(std::ostream& out) const
   << "usage: " << Commander::shared().executable()
   << " " << name() << " [<options>]" << std::endl;
   out << options() << std::endl;
-}
-
-void Commander::usage(std::ostream& out)
-{
-  out << "usage: " << executable()
-  << " <command> [<args>]"
-  << std::endl;
-  
-  printCommandList(out);
-}
-
-void Commander::printCommandList(std::ostream& out)
-{
-  out << "These are the available commands:" << std::endl;
-  for(auto& c : commands()) {
-    out << "   "
-    << std::setw(10) << std::left << c->name()
-    << " "
-    << c->description()
-    << std::endl;
-  }
 }
 
 class NullBuffer : public std::streambuf

@@ -29,8 +29,11 @@
 
 namespace jerome {
   namespace npc {
+    
     namespace detail {
-
+      
+      template <typename F>
+      struct DefaultTrainerProvider;
       class TrainerImplementation;
 
       class Trainer
@@ -67,10 +70,33 @@ namespace jerome {
         Data devData() const;
 
         void setData(const Data& trainData, const Data& devData);
+        
+        Record model() const;
+        void setModel(const Record& inModel);
 
-        static Trainer trainerFscore();
-        static Trainer trainerAveragePrecision();
-        static Trainer trainerAccuracy();
+        static String trainerFscoreID();
+        static String trainerAveragePrecisionID();
+        static String trainerAccuracyID();
+        
+        template <typename F>
+        friend struct DefaultTrainerProvider;
+        
+        static constexpr const char* G_FTOL_REL = "global-function-relative-tolerance";
+        static constexpr const char* G_FTOL_ABS = "global-function-absolute-tolerance";
+        static constexpr const char* G_XTOL_REL = "global-parameter-relative-tolerance";
+        static constexpr const char* G_XTOL_ABS = "global-parameter-absolute-tolerance";
+        static constexpr const char* G_ALGORITHM = "global-algorithm";
+        
+        static constexpr const char* L_FTOL_REL = "local-function-relative-tolerance";
+        static constexpr const char* L_FTOL_ABS = "local-function-absolute-tolerance";
+        static constexpr const char* L_XTOL_REL = "local-parameter-relative-tolerance";
+        static constexpr const char* L_XTOL_ABS = "local-parameter-absolute-tolerance";
+        static constexpr const char* L_ALGORITHM = "local-algorithm";
+        
+        static List<String> globalAlgorithms();
+        static List<String> localAlgorithms();
+        static List<String> globalAlgorithmsRequiringLocalOptimizer();
+        
       };
 
     }

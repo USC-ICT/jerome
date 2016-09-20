@@ -19,4 +19,4 @@
 //  along with Jerome.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "TrainerFactory.hpp"
+// see jerome/npc/detail/Trainer.cpp
