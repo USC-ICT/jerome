@@ -15,14 +15,17 @@
 
 #include "Info.hpp"
 
-static const char* oInputFile   = "input";
-static const char* oOutputFile   = "output";
+static const char* oInputFile     = "input";
+static const char* oOutputFile    = "output";
+static const char* oVerbosity     = "verbosity,v";
 
 po::options_description Info::options(po::options_description inOptions) const
 {
   po::options_description options(parent_type::options(inOptions));
   
   options.add_options()
+  (oVerbosity, 	po::value<int>()->default_value(0),
+   "verbosity level")
   (oInputFile, 	po::value<std::string>()->default_value("-"),
    "input file. '-' = stdin.")
   (oOutputFile, 	po::value<std::string>()->default_value("-"),
@@ -47,7 +50,8 @@ OptionalError Info::setup()
 //}
 
 template <typename T>
-static void printFieldInfo(std::ostream& os, const T& range)
+static void printFieldInfo(std::ostream& os, const T& range,
+                           const po::variables_map& inVM)
 {
   typedef StringMap<unsigned> field_type;
   typedef std::pair<String,unsigned> pair_type;
@@ -64,14 +68,17 @@ static void printFieldInfo(std::ostream& os, const T& range)
   std::sort(fieldKeys.begin(), fieldKeys.end());
   for(const auto& key : fieldKeys) {
     const auto& field = fields[key];
-    os << tab << std::setw(12) << std::left << key << " " << field.size() << std::endl;
+    os  << tab << std::setw(12) << std::left << key
+        << " " << field.size() << std::endl;
     if (field.size() > 10) continue;
+    if (inVM[oVerbosity].as<int>() <= 1) continue;
     List<pair_type> values(field.begin(), field.end());
     std::sort(values.begin(), values.end(),
               [](const pair_type& a, const pair_type& b)
               { return b.second < a.second; });
     for(const auto& v : values) {
-      os << tab << tab << std::setw(12) << v.first << ": " << v.second << std::endl;
+      os << tab << tab << std::setw(12) << v.first
+        << ": " << v.second << std::endl;
     }
   }
 }
@@ -89,10 +96,12 @@ OptionalError Info::run1Classifier(const std::string& inStateName)
   *mOutput << "#   answers: " << optState->answers().utterances().size() << std::endl;
   *mOutput << "#     links: " << optState->links().links().size() << std::endl;
   
-  *mOutput << "questions fields: "<< std::endl;
-  printFieldInfo(*mOutput, optState->questions().utterances());
-  *mOutput << "answer fields: "<< std::endl;
-  printFieldInfo(*mOutput, optState->answers().utterances());
+  if (variables()[oVerbosity].as<int>() > 0) {
+    *mOutput << "questions fields: "<< std::endl;
+    printFieldInfo(*mOutput, optState->questions().utterances(), variables());
+    *mOutput << "answer fields: "<< std::endl;
+    printFieldInfo(*mOutput, optState->answers().utterances(), variables());
+  }
   
   return Error::NO_ERROR;
 }

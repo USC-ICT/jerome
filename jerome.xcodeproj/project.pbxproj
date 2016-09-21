@@ -415,6 +415,7 @@
 		6262BC9F1D8F8ABA00B2EF7A /* TrainerFactory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TrainerFactory.hpp; sourceTree = "<group>"; };
 		6262BCA31D915B2200B2EF7A /* Info.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Info.cpp; sourceTree = "<group>"; };
 		6262BCA41D915B2200B2EF7A /* Info.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Info.hpp; sourceTree = "<group>"; };
+		6262BCA61D92299700B2EF7A /* split.private.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = split.private.hpp; sourceTree = "<group>"; };
 		6265D995198040A8009D158B /* link.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = link.hpp; sourceTree = "<group>"; };
 		6268B0291A0579FC00287DF4 /* parsing_cf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = parsing_cf.cpp; sourceTree = "<group>"; };
 		6268B02A1A0579FC00287DF4 /* parsing_cf.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = parsing_cf.hpp; sourceTree = "<group>"; };
@@ -1166,6 +1167,7 @@
 				62461EE21D7DF85800F8E4F4 /* Split.hpp */,
 				62461EE41D7DF86400F8E4F4 /* Train.cpp */,
 				62461EE51D7DF86400F8E4F4 /* Train.hpp */,
+				6262BCA61D92299700B2EF7A /* split.private.hpp */,
 			);
 			path = jerome_tool;
 			sourceTree = "<group>";

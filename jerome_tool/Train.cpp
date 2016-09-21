@@ -22,6 +22,7 @@
 #include <jerome/type/Factory.hpp>
 #include <jerome/ir/report/HTMLReporter.hpp>
 #include <jerome/ir/report/XMLReporter.hpp>
+#include "split.private.hpp"
 
 static const char* oInputFile           = "input";
 static const char* oOutputFile          = "output";
@@ -34,6 +35,7 @@ static const char* oAnswerAnalyzer      = "answer-analyzer";
 static const char* oQuestionWeighting   = "question-weighting";
 static const char* oAnswerWeighting     = "answer-weighting";
 static const char* oTrainer             = "trainer";
+static const char* oVerbosity           = "verbosity";
 
 using namespace jerome;
 using namespace jerome::npc;
@@ -61,6 +63,8 @@ po::options_description Train::options(po::options_description inOptions) const
   auto trainerModels = modelNames<TrainerFactory>();
 
   options.add_options()
+  (oVerbosity, 	po::value<int>()->default_value(int(0)),
+   "verbosity level")
   (oInputFile, 	po::value<std::string>()->default_value("-"),
    "input file (default: standard input)")
   (oOutputFile, po::value<std::string>(),
@@ -123,7 +127,8 @@ po::options_description Train::options(po::options_description inOptions) const
    "the objective function value by less than this value multiplied by the "\
    "absolute value of the function value. (If there is any chance that your "\
    "optimum function value is close to zero, you might want to set an "\
-   "absolute tolerance as well.)")
+   "absolute tolerance as well.) As a first take, set this value to something "\
+   "like 0.0001.")
   (TR::G_FTOL_ABS, po::value<double>(),
    "stop when an optimization step (or an estimate of the optimum) changes "\
    "the function value by less than this value.")
@@ -162,30 +167,6 @@ po::options_description Train::options(po::options_description inOptions) const
 
 // ----------------------------------------------------------------------------
 
-typedef List<Utterance> UL;
-
-template <typename T>
-static std::pair<UL, UL>
-splitData(const po::variables_map& inVM, const String& inKey, const T& inRange,
-          double inDefaultProportion, const String& inLabel)
-{
-  std::string propText = inVM[inKey].as<std::string>();
-  if (propText == "label") {
-    return jerome::split<UL, T>(inRange,
-     [&inLabel](const Utterance& u) {
-       return u.get("train_test", "train") == inLabel;
-     });
-  } else {
-    double testProp = inDefaultProportion;
-    if (propText == "auto") {
-    } else if (hasSuffix(propText, "%")) {
-      testProp = std::atof(propText.c_str()) / 100.0;
-    } else {
-      testProp = std::atof(propText.c_str());
-    }
-    return jerome::split<UL, T> (inRange, testProp);
-  }
-}
 
 template <typename T>
 static void recordEmplace(Record& ioRecord,
@@ -277,18 +258,21 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
     maxTime = variables()[oMaxTime].as<int>();
   
   double bestValue = 0;
+  int verbosity = variables()[oVerbosity].as<int>();
   
   TrainingParameters<Utterance> params;
 
   params.stateName = classifierName;
-  params.callback = [&bestValue,maxTime](TrainingState& state) {
+  params.callback = [&bestValue,maxTime,verbosity](TrainingState& state) {
     if (maxTime > 0 && state.elapsedTimeInSeconds() > maxTime)
       state.stop();
     if (state.lastValue() > bestValue) {
       bestValue = state.lastValue();
-      std::cout
-        << state.name() << ": " << state.lastArgument()
-        << " " << bestValue << std::endl;
+      if (verbosity > 2) {
+        std::cout
+          << state.name() << ": " << state.lastArgument()
+          << " " << bestValue << std::endl;
+      }
     }
   };
   params.developmentQuestions = devTrainSplit.first;
@@ -316,10 +300,13 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
   auto acc_or_error_after = platform().evaluate(eparams);
   if (!acc_or_error_after) return acc_or_error_after.error();
 
-  std::cout
-    << acc_or_error_before.value() << " -> "
-    << acc_or_error_after.value() << std::endl;
-  
+  if (verbosity > 1) {
+    std::cout << acc_or_error_before.value() << " -> ";
+  }
+  if (verbosity > 0) {
+    std::cout << acc_or_error_after.value() << std::endl;
+  }
+
   return Error::NO_ERROR;
 }
 

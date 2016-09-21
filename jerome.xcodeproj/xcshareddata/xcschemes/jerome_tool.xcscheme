@@ -67,8 +67,12 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "help train"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "info --input &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Examples/AnnotatedTranscripts+/Fritzie/fritzieAnnSFAAddWiz.plist.csxml&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "help"
@@ -99,7 +103,11 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "train --test-split label --dev-split auto --max-time 6000 --input &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Examples/AnnotatedTranscripts+/Fritzie/fritzieAnnSFAAddWiz.plist.csxml&quot; --output test.csxml"
+            argument = "train --test-split label --dev-split auto --max-time 1200 --verbosity 2 --answer-analyzer &quot;text-unigram+id&quot; --answer-weighting &quot;unigram+id&quot; --global-function-relative-tolerance 0.0001  --input &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Examples/AnnotatedTranscripts+/Fritzie/fritzieAnnSFAAddWiz.plist.csxml&quot; --output test.csxml"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "train --input &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Examples/AnnotatedTranscripts+/Fritzie/fritzieAnnSFAAddWiz.plist.csxml&quot; "
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument

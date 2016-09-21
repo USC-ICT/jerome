@@ -37,8 +37,7 @@ namespace jerome {
         class HTMLReporterBase
         {
         public:
-          static constexpr char const* IDENTIFIER
-            = "jerome.reporter.html";
+          static constexpr char const* IDENTIFIER = "jerome.reporter.html";
           
           HTMLReporterBase();
           ~HTMLReporterBase();

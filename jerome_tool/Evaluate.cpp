@@ -16,6 +16,7 @@
 #include <jerome/npc/detail/ModelWriterText.hpp>
 #include <jerome/ir/report/HTMLReporter.hpp>
 #include <jerome/ir/report/XMLReporter.hpp>
+#include "split.private.hpp"
 
 static const char* oInputFile   = "input";
 static const char* oReportFile	= "report";
@@ -61,6 +62,31 @@ OptionalError Evaluate::teardown()
   return Error::NO_ERROR;
 }
 
+static Result<String> parseFormat(const po::variables_map& inVM)
+{
+  std::string format = inVM[oReportFormat].as<std::string>();
+  if (format == "xml") {
+    return String(jerome::ir::evaluation::detail::XMLReporterBase::IDENTIFIER);
+  } else if (format == "html") {
+    return String(jerome::ir::evaluation::detail::HTMLReporterBase::IDENTIFIER);
+  } else {
+    return Error("Unknown report format: \"" + format + "\"");
+  }
+}
+
+static ostream_ptr parseReportStream(const std::string& classifierName,
+                                     const po::variables_map& inVM)
+{
+  if (inVM[oReportFile].empty()) {
+    return Command::nullOStream();
+  } else {
+    auto name = string_format(inVM[oReportFile].as<std::string>(),
+                              inVM[oInputFile].as<std::string>().c_str(),
+                              classifierName.c_str());
+    return Command::ostreamWithName(name);
+  }
+}
+
 OptionalError Evaluate::run1Classifier(const std::string& classifierName)
 {
   auto optState = platform().collection().states()
@@ -69,61 +95,24 @@ OptionalError Evaluate::run1Classifier(const std::string& classifierName)
   if (!optState) {
     return Error(std::string("Invalid classifier name: ") + classifierName);
   }
+
+  auto format_or_error = parseFormat(variables());
+  if (!format_or_error) return format_or_error.error();
   
-  typedef List<Utterance> UL;
-  
-  std::string testPropText = variables()[oTestSplit].as<std::string>();
-  std::pair<UL, UL>   testTrainSplit;
-  std::pair<UL, UL>   devTrainSplit;
-  
-  if (testPropText == "label") {
-    testTrainSplit = jerome::split<UL, const Domain::utterances_type&>
-    (optState->questions().utterances(),
-     [](const Utterance& u) {
-       return u.get("train_test", "train") == "test";
-     });
-  } else {
-    double testProp = 0.1;
-    if (testPropText == "auto") {
-    } else if (hasSuffix(testPropText, "%")) {
-      testProp = std::atof(testPropText.c_str()) / 100.0;
-    } else {
-      testProp = std::atof(testPropText.c_str());
-    }
-    testTrainSplit = jerome::split<UL, const Domain::utterances_type&>
-    (optState->questions().utterances(), testProp);
-  }
-  
-  EvaluationParameters<Utterance> params;
-  
-  std::string reportFormatID =
-  jerome::ir::evaluation::detail::HTMLReporterBase::IDENTIFIER;
-  
-  if (variables().count(oReportFormat)) {
-    std::string format = variables()[oReportFormat].as<std::string>();
-    if (format == "xml") {
-      reportFormatID =
-      jerome::ir::evaluation::detail::XMLReporterBase::IDENTIFIER;
-    } else if (format == "html") {
-      
-    } else {
-      return Error("Unknown report format: \"" + format + "\"");
-    }
-  }
+  std::pair<UL, UL>   testTrainSplit =
+  splitData<const Domain::utterances_type&>(variables(), oTestSplit,
+                                            optState->questions().utterances(),
+                                            0.1, "test");
   
   Record args(jerome::detail::FactoryConst::PROVIDER_KEY,
-              reportFormatID);
+              format_or_error.value());
+
+  EvaluationParameters<Utterance> params;
   
   params.stateName = classifierName;
   params.testQuestions = testTrainSplit.first;
   params.trainingQuestions = testTrainSplit.second;
-  if (variables()[oReportFile].empty()) {
-    params.report = Command::nullOStream();
-  } else {
-    params.report = Command::ostreamWithName(string_format(variables()[oReportFile].as<std::string>(),
-                                                           variables()[oInputFile].as<std::string>().c_str(),
-                                                           classifierName.c_str()));
-  }
+  params.report = parseReportStream(classifierName, variables());
   params.reporterModel = args;
   
   auto acc_or_error = platform().evaluate(params);
