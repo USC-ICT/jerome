@@ -42,7 +42,7 @@
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -103,7 +103,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "train --test-split label --dev-split auto --max-time 1200 --verbosity 2 --answer-analyzer &quot;text-unigram+id&quot; --answer-weighting &quot;unigram+id&quot; --global-function-relative-tolerance 0.0001  --input &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Examples/AnnotatedTranscripts+/Fritzie/fritzieAnnSFAAddWiz.plist.csxml&quot; --output test.csxml"
+            argument = "train --test-split label --dev-split auto --max-time 5 --verbosity 3 --answer-analyzer text-unigram+id --answer-weighting unigram+id --global-function-relative-tolerance 0.01 --report-format xml --report &quot;%s-%s-%s.xml&quot; --input &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Examples/OriginalTranscripts+/Aaron/aaronOrigSFA.plist.csxml&quot; --output &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Examples/OriginalTranscripts+/Aaron/aaronOrigSFA.plist.csxml.new&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

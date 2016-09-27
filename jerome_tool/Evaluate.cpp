@@ -16,12 +16,13 @@
 #include <jerome/npc/detail/ModelWriterText.hpp>
 #include <jerome/ir/report/HTMLReporter.hpp>
 #include <jerome/ir/report/XMLReporter.hpp>
-#include "split.private.hpp"
 
 static const char* oInputFile   = "input";
 static const char* oReportFile	= "report";
 static const char* oReportFormat= "report-format";
 static const char* oTestSplit   = "test-split";
+
+#include "split.private.hpp"
 
 using namespace jerome;
 using namespace jerome::npc;
@@ -34,9 +35,10 @@ po::options_description Evaluate::options(po::options_description inOptions) con
   (oInputFile, 	po::value<std::string>()->default_value("-"),
    "input file (default standard input)")
   (oReportFile, po::value<std::string>(),
-   "report file name format string (default: none), e.g., \"report-%s.xml\". "\
-   "The file will be named by replacing the first argument in the format " \
-   "with the classifier name." )
+   "report file name format string (default: none), e.g., "\
+   "\"report-%s-%s.xml\". The file will be named by replacing the first " \
+   "argument in the format with with input file name and the second with " \
+   "the classifier name." )
   (oReportFormat, po::value<std::string>()->default_value("html"),
    "report file format. One of xml or html.")
   (oTestSplit,  po::value<std::string>()->default_value("label"),
@@ -60,31 +62,6 @@ OptionalError Evaluate::setup()
 OptionalError Evaluate::teardown()
 {
   return Error::NO_ERROR;
-}
-
-static Result<String> parseFormat(const po::variables_map& inVM)
-{
-  std::string format = inVM[oReportFormat].as<std::string>();
-  if (format == "xml") {
-    return String(jerome::ir::evaluation::detail::XMLReporterBase::IDENTIFIER);
-  } else if (format == "html") {
-    return String(jerome::ir::evaluation::detail::HTMLReporterBase::IDENTIFIER);
-  } else {
-    return Error("Unknown report format: \"" + format + "\"");
-  }
-}
-
-static ostream_ptr parseReportStream(const std::string& classifierName,
-                                     const po::variables_map& inVM)
-{
-  if (inVM[oReportFile].empty()) {
-    return Command::nullOStream();
-  } else {
-    auto name = string_format(inVM[oReportFile].as<std::string>(),
-                              inVM[oInputFile].as<std::string>().c_str(),
-                              classifierName.c_str());
-    return Command::ostreamWithName(name);
-  }
 }
 
 OptionalError Evaluate::run1Classifier(const std::string& classifierName)

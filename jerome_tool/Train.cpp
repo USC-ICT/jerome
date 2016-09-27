@@ -22,11 +22,11 @@
 #include <jerome/type/Factory.hpp>
 #include <jerome/ir/report/HTMLReporter.hpp>
 #include <jerome/ir/report/XMLReporter.hpp>
-#include "split.private.hpp"
 
 static const char* oInputFile           = "input";
 static const char* oOutputFile          = "output";
 static const char* oReportFile          = "report";
+static const char* oReportFormat        = "report-format";
 static const char* oTestSplit           = "test-split";
 static const char* oDevSplit            = "dev-split";
 static const char* oMaxTime             = "max-time";
@@ -36,6 +36,8 @@ static const char* oQuestionWeighting   = "question-weighting";
 static const char* oAnswerWeighting     = "answer-weighting";
 static const char* oTrainer             = "trainer";
 static const char* oVerbosity           = "verbosity";
+
+#include "split.private.hpp"
 
 using namespace jerome;
 using namespace jerome::npc;
@@ -69,8 +71,13 @@ po::options_description Train::options(po::options_description inOptions) const
    "input file (default: standard input)")
   (oOutputFile, po::value<std::string>(),
    "output file (default: none)")
-  (oReportFile, po::value<std::string>()->default_value("-"),
-   "report file")
+  (oReportFile, po::value<std::string>(),
+   "report file name format string (default: none), e.g., \"%s-%s-%s.xml\". "\
+   "The file will be named by replacing the first argument in the format " \
+   "with with input file name, the second with the classifier name, and" \
+   "the third is a suffix: one of \"before\" and \"after\".")
+  (oReportFormat, po::value<std::string>()->default_value("html"),
+   "report file format. One of xml or html.")
   (oMaxTime, po::value<int>(),
    "maximum training time in seconds")
   (oTestSplit,  po::value<std::string>()->default_value("label"),
@@ -253,6 +260,9 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
     return ranker_or_error.error();
   }
 
+  auto format_or_error = parseFormat(variables());
+  if (!format_or_error) return format_or_error.error();
+
   int maxTime = 0;
   if (!variables()[oMaxTime].empty())
     maxTime = variables()[oMaxTime].as<int>();
@@ -268,10 +278,12 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
       state.stop();
     if (state.lastValue() > bestValue) {
       bestValue = state.lastValue();
-      if (verbosity > 2) {
+      if (verbosity > 3) {
         std::cout
           << state.name() << ": " << state.lastArgument()
           << " " << bestValue << std::endl;
+      } else if (verbosity > 2) {
+        std::cout << "." << std::flush;
       }
     }
   };
@@ -283,27 +295,31 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
   EvaluationParameters<Utterance> eparams;
   
   Record eargs(jerome::detail::FactoryConst::PROVIDER_KEY,
-              jerome::ir::evaluation::detail::HTMLReporterBase::IDENTIFIER);
+              format_or_error.value());
   
   eparams.stateName = classifierName;
   eparams.testQuestions = testTrainSplit.first;
   eparams.trainingQuestions = testTrainSplit.second;
-  eparams.report = Command::nullOStream();
+  eparams.report = parseReportStream(classifierName, variables(), "before");
   eparams.reporterModel = eargs;
   
-  auto acc_or_error_before = platform().evaluate(eparams);
-  if (!acc_or_error_before) return acc_or_error_before.error();
+  if (verbosity > 1) {
+    auto acc_or_error_before = platform().evaluate(eparams);
+    if (!acc_or_error_before) return acc_or_error_before.error();
+    std::cout << acc_or_error_before.value() << "\t" << std::flush;
+  }
   
   auto error = platform().train(params);
   if (error) return error;
 
+  eparams.report = parseReportStream(classifierName, variables(), "after");
   auto acc_or_error_after = platform().evaluate(eparams);
   if (!acc_or_error_after) return acc_or_error_after.error();
 
-  if (verbosity > 1) {
-    std::cout << acc_or_error_before.value() << " -> ";
-  }
   if (verbosity > 0) {
+    if (verbosity > 2) {
+      std::cout << "\t";
+    }
     std::cout << acc_or_error_after.value() << std::endl;
   }
 
