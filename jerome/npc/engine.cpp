@@ -55,18 +55,6 @@ namespace jerome {
 
       }
 
-      struct ParametersParsingVisitor
-        : public Record::Visitor
-      {
-				using Record::Visitor::operator();
-        ir::value_vector  params;
-
-        void operator () (const String& inKey, double inValue)
-        {
-          params.push_back(inValue);
-        }
-      };
-
       Result<Ranker> Engine::ranker(const String& inStateName)
       {
         auto found = mRankers.find(inStateName);
@@ -83,13 +71,10 @@ namespace jerome {
         State& state(*optState);
 
         auto data = dataFromState(state, mCollection.utterance_index());
-
-        ParametersParsingVisitor  visitor;
         auto record = state.rankerModel().at(State::PARAMETERS_KEY, Record());
-        record.visit(visitor);
 
         auto rankerResult = RankerFactory::sharedInstance().make(
-          state.rankerModel(), data, visitor.params);
+          state.rankerModel(), data, record.allValuesOfType<double>());
 
         if (rankerResult) {
           auto pair = mRankers.emplace(inStateName, rankerResult.value());
@@ -244,12 +229,10 @@ namespace jerome {
         auto KEY = jerome::detail::FactoryConst::PROVIDER_KEY;
         auto targetRankerID = params.rankerModel.at<String>(KEY);
         if (targetRankerID) {
-          ParametersParsingVisitor  visitor;
           auto record = params.rankerModel.at(State::PARAMETERS_KEY, Record());
-          record.visit(visitor);
           
           auto rankerResult = RankerFactory::sharedInstance()
-            .make(optState->rankerModel(), data, visitor.params);
+            .make(optState->rankerModel(), data, record.allValuesOfType<double>());
           
           if (!rankerResult) {
             return rankerResult.error();

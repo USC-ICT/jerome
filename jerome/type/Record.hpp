@@ -185,7 +185,31 @@ namespace jerome {
 			{}
 			
 		};
+    
+  private:
+    
+    template <typename T>
+    struct ValueCollector
+    : public Visitor
+    {
+      using Visitor::operator();
+      List<T>  values;
+      
+      void operator () (const String& inKey, const T& inValue)
+      {
+        values.push_back(inValue);
+      }
+    };
+
+  public:
 		
+    template <typename T>
+    List<T> allValuesOfType() const {
+      ValueCollector<T> collector;
+      this->visit(collector);
+      return collector.values;
+    }
+    
 	};
 	
 	//	namespace detail {

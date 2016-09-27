@@ -57,6 +57,10 @@
 //#define JEROME_INTERNAL_BASIC_REPORT
 #endif
 
+#ifdef JEROME_INTERNAL_BASIC_REPORT
+//#undef JEROME_INTERNAL_BASIC_REPORT
+#endif
+
 namespace jerome {
 	namespace npc {
 		namespace detail {
