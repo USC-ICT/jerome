@@ -256,6 +256,7 @@ namespace jerome {
         optState->setRankerModel(ranker.model());
         
         if (madeNewRanker) {
+          mRankers.erase(optState->name());
           mRankers.emplace(optState->name(), ranker);
         }
       
