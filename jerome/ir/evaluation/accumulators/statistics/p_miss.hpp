@@ -40,6 +40,7 @@ namespace jerome {
           {
 						
             typedef double result_type;
+            
             pmiss_impl(dont_care)
             {
             }

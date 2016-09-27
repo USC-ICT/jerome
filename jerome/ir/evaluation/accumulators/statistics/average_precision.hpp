@@ -43,19 +43,14 @@ namespace jerome {
 
             typedef double result_type;
 
-            template <typename Args>
-            average_precision_impl(Args const& args)
+            average_precision_impl(dont_care)
               : value(0)
             {
-              this->value = relevant_size(args) == 0 ? 1 : 0;
             }
 
             template <typename Args>
             void operator () (Args const& args)
             {
-              if (retrieved_count(args) == 1 && relevant_size(args) == 0) {
-                this->value = 0;
-              }
               if (is_relevant(args))
                 this->value += (result_type)relevant_count(args) /
                                (result_type)retrieved_count(args);
@@ -65,7 +60,7 @@ namespace jerome {
             void subtract(Args const& args)
             {
               if (retrieved_count(args) == 0) {
-                this->value = relevant_size(args) == 0 ? 1 : 0;
+                this->value = 0;
               } else {
                 if (is_relevant(args))
                   this->value -= (result_type)(relevant_count(args) + 1) /
@@ -76,8 +71,16 @@ namespace jerome {
             template <typename Args>
             result_type result(Args const& args) const
             {
+              auto rs = relevant_size(args);
+              auto rc = retrieved_count(args);
+              if (rs == 0 && rc == 0) return 1;
+              
               result_type denom = relevant_count(args);
-              return denom == 0 ? 0 : (this->value / denom);
+              result_type average_precision = denom == 0
+                ? 0 : (this->value / denom);
+              
+              assert(average_precision >= 0 && average_precision <= 1);
+              return average_precision;
             }
 
           private:

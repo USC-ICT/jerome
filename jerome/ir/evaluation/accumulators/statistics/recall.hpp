@@ -39,6 +39,7 @@ namespace jerome {
             : subtractable_accumulator_base
           {
             typedef double result_type;
+            
             recall_impl(dont_care)
             {
             }

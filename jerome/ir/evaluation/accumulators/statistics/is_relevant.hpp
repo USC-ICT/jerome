@@ -37,7 +37,8 @@ namespace jerome {
 						
             typedef bool result_type;
 
-            is_relevant_impl(dont_care) : value(false)
+            is_relevant_impl(dont_care)
+              : value(false)
             {
             }
 

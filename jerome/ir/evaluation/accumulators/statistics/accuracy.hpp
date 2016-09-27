@@ -41,22 +41,17 @@ namespace jerome {
           {						
             typedef short result_type;
 
-            template <typename Args>
-            accuracy_impl(Args const& args)
+            accuracy_impl(dont_care)
               : value(0)
             {
-              this->value = relevant_size(args) == 0 ? 1 : 0;
             }
 
             template <typename Args>
             void operator () (Args const& args)
             {
               if (retrieved_count(args) == 1) {
-                if (relevant_size(args) == 0) {
-                  this->value = 0;
-                } else {
-                  this->value = is_relevant(args) ? 1 : 0;
-                }
+                this->value = (relevant_size(args) > 0 && is_relevant(args))
+                  ? 1 : 0;
               }
             }
 
@@ -64,12 +59,16 @@ namespace jerome {
             void subtract(Args const& args)
             {
               if (retrieved_count(args) == 0) {
-                this->value = relevant_size(args) == 0 ? 1 : 0;
+                this->value = 0;
               }
             }
 
-            result_type result(dont_care) const
+            template <typename Args>
+            result_type result(Args const& args) const
             {
+              if (retrieved_count(args) == 0 && relevant_size(args) == 0)
+                return 1;
+              
               assert(this->value == 0 || this->value == 1);
               return this->value;
             }

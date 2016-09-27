@@ -41,7 +41,8 @@ namespace jerome {
 						
             typedef double result_type;
 
-            roc_area_impl(dont_care) : value(0)
+            roc_area_impl(dont_care)
+              : value(0)
             {
             }
 

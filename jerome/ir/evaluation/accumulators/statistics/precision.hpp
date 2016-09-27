@@ -41,6 +41,7 @@ namespace jerome {
           {
 
             typedef double result_type;
+            
             precision_impl(dont_care)
             {
             }

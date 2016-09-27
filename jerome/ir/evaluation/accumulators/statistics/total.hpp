@@ -53,8 +53,8 @@ namespace jerome {
           public:
             typedef feature_result_type result_type;
 
-            template <typename Args>
-            total_impl(Args const& args) : value()
+            total_impl(dont_care)
+              : value()
             {
             }
 
@@ -87,8 +87,8 @@ namespace jerome {
           {
 						typedef Sample    result_type;
 
-            template <typename Args>
-            total_impl2(Args const& args) : value()
+            total_impl2(dont_care)
+              : value()
             {
             }
 

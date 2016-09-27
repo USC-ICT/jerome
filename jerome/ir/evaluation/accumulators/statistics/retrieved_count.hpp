@@ -39,7 +39,9 @@ namespace jerome {
           {
 
             typedef std::size_t result_type;
-            retrieved_count_impl(dont_care) : value(0)
+            
+            retrieved_count_impl(dont_care)
+              : value(0)
             {
             }
 

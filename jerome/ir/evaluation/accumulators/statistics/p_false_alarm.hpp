@@ -42,6 +42,7 @@ namespace jerome {
           {
 
             typedef double result_type;
+            
             pfalsealarm_impl(dont_care)
             {
             }
