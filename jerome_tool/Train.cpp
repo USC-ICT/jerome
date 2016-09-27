@@ -6,6 +6,8 @@
 //  Copyright © 2016 Anton Leuski & ICT/USC. All rights reserved.
 //
 
+#include <signal.h>
+
 #include <fstream>
 #include "Train.hpp"
 
@@ -78,8 +80,10 @@ po::options_description Train::options(po::options_description inOptions) const
    "the third is a suffix: one of \"before\" and \"after\".")
   (oReportFormat, po::value<std::string>()->default_value("html"),
    "report file format. One of xml or html.")
-  (oMaxTime, po::value<int>(),
-   "maximum training time in seconds")
+  (oMaxTime, po::value<std::string>(),
+   "maximum training time. Can be specified as <number><unit>, where unit is "\
+   "one of 's' (seconds), 'm' (minutes), or 'h' (hours). If the unit is "\
+   "omitted, we assume seconds.")
   (oTestSplit,  po::value<std::string>()->default_value("label"),
    (std::string("How to select test questions. Provide one of \n")
     + "  auto      \t\n"
@@ -233,7 +237,34 @@ Result<Record> makeRankerModel(const po::variables_map& inVM)
   return model;
 }
 
+static int
+parseTime(const std::string& inTime)
+{
+  char* end;
+  double value = std::strtod(inTime.c_str(), &end);
+  switch (*end) {
+    case 'h': return (int)(value * 60 * 60);
+    case 'm': return (int)(value * 60);
+    default: return (int)value;
+  }
+}
+
 // ----------------------------------------------------------------------------
+
+static bool sCaughtSIGINT = false;
+static void my_SIGINT_handler(int s)
+{
+  sCaughtSIGINT = true;
+}
+
+static void setup_SIGINT_handler()
+{
+  struct sigaction sigIntHandler;
+  sigIntHandler.sa_handler = my_SIGINT_handler;
+  sigemptyset(&sigIntHandler.sa_mask);
+  sigIntHandler.sa_flags = 0;
+  sigaction(SIGINT, &sigIntHandler, NULL);
+}
 
 OptionalError Train::run1Classifier(const std::string& classifierName)
 {
@@ -265,26 +296,42 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
 
   int maxTime = 0;
   if (!variables()[oMaxTime].empty())
-    maxTime = variables()[oMaxTime].as<int>();
+    maxTime = parseTime(variables()[oMaxTime].as<std::string>());
   
   double bestValue = 0;
   int verbosity = variables()[oVerbosity].as<int>();
   
   TrainingParameters<Utterance> params;
 
+  setup_SIGINT_handler();
+  
   params.stateName = classifierName;
   params.callback = [&bestValue,maxTime,verbosity](TrainingState& state) {
-    if (maxTime > 0 && state.elapsedTimeInSeconds() > maxTime)
+    if (sCaughtSIGINT) {
       state.stop();
-    if (state.lastValue() > bestValue) {
-      bestValue = state.lastValue();
-      if (verbosity > 3) {
-        std::cout
-          << state.name() << ": " << state.lastArgument()
-          << " " << bestValue << std::endl;
-      } else if (verbosity > 2) {
-        std::cout << "." << std::flush;
+      return;
+    }
+
+    if (maxTime > 0 && state.elapsedTimeInSeconds() > maxTime) {
+      state.stop();
+      return;
+    }
+    
+    if (verbosity > 3) {
+      std::cout
+      << state.name() << ": " << std::setw(10) << std::setprecision(7)
+      << state.lastValue()
+      << " "
+      << state.lastArgument();
+      
+      if (state.lastValue() > bestValue) {
+        bestValue = state.lastValue();
+        std::cout << std::endl;
+      } else {
+        std::cout << "\r" << std::flush;
       }
+    } else if (verbosity > 2) {
+      std::cout << "." << std::flush;
     }
   };
   params.developmentQuestions = devTrainSplit.first;
@@ -318,7 +365,11 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
 
   if (verbosity > 0) {
     if (verbosity > 2) {
-      std::cout << "\t";
+      if (verbosity > 3) {
+        std::cout << std::endl;
+      } else {
+        std::cout << "\t";
+      }
     }
     std::cout << acc_or_error_after.value() << std::endl;
   }
