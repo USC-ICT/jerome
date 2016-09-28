@@ -266,6 +266,21 @@ static void setup_SIGINT_handler()
   sigaction(SIGINT, &sigIntHandler, NULL);
 }
 
+// ----------------------------------------------------------------------------
+
+struct Verbosity {
+  Verbosity(int inValue)
+  : value(inValue)
+  {}
+  
+  bool isPrintingFinalScore() const { return value > 0; }
+  bool isPrintingInitialScore() const { return value > 1; }
+  bool isPrintingProgress() const { return value > 2; }
+  bool isPrintingFunctionValues() const { return value > 3; }
+private:
+  int value;
+};
+
 OptionalError Train::run1Classifier(const std::string& classifierName)
 {
   auto optState = platform().collection().states()
@@ -299,38 +314,53 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
     maxTime = parseTime(variables()[oMaxTime].as<std::string>());
   
   double bestValue = 0;
-  int verbosity = variables()[oVerbosity].as<int>();
+  bool newline = true;
+  Verbosity verbosity(variables()[oVerbosity].as<int>());
   
   TrainingParameters<Utterance> params;
 
   setup_SIGINT_handler();
   
   params.stateName = classifierName;
-  params.callback = [&bestValue,maxTime,verbosity](TrainingState& state) {
+  params.callback = [&](TrainingState& state) {
     if (sCaughtSIGINT) {
+      if (verbosity.isPrintingFunctionValues()) {
+        std::cout << std::endl << "Caught SIGINT. Exiting... " << std::flush;
+      }
       state.stop();
       return;
     }
 
     if (maxTime > 0 && state.elapsedTimeInSeconds() > maxTime) {
+      if (verbosity.isPrintingFunctionValues()) {
+        std::cout << std::endl << "Timer expired. Exiting... " << std::flush;
+      }
       state.stop();
       return;
     }
     
-    if (verbosity > 3) {
+    if (verbosity.isPrintingFunctionValues()) {
+
+      if (newline) {
+        std::cout << std::endl;
+        newline = false;
+      } else {
+        std::cout << "\r";
+      }
+
       std::cout
-      << state.name() << ": " << std::setw(10) << std::setprecision(7)
-      << state.lastValue()
+      << state.name() << ": "
+      << std::setw(10) << std::setprecision(7) << std::fixed << state.lastValue()
       << " "
-      << state.lastArgument();
+      << state.lastArgument()
+      << std::flush;
       
       if (state.lastValue() > bestValue) {
         bestValue = state.lastValue();
-        std::cout << std::endl;
-      } else {
-        std::cout << "\r" << std::flush;
+        newline = true;
       }
-    } else if (verbosity > 2) {
+
+    } else if (verbosity.isPrintingProgress()) {
       std::cout << "." << std::flush;
     }
   };
@@ -350,10 +380,10 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
   eparams.report = parseReportStream(classifierName, variables(), "before");
   eparams.reporterModel = eargs;
   
-  if (verbosity > 1) {
+  if (verbosity.isPrintingInitialScore()) {
     auto acc_or_error_before = platform().evaluate(eparams);
     if (!acc_or_error_before) return acc_or_error_before.error();
-    std::cout << acc_or_error_before.value() << "\t" << std::flush;
+    std::cout << acc_or_error_before.value() << std::flush;
   }
   
   auto error = platform().train(params);
@@ -363,13 +393,12 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
   auto acc_or_error_after = platform().evaluate(eparams);
   if (!acc_or_error_after) return acc_or_error_after.error();
 
-  if (verbosity > 0) {
-    if (verbosity > 2) {
-      if (verbosity > 3) {
-        std::cout << std::endl;
-      } else {
-        std::cout << "\t";
-      }
+  if (verbosity.isPrintingFinalScore()) {
+    if (verbosity.isPrintingFunctionValues()) {
+      std::cout << std::endl;
+    } else if (verbosity.isPrintingInitialScore()
+               || verbosity.isPrintingProgress()) {
+      std::cout << "\t";
     }
     std::cout << acc_or_error_after.value() << std::endl;
   }
