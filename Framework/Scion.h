@@ -13,51 +13,68 @@
 @class ALXMLNode;
 @class ALXMLDoc;
 
+typedef void(^ALLogHandlerBlock)(NSArray<NSObject*>* _Nonnull);
+
 @protocol ALXMLDocProtocol <JSExport>
-@property (nonatomic, strong, readonly) ALXMLNode* documentElement;
+@property (nonatomic, strong, readonly) ALXMLNode* _Nonnull documentElement;
 @end
 
 @protocol ALURLProtocol <JSExport>
-- (NSString*)getPathFromUrl:(NSString*)url;
-- (NSString*)changeUrlPath:(NSString*)url :(NSString*)newPath;
+- (NSString* _Nullable)getPathFromUrl:(NSString* _Nonnull)url;
+- (NSString* _Nullable)changeUrlPath:(NSString* _Nonnull)url
+                                    :(NSString* _Nonnull)newPath;
 @end
 
 @protocol ALDomProtocol <JSExport>
-- (NSArray*)getChildren:(ALXMLNode*)node;
-- (NSString*)localName:(ALXMLNode*)node;
-- (NSString*)getAttribute:(ALXMLNode*)node :(NSString*)attribute;
-- (BOOL)hasAttribute:(ALXMLNode*)node :(NSString*)attribute;
-- (NSString*)namespaceURI:(ALXMLNode*)node;
-- (ALXMLNode*)createElementNS:(ALXMLDoc*)doc :(NSString*)ns :(NSString*)localName;
-- (void) setAttribute:(ALXMLNode*) node :(NSString*)name :(NSString*)value;
-- (ALXMLNode*) appendChild:(ALXMLNode*)parent :(ALXMLNode*)child;
-- (NSString*)textContent:(ALXMLNode*)node :(NSString*)txt;
-- (NSArray*)getElementChildren:(ALXMLNode*)node;
+- (NSArray* _Nonnull)getChildren:(ALXMLNode* _Nonnull)node;
+- (NSString* _Nullable)localName:(ALXMLNode* _Nonnull)node;
+- (NSString* _Nullable)getAttribute:(ALXMLNode* _Nonnull)node
+                                   :(NSString* _Nonnull)attribute;
+- (BOOL)hasAttribute:(ALXMLNode* _Nonnull)node :(NSString* _Nonnull)attribute;
+- (NSString* _Nullable)namespaceURI:(ALXMLNode* _Nonnull)node;
+- (ALXMLNode* _Nonnull)createElementNS:(ALXMLDoc* _Nonnull)doc
+                                      :(NSString* _Nullable)ns
+                                      :(NSString* _Nonnull)localName;
+- (void)setAttribute:(ALXMLNode* _Nonnull)node
+                    :(NSString* _Nonnull)name
+                    :(NSString* _Nonnull)value;
+- (ALXMLNode* _Nonnull)appendChild:(ALXMLNode* _Nonnull)parent
+                                  :(ALXMLNode* _Nonnull)child;
+- (NSString* _Nullable)textContent:(ALXMLNode* _Nonnull)node
+                                  :(NSString* _Nullable)txt;
+- (NSArray* _Nonnull)getElementChildren:(ALXMLNode* _Nonnull)node;
 @end
 
 @protocol ALPathProtocol <JSExport>
-- (NSString*)join:(NSString*)path1 :(NSString*)path2;
-- (NSString*)dirname:(NSString*)path;
-- (NSString*)basename:(NSString*)path :(NSString*)ext;
-- (NSString*)extname:(NSString*)path;
+- (NSString* _Nonnull)join:(NSString* _Nonnull)path1
+                          :(NSString* _Nonnull)path2;
+- (NSString* _Nonnull)dirname:(NSString* _Nonnull)path;
+- (NSString* _Nonnull)basename:(NSString* _Nonnull)path
+                              :(NSString* _Nullable)ext;
+- (NSString* _Nullable)extname:(NSString* _Nonnull)path;
 @end
 
 @protocol ALScionPlatformProtocol <JSExport>
-@property (nonatomic, strong, readonly) id<ALURLProtocol> url;
-@property (nonatomic, strong, readonly) id<ALDomProtocol> dom;
-@property (nonatomic, strong, readonly) id<ALPathProtocol> path;
+@property (nonatomic, strong, readonly) id<ALURLProtocol> _Nonnull url;
+@property (nonatomic, strong, readonly) id<ALDomProtocol> _Nonnull dom;
+@property (nonatomic, strong, readonly) id<ALPathProtocol> _Nonnull path;
 
-- (void)getDocumentFromUrl:(NSString*)URL :(JSValue*)cb;
-- (ALXMLDoc*)parseDocumentFromString:(NSString*)content;
-- (void)getDocumentFromFilesystem:(NSString*)path :(JSValue*)cb;
-- (void)getResourceFromUrl:(NSString*)url :(JSValue*)cb;
+- (void)getDocumentFromUrl:(NSString* _Nonnull)URL
+                          :(JSValue* _Nonnull)cb;
+- (ALXMLDoc* _Nonnull)parseDocumentFromString:(NSString* _Nonnull)content;
+- (void)getDocumentFromFilesystem:(NSString* _Nonnull)path
+                                 :(JSValue* _Nonnull)cb;
+- (void)getResourceFromUrl:(NSString* _Nonnull)url
+                          :(JSValue* _Nonnull)cb;
 //- (void)postDataToUrl:(NSString*)url :(ALStringRsrcCallback)cb;
-- (uint32_t)setTimeout:(JSValue*)cb :(double)timeout;
+- (uint32_t)setTimeout:(JSValue* _Nonnull)cb :(double)timeout;
 - (void)clearTimeout:(uint32_t)timeoutID;
 - (void)log;
-- (JSValue*)eval:(NSString*)content :(NSString*)name;
+- (JSValue* _Nullable)eval:(NSString* _Nonnull)content
+                          :(NSString* _Nonnull)name;
 @end
 
 @interface ALScionPlatform : NSObject <ALScionPlatformProtocol>
-+ (instancetype)scionPlatformWithQueue:(dispatch_queue_t)queue;
++ (instancetype _Nonnull)scionPlatformWithQueue:(dispatch_queue_t _Nonnull)queue
+                                            log:(ALLogHandlerBlock _Nonnull)log;
 @end

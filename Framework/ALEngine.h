@@ -12,7 +12,7 @@
 JEROME_FRAMEWORK_SYMBOL_EXPORT
 @interface ALEngine : NSObject
 @property(nonatomic, strong, readonly) ALCollection* _Nullable colleciton;
-
+@property(nonatomic, copy) void (^_Nonnull log)(NSArray<NSObject*>* _Nonnull);
 
 - (BOOL)readCollectionFromURL:(NSURL* _Nonnull)url
                         error:(NSError * _Nullable * _Nullable)outError;

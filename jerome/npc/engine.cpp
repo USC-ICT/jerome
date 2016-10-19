@@ -93,15 +93,15 @@ namespace jerome {
           throw ranker_or_error.error();
         }
 
-        typedef std::chrono::time_point<std::chrono::system_clock>	time_point_type;
-        time_point_type mStartTime = time_point_type::clock::now();
+//        typedef std::chrono::time_point<std::chrono::system_clock>	time_point_type;
+//        time_point_type mStartTime = time_point_type::clock::now();
 
         Ranker::result_type   rl = ranker_or_error.value()(query);
         // std::cout << *rl;
 
-        time_point_type end = time_point_type::clock::now();
-        std::chrono::duration<double> elapsed_seconds = end - mStartTime;
-        std::cout << "TIME: " << elapsed_seconds.count() << std::endl;
+//        time_point_type end = time_point_type::clock::now();
+//        std::chrono::duration<double> elapsed_seconds = end - mStartTime;
+//        std::cout << "TIME: " << elapsed_seconds.count() << std::endl;
 
 //        {
 //          typedef std::chrono::time_point<std::chrono::system_clock>	time_point_type;

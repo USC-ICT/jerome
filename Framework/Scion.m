@@ -279,16 +279,19 @@ static NSString* xpathToNode(xmlNodePtr node) {
 @property (nonatomic, strong) dispatch_queue_t queue;
 @property (nonatomic, strong) NSMutableDictionary* timers;
 @property (nonatomic, assign) uint32_t timerIDCount;
+@property (nonatomic, copy) ALLogHandlerBlock _Nonnull logHandler;
 @end
 
 @implementation ALScionPlatform
 
 + (instancetype)scionPlatformWithQueue:(dispatch_queue_t)queue
+                                   log:(ALLogHandlerBlock)log
 {
-  return [[self alloc] initWithQueue:queue];
+  return [[self alloc] initWithQueue:queue log:log];
 }
 
 - (instancetype)initWithQueue:(dispatch_queue_t)queue
+                          log:(ALLogHandlerBlock)log
 {
   if (self = [super init]) {
     self.timers = [NSMutableDictionary new];
@@ -297,6 +300,7 @@ static NSString* xpathToNode(xmlNodePtr node) {
     self.url = [ALURL new];
     self.dom = [ALDom new];
     self.path = [ALPath new];
+    self.logHandler = log;
   }
   return self;
 }
@@ -398,9 +402,9 @@ static NSString* xpathToNode(xmlNodePtr node) {
   JSManagedValue* retainedCB = [JSManagedValue managedValueWithValue:cb];
   
   dispatch_source_set_event_handler(timer, ^{
-    NSLog(@"calling timer callback");
-    dispatch_source_cancel(timer);
     ALScionPlatform* strongSelf = weakSelf;
+    strongSelf.logHandler( @[ @"info", @"calling timer callback"] );
+    dispatch_source_cancel(timer);
     if (strongSelf) {
       [retainedCB.value callWithArguments:[NSArray array]];
       [strongSelf _clearTimeout:identifier];
@@ -420,7 +424,7 @@ static NSString* xpathToNode(xmlNodePtr node) {
 
 - (void)log
 {
-  NSLog(@"%@", [JSContext currentArguments]);
+  self.logHandler([JSContext currentArguments]);
 }
 
 - (JSValue*)eval:(NSString*)content :(NSString*)name

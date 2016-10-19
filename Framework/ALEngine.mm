@@ -53,6 +53,9 @@ using namespace jerome::npc;
   if (self = [super init]) {
     self.queue = dispatch_queue_create("edu.usc.ict.ScriptingEngine",
                                        DISPATCH_QUEUE_SERIAL);
+    self.log = ^(NSArray<NSObject*>* array) {
+      NSLog(@"%@", array);
+    };
   }
   return self;
 }
@@ -165,7 +168,8 @@ using namespace jerome::npc;
     NSLog(@"Exception in JavaScript: %@", exception);
   };
   
-  self.context[@"__scionPlatform"] = [ALScionPlatform scionPlatformWithQueue:self.queue];
+  self.context[@"__scionPlatform"]
+    = [ALScionPlatform scionPlatformWithQueue:self.queue log:self.log];
   
   [self.context evaluateScript:[NSString stringWithUTF8String:SCION_SCRIPT.source]
                  withSourceURL:[NSURL fileURLWithPath:[NSString stringWithUTF8String:SCION_SCRIPT.name]]];
