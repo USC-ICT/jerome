@@ -17,7 +17,7 @@
 
 static const char* oInputFile     = "input";
 static const char* oOutputFile    = "output";
-static const char* oVerbosity     = "verbosity,v";
+static const char* oVerbosity     = "verbosity";
 
 po::options_description Info::options(po::options_description inOptions) const
 {
@@ -66,12 +66,18 @@ static void printFieldInfo(std::ostream& os, const T& range,
   auto fieldKeys = keys(fields);
   String tab = "  ";
   std::sort(fieldKeys.begin(), fieldKeys.end());
+  
+  int verbosity = inVM[oVerbosity].as<int>();
+  
   for(const auto& key : fieldKeys) {
     const auto& field = fields[key];
     os  << tab << std::setw(12) << std::left << key
         << " " << field.size() << std::endl;
-    if (field.size() > 10) continue;
-    if (inVM[oVerbosity].as<int>() <= 1) continue;
+    // each level of verbosity adds another 10 to the size
+    // of the categories that are printed out. Categories with 
+    // size less than 10*verbosity only printed as names
+    if (field.size() > 10*verbosity) continue;
+    if (verbosity <= 1) continue;
     List<pair_type> values(field.begin(), field.end());
     std::sort(values.begin(), values.end(),
               [](const pair_type& a, const pair_type& b)
