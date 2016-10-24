@@ -24,7 +24,7 @@ JEROME_FRAMEWORK_SYMBOL_EXPORT
                            respondTo:(NSString* _Nonnull)question;
 
 - (void)readDialogueManagerFromURL:(NSURL* _Nonnull)url
-                  completionHandle:(ALDialoguScriptLoadedHandled _Nonnull)completionHandle;
+                  completionHandle:(ALDialogueScriptLoadedHandle _Nonnull)completionHandle;
 
 - (void)postEvent:(NSString* _Nonnull)eventName
          withData:(NSDictionary<NSString*, NSString*>* _Nonnull)data

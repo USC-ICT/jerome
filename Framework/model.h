@@ -65,5 +65,5 @@ JEROME_FRAMEWORK_SYMBOL_EXPORT
 @end
 
 typedef void (^ALTrainingStateHandler)(ALTrainingState * _Nonnull);
-typedef void (^ALDialoguScriptLoadedHandled)(NSString * _Nullable, NSError * _Nullable);
+typedef void (^ALDialogueScriptLoadedHandle)(NSString * _Nullable, NSError * _Nullable);
 typedef void (^ALEngineEventHandler)(ALPlatformEvent * _Nonnull);

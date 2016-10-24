@@ -29,6 +29,21 @@
 using namespace jerome::scripting;
 using namespace jerome::npc;
 
+@interface JSContext (AL)
+- (JSValue *)evaluateScriptLiteral:(ScriptLiteral *)script;
+@end
+
+@implementation JSContext (AL)
+
+- (JSValue *)evaluateScriptLiteral:(ScriptLiteral *)script
+{
+  NSString* name = [NSString stringWithUTF8String:script->name];
+  return [self evaluateScript:[NSString stringWithUTF8String:script->source]
+                withSourceURL:[NSURL fileURLWithPath:name]];
+}
+
+
+@end
 
 @interface ALEngine ()
 @property (nonatomic, assign) detail::Engine platformStorage;
@@ -86,11 +101,33 @@ using namespace jerome::npc;
   
 }
 
+- (void)doReadDialogueManagerFromSource:(NSString*)source
+                       completionHandle:(ALDialogueScriptLoadedHandle
+                                         _Nonnull)completionHandle
+{
+  [self initializeScripting];
+  [self.context[@"initStateMachineWithString"]
+   callWithArguments:@[ source, ^(JSValue* error, NSString* name) {
+    if (name) {
+      completionHandle(name, nil);
+    } else {
+      completionHandle(nil,
+                       [NSError errorWithDomain:@"JS"
+                                           code:0
+                                       userInfo:@{ NSLocalizedDescriptionKey
+                                                   : error.description }]);
+    }
+  }]];
+}
+
 - (void)readDialogueManagerFromURL:(NSURL*)url
-                  completionHandle:(ALDialoguScriptLoadedHandled _Nonnull)completionHandle
+                  completionHandle:(ALDialogueScriptLoadedHandle
+                                    _Nonnull)completionHandle
 {
   NSError* error;
-  NSString* source = [NSString stringWithContentsOfURL:url usedEncoding:nil error:&error];
+  NSString* source = [NSString stringWithContentsOfURL:url
+                                          usedEncoding:nil
+                                                 error:&error];
   if (!source) {
     completionHandle(nil, error);
     return;
@@ -99,21 +136,35 @@ using namespace jerome::npc;
   __weak ALEngine* weakSelf = self;
   dispatch_async(self.queue, ^{
     ALEngine* strongSelf = weakSelf;
-    if (!strongSelf) return;
-
-    [strongSelf initializeScripting];
-    [strongSelf.context[@"initStateMachineWithString"]
-      callWithArguments:@[ source, ^(JSValue* error, NSString* name) {
-      if (name) {
-        completionHandle(name, nil);
-      } else {
-        completionHandle(nil,
-         [NSError errorWithDomain:@"JS"
-                                  code:0
-                              userInfo:@{ NSLocalizedDescriptionKey : error.description }]);
-      }
-      }]];
+    [strongSelf doReadDialogueManagerFromSource:source
+                               completionHandle:completionHandle];
   });
+}
+
+- (NSString*)readDialogueManagerFromURL:(NSURL*)url
+                                  error:(NSError**)outError
+{
+  NSString* source = [NSString stringWithContentsOfURL:url
+                                          usedEncoding:nil
+                                                 error:outError];
+  if (!source) {
+    return nil;
+  }
+  
+  __block NSError*  error = nil;
+  __block NSString* name = nil;
+  
+  dispatch_sync(self.queue, ^{
+    [self doReadDialogueManagerFromSource:source
+                         completionHandle:^(NSString* inName, NSError* inError)
+    {
+      name = inName;
+      error = inError;
+    }];
+  });
+  
+  if (outError) *outError = error;
+  return name;
 }
 
 - (ALUtterance* _Nullable)classifier:(NSString* _Nonnull)stateName
@@ -128,6 +179,15 @@ using namespace jerome::npc;
   }
 }
 
+- (void)doPostEvent:(NSString* _Nonnull)eventName
+         withData:(NSDictionary<NSString*, NSString*>* _Nonnull)data
+        toMachine:(NSString* _Nonnull)machine
+{
+  [self initializeScripting];
+  [self.context[@"postEventToStateMachine"]
+   callWithArguments:@[ machine, eventName, data ]];
+}
+
 - (void)postEvent:(NSString* _Nonnull)eventName
          withData:(NSDictionary<NSString*, NSString*>* _Nonnull)data
         toMachine:(NSString* _Nonnull)machine
@@ -135,11 +195,7 @@ using namespace jerome::npc;
   __weak ALEngine* weakSelf = self;
   dispatch_async(self.queue, ^{
     ALEngine* strongSelf = weakSelf;
-    if (!strongSelf) return;
-
-    [strongSelf initializeScripting];
-    [strongSelf.context[@"postEventToStateMachine"]
-     callWithArguments:@[ machine, eventName, data ]];
+    [strongSelf doPostEvent:eventName withData:data toMachine:machine];
   });
 }
 
@@ -171,14 +227,9 @@ using namespace jerome::npc;
   self.context[@"__scionPlatform"]
     = [ALScionPlatform scionPlatformWithQueue:self.queue log:self.log];
   
-  [self.context evaluateScript:[NSString stringWithUTF8String:SCION_SCRIPT.source]
-                 withSourceURL:[NSURL fileURLWithPath:[NSString stringWithUTF8String:SCION_SCRIPT.name]]];
-  
-  [self.context evaluateScript:[NSString stringWithUTF8String:JEROME_STARTUP_SCRIPT.source]
-                 withSourceURL:[NSURL fileURLWithPath:[NSString stringWithUTF8String:JEROME_STARTUP_SCRIPT.name]]];
-  
-  [self.context evaluateScript:[NSString stringWithUTF8String:JEROME_UTTERANCE_COMPILER_SCRIPT.source]
-                 withSourceURL:[NSURL fileURLWithPath:[NSString stringWithUTF8String:JEROME_UTTERANCE_COMPILER_SCRIPT.name]]];
+  [self.context evaluateScriptLiteral:&SCION_SCRIPT];
+  [self.context evaluateScriptLiteral:&JEROME_STARTUP_SCRIPT];
+  [self.context evaluateScriptLiteral:&JEROME_UTTERANCE_COMPILER_SCRIPT];
 
   // I decided to retain the scriptingEngine
   self.scriptingEngine = [ALScriptingEngine new];

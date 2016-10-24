@@ -61,7 +61,7 @@ namespace jerome { namespace javascript { namespace detail {
 	inline String JSString::string () const {
     if (!mStringRef) return "null";
 		std::size_t	size	= JSStringGetMaximumUTF8CStringSize(mStringRef);
-		std::auto_ptr<char> buffer(new char[size]);
+		std::unique_ptr<char[]> buffer(new char[size]);
 		JSStringGetUTF8CString(mStringRef, buffer.get(), size);
 		return String(buffer.get());
 	}
