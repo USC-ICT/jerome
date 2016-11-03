@@ -167,9 +167,10 @@ using namespace jerome::npc;
   return name;
 }
 
-- (ALUtterance* _Nullable)classifier:(NSString* _Nonnull)stateName
+- (ALUtterance* _Nullable)do_classifier:(NSString* _Nonnull)stateName
                            respondTo:(NSString* _Nonnull)question
 {
+  [self initializeScripting];
   auto rl = self.platform.search(stateName.cppString,
               detail::Engine::queryForString(question.cppString));
   if (rl.size()) {
@@ -177,6 +178,29 @@ using namespace jerome::npc;
   } else {
     return nil;
   }
+}
+
+- (ALUtterance* _Nullable)classifier:(NSString* _Nonnull)stateName
+                           respondTo:(NSString* _Nonnull)question
+{
+  __block ALUtterance*  result = nil;
+  dispatch_sync(self.queue, ^{
+    result = [self do_classifier:stateName respondTo:question];
+  });
+  return result;
+}
+
+- (void)classifier:(NSString* _Nonnull)stateName
+         respondTo:(NSString* _Nonnull)question
+  completionHanlde:(void(^)(ALUtterance* _Nullable))handle
+{
+  __weak ALEngine* weakSelf = self;
+  dispatch_async(self.queue, ^{
+    ALEngine* strongSelf = weakSelf;
+    if (!strongSelf) return;
+    ALUtterance* result = [weakSelf do_classifier:stateName respondTo:question];
+    handle(result);
+  });
 }
 
 - (void)doPostEvent:(NSString* _Nonnull)eventName

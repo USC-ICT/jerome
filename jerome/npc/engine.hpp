@@ -51,7 +51,7 @@ namespace jerome {
           : public Error
         {
           undefined_state_error(const String& name)
-            : Error(String("no state defined with name ") + name)
+            : Error(String("no state defined with name \"") + name + "\"")
           {
           }
 

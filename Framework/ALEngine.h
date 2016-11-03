@@ -23,6 +23,10 @@ JEROME_FRAMEWORK_SYMBOL_EXPORT
 - (ALUtterance* _Nullable)classifier:(NSString* _Nonnull)stateName
                            respondTo:(NSString* _Nonnull)question;
 
+- (void)classifier:(NSString* _Nonnull)stateName
+         respondTo:(NSString* _Nonnull)question
+  completionHanlde:(void(^ _Nonnull)(ALUtterance* _Nullable))handle;
+
 - (void)readDialogueManagerFromURL:(NSURL* _Nonnull)url
                   completionHandle:(ALDialogueScriptLoadedHandle _Nonnull)completionHandle;
 
