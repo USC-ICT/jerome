@@ -168,38 +168,50 @@ using namespace jerome::npc;
 }
 
 - (ALUtterance* _Nullable)do_classifier:(NSString* _Nonnull)stateName
-                           respondTo:(NSString* _Nonnull)question
+                              respondTo:(NSString* _Nonnull)question
+                                  error:(NSError**)outError
 {
   [self initializeScripting];
-  auto rl = self.platform.search(stateName.cppString,
-              detail::Engine::queryForString(question.cppString));
-  if (rl.size()) {
-    return [ALUtterance utteranceWithUtterance:rl[0]];
-  } else {
+  try {
+    auto rl = self.platform.search(stateName.cppString,
+                detail::Engine::queryForString(question.cppString));
+    if (outError) *outError = nil;
+    if (rl.size()) {
+      return [ALUtterance utteranceWithUtterance:rl[0]];
+    } else {
+      return nil;
+    }
+  } catch (const jerome::Error& e) {
+    if (outError)
+      *outError = [NSError errorWithError:e];
     return nil;
   }
 }
 
 - (ALUtterance* _Nullable)classifier:(NSString* _Nonnull)stateName
                            respondTo:(NSString* _Nonnull)question
+                               error:(NSError* _Nullable * _Nullable)outError
 {
   __block ALUtterance*  result = nil;
   dispatch_sync(self.queue, ^{
-    result = [self do_classifier:stateName respondTo:question];
+    result = [self do_classifier:stateName respondTo:question error:outError];
   });
   return result;
 }
 
 - (void)classifier:(NSString* _Nonnull)stateName
          respondTo:(NSString* _Nonnull)question
-  completionHanlde:(void(^)(ALUtterance* _Nullable))handle
+  completionHandle:(void(^)(ALUtterance* _Nullable,
+                            NSError* _Nullable))handle
 {
   __weak ALEngine* weakSelf = self;
   dispatch_async(self.queue, ^{
     ALEngine* strongSelf = weakSelf;
     if (!strongSelf) return;
-    ALUtterance* result = [weakSelf do_classifier:stateName respondTo:question];
-    handle(result);
+    NSError* error = nil;
+    ALUtterance* result = [weakSelf do_classifier:stateName
+                                        respondTo:question error:&error];
+    handle(result, error);
   });
 }
 

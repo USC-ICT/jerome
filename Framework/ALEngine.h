@@ -21,11 +21,13 @@ JEROME_FRAMEWORK_SYMBOL_EXPORT
                        error:(NSError * _Nullable * _Nullable)outError;
 
 - (ALUtterance* _Nullable)classifier:(NSString* _Nonnull)stateName
-                           respondTo:(NSString* _Nonnull)question;
+                           respondTo:(NSString* _Nonnull)question
+                               error:(NSError* _Nullable * _Nullable)outError;
 
 - (void)classifier:(NSString* _Nonnull)stateName
          respondTo:(NSString* _Nonnull)question
-  completionHanlde:(void(^ _Nonnull)(ALUtterance* _Nullable))handle;
+  completionHandle:(void(^ _Nonnull)(ALUtterance* _Nullable,
+                                     NSError* _Nullable))handle;
 
 - (void)readDialogueManagerFromURL:(NSURL* _Nonnull)url
                   completionHandle:(ALDialogueScriptLoadedHandle _Nonnull)completionHandle;
