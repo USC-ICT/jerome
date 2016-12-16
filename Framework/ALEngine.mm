@@ -71,6 +71,8 @@ using namespace jerome::npc;
     self.log = ^(NSArray<NSObject*>* array) {
       NSLog(@"%@", array);
     };
+    
+    self.platform.setUsingLookupTable(true);
   }
   return self;
 }

@@ -89,9 +89,7 @@ namespace jerome { namespace ir {
 			const Frequencies&	tfs() const { return mFrequencies; }
 			
 			static const Term& missing_term() {
-        // STATIC
-				static auto s_missing_term = new Term;
-				return *s_missing_term;
+				return *_missing_term();
 			}
 			
 			void	add(size_type inDocumentID, const Token& inToken) {
@@ -116,6 +114,18 @@ namespace jerome { namespace ir {
 			void	optimize(Index& inIndex, Field& inField) {
         jerome::resize(mFrequencies, (size_type)inIndex.documentCount());
 			}
+      
+      bool isMissing() const {
+        return this == Term::_missing_term();
+      }
+    
+    private:
+      static const Term* _missing_term() {
+        // STATIC
+        static auto s_missing_term = new Term;
+        return s_missing_term;
+      }
+      
 		};
 		
 		class Field {

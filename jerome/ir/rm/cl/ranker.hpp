@@ -25,6 +25,7 @@
 
 #include <jerome/types.hpp>
 #include <jerome/ir/evaluation.hpp>
+#include <jerome/ir/lookup.hpp>
 #include <jerome/ir/ranker.hpp>
 #include <jerome/ir/rm/rm.hpp>
 #include <jerome/ir/rm/cl/link.hpp>
@@ -51,7 +52,12 @@ struct Ranker : public jerome::ir::rm::Ranker<Q, A, Ranker<Q,A,L>> {
 	typedef typename A::weighting_type						document_weighting_type;
 	typedef typename Q::weighting_type						query_weighting_type;
 	
-	template <class QueryRange, class DocumentRange, class LinkRange, class QueryAnalyzer, class DocumentAnalyzer>
+	template <
+    class QueryRange
+  , class DocumentRange
+  , class LinkRange
+  , class QueryAnalyzer
+  , class DocumentAnalyzer>
 	void index(
 			   const query_weighting_type& inQueryWeighting,
 			   const document_weighting_type& inDocumentWeighting,
@@ -102,19 +108,59 @@ struct Ranker : public jerome::ir::rm::Ranker<Q, A, Ranker<Q,A,L>> {
 	std::size_t countOfDocuments() const { return this->document().index().documentCount(); }
 	std::size_t countOfQueries()   const { return this->query().index().documentCount(); }
 	
+  result_type lookup(const query_type& inQuery) const
+  {
+    result_type ranked_list(inQuery.documentCount());
+    auto doc_lists = jerome::ir::lookup(inQuery, this->query().index());
+    
+    for(std::size_t i = 0, n = doc_lists.size(); i < n; ++i) {
+      if (doc_lists[i].empty()) {
+        continue;
+      }
+      
+      // if multiple queires match and same documents are linked to those
+      // queries, we only want a single instance of each document to appear
+      // in the ranked list.
+      Set<std::size_t>  docs;
+      for(std::size_t j = 0, m = doc_lists[i].size(); j < m; ++j) {
+        for(const auto& x : mIndexesOfDocumentsLinkedToQueryWithIndex[doc_lists[i][j]]) {
+          docs.insert(x);
+        }
+      }
+      List<std::size_t> sortedDocs(std::begin(docs), std::end(docs));
+      std::sort(std::begin(sortedDocs), std::end(sortedDocs));
+
+      for(const auto& x : sortedDocs) {
+        // use 0 to indicate that this is a perfact match
+        ranked_list[i].push_back(typename ranked_list_type::value_type(0,
+                  *(this->document().model().objectIterator()+x)));
+      }
+    }
+    
+    return ranked_list;
+  }
+  
 private:
 	void computeIndexesOfQueriesLinkedToDocumentWithIndex() {
 		mIndexesOfQueriesLinkedToDocumentWithIndex.clear();
 		for(std::size_t i = 0, n = this->document().index().documentCount(); i < n; ++i) {
 			mIndexesOfQueriesLinkedToDocumentWithIndex.push_back(std::vector<std::size_t>());
 		}
+    
+    mIndexesOfDocumentsLinkedToQueryWithIndex.clear();
+    for(std::size_t i = 0, n = this->query().index().documentCount(); i < n; ++i) {
+      mIndexesOfDocumentsLinkedToQueryWithIndex.push_back(std::vector<std::size_t>());
+    }
+    
 		for(std::size_t i = 0, n = links().size(); i < n; ++i) {
-			mIndexesOfQueriesLinkedToDocumentWithIndex[links()[i].documentIndex].push_back(i);
+			mIndexesOfQueriesLinkedToDocumentWithIndex[links()[i].documentIndex].push_back(links()[i].queryIndex);
+      mIndexesOfDocumentsLinkedToQueryWithIndex[links()[i].queryIndex].push_back(links()[i].documentIndex);
 		}
 	}
 	
 	link_list_type		mLinks;
 	std::vector<std::vector<std::size_t>>		mIndexesOfQueriesLinkedToDocumentWithIndex;
+  std::vector<std::vector<std::size_t>>		mIndexesOfDocumentsLinkedToQueryWithIndex;
 };
 
 }}}}

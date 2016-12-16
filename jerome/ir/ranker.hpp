@@ -216,7 +216,9 @@ namespace jerome {  namespace ir {
 		
 		using parent_type::operator();
 		
-		result_type		operator() (const Q& query) { return parent_type::operator()(mAnalyzer(query)); }
+		result_type		operator() (const query_type& query) {
+      return parent_type::operator()(mAnalyzer(query));
+    }
 		
 		query_analyzer_type& analyzer() { return mAnalyzer; } 
 		const query_analyzer_type& analyzer() const { return mAnalyzer; }

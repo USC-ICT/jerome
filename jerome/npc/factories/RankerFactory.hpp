@@ -97,8 +97,9 @@ namespace jerome {
       static constexpr const char* QUESTION_WEIGHTING_KEY = "question.weighting";
       static constexpr const char* ANSWER_ANALYZER_KEY = "answer.analyzer";
       static constexpr const char* QUESTION_ANALYZER_KEY = "question.analyzer";
+      static constexpr const char* USE_LOOKUP_TABLE_KEY = "use.lookup.table";
     };
-    
+   
 	}
 }
 

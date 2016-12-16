@@ -53,6 +53,10 @@ namespace jerome {
         , public UtteranceCLRankerModel
       {
       public:
+        typedef UtteranceRanker<UtteranceCLRankerBase> parent_type;
+        JEROME_INTERNAL_RANKER_TYPES(parent_type)
+        typedef parent_type::query_analyzer_type query_analyzer_type;
+       
         UtteranceCLRanker() = default;
         UtteranceCLRanker(const State::ranker_model_type& inModel,
           const Data& data)
@@ -77,6 +81,9 @@ namespace jerome {
                              AnalyzerFactory::sharedInstance().defaultModel()));
 					mModel.emplace(QUESTION_ANALYZER_KEY, qry_analyzer.value().model());
 
+          mModel.emplace(USE_LOOKUP_TABLE_KEY,
+                         inModel.at(USE_LOOKUP_TABLE_KEY, false));
+          
           this->index(
                       qry_weigh.value()
                       , doc_weigh.value()
@@ -92,6 +99,50 @@ namespace jerome {
 				Record model() const
         { return mModel; }
 				
+        using parent_type::operator();
+
+        result_type	operator() (const query_analyzer_type::result_type& query)
+        {
+          if (!model().at(USE_LOOKUP_TABLE_KEY, false)) {
+            return parent_type::operator()(query);
+          }
+          
+          auto ranked_list = lookup(query);
+          std::size_t empty_lists_count = 0;
+          
+          for(const auto& list : ranked_list) {
+            if (list.empty()) {
+              empty_lists_count += 1;
+            }
+          }
+          
+          // if every query matches perfectly, return
+          if (empty_lists_count == 0) {
+            return ranked_list;
+          }
+          
+          auto classifier_lists = parent_type::operator()(query);
+
+          // if every query requires fuzzy search, return
+          if (empty_lists_count == ranked_list.size()) {
+            return classifier_lists;
+          }
+
+          // replace missing perfect macth results with fuzzy search results
+          for(std::size_t i = 0, n = ranked_list.size(); i < n; ++i) {
+            if (ranked_list[i].empty()) {
+              ranked_list[i] = classifier_lists[i];
+            }
+          }
+          
+          return ranked_list;
+        }
+
+        result_type	operator() (const argument_type& query)
+        {
+          return this->operator()(analyzer()(query));
+        }
+        
 			private:
 				Record mModel;
       };
@@ -111,7 +162,6 @@ namespace jerome {
       return parent_type::make(inModel.at<String>(parent_type::PROVIDER_KEY),
                                inModel, inData, inParams);
     }
-
-
+    
   }
 }

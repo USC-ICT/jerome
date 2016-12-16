@@ -87,9 +87,13 @@ namespace jerome {
 
 				void collectionWasUpdated(const OptionalString& inStateName);
 
+        bool usingLookupTable() const { return mUseLookupTable; }
+        void setUsingLookupTable(bool flag) { mUseLookupTable = flag; }
+        
       private:
         Collection					mCollection;
         StringMap<Ranker>		mRankers;
+        bool                mUseLookupTable;
 				
 				void stateWasUpdated(const State& inState);
       };

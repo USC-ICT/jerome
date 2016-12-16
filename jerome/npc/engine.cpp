@@ -72,9 +72,14 @@ namespace jerome {
 
         auto data = dataFromState(state, mCollection.utterance_index());
         auto record = state.rankerModel().at(State::PARAMETERS_KEY, Record());
-
+        auto rankerModel = state.rankerModel();
+        
+        if (usingLookupTable()) {
+          rankerModel.emplace(UtteranceCLRankerModel::USE_LOOKUP_TABLE_KEY, true);
+        }
+        
         auto rankerResult = RankerFactory::sharedInstance().make(
-          state.rankerModel(), data, record.allValuesOfType<double>());
+          rankerModel, data, record.allValuesOfType<double>());
 
         if (rankerResult) {
           auto pair = mRankers.emplace(inStateName, rankerResult.value());
