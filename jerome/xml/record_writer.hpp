@@ -52,6 +52,12 @@ namespace jerome {
     };
 
     template <>
+    struct RecordTags::Trait<bool>
+    {
+      static constexpr const char* TAG = "bool";
+    };
+    
+    template <>
     struct RecordTags::Trait<String>
     {
       static constexpr const char* TAG = "string";
@@ -91,6 +97,7 @@ namespace jerome {
             : mStream(os)
             , mName(inName)
           {
+            mStream << std::boolalpha;
           }
 
           void start(const String& tag) const
@@ -143,12 +150,19 @@ namespace jerome {
 			};
 
 			template <typename Tags>
-			struct recordReader<Tags, double> {
-				static double read(xml::reader& ioReader) {
-					return std::stod(ioReader.elementText());
+			struct recordReader<Tags, bool> {
+				static bool read(xml::reader& ioReader) {
+          return stob(ioReader.elementText());
 				}
 			};
 
+      template <typename Tags>
+      struct recordReader<Tags, double> {
+        static double read(xml::reader& ioReader) {
+          return std::stod(ioReader.elementText());
+        }
+      };
+      
 			template <typename Tags>
 			struct recordReader<Tags, Record> {
 				static Record read(xml::reader& ioReader);

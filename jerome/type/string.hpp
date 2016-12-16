@@ -25,6 +25,7 @@
 
 #include <string>
 #include <jerome/type/optional.hpp>
+#include <boost/algorithm/string.hpp>
 
 #if defined(__ANDROID__)
 // Android NDK doesn't support these C++ functions. Thus we just
@@ -70,6 +71,16 @@ namespace jerome {
     std::unique_ptr<char[]> buf(new char[size]);
     snprintf(buf.get(), size, format.c_str(), args ...);
     return String(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
+  }
+  
+  inline String to_lower(const String& inString)
+  {
+    return boost::algorithm::to_lower_copy(inString);
+  }
+  
+  inline bool stob(const String& inString)
+  {
+    return to_lower(inString) == "true" || stoi(inString) != 0;
   }
 }
 

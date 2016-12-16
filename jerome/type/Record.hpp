@@ -30,7 +30,7 @@ namespace jerome {
 	class Record;
 	
 	namespace detail {
-		typedef boost::variant<String, double,
+		typedef boost::variant<String, double, bool,
 		boost::recursive_wrapper<Record>> Record_Field;
 		
 		template <typename V>
