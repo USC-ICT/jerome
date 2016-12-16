@@ -14,6 +14,8 @@ using namespace jerome;
 
 @interface ALUtterance ()
 @property (nonatomic, assign) npc::Utterance utterance;
+@property (nonatomic, copy, readonly, nonnull) NSArray* fields;
+@property (nonatomic, copy, readonly, nonnull) NSDictionary* dictionaryWithFieldValues;
 @end
 
 @implementation ALUtterance
@@ -44,6 +46,29 @@ using namespace jerome;
 - (void)setObject:(NSString* _Nullable)obj forKeyedSubscript:(NSString* _Nonnull)key
 {
   [self setValue:obj forKey:key];
+}
+
+- (NSString*)description
+{
+  return self.dictionaryWithFieldValues.description;
+}
+
+- (NSArray*)fields
+{
+  NSMutableArray* array = [NSMutableArray new];
+  for(const auto& f : self->_utterance.fieldNames()) {
+    [array addObject:[NSString stringWithCPPString:f]];
+  }
+  return array;
+}
+
+- (NSDictionary*)dictionaryWithFieldValues
+{
+  NSMutableDictionary* dict = [NSMutableDictionary new];
+  for(NSString* f in self.fields) {
+    dict[f] = [self valueForKey:f];
+  }
+  return dict;
 }
 
 @end
