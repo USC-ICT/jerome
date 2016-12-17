@@ -2057,6 +2057,7 @@
 				);
 				PRODUCT_NAME = jerome;
 				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
 				USE_HEADERMAP = NO;
 			};
 			name = Debug;
@@ -2080,6 +2081,7 @@
 				);
 				PRODUCT_NAME = jerome;
 				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
 				USE_HEADERMAP = NO;
 			};
 			name = Release;
