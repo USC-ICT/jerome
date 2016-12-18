@@ -80,7 +80,13 @@ namespace jerome {
   
   inline bool stob(const String& inString)
   {
-    return to_lower(inString) == "true" || stoi(inString) != 0;
+    if (to_lower(inString) == "true") { return true; }
+    if (to_lower(inString) == "false") { return false; }
+    try {
+      return stoi(inString) != 0;
+    } catch (std::exception&) {
+      return false;
+    }
   }
 }
 

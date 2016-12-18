@@ -37,7 +37,7 @@ po::options_description Evaluate::options(po::options_description inOptions) con
   (oReportFile, po::value<std::string>(),
    "report file name format string (default: none), e.g., "\
    "\"report-%s-%s.xml\". The file will be named by replacing the first " \
-   "argument in the format with with input file name and the second with " \
+   "argument in the format with input file name and the second with " \
    "the classifier name." )
   (oReportFormat, po::value<std::string>()->default_value("html"),
    "report file format. One of xml or html.")
