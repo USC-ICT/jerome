@@ -34,13 +34,12 @@ namespace jerome {
     explicit Bool(bool inValue) : mValue(inValue) {}
     bool value() const { return mValue; }
   private:
-    friend std::ostream& operator << (std::ostream& os, const Bool& value);
     bool mValue;
   };
   
   inline std::ostream& operator << (std::ostream& os, const Bool& value)
   {
-    return os << std::boolalpha << value.mValue;
+    return os << std::boolalpha << value.value();
   }
 	
 	namespace detail {

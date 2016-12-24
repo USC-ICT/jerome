@@ -103,8 +103,9 @@ namespace jerome {
         [&] (const value_type& x) {
         return x.first == inKey;
       });
-      return i == end() ? optional<const Value&>() : optional<const Value&>(
-        i->second);
+      return i == end()
+        ? optional<const Value&>()
+        : optional<const Value&>(i->second);
     }
 
     const Value& at(const key_type& inKey, const mapped_type& inDefault) const
@@ -114,6 +115,12 @@ namespace jerome {
         return x.first == inKey;
       });
       return i == end() ? inDefault : i->second;
+    }
+    
+    void replace(const key_type& inKey, const mapped_type& inValue)
+    {
+      remove(inKey);
+      emplace(inKey, inValue);
     }
 
 		void remove(const key_type& inKey)

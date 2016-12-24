@@ -75,7 +75,8 @@ namespace jerome {
         auto rankerModel = state.rankerModel();
         
         if (usingLookupTable()) {
-          rankerModel.emplace(UtteranceCLRankerModel::USE_LOOKUP_TABLE_KEY, true);
+          rankerModel.replace(UtteranceCLRankerModel::USE_LOOKUP_TABLE_KEY,
+                              Bool(true));
         }
         
         auto rankerResult = RankerFactory::sharedInstance().make(

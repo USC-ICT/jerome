@@ -87,11 +87,14 @@ namespace jerome { namespace ir {
         const auto& indexField(inIndex.findField(field.first));
         
         for(const auto& term : field.second.terms()) {
+          const auto& termText(term.first);
+          const auto& termInfo(term.second);
+          
           // find the query term in the target index
-          const auto indexTerm = indexField.findTerm(term.first);
+          const auto indexTerm = indexField.findTerm(termText);
           if (indexTerm.isMissing()) {
             // all the queries with this term cannot be matched.
-            flags.setFrom(term.second);
+            flags.setFrom(termInfo);
             if (flags.isAllSet()) {
               return doc_lists;
             }
@@ -101,50 +104,75 @@ namespace jerome { namespace ir {
           // index all documents in the target index by TF of the term
           Map<term_freq_type, doc_id_set_type>  validDocs;
           for_each(indexTerm.tfs(),
-                   [&](const term_index_type& i,
-                       const term_freq_type& v)
+                   [&](const term_index_type& docIndex,
+                       const term_freq_type& tf)
                    {
-                     auto iter = validDocs.find(v);
+                     auto iter = validDocs.find(tf);
                      if (iter == validDocs.end()) {
-                       validDocs.emplace(v, doc_id_set_type(1, i));
+                       validDocs.emplace(tf, doc_id_set_type(1, docIndex));
                      } else {
-                       iter->second.push_back(i);
+                       iter->second.push_back(docIndex);
                      }
                    });
           
           
-          for_each(term.second.tfs(),
-                   [&](const term_index_type& i,
-                       const term_freq_type& v)
+          for_each(termInfo.tfs(),
+                   [&](const term_index_type& qryIndex,
+                       const term_freq_type& tf)
                    {
-                     if (flags.isSet(i)) { return; }
+                     if (flags.isSet(qryIndex)) { return; }
                      
-                     auto iter = validDocs.find(v);
+                     auto iter = validDocs.find(tf);
                      if (iter == validDocs.end()) {
-                       flags.set(i);
+                       flags.set(qryIndex);
                        return;
                      }
                      
-                     if (doc_lists[i].empty()) {
-                       doc_lists[i] = iter->second;
+                     // iter->second <-> list of all documents that have
+                     // term termText with the same tf as the query
+                     
+                     // we need to make sure the documents have the same
+                     // number of terms as the query
+                     auto qryLength = field.second.documentLengths()[qryIndex];
+                     doc_id_set_type  clean_doc_set;
+                     std::remove_copy_if(std::begin(iter->second),
+                                         std::end(iter->second),
+                                         std::back_inserter(clean_doc_set),
+                                         [&](const term_index_type& docIndex) {
+                                           return qryLength !=
+                                           indexField.documentLengths()[docIndex];
+                                         });
+                     
+                     if (clean_doc_set.empty()) {
+                       // oops all matching documents have different number of
+                       // terms. We done with the query.
+                       doc_lists[qryIndex] = clean_doc_set;
+                       flags.set(qryIndex);
                        return;
                      }
                      
+                     if (doc_lists[qryIndex].empty()) {
+                       doc_lists[qryIndex] = clean_doc_set;
+                       return;
+                     }
+
                      doc_id_set_type result;
-                     std::set_intersection(std::begin(doc_lists[i]),
-                                           std::end(doc_lists[i]),
-                                           std::begin(iter->second),
-                                           std::end(iter->second),
+                     std::set_intersection(std::begin(doc_lists[qryIndex]),
+                                           std::end(doc_lists[qryIndex]),
+                                           std::begin(clean_doc_set),
+                                           std::end(clean_doc_set),
                                            std::back_inserter(result));
                      
                      if (result.empty()) {
-                       flags.set(i);
+                       flags.set(qryIndex);
                      }
                      
-                     doc_lists[i] = result;
+                     doc_lists[qryIndex] = result;
                    });
           
         }
+        
+        
         
       } catch (const std::exception& e) {
         // the field is missing from the target index
