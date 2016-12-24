@@ -28,9 +28,23 @@
 namespace jerome {
 	
 	class Record;
+  
+  struct Bool {
+    Bool() : mValue(false) {}
+    explicit Bool(bool inValue) : mValue(inValue) {}
+    bool value() const { return mValue; }
+  private:
+    friend std::ostream& operator << (std::ostream& os, const Bool& value);
+    bool mValue;
+  };
+  
+  inline std::ostream& operator << (std::ostream& os, const Bool& value)
+  {
+    return os << std::boolalpha << value.mValue;
+  }
 	
 	namespace detail {
-		typedef boost::variant<String, double, bool,
+		typedef boost::variant<String, double, Bool,
 		boost::recursive_wrapper<Record>> Record_Field;
 		
 		template <typename V>

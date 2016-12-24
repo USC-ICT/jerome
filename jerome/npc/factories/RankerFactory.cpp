@@ -82,7 +82,7 @@ namespace jerome {
 					mModel.emplace(QUESTION_ANALYZER_KEY, qry_analyzer.value().model());
 
           mModel.emplace(USE_LOOKUP_TABLE_KEY,
-                         inModel.at(USE_LOOKUP_TABLE_KEY, false));
+                         inModel.at(USE_LOOKUP_TABLE_KEY, Bool(false)));
           
           this->index(
                       qry_weigh.value()
@@ -103,7 +103,7 @@ namespace jerome {
 
         result_type	operator() (const query_analyzer_type::result_type& query)
         {
-          if (!model().at(USE_LOOKUP_TABLE_KEY, false)) {
+          if (!model().at(USE_LOOKUP_TABLE_KEY, Bool(false)).value()) {
             return parent_type::operator()(query);
           }
           

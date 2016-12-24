@@ -52,7 +52,7 @@ namespace jerome {
     };
 
     template <>
-    struct RecordTags::Trait<bool>
+    struct RecordTags::Trait<Bool>
     {
       static constexpr const char* TAG = "bool";
     };
@@ -150,9 +150,9 @@ namespace jerome {
 			};
 
 			template <typename Tags>
-			struct recordReader<Tags, bool> {
-				static bool read(xml::reader& ioReader) {
-          return stob(ioReader.elementText());
+			struct recordReader<Tags, Bool> {
+				static Bool read(xml::reader& ioReader) {
+          return Bool(stob(ioReader.elementText()));
 				}
 			};
 
