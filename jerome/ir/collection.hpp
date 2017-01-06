@@ -183,6 +183,11 @@ namespace jerome { namespace ir {
 			template <class Index> friend class filter::IndexWriter;
 			
 			void	add(typename Term::size_type inDocumentID, const Token& inToken) {
+        
+//        if (inDocumentID < mDocumentLengths.size() && mDocumentLengths[inDocumentID] >= 75) {
+//          return;
+//        }
+
 				typename Terms::iterator p = mTerms.find(inToken.text());
 				if (p == mTerms.end()) {
 					mTerms.emplace(inToken.text(), Term(inDocumentID, inToken));

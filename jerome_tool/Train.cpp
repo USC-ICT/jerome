@@ -123,12 +123,12 @@ po::options_description Train::options(po::options_description inOptions) const
   (TR::G_ALGORITHM, po::value<std::string>()
    ->default_value("GN_DIRECT_L_RAND"),
    (std::string("global optimization algorithm. One of\n  ")
-    + boost::algorithm::join(TR::globalAlgorithms(), "\n  ")).c_str())
+    + boost::algorithm::join(TR::algorithms(TR::AlgorithmKind::ALL), "\n  ")).c_str())
   (TR::L_ALGORITHM, po::value<std::string>(),
    (std::string("some global optimization algorithms, i.e., ")
-    + boost::algorithm::join(TR::globalAlgorithmsRequiringLocalOptimizer(), ", ")
+    + boost::algorithm::join(TR::algorithms(TR::AlgorithmKind::GLOBAL_REQUIRING_LOCAL), ", ")
     + " require a local optimizer. Try LN_BOBYQA first. One of\n  "
-    + boost::algorithm::join(TR::localAlgorithms(), "\n  ")).c_str())
+    + boost::algorithm::join(TR::algorithms(TR::AlgorithmKind::LOCAL), "\n  ")).c_str())
   ;
   
   po::options_description stopping("Stopping criteria");

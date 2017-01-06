@@ -98,12 +98,36 @@ namespace jerome {
 { auto optional_double = this->model().template at<double>(Trainer::KEY); \
 if (optional_double) OPT.set_##FUN(*optional_double); \
 }
-#define MAP_ASSIGN(X) \
-map[ #X ] = nlopt::X
       
-      static StringMap<nlopt::algorithm> makeGlobalAlgorithms()
+      struct Algorithm {
+        nlopt::algorithm algorithm;
+        bool global;
+        bool requiresLocal;
+        Algorithm(nlopt::algorithm inAlgorithm
+                  , bool inGlobal = true
+                  , bool inRequiresLocal = false)
+        : algorithm(inAlgorithm)
+        , global(inGlobal)
+        , requiresLocal(inRequiresLocal)
+        {}
+//        Algorithm(const Algorithm&) = default;
+//        Algorithm(Algorithm&&) = default;
+//        Algorithm& operator = (const Algorithm&) = default;
+//        Algorithm& operator = (Algorithm&&) = default;
+      };
+      
+#define MAP_ASSIGN(X) \
+map.emplace(#X, Algorithm(nlopt::X))
+
+#define MAP_ASSIGN_L(X) \
+map.emplace(#X, Algorithm(nlopt::X, false))
+
+#define MAP_ASSIGN_G_L(X) \
+map.emplace(#X, Algorithm(nlopt::X, true, true))
+
+      static StringMap<Algorithm> makeAlgorithms()
       {
-        StringMap<nlopt::algorithm> map;
+        StringMap<Algorithm> map;
         MAP_ASSIGN(GN_DIRECT_L_RAND);
         MAP_ASSIGN(GN_DIRECT_L);
         MAP_ASSIGN(GN_DIRECT);
@@ -113,75 +137,54 @@ map[ #X ] = nlopt::X
         //      MAP_ASSIGN(GN_ORIG_DIRECT);
         //      MAP_ASSIGN(GN_ORIG_DIRECT_L);
         MAP_ASSIGN(GN_CRS2_LM);
-        //      MAP_ASSIGN(GN_MLSL);
-        //      MAP_ASSIGN(GN_MLSL_LDS);
         MAP_ASSIGN(GN_ISRES);
-        MAP_ASSIGN(AUGLAG);
-        MAP_ASSIGN(AUGLAG_EQ);
-        MAP_ASSIGN(G_MLSL);
-        MAP_ASSIGN(G_MLSL_LDS);
+        MAP_ASSIGN_G_L(AUGLAG);
+        MAP_ASSIGN_G_L(AUGLAG_EQ);
+        MAP_ASSIGN_G_L(G_MLSL);
+        MAP_ASSIGN_G_L(G_MLSL_LDS);
+
+        MAP_ASSIGN_L(LN_BOBYQA);
+        MAP_ASSIGN_L(LN_COBYLA);
+        MAP_ASSIGN_L(LN_PRAXIS);
+        MAP_ASSIGN_L(LN_NEWUOA);
+        MAP_ASSIGN_L(LN_NEWUOA_BOUND);
+        MAP_ASSIGN_L(LN_NELDERMEAD);
+        MAP_ASSIGN_L(LN_SBPLX);
+        MAP_ASSIGN_L(LN_AUGLAG);
+        MAP_ASSIGN_L(LN_AUGLAG_EQ);
+
         return map;
       }
       
-      static const StringMap<nlopt::algorithm>& globalAlgorithmsMap()
+      static const StringMap<Algorithm>& algorithmsMap()
       {
-        static StringMap<nlopt::algorithm> globalAlgorithmsMap =
-        makeGlobalAlgorithms();
-        return globalAlgorithmsMap;
+        static StringMap<Algorithm> algorithmsMap = makeAlgorithms();
+        return algorithmsMap;
       }
       
-      static StringMap<nlopt::algorithm> makeLocalAlgorithms()
+      List<String> Trainer::algorithms(AlgorithmKind kind)
       {
-        StringMap<nlopt::algorithm> map;
-        MAP_ASSIGN(LN_BOBYQA);
-        MAP_ASSIGN(LN_COBYLA);
-        MAP_ASSIGN(LN_PRAXIS);
-        MAP_ASSIGN(LN_NEWUOA);
-        MAP_ASSIGN(LN_NEWUOA_BOUND);
-        MAP_ASSIGN(LN_NELDERMEAD);
-        MAP_ASSIGN(LN_SBPLX);
-        MAP_ASSIGN(LN_AUGLAG);
-        MAP_ASSIGN(LN_AUGLAG_EQ);
-        return map;
-      }
-      
-      static const StringMap<nlopt::algorithm>& localAlgorithmsMap()
-      {
-        static StringMap<nlopt::algorithm> localAlgorithmsMap =
-        makeLocalAlgorithms();
-        return localAlgorithmsMap;
-      }
-      
-      static StringMap<nlopt::algorithm> makeGlobalAlgorithms1()
-      {
-        StringMap<nlopt::algorithm> map;
-        MAP_ASSIGN(AUGLAG);
-        MAP_ASSIGN(AUGLAG_EQ);
-        MAP_ASSIGN(G_MLSL);
-        MAP_ASSIGN(G_MLSL_LDS);
-        return map;
-      }
-      
-      static const StringMap<nlopt::algorithm>& globalAlgorithmsMap1()
-      {
-        static StringMap<nlopt::algorithm> globalAlgorithmsMap =
-        makeGlobalAlgorithms1();
-        return globalAlgorithmsMap;
-      }
-      
-      List<String> Trainer::globalAlgorithms()
-      {
-        return keys(globalAlgorithmsMap());
-      }
-      
-      List<String> Trainer::localAlgorithms()
-      {
-        return keys(localAlgorithmsMap());
-      }
-      
-      List<String> Trainer::globalAlgorithmsRequiringLocalOptimizer()
-      {
-        return keys(globalAlgorithmsMap1());
+        List<String> list;
+        for(const auto& i : algorithmsMap()) {
+          switch (kind) {
+            case ALL:
+              list.push_back(i.first);
+              break;
+            case GLOBAL:
+              if (i.second.global)
+                list.push_back(i.first);
+              break;
+            case LOCAL:
+              if (!i.second.global)
+                list.push_back(i.first);
+              break;
+            case GLOBAL_REQUIRING_LOCAL:
+              if (i.second.global && i.second.requiresLocal)
+                list.push_back(i.first);
+              break;
+          }
+        }
+        return list;
       }
       
       template <typename F>
@@ -253,14 +256,18 @@ map[ #X ] = nlopt::X
           nlopt::algorithm  algorithm = nlopt::GN_DIRECT_L_RAND;
           auto global_alg_name = this->model()
             .template at<String>(Trainer::G_ALGORITHM);
+          
+          bool requiresLocal = false;
+          
           if (global_alg_name) {
-            auto optional_algorithm = map_value_at(globalAlgorithmsMap(),
+            auto optional_algorithm = map_value_at(algorithmsMap(),
                                                    *global_alg_name);
             if (!optional_algorithm) {
               return Error("Unknown global optimization algorithm "
                            + *global_alg_name);
             }
-            algorithm = *optional_algorithm;
+            algorithm = optional_algorithm->algorithm;
+            requiresLocal = optional_algorithm->requiresLocal;
           }
           
           optimizer_type gopt(algorithm, ranges);
@@ -273,14 +280,14 @@ map[ #X ] = nlopt::X
           auto local_alg_name = this->model()
             .template at<String>(Trainer::L_ALGORITHM);
           if (local_alg_name) {
-            auto optional_algorithm = map_value_at(localAlgorithmsMap(),
+            auto optional_algorithm = map_value_at(algorithmsMap(),
                                                    *local_alg_name);
-            if (!optional_algorithm) {
+            if (!optional_algorithm || optional_algorithm->global) {
               return Error("Unknown local optimization algorithm "
                            + *local_alg_name);
             }
             
-            optimizer_type lopt(*optional_algorithm, ranges);
+            optimizer_type lopt(optional_algorithm->algorithm, ranges);
             COPY_VAL(L_FTOL_REL, lopt, ftol_rel);
             COPY_VAL(L_FTOL_ABS, lopt, ftol_abs);
             COPY_VAL(L_XTOL_REL, lopt, xtol_rel);
@@ -288,13 +295,9 @@ map[ #X ] = nlopt::X
             lopt.set_max_objective(obj);
             
             gopt.set_local_optimizer(lopt);
-          } else {
-            for(const auto& a : globalAlgorithmsMap1()) {
-              if (algorithm == a.second) {
-                return Error("Local optimization algorithm is required for "
-                             + *global_alg_name);
-              }
-            }
+          } else if (requiresLocal) {
+            return Error("Local optimization algorithm is required for "
+                         + *global_alg_name);
           }
           
           gopt.set_max_objective(obj);
@@ -354,17 +357,16 @@ map[ #X ] = nlopt::X
 
 //          double stop_value = 0.381;
 
-          for (auto galg : globalAlgorithmsMap()) {
+          for (auto galg : algorithmsMap()) {
 
-            optimizer_type gopt(galg.second, ranges);
+            optimizer_type gopt(galg.second.algorithm, ranges);
 
 //      gopt.set_xtol_abs(1e-2);
             gopt.set_ftol_abs(1e-3);
 
 //			gopt.set_stopval(stop_value);
 
-            if (globalAlgorithmsMap1().find(galg.first) ==
-                globalAlgorithmsMap1().end()) {
+            if (!galg.second.requiresLocal) {
 
               objective_type obj(inRanker, devSet);
 
@@ -383,11 +385,13 @@ map[ #X ] = nlopt::X
 
             } else {
 
-              for (auto lalg : localAlgorithmsMap()) {
+              for (auto lalg : algorithmsMap()) {
 
+                if (lalg.second.global) continue;
+                
                 objective_type obj(inRanker, devSet);
 
-                optimizer_type lopt(lalg.second, ranges);
+                optimizer_type lopt(lalg.second.algorithm, ranges);
 
 //					lopt.set_stopval(stop_value);
 //          lopt.set_xtol_abs(1e-4);

@@ -93,10 +93,14 @@ namespace jerome {
         static constexpr const char* L_XTOL_ABS = "local-parameter-absolute-tolerance";
         static constexpr const char* L_ALGORITHM = "local-algorithm";
         
-        static List<String> globalAlgorithms();
-        static List<String> localAlgorithms();
-        static List<String> globalAlgorithmsRequiringLocalOptimizer();
+        enum AlgorithmKind {
+          LOCAL,
+          GLOBAL,
+          ALL,
+          GLOBAL_REQUIRING_LOCAL
+        };
         
+        static List<String> algorithms(AlgorithmKind kind = ALL);        
       };
 
     }

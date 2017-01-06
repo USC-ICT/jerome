@@ -104,7 +104,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "train --test-split label --dev-split auto --max-time 5 --verbosity 3 --answer-analyzer text-unigram+id --answer-weighting unigram+id --global-function-relative-tolerance 0.01 --report-format xml --report &quot;%s-%s-%s.xml&quot; --input &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Examples/OriginalTranscripts+/Aaron/aaronOrigSFA.plist.csxml&quot; --output &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Examples/OriginalTranscripts+/Aaron/aaronOrigSFA.plist.csxml.new&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "train --input &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Examples/AnnotatedTranscripts+/Fritzie/fritzieAnnSFAAddWiz.plist.csxml&quot; "
@@ -113,6 +113,54 @@
          <CommandLineArgument
             argument = "split"
             isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "train"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--test-split label"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--dev-split auto"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--max-time 30m"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--global-algorithm GN_DIRECT_L_RAND"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--verbosity 4"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--answer-analyzer text-unigram+id"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--answer-weighting unigram+id"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--global-function-relative-tolerance 0.0001"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--input &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Attic/plists/fritzie.plist.csxml&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--output &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Attic/plists/fritzie.plist.csxml.new&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--classifier-name &quot;Anyone - Fritzie Fritzshall&quot;"
+            isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
       <EnvironmentVariables>
