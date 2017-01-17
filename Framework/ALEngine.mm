@@ -226,9 +226,9 @@ using namespace jerome::npc;
    callWithArguments:@[ machine, eventName, data ]];
 }
 
-- (void)postEvent:(NSString* _Nonnull)eventName
-         withData:(NSDictionary<NSString*, NSString*>* _Nonnull)data
-        toMachine:(NSString* _Nonnull)machine
+- (void)postEventWithName:(NSString* _Nonnull)eventName
+                     data:(NSDictionary<NSString*, NSString*>* _Nonnull)data
+                toMachine:(NSString* _Nonnull)machine
 {
   __weak ALEngine* weakSelf = self;
   dispatch_async(self.queue, ^{

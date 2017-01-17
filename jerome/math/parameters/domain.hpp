@@ -55,6 +55,9 @@ namespace parameters {
 
 	List<RangeDomain::value_type> mean(const range_vector& ranges);
 	List<RangeDomain::value_type> random(const range_vector& ranges);
+  List<RangeDomain::value_type>
+  clumpToMean(const List<RangeDomain::value_type>& value,
+              const range_vector& ranges);
 
 }
 }

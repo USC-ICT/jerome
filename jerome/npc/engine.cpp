@@ -234,7 +234,10 @@ namespace jerome {
         auto rankerModel = ranker.model();
         auto KEY = jerome::detail::FactoryConst::PROVIDER_KEY;
         auto targetRankerID = params.rankerModel.at<String>(KEY);
-        if (targetRankerID) {
+        auto sourceRankerID = rankerModel.at<String>(KEY);
+        if (targetRankerID
+            && (!sourceRankerID || *sourceRankerID != *targetRankerID))
+        {
           auto record = params.rankerModel.at(State::PARAMETERS_KEY, Record());
           
           auto rankerResult = RankerFactory::sharedInstance()

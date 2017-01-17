@@ -184,6 +184,7 @@ map.emplace(#X, Algorithm(nlopt::X, true, true))
               break;
           }
         }
+        std::sort(list.begin(), list.end());
         return list;
       }
       
@@ -306,10 +307,8 @@ map.emplace(#X, Algorithm(nlopt::X, true, true))
 						callback(state);
           });
 
-          std::vector<double> o = math::parameters::mean(ranges);
-					std::vector<double> x;
-
-					x = inRanker.values();
+					std::vector<double> x = inRanker.values();
+          std::vector<double> o = math::parameters::clumpToMean(x, ranges);
 
 //          std::cout << x << std::endl;
 //          std::cout << obj.scoreValuePair(x) << std::endl;

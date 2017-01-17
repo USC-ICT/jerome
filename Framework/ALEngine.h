@@ -35,9 +35,11 @@ JEROME_FRAMEWORK_SYMBOL_EXPORT
 - (NSString* _Nullable)readDialogueManagerFromURL:(NSURL* _Nonnull)url
                                             error:(NSError*  _Nullable * _Nullable)outError;
 
-- (void)postEvent:(NSString* _Nonnull)eventName
-         withData:(NSDictionary<NSString*, NSString*>* _Nonnull)data
-        toMachine:(NSString* _Nonnull)machine;
+- (void)postEventWithName:(NSString* _Nonnull)name
+                     data:(NSDictionary<NSString*, NSString*>* _Nonnull)data
+                toMachine:(NSString* _Nonnull)machine
+NS_SWIFT_NAME(postEvent(name:data:toMachine:))
+;
 
 - (void)setEngineEventHandler:(ALEngineEventHandler _Nonnull)eventHandler;
 

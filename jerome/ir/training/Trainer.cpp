@@ -78,6 +78,14 @@ namespace jerome {
 					return x;
 				} catch (const nlopt::forced_stop& ex) {
 					return x;
+        } catch (const nlopt::roundoff_limited& ex) {
+          std::cerr
+            << std::endl
+            << "Optimization halted because roundoff errors limited progress."
+            << std::endl;
+          // NLOPT reference says that "the optimization still typically
+          // returns a useful result", so we return the value out.
+          return x;
 				}
       }
 

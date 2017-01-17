@@ -135,7 +135,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--verbosity 4"
+            argument = "--verbosity 0"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

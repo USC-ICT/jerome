@@ -59,7 +59,26 @@ namespace parameters {
 		return result;
 	}
 
-	List<RangeDomain::value_type> random(const range_vector& ranges)
+  List<RangeDomain::value_type>
+  clumpToMean(const List<RangeDomain::value_type>& value,
+              const range_vector& ranges)
+  {
+    List<RangeDomain::value_type> result;
+    for(List<RangeDomain::value_type>::size_type i = 0, n = value.size();
+        i < n; ++i)
+    {
+      const auto& r = ranges[i];
+      const auto& v = value[i];
+      if (v >= r.minimum() && v <= r.maximum()) {
+        result.push_back(v);
+      } else {
+        result.push_back((r.minimum()+r.maximum()) * 0.5);
+      }
+    }
+    return result;
+  }
+
+  List<RangeDomain::value_type> random(const range_vector& ranges)
 	{
 		List<RangeDomain::value_type> result;
     static jerome::random<RangeDomain::value_type> random_gen(0, 1);
