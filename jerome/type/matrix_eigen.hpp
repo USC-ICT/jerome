@@ -178,13 +178,13 @@ namespace jerome {
   }
     
   template <typename M, typename S>
-  inline void resize(M&& m, S s)
+  inline void resize(M& m, S s)
   {
     m.conservativeResize(s);
   }
 
   template <typename V>
-  inline void append_vector_to_vector(const V& src, V&& dst,
+  inline void append_vector_to_vector(const V& src, V& dst,
                                       const typename traits<V>::size_type& off)
   {
     for(auto i = src.begin(), e = src.end(); i != e; ++i) {
@@ -193,7 +193,7 @@ namespace jerome {
   }
 
   template <typename V>
-  inline void append_sparse_vector_to_sparse_vector(const V& src, V&& dst,
+  inline void append_sparse_vector_to_sparse_vector(const V& src, V& dst,
                                                     const typename traits<V>::size_type& off)
   {
     for (typename V::InnerIterator E(src); E; ++E) {
@@ -202,14 +202,14 @@ namespace jerome {
   }
 
   template <typename X, typename I, typename V>
-  inline auto set_value_at_index_in_vector(X&& x, const I& i, V&& v)
+  inline auto set_value_at_index_in_vector(X&& x, const I& i, V& v)
   -> decltype(v.coeffRef(i))
   {
     return v.coeffRef(i) = x;
   }
 
   template <typename I, typename V>
-  inline auto increment_value_at_index_in_vector(const I& i, V&& v)
+  inline auto increment_value_at_index_in_vector(const I& i, V& v)
   -> decltype(v.coeffRef(i))
   {
     return v.coeffRef(i) += 1;
@@ -230,7 +230,7 @@ namespace jerome {
   }
   
   template <typename A, typename B, typename C>
-  inline void sparse_outer_prod_add_to(const A& a, const B& b, C&& c) {
+  inline void sparse_outer_prod_add_to(const A& a, const B& b, C& c) {
     for (typename A::InnerIterator a_it(a); a_it; ++a_it) {
       const auto a_index = a_it.index();
       const auto a_value = a_it.value();
@@ -241,7 +241,7 @@ namespace jerome {
   }
 
   template <typename A, typename B, typename C>
-  inline void sparse_scale_add_to(const A& a, const B& b, C&& c) {
+  inline void sparse_scale_add_to(const A& a, const B& b, C& c) {
     for (typename A::InnerIterator a_it(a); a_it; ++a_it) {
       c(a_it.index()) += a_it.value() * b;
     }
