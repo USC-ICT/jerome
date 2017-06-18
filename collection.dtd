@@ -1,0 +1,47 @@
+<!--<!DOCTYPE COLLECTION [-->
+
+    <!ELEMENT database (utterances, links, domains, lattices, states, nextID)>
+    <!ATTLIST database version CDATA #IMPLIED>
+
+    <!ELEMENT utterances ANY>
+      <!ELEMENT utterance (field*)>
+      <!ATTLIST utterance id ID #REQUIRED>
+        <!ELEMENT field (#PCDATA)>
+        <!ATTLIST field name CDATA #REQUIRED>
+
+    <!ELEMENT links ANY>
+      <!ELEMENT link (utterances)>
+      <!ATTLIST link id ID #REQUIRED>
+      <!ATTLIST link value CDATA #REQUIRED>
+
+    <!ELEMENT domains (domain*)>
+      <!ELEMENT domain (utterances)>
+      <!ATTLIST domain id ID #REQUIRED>
+      <!ATTLIST domain name CDATA #REQUIRED>
+
+    <!ELEMENT lattices (lattice*)>
+      <!ELEMENT lattice (links)>
+      <!ATTLIST lattice id ID #REQUIRED>
+      <!ATTLIST lattice name CDATA #REQUIRED>
+
+    <!ELEMENT states (state*)>
+      <!ELEMENT state (classifier)>
+      <!ATTLIST state id ID #REQUIRED>
+      <!ATTLIST state answers IDREF #REQUIRED>
+      <!ATTLIST state links IDREF #REQUIRED>
+      <!ATTLIST state questions IDREF #REQUIRED>
+      <!ATTLIST state name CDATA #REQUIRED>
+
+    <!ELEMENT classifier (string|record|double)*>
+
+      <!ELEMENT string (#PCDATA)>
+      <!ATTLIST string name CDATA #REQUIRED>
+
+      <!ELEMENT double (#PCDATA)>
+      <!ATTLIST double name CDATA #REQUIRED>
+
+      <!ELEMENT record (string|record|double)*>
+      <!ATTLIST record name CDATA #REQUIRED>
+
+    <!ELEMENT nextID (#PCDATA)>
+<!--]>-->

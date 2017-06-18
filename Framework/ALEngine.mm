@@ -192,7 +192,7 @@ using namespace jerome::npc;
 
 - (ALUtterance* _Nullable)classifier:(NSString* _Nonnull)stateName
                            respondTo:(NSString* _Nonnull)question
-                               error:(NSError* _Nullable * _Nullable)outError
+                               error:(NSError* _Nullable __autoreleasing * _Nullable)outError
 {
   __block ALUtterance*  result = nil;
   dispatch_sync(self.queue, ^{

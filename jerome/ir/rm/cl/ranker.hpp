@@ -87,10 +87,10 @@ struct Ranker : public jerome::ir::rm::Ranker<Q, A, Ranker<Q,A,L>> {
     
     for(std::size_t i = 0, n = p_size.columnCount; i < n; ++i) {
       double sum = 0;
-      for(const auto link : links()) {
+      for(const auto& link : links()) {
         sum += qm(link.queryIndex, i);
       }
-      for(const auto link : links()) {
+      for(const auto& link : links()) {
         jerome::column(p, i) += jerome::column(dm, link.documentIndex)
           * (qm(link.queryIndex, i) / sum);
       }

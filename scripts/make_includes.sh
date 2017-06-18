@@ -27,9 +27,9 @@ for f in "${FILES_TO_INCLUDE[@]}"
 do
 	newName=`basename "$f"`
 	newName="${dst_dir}/$newName.inc"
-	echo -n 'u8R"=====(' > "$newName"
+	printf 'u8R"=====(' > "$newName"
 	cat "$f" >> "$newName"
-	echo -n ')====="' >> "$newName"
+	printf ')====="' >> "$newName"
 done
 
 
