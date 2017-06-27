@@ -1579,7 +1579,7 @@
 					};
 					62B316CA1D0F7B1100D2E4E4 = {
 						CreatedOnToolsVersion = 7.3.1;
-						LastSwiftMigration = 0830;
+						LastSwiftMigration = 0900;
 					};
 					62CA480C1BB0859E00A2AA7B = {
 						CreatedOnToolsVersion = 7.0;
@@ -2222,7 +2222,7 @@
 				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(BUILD_DIR)/../kstem/$(CONFIGURATION)";
+				LIBRARY_SEARCH_PATHS = "$(BUILD_DIR)/../kstem/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = "$(SRCROOT)/../build/osx/lib/libnlopt_cxx.a";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
@@ -2275,7 +2275,7 @@
 				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(BUILD_DIR)/../kstem/$(CONFIGURATION)";
+				LIBRARY_SEARCH_PATHS = "$(BUILD_DIR)/../kstem/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = "$(SRCROOT)/../build/osx/lib/libnlopt_cxx.a";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
@@ -2494,6 +2494,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(BUILD_DIR)/../kstem/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
 					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
@@ -2552,6 +2553,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(BUILD_DIR)/../kstem/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
 					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
@@ -2602,7 +2604,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -2637,7 +2640,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.usc.ict.Jerome-iosTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -2683,6 +2687,7 @@
 					/usr/include/libxml2,
 					"$(SRCROOT)/../build/ios/include",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = jerome;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
