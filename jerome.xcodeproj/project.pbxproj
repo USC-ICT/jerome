@@ -807,7 +807,6 @@
 			children = (
 				628E31CA1D67CFEB0073F882 /* libxml2.tbd */,
 				62B316F61D0FC01200D2E4E4 /* libnlopt_cxx.a */,
-				62B316EE1D0F7D2000D2E4E4 /* boost.framework */,
 				62B316EC1D0F7D0400D2E4E4 /* JavaScriptCore.framework */,
 				62B316E81D0F7CD100D2E4E4 /* libxml2.2.tbd */,
 				62FA58C31CC99E1600641E2C /* libxml2.2.tbd */,
@@ -969,6 +968,7 @@
 		627818AF1CC825D800C344E4 /* ios */ = {
 			isa = PBXGroup;
 			children = (
+				62B316EE1D0F7D2000D2E4E4 /* boost.framework */,
 			);
 			name = ios;
 			sourceTree = "<group>";
@@ -2061,13 +2061,13 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../build/osx/Frameworks\"",
+					"\"$(SRCROOT)/3rdParty/build/osx/Frameworks\"",
 				);
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
-					"$(SRCROOT)/../build/osx/include",
+					"$(SRCROOT)/3rdParty/build/osx/include",
 				);
 				PRODUCT_NAME = jerome;
 				SDKROOT = macosx;
@@ -2085,13 +2085,13 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../build/osx/Frameworks\"",
+					"\"$(SRCROOT)/3rdParty/build/osx/Frameworks\"",
 				);
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
-					"$(SRCROOT)/../build/osx/include",
+					"$(SRCROOT)/3rdParty/build/osx/include",
 				);
 				PRODUCT_NAME = jerome;
 				SDKROOT = macosx;
@@ -2206,7 +2206,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../build/osx/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/3rdParty/build/osx/Frameworks";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -2217,14 +2217,14 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
-					"$(SRCROOT)/../build/osx/include",
+					"$(SRCROOT)/3rdParty/build/osx/include",
 				);
 				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(BUILD_DIR)/../kstem/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "$(SRCROOT)/../build/osx/lib/libnlopt_cxx.a";
+				OTHER_LDFLAGS = "$(SRCROOT)/3rdParty/build/osx/lib/libnlopt_cxx.a";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
 				PRODUCT_NAME = Jerome;
 				SDKROOT = macosx;
@@ -2259,7 +2259,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../build/osx/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/3rdParty/build/osx/Frameworks";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -2270,14 +2270,14 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
-					"$(SRCROOT)/../build/osx/include",
+					"$(SRCROOT)/3rdParty/build/osx/include",
 				);
 				INFOPLIST_FILE = Framework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(BUILD_DIR)/../kstem/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "$(SRCROOT)/../build/osx/lib/libnlopt_cxx.a";
+				OTHER_LDFLAGS = "$(SRCROOT)/3rdParty/build/osx/lib/libnlopt_cxx.a";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
 				PRODUCT_NAME = Jerome;
 				SDKROOT = macosx;
@@ -2474,7 +2474,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../build/ios/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/3rdParty/build/ios/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2488,7 +2488,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
-					"$(SRCROOT)/../build/ios/include",
+					"$(SRCROOT)/3rdParty/build/ios/include",
 				);
 				INFOPLIST_FILE = Jerome.ios/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -2498,7 +2498,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
 					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
-					"$(SRCROOT)/../build/ios/lib/libnlopt_cxx.a",
+					"$(SRCROOT)/3rdParty/build/ios/lib/libnlopt_cxx.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
 				PRODUCT_NAME = Jerome;
@@ -2537,7 +2537,7 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../build/ios/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/3rdParty/build/ios/Frameworks";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -2547,7 +2547,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
-					"$(SRCROOT)/../build/ios/include",
+					"$(SRCROOT)/3rdParty/build/ios/include",
 				);
 				INFOPLIST_FILE = Jerome.ios/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -2557,7 +2557,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
 					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
-					"$(SRCROOT)/../build/ios/lib/libnlopt_cxx.a",
+					"$(SRCROOT)/3rdParty/build/ios/lib/libnlopt_cxx.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
 				PRODUCT_NAME = Jerome;

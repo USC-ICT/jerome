@@ -29,15 +29,15 @@
 # Current iPhone SDK
 : ${IPHONE_SDKVERSION:=`xcodebuild -showsdks | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
 # Specific iPhone SDK
-# : ${IPHONE_SDKVERSION:=8.1}
+: ${MIN_IOS_VERSION:=8.1}
 
 # Current OSX SDK
 : ${OSX_SDKVERSION:=`xcodebuild -showsdks | grep macosx | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
 # Specific OSX SDK
-# : ${OSX_SDKVERSION:=10.10}
+: ${MIN_OSX_VERSION:=10.10}
 
 : ${XCODE_ROOT:=`xcode-select -print-path`}
-: ${EXTRA_CPPFLAGS:="-fvisibility=hidden -fvisibility-inlines-hidden -DBOOST_AC_USE_PTHREADS -DBOOST_SP_USE_PTHREADS -g -DNDEBUG -std=c++11 -stdlib=libc++"}
+: ${EXTRA_CPPFLAGS:="-fvisibility=hidden -fvisibility-inlines-hidden -DBOOST_AC_USE_PTHREADS -DBOOST_SP_USE_PTHREADS -g -DNDEBUG -std=c++11 -stdlib=libc++ -Os"}
 
 # The EXTRA_CPPFLAGS definition works around a thread race issue in
 # shared_ptr. I encountered this historically and have not verified that
@@ -66,10 +66,23 @@
 : ${IOSFRAMEWORKDIR:="${IOSDIR}/framework"}
 : ${OSXFRAMEWORKDIR:="${OSXDIR}/framework"}
 : ${IOS_ARCHS:="armv7 armv7s arm64"}
-: ${OSX_ARCHS:="i386 x86_64"}
+: ${OSX_ARCHS:="x86_64"}
 
-BOOST_TARBALL=$TARBALLDIR/boost_$BOOST_VERSION2.tar.bz2
-BOOST_SRC=$SRCDIR/boost_${BOOST_VERSION2}
+OSX_ARCHS_OPTIONS=""
+for a in $OSX_ARCHS
+do
+	OSX_ARCHS_OPTIONS="$OSX_ARCHS_OPTIONS -arch $a"
+done
+
+IOS_ARCHS_OPTIONS=""
+for a in $IOS_ARCHS
+do
+	IOS_ARCHS_OPTIONS="$IOS_ARCHS_OPTIONS -arch $a"
+done
+
+BOOST_TARBALL="$TARBALLDIR/boost_$BOOST_VERSION2.tar.bz2"
+BOOST_SRC="$SRCDIR/boost_${BOOST_VERSION2}"
+JAM_FILE="$BOOST_SRC/tools/build/src/user-config.jam"
 
 #===============================================================================
 ARM_DEV_CMD="xcrun --sdk iphoneos"
@@ -101,7 +114,8 @@ cleanEverythingReadyToStart()
 {
     echo Cleaning everything before we start to build...
 
-    rm -rf "${BUILDDIR}" "${IOSDIR}" "${OSXDIR}"
+		echo "    rm -rf \"${BUILDDIR}\" \"${IOSDIR}\" \"${OSXDIR}\" \"${SRCDIR}\""
+    rm -rf "${BUILDDIR}" "${IOSDIR}" "${OSXDIR}" "${SRCDIR}"
 
     doneSection
 }
@@ -129,7 +143,7 @@ unpackBoost()
     [ -d $SRCDIR ]    || mkdir -p $SRCDIR
     [ -d $BOOST_SRC ] || ( cd $SRCDIR; tar xfj $BOOST_TARBALL )
     [ -d $BOOST_SRC ] && echo "    ...unpacked as $BOOST_SRC"
-    
+
     echo "patching matrix.hpp"
     pushd $SRCDIR
     patch -p1 < ../matrix.patch
@@ -142,7 +156,12 @@ unpackBoost()
 
 restoreBoost()
 {
-    cp $BOOST_SRC/tools/build/src/user-config.jam-bk $BOOST_SRC/tools/build/src/user-config.jam
+	if [ -f "${JAM_FILE}-bk" ]
+	then
+    mv "${JAM_FILE}-bk" "${JAM_FILE}"
+  else
+  	rm "${JAM_FILE}"
+  fi
 }
 
 #===============================================================================
@@ -151,21 +170,24 @@ updateBoost()
 {
     echo Updating boost into $BOOST_SRC...
 
-    cp $BOOST_SRC/tools/build/src/user-config.jam $BOOST_SRC/tools/build/src/user-config.jam-bk
+		if [ -f "${JAM_FILE}" ]
+		then
+	    cp "${JAM_FILE}" "${JAM_FILE}-bk"
+		fi
 
-    cat >> $BOOST_SRC/tools/build/src/user-config.jam <<EOF
+    cat >> "${JAM_FILE}" <<EOF
 using darwin : ${IPHONE_SDKVERSION}~iphone
-: $XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch armv7 -arch armv7s -arch arm64 $EXTRA_CPPFLAGS
+: $XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ ${IOS_ARCHS_OPTIONS} -mios-version-min=$MIN_IOS_VERSION $EXTRA_CPPFLAGS
 : <striper> <root>$XCODE_ROOT/Platforms/iPhoneOS.platform/Developer
 : <architecture>arm <target-os>iphone
 ;
 using darwin : ${IPHONE_SDKVERSION}~iphonesim
-: $XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch x86_64 $EXTRA_CPPFLAGS
+: $XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ ${OSX_ARCHS_OPTIONS} -mios-version-min=$MIN_IOS_VERSION $EXTRA_CPPFLAGS
 : <striper> <root>$XCODE_ROOT/Platforms/iPhoneSimulator.platform/Developer
 : <architecture>x86 <target-os>iphone
 ;
 using darwin : ${OSX_SDKVERSION}
-: $XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch x86_64 $EXTRA_CPPFLAGS
+: $XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ ${OSX_ARCHS_OPTIONS} -mmacosx-version-min=$MIN_OSX_VERSION $EXTRA_CPPFLAGS
 : <striper> <root>$XCODE_ROOT/Platforms/MacOSX.platform/Developer
 : <architecture>x86 <target-os>darwin
 ;
@@ -190,11 +212,13 @@ inventMissingHeaders()
 
 bootstrapBoost()
 {
-    cd $BOOST_SRC
+    pushd $BOOST_SRC
 
     BOOST_LIBS_COMMA=$(echo $BOOST_LIBS | sed -e "s/ /,/g")
     echo "Bootstrapping (with libs $BOOST_LIBS_COMMA)"
     ./bootstrap.sh --with-libraries=$BOOST_LIBS_COMMA
+
+		popd
 
     doneSection
 }
@@ -203,32 +227,36 @@ bootstrapBoost()
 
 buildBoost()
 {
-    cd $BOOST_SRC
+    pushd $BOOST_SRC
 
     echo Building Boost for iPhone
-    ./b2 -j16 --build-dir="${ARM_B2_DIR}" --stagedir="${ARM_B2_DIR}/stage" --prefix="$PREFIXDIR" toolset=darwin architecture=arm target-os=iphone macosx-version=iphone-${IPHONE_SDKVERSION} define=_LITTLE_ENDIAN link=static stage
+    ./b2 -j16 --build-dir="${ARM_B2_DIR}" --stagedir="${ARM_B2_DIR}/stage" --prefix="$PREFIXDIR" \
+    	toolset=darwin cxxflags="${EXTRA_CPPFLAGS}" architecture=arm \
+    	target-os=iphone macosx-version=iphone-${IPHONE_SDKVERSION} define=_LITTLE_ENDIAN link=static stage
     doneSection
 
     echo Installing Boost Headers
     # Install this one so we can copy the includes for the frameworks...
-    ./b2 -j16 --build-dir="${ARM_B2_DIR}" --stagedir="${ARM_B2_DIR}/stage" --prefix=$PREFIXDIR toolset=darwin architecture=arm target-os=iphone macosx-version=iphone-${IPHONE_SDKVERSION} define=_LITTLE_ENDIAN link=static install
+    ./b2 -j16 --build-dir="${ARM_B2_DIR}" --stagedir="${ARM_B2_DIR}/stage" --prefix=$PREFIXDIR toolset=darwin cxxflags="${EXTRA_CPPFLAGS}" architecture=arm target-os=iphone macosx-version=iphone-${IPHONE_SDKVERSION} define=_LITTLE_ENDIAN link=static install
     doneSection
 
     echo Building Boost for iPhoneSimulator
-    ./b2 -j16 --build-dir="${SIM_B2_DIR}" --stagedir="${SIM_B2_DIR}/stage" toolset=darwin-${IPHONE_SDKVERSION}~iphonesim architecture=x86 target-os=iphone macosx-version=iphonesim-${IPHONE_SDKVERSION} link=static stage
+    ./b2 -j16 --build-dir="${SIM_B2_DIR}" --stagedir="${SIM_B2_DIR}/stage" toolset=darwin-${IPHONE_SDKVERSION}~iphonesim cxxflags="${EXTRA_CPPFLAGS}" architecture=x86 target-os=iphone macosx-version=iphonesim-${IPHONE_SDKVERSION} link=static stage
     doneSection
 
     echo building Boost for OSX
-    ./b2 -j16 --build-dir="${OSX_B2_DIR}" --stagedir="${OSX_B2_DIR}/stage" toolset=clang cxxflags="-std=c++11 -stdlib=libc++ -arch i386 -arch x86_64" linkflags="-stdlib=libc++" link=static threading=multi macosx-version=${OSX_SDKVERSION} stage
+    ./b2 -j16 --build-dir="${OSX_B2_DIR}" --stagedir="${OSX_B2_DIR}/stage" toolset=darwin-${OSX_SDKVERSION} cxxflags="${EXTRA_CPPFLAGS} ${OSX_ARCHS_OPTIONS}" architecture=x86 linkflags="-stdlib=libc++" link=static threading=multi macosx-version=${OSX_SDKVERSION} stage
     doneSection
+
+    popd
 }
 
 #===============================================================================
 
 unpackArchive()
 {
-    BUILDDIR=$1
-    LIBNAME=$2
+    local BUILDDIR=$1
+    local LIBNAME=$2
 
     echo "Unpacking $LIBNAME"
 
@@ -252,7 +280,7 @@ scrunchOneLib()
 	ARCH="$3"
 	TARGET_DIR="$4"
 	$NAME="$5"
-	
+
 	echo ${ARCH}
 	$DEV_CMD lipo "${BUILD_DIR}/stage/lib/libboost_$NAME.a" -thin ${ARCH} -o "${TARGET_DIR}/${ARCH}/libboost_$NAME.a"
 	unpackArchive "${TARGET_DIR}/${ARCH}/obj" $NAME
@@ -261,23 +289,23 @@ scrunchOneLib()
 
 scrunchAllLibsTogetherInOneLibPerPlatform()
 {
-    cd $BOOST_SRC
+    pushd $BOOST_SRC
 
     rm "$IOS_BUILD_DIR/*/libboost.a"
     rm "$OSX_BUILD_DIR/*/libboost.a"
 
     # iOS Device
-	for ARCH in ${IOS_ARCHS}; do 
+	for ARCH in ${IOS_ARCHS}; do
 	    mkdir -p $IOS_BUILD_DIR/${ARCH}/obj
 	done
-	
+
     # iOS Simulator
-	for ARCH in ${OSX_ARCHS}; do 
+	for ARCH in ${OSX_ARCHS}; do
     	mkdir -p $IOS_BUILD_DIR/${ARCH}/obj
 	done
 
     # OSX
-	for ARCH in ${OSX_ARCHS}; do 
+	for ARCH in ${OSX_ARCHS}; do
     	mkdir -p $OSX_BUILD_DIR/${ARCH}/obj
 	done
 
@@ -292,27 +320,29 @@ scrunchAllLibsTogetherInOneLibPerPlatform()
 
         ALL_LIBS="$ALL_LIBS libboost_$NAME.a"
 
-		for ARCH in ${IOS_ARCHS}; do 
+		for ARCH in ${IOS_ARCHS}; do
 			scrunchOneLib "$ARM_DEV_CMD" "${ARM_B2_DIR}" "${ARCH}" "$IOS_BUILD_DIR" "$NAME"
 	    done
-	    
-		for ARCH in ${OSX_ARCHS}; do 
+
+		for ARCH in ${OSX_ARCHS}; do
 			scrunchOneLib "$SIM_DEV_CMD" "${SIM_B2_DIR}" "${ARCH}" "$IOS_BUILD_DIR" "$NAME"
 		done
 
-		for ARCH in ${OSX_ARCHS}; do 
+		for ARCH in ${OSX_ARCHS}; do
 			scrunchOneLib "$OSX_DEV_CMD" "${OSX_B2_DIR}" "${ARCH}" "$OSX_BUILD_DIR" "$NAME"
 		done
 
     done
+
+    popd
 }
 
 #===============================================================================
 buildFramework()
 {
     : ${1:?}
-    FRAMEWORKDIR=$1
-    BUILDDIR=$2
+    local FRAMEWORKDIR=$1
+    local BUILDDIR=$2
 
     VERSION_TYPE=Alpha
     FRAMEWORK_NAME=boost
@@ -379,8 +409,14 @@ EOF
 #===============================================================================
 cleanAfterBuild()
 {
-	rm -rf $PREFIXDIR
-	rm -rf $BUILDDIR
+	echo "Removing directories"
+	echo "rm -rf \"$PREFIXDIR\""
+	rm -rf "$PREFIXDIR"
+	echo "rm -rf \"$BUILDDIR\""
+	rm -rf "${BUILDDIR}"
+	echo "rm -rf \"$SRCDIR\""
+	rm -rf "${SRCDIR}"
+
     doneSection
 }
 

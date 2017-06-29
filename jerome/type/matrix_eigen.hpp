@@ -33,8 +33,8 @@
 #define EIGEN_SPARSEVECTOR_PLUGIN "jerome/type/matrix_eigen_sparse_vector_plugin.hpp"
 #endif
 
-#include <Eigen/Dense>
-#include <Eigen/Sparse>
+#include <eigen3/Eigen/Dense>
+#include <eigen3/Eigen/Sparse>
 
 #if __jerome_had_no_EIGEN_SPARSEVECTOR_PLUGIN__
 #undef EIGEN_SPARSEVECTOR_PLUGIN
