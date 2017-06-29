@@ -37,17 +37,19 @@ popd
 
 ## build eigen
 
-eigen_name="eigen-eigen-07105f7124f9"
-tar -xkf eigen-3.2.8.tar.bz2
-pushd "${eigen_name}"
-	mkdir "build"
-	pushd "build"
-		cmake .. -DCMAKE_INSTALL_PREFIX="${build_dir}/osx"
-		make install
+pushd "${root_dir}"
+	eigen_name="eigen-eigen-07105f7124f9"
+	tar -xkf eigen-3.2.8.tar.bz2
+	pushd "${eigen_name}"
+		mkdir "build"
+		pushd "build"
+			cmake .. -DCMAKE_INSTALL_PREFIX="${build_dir}/osx"
+			make install
+		popd
+		ln -sf "${build_dir}/osx/include/eigen3" "${build_dir}/ios/include/"
 	popd
-	ln -sf "${build_dir}/osx/include/eigen3" "${build_dir}/ios/include/eigen3"
+	rm -rf "${eigen_name}"
 popd
-rm -rf "${eigen_name}"
 
 ## build nlopt
 
