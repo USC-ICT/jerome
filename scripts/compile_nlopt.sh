@@ -1,8 +1,24 @@
 #! /bin/sh
 
-pushd $(dirname "${0}")
-root_dir=$(pwd -L)
-popd
+src_dir=$1
+dst_dir=$2
+
+found_nlopt="YES"
+for platform_name in ios osx
+do
+	if [ ! -f "${dst_dir}/${platform_name}/lib/libnlopt_cxx.a" ]
+	then
+		found_nlopt="NO"
+	fi
+done
+
+if [ "${found_nlopt}" = "YES" ]
+then
+	echo "Found nlopt binary"
+	exit
+fi
+
+pushd "${src_dir}"
 
 tar -xzf nlopt-2.3.tar.gz
 
@@ -20,7 +36,7 @@ tar -xzf nlopt-2.3.tar.gz
 : ${EXTRA_CPPFLAGS:="${EXTRA_CFLAGS} -std=c++11 -stdlib=libc++"}
 
 
-BASE_PREFIX="$root_dir/build"
+BASE_PREFIX="${dst_dir}"
 TOOLCHAIN="$XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain"
 
 configure_and_make () {
@@ -62,6 +78,8 @@ configure_and_make "${BASE_PREFIX}/osx" "-arch x86_64" \
 
 popd
 rm -rf nlopt-2.3
+
+popd
 
 #
 # configure_and_make "x86" "-arch x86_64" \

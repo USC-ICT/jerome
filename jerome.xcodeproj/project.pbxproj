@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		6280599B1F05D05900D6B08D /* 3rdParty */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 6280599E1F05D05900D6B08D /* Build configuration list for PBXAggregateTarget "3rdParty" */;
+			buildPhases = (
+				6280599F1F05D05F00D6B08D /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = 3rdParty;
+			productName = 3rdParty;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		6200F5591BAA04AD009828A4 /* evaluation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6200F5571BAA04AD009828A4 /* evaluation.cpp */; };
 		6200F72E1B83C87000CA121E /* ModelWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6200F72C1B83C87000CA121E /* ModelWriter.cpp */; };
@@ -205,6 +219,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 622EA2D11604D43600764667;
 			remoteInfo = jerome.osx;
+		};
+		628059A01F05D9D500D6B08D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62A2526E14365A860008E65F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6280599B1F05D05900D6B08D;
+			remoteInfo = 3rdParty;
+		};
+		628059A41F05D9EA00D6B08D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62A2526E14365A860008E65F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6280599B1F05D05900D6B08D;
+			remoteInfo = 3rdParty;
 		};
 		62A1279419A66AC500340BE9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1405,6 +1433,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				628059A11F05D9D500D6B08D /* PBXTargetDependency */,
 				62C41A941EF71CA50025C26D /* PBXTargetDependency */,
 			);
 			name = libjerome.osx;
@@ -1534,6 +1563,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				628059A51F05D9EA00D6B08D /* PBXTargetDependency */,
 				62B316BA1D0F7AF500D2E4E4 /* PBXTargetDependency */,
 			);
 			name = libjerome.ios;
@@ -1560,6 +1590,10 @@
 					};
 					627818B51CC831C300C344E4 = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = 4RX84Q9D57;
+					};
+					6280599B1F05D05900D6B08D = {
+						CreatedOnToolsVersion = 9.0;
 						DevelopmentTeam = 4RX84Q9D57;
 					};
 					62B09ACF1CECD18200A031CB = {
@@ -1605,6 +1639,7 @@
 				62B09ACF1CECD18200A031CB /* jerome_tool */,
 				62B316C11D0F7B1100D2E4E4 /* Jerome.ios */,
 				62B316CA1D0F7B1100D2E4E4 /* Jerome.iosTests */,
+				6280599B1F05D05900D6B08D /* 3rdParty */,
 			);
 		};
 /* End PBXProject section */
@@ -1693,6 +1728,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "#source \"${SRCROOT}/scripts/copy_headers.sh\"\n";
+		};
+		6280599F1F05D05F00D6B08D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/scripts/make_all.sh\"\n";
 		};
 		62B84DB51BB4B2AB009FD8E4 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1918,6 +1966,16 @@
 			isa = PBXTargetDependency;
 			target = 622EA2D11604D43600764667 /* libjerome.osx */;
 			targetProxy = 627818C61CC8330300C344E4 /* PBXContainerItemProxy */;
+		};
+		628059A11F05D9D500D6B08D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6280599B1F05D05900D6B08D /* 3rdParty */;
+			targetProxy = 628059A01F05D9D500D6B08D /* PBXContainerItemProxy */;
+		};
+		628059A51F05D9EA00D6B08D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6280599B1F05D05900D6B08D /* 3rdParty */;
+			targetProxy = 628059A41F05D9EA00D6B08D /* PBXContainerItemProxy */;
 		};
 		62A1279519A66AC500340BE9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2284,6 +2342,22 @@
 				SKIP_INSTALL = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		6280599C1F05D05900D6B08D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 4RX84Q9D57;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		6280599D1F05D05900D6B08D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 4RX84Q9D57;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -2752,6 +2826,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		6280599E1F05D05900D6B08D /* Build configuration list for PBXAggregateTarget "3rdParty" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6280599C1F05D05900D6B08D /* Debug */,
+				6280599D1F05D05900D6B08D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		62A2527114365A860008E65F /* Build configuration list for PBXProject "jerome" */ = {
 			isa = XCConfigurationList;
