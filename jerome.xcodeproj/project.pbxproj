@@ -2752,14 +2752,14 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../build/ios/Frameworks\"",
+					"\"$(SRCROOT)/3rdParty/build/ios/Frameworks\"",
 				);
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
-					"$(SRCROOT)/../build/ios/include",
+					"$(SRCROOT)/3rdParty/build/ios/include",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = jerome;
@@ -2773,14 +2773,14 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../build/ios/Frameworks\"",
+					"\"$(SRCROOT)/3rdParty/build/ios/Frameworks\"",
 				);
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
-					"$(SRCROOT)/../build/ios/include",
+					"$(SRCROOT)/3rdParty/build/ios/include",
 				);
 				PRODUCT_NAME = jerome;
 				SDKROOT = iphoneos;
@@ -2834,6 +2834,7 @@
 				6280599D1F05D05900D6B08D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		62A2527114365A860008E65F /* Build configuration list for PBXProject "jerome" */ = {
 			isa = XCConfigurationList;
