@@ -4,7 +4,7 @@ src_dir=$1
 dst_dir=$2
 
 found_eigen="YES"
-for platform_name in ios osx
+for platform_name in iphoneos iphonesimulator macosx
 do
 	if [ ! -e "${dst_dir}/${platform_name}/include/eigen3" ]
 	then
@@ -24,16 +24,22 @@ pushd "${src_dir}"
 	pushd "${eigen_name}"
 		mkdir "build"
 		pushd "build"
-			cmake .. -DCMAKE_INSTALL_PREFIX="${dst_dir}/osx"
+			cmake .. -DCMAKE_INSTALL_PREFIX="${dst_dir}/macosx"
 			make install
 		popd
 
-		if [ ! -d "${dst_dir}/ios/include/" ]
-		then
-			mkdir -p "${dst_dir}/ios/include/"
-		fi
+		for platform_name in iphoneos iphonesimulator
+		do
+			if [ ! -d "${dst_dir}/${platform_name}/include/" ]
+			then
+				mkdir -p "${dst_dir}/${platform_name}/include/"
+			fi
 
-		ln -sf "${dst_dir}/osx/include/eigen3" "${dst_dir}/ios/include/"
+			pushd "${dst_dir}/${platform_name}/include/"
+			ln -sf "../../macosx/include/eigen3"
+			popd
+		done
+
 	popd
 	rm -rf "${eigen_name}"
 popd

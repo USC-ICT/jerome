@@ -4,7 +4,7 @@ src_dir=$1
 dst_dir=$2
 
 found_nlopt="YES"
-for platform_name in ios osx
+for platform_name in iphoneos iphonesimulator macosx
 do
 	if [ ! -f "${dst_dir}/${platform_name}/lib/libnlopt_cxx.a" ]
 	then
@@ -68,11 +68,15 @@ configure_and_make () {
 
 pushd nlopt-2.3
 
-configure_and_make "${BASE_PREFIX}/ios" "-arch armv7 -arch armv7s -arch arm64" \
+configure_and_make "${BASE_PREFIX}/iphoneos" "-arch armv7 -arch armv7s -arch arm64" \
 	"iPhoneOS" ${IPHONE_SDKVERSION} "-mios-version-min=${MIN_IOS_VERSION}" \
 	"--host=arm-apple-darwin --target=arm-apple-darwin"
 
-configure_and_make "${BASE_PREFIX}/osx" "-arch x86_64" \
+configure_and_make "${BASE_PREFIX}/iphonesimulator" "-arch x86_64" \
+	"iPhoneSimulator" ${IPHONE_SDKVERSION} "-mios-version-min=${MIN_IOS_VERSION}" \
+	"--host=x86-apple-darwin"
+
+configure_and_make "${BASE_PREFIX}/macosx" "-arch x86_64" \
 	"MacOSX" ${OSX_SDKVERSION} "-mmacosx-version-min=${MIN_OSX_VERSION}" \
 	""
 
