@@ -126,7 +126,7 @@ namespace jerome {
 	namespace filter {
 
 		/**
-		 * filter out tokens that do not contain alphanumeric characters, i.e., punctuation
+		 * filter out tokens that do not contain any alphanumeric characters, i.e., punctuation
 		 */
 		class Alphanumeric : public TokenFilter {
 		public:
