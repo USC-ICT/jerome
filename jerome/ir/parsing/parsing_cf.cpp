@@ -169,9 +169,9 @@ namespace jerome {
 		 
 		for (CFIndex cnt = 0; cnt < length; ++cnt) {
 			 UniChar ch = CFStringGetCharacterFromInlineBuffer(&inlineBuffer, cnt);
-			 if (!CFCharacterSetIsCharacterMember(inCharSet, ch)) return false;
+			 if (CFCharacterSetIsCharacterMember(inCharSet, ch)) return true;
 		}
-		return true;
+		return false;
 	}
 
 	bool CharSet::getNextToken(Token& ioToken) {

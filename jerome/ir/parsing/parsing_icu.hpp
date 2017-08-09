@@ -135,7 +135,7 @@ namespace jerome {
 		};
 		
 		/**
-		 * filter out tokens that do not contain alpha characters, i.e., numbers & punctuation
+		 * filter out tokens that do not contain any alpha characters, i.e., numbers & punctuation
 		 */
 		class Alpha : public TokenFilter {
 		public:

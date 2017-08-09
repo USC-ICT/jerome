@@ -26,6 +26,7 @@
 
 #include <boost/algorithm/algorithm.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/cxx11/one_of.hpp>
 
 namespace jerome { 
 
@@ -63,7 +64,7 @@ namespace jerome {
 		while (TokenFilter::getNextToken(ioToken)) {
       // we assume utf8 internal encoding
       auto inp = boost::locale::conv::utf_to_utf<wchar_t>(ioToken.text());
-      if (boost::algorithm::all(inp, boost::algorithm::is_alnum(locale())))
+      if (boost::algorithm::one_of(inp, boost::algorithm::is_alnum(locale())))
         return true;
 		}
 		return false;
@@ -75,7 +76,7 @@ namespace jerome {
 	bool Alpha::getNextToken(Token& ioToken) {
 		while (TokenFilter::getNextToken(ioToken)) {
       auto inp = boost::locale::conv::utf_to_utf<wchar_t>(ioToken.text());
-      if (boost::algorithm::all(inp, boost::algorithm::is_alpha(locale())))
+      if (boost::algorithm::one_of(inp, boost::algorithm::is_alpha(locale())))
         return true;
 		}
 		return false;

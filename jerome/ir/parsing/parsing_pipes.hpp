@@ -51,10 +51,10 @@ namespace jerome { namespace ir {
 
 				TokenStream	stream(new Tokenizer(args[_string],
                                          args[_locale | jerome::Locale()]));
-				stream	= new Alphanumeric(stream);
 				stream	= new Lowercase(stream);
 				stream	= new Apostrophe(stream);
-				
+        stream  = new Alphanumeric(stream);
+
 				String dictionaryPath				=
           args[_dictionary | Dictionary::defaultDictionaryName()];
 				if (dictionaryPath.length())

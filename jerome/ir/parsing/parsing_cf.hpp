@@ -95,7 +95,7 @@ namespace jerome {
 	namespace filter {
 
 		/**
-		 * filter out tokens that do not contain alphanumeric characters, i.e., punctuation
+		 * filter out tokens that do not contain any characters from the given set, i.e., punctuation
 		 */
 		class CharSet : public TokenFilter {
 			CFCharacterSetRef	mCharSet;
@@ -105,7 +105,7 @@ namespace jerome {
 		};
 
 		/**
-		 * filter out tokens that do not contain alphanumeric characters, i.e., punctuation
+		 * filter out tokens that do not contain any alphanumeric characters, i.e., punctuation
 		 */
 		class Alphanumeric : public CharSet {
 		public:
@@ -113,7 +113,7 @@ namespace jerome {
 		};
 		
 		/**
-		 * filter out tokens that do not contain alpha characters, i.e., numbers & punctuation
+		 * filter out tokens that do not contain any alpha characters, i.e., numbers & punctuation
 		 */
 		class Alpha : public CharSet {
 		public:
