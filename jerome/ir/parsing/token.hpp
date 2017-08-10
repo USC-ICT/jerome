@@ -28,73 +28,108 @@ namespace jerome {
 	class Locale;
 	
 	namespace ir {
-		
+
+    namespace i {
+      class Token {
+      public:
+        typedef uint32_t  size_type;
+
+      private:
+        size_type    mOffset;
+        size_type    mLength;
+        uint32_t    mType;
+
+      public:
+
+        Token(size_type inOffset = 0, size_type inLength = 0, uint32_t inType = 0) :
+        mOffset(inOffset), mLength(inLength), mType(inType) {}
+
+        Token(const Token& inSource)
+        : mOffset(inSource.mOffset)
+        , mLength(inSource.mLength)
+        , mType(inSource.mType)
+        {}
+
+        Token(Token&& inSource)
+        : mOffset(inSource.mOffset)
+        , mLength(inSource.mLength)
+        , mType(inSource.mType)
+        {}
+
+        Token& operator = (const Token& inSource)
+        {
+          mOffset = inSource.mOffset;
+          mLength = inSource.mLength;
+          mType  = inSource.mType;
+          return *this;
+        }
+
+        Token& operator = (Token&& inSource)
+        {
+          mOffset = inSource.mOffset;
+          mLength = inSource.mLength;
+          mType  = inSource.mType;
+          return *this;
+        }
+
+        size_type    offset()   const { return mOffset; }
+        size_type    length()   const { return mLength; }
+        size_type    end()    const { return offset() + length(); }
+        uint32_t    type()     const { return mType; }
+
+        size_type&    offset()   { return mOffset; }
+        size_type&    length()   { return mLength; }
+        uint32_t&    type()     { return mType; }
+
+        Token& operator += (const Token& inToken);
+      };
+
+    }
+
 		// -----------------------------------------------------------------------------
 		
-		class Token {
-		public:
-			typedef uint32_t	size_type;
-			
-		private:
+    class Token: i::Token {
 			String			mText;
-			size_type		mOffset;
-			size_type		mLength;
-			uint32_t		mType;
-			
+      typedef i::Token super_type;
+
 		public:
 			
 			Token(const String& inText = "", size_type inOffset = 0, size_type inLength = 0, uint32_t inType = 0) :
-			mText(inText), mOffset(inOffset), mLength(inLength), mType(inType) {}
+			super_type(inOffset, inLength, inType), mText(inText) {}
 			
 			Token(const String::value_type* inText, size_type inOffset, size_type inLength, uint32_t inType = 0) :
-			mText(inText+inOffset, inLength), mOffset(inOffset), mLength(inLength), mType(inType) {}
+			super_type(inOffset, inLength, inType), mText(inText+inOffset, inLength) {}
 			
 			Token(const String::value_type* inText, size_type inTextLength, size_type inOffset, size_type inLength, uint32_t inType = 0) :
-			mText(inText, inTextLength), mOffset(inOffset), mLength(inLength), mType(inType) {}
+			super_type(inOffset, inLength, inType), mText(inText, inTextLength) {}
 			
 			Token(const Token& inSource)
-			: mText(inSource.mText)
-			, mOffset(inSource.mOffset)
-			, mLength(inSource.mLength)
-			, mType(inSource.mType)
+			: super_type(inSource)
+      , mText(inSource.mText)
 			{}
 			
 			Token(Token&& inSource)
-			: mText(std::move(inSource.mText))
-			, mOffset(inSource.mOffset)
-			, mLength(inSource.mLength)
-			, mType(inSource.mType)
+      : super_type(inSource)
+			, mText(std::move(inSource.mText))
 			{}
 			
 			Token& operator = (const Token& inSource)
 			{
+        super_type::operator = (inSource);
 				mText	= inSource.mText;
-				mOffset = inSource.mOffset;
-				mLength = inSource.mLength;
-				mType	= inSource.mType;
 				return *this;
 			}
 			
 			Token& operator = (Token&& inSource)
 			{
+        super_type::operator = (inSource);
 				mText	= std::move(inSource.mText);
-				mOffset = inSource.mOffset;
-				mLength = inSource.mLength;
-				mType	= inSource.mType;
 				return *this;
 			}
 			
 			const String&	text() 		const { return mText; }
-			size_type		offset() 	const { return mOffset; }
-			size_type		length() 	const { return mLength; }
-			size_type		end()		const { return offset() + length(); }
-			uint32_t		type() 		const { return mType; }
-			
 			String&			text()		{ return mText; }
-			size_type&		offset() 	{ return mOffset; }
-			size_type&		length() 	{ return mLength; }
-			uint32_t&		type() 		{ return mType; }
-			
+
 			Token& operator += (const Token& inToken);
 		};
 		
@@ -102,22 +137,19 @@ namespace jerome {
 
 //    static const jerome::Locale  kDefaultLocale;
 
-    template <class T>
 		struct TokenStream {
-      typedef T token_type;
-      optional<token_type> nextToken() { return optional<token_type>(); }
+//      optional<token_type> nextToken() { return optional<token_type>(); }
 //			const jerome::Locale& locale() const { return kDefaultLocale; }
 		};
 
-    template <class T, class TS>
-		class TokenFilter {
-      typedef T token_type;
+    template <class TS>
+    class TokenFilter: TokenStream {
       typedef TS source_type;
 			source_type		mSource;
 		public:
 			explicit TokenFilter(source_type inSource) : mSource(inSource) {};
 			source_type& source() { return mSource; }
-      optional<token_type> nextToken() { return optional<token_type>(); }
+      // optional<token_type> nextToken() { return optional<token_type>(); }
 			const jerome::Locale& locale() const { return source().locale(); }
 		};
 	
