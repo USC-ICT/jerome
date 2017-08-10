@@ -99,44 +99,25 @@ namespace jerome {
 		};
 		
 		// -----------------------------------------------------------------------------
-		
-		struct TokenStream;
-		
-		namespace i {
-			
-			struct TokenStreamImpl {
-				virtual ~TokenStreamImpl() {}
-				virtual bool getNextToken(Token& ioToken) = 0;
-				virtual const jerome::Locale& locale() const { return kDefaultLocale; }
-				void run() {
-					Token tok;
-					while (getNextToken(tok));
-				}
-			private:
-        // STATIC
-				static const jerome::Locale	kDefaultLocale;
-			};
-			
-		}
-		
-		struct TokenStream : public ReferenceClassInterface<i::TokenStreamImpl> {
-			typedef ReferenceClassInterface<i::TokenStreamImpl> parent_type;
-			TokenStream() = default;
-			TokenStream(i::TokenStreamImpl* inSource) : parent_type(shared_ptr<implementation_type>(inSource)) {}
-			bool getNextToken(Token& ioToken) { return implementation().getNextToken(ioToken); }
-			const jerome::Locale& locale() const { return implementation().locale(); }
-			void run() { implementation().run(); }
+
+//    static const jerome::Locale  kDefaultLocale;
+
+    template <class T>
+		struct TokenStream {
+      typedef T token_type;
+      optional<token_type> nextToken() { return optional<token_type>(); }
+//			const jerome::Locale& locale() const { return kDefaultLocale; }
 		};
-		
-		// -----------------------------------------------------------------------------
-		
-		class TokenFilter : public i::TokenStreamImpl {
-			jerome::ir::TokenStream		mSource;
+
+    template <class T, class TS>
+		class TokenFilter {
+      typedef T token_type;
+      typedef TS source_type;
+			source_type		mSource;
 		public:
-			explicit TokenFilter(jerome::ir::TokenStream inSource) : mSource(inSource) {};
-			jerome::ir::TokenStream& source() { return mSource; }
-			const jerome::ir::TokenStream& source() const { return mSource; }
-			bool getNextToken(Token& ioToken) { return source().getNextToken(ioToken); }
+			explicit TokenFilter(source_type inSource) : mSource(inSource) {};
+			source_type& source() { return mSource; }
+      optional<token_type> nextToken() { return optional<token_type>(); }
 			const jerome::Locale& locale() const { return source().locale(); }
 		};
 	

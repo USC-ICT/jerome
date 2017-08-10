@@ -31,8 +31,9 @@ namespace jerome {
 		namespace filter {
 			
 			/**
-			 * convert toke to lowercase
+			 * convert token to lowercase
 			 */
+      
 			class Lowercase : public TokenFilter {
 			public:
 				explicit Lowercase(TokenStream inSource) : TokenFilter(inSource) {};
