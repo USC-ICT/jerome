@@ -293,7 +293,8 @@ namespace filter {
 	
 		if (mDictionary.get() == nullptr) return true;
 
-		Storage::map_type::const_iterator	entry	= mDictionary->map().find(ioToken.text().c_str());
+		Storage::map_type::const_iterator entry =
+      mDictionary->map().find(ioToken.text().c_str());
 		if (entry == mDictionary->map().end()) return true;
 		
 		ioToken.text() = entry->second;

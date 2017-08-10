@@ -91,7 +91,8 @@ namespace jerome {
 	Tokenizer::Tokenizer(const String* inString, jerome::Locale const & inLocale) 
 	: mLocale(inLocale)
 	{
-		init(CFStringCreateWithCString(kCFAllocatorDefault, inString->c_str(), kCFStringEncodingUTF8));
+		init(CFStringCreateWithCString(kCFAllocatorDefault, inString->c_str(),
+                                   kCFStringEncodingUTF8));
 	}
 
 	Tokenizer::~Tokenizer() {
@@ -102,8 +103,11 @@ namespace jerome {
 	void 
 	Tokenizer::init(CFStringRef inString) {
 		mString	= inString;
-		mTokenizer	= CFStringTokenizerCreate(kCFAllocatorDefault, mString, 
-			CFRangeMake(0, CFStringGetLength(mString)), kCFStringTokenizerUnitWordBoundary, locale().locale());
+		mTokenizer = CFStringTokenizerCreate(kCFAllocatorDefault,
+                                         mString,
+                                         CFRangeMake(0, CFStringGetLength(mString)),
+                                         kCFStringTokenizerUnitWordBoundary,
+                                         locale().locale());
 	}
 
 	bool
@@ -113,9 +117,9 @@ namespace jerome {
 		
 		CFRange		range		= CFStringTokenizerGetCurrentTokenRange(mTokenizer);
 		CFStringRef	substring	= CFStringCreateWithSubstring(kCFAllocatorDefault, mString, range);
-		ioToken					= Token(stringFromCFString(substring),
-													(Token::size_type)range.location, // silence warnings
-													(Token::size_type)range.length);
+		ioToken = Token(stringFromCFString(substring),
+                    (Token::size_type)range.location, // silence warnings
+                    (Token::size_type)range.length);
 		CFRelease(substring);
 		return true;
 	}
