@@ -114,7 +114,6 @@
 		62B09AD31CECD18200A031CB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62B09AD21CECD18200A031CB /* main.cpp */; };
 		62B09AD91CECD1AA00A031CB /* libjerome.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D21604D43600764667 /* libjerome.a */; };
 		62B09ADA1CECD1BA00A031CB /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58C31CC99E1600641E2C /* libxml2.2.tbd */; };
-		62B09ADB1CECD1BF00A031CB /* libnlopt_cxx.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 62176AD11A54741A000F745D /* libnlopt_cxx.0.dylib */; };
 		62B316C51D0F7B1100D2E4E4 /* Jerome.h in Headers */ = {isa = PBXBuildFile; fileRef = 62B316C41D0F7B1100D2E4E4 /* Jerome.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		62B316CC1D0F7B1100D2E4E4 /* Jerome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62B316C21D0F7B1100D2E4E4 /* Jerome.framework */; };
 		62B316D11D0F7B1100D2E4E4 /* Jerome_iosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62B316D01D0F7B1100D2E4E4 /* Jerome_iosTests.swift */; };
@@ -166,6 +165,8 @@
 		62D56AF81987069400F09A32 /* cross_entropy_jelinek_mercer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62D56AF11987069400F09A32 /* cross_entropy_jelinek_mercer.cpp */; };
 		62D56AF91987069400F09A32 /* jelinek_mercer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62D56AF51987069400F09A32 /* jelinek_mercer.cpp */; };
 		62D56AFA1987069400F09A32 /* jelinek_mercer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62D56AF51987069400F09A32 /* jelinek_mercer.cpp */; };
+		62DDE2FE1F699F48002B1DE8 /* libnlopt_cxx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62DDE2FD1F699F48002B1DE8 /* libnlopt_cxx.a */; };
+		62DDE3001F699F66002B1DE8 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62DDE2FF1F699F66002B1DE8 /* boost.framework */; };
 		62E4E3A51B5DFA9A008440CC /* platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62E4E3A31B5DFA9A008440CC /* platform.cpp */; };
 		62E4E3A61B5DFA9A008440CC /* platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62E4E3A31B5DFA9A008440CC /* platform.cpp */; };
 		62E830E71B64752500847135 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62E830E51B64752400847135 /* engine.cpp */; };
@@ -601,6 +602,8 @@
 		62D56AF51987069400F09A32 /* jelinek_mercer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jelinek_mercer.cpp; sourceTree = "<group>"; };
 		62D56AF61987069400F09A32 /* jelinek_mercer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = jelinek_mercer.hpp; sourceTree = "<group>"; };
 		62D8A8291BF699F9005355B0 /* regex.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = regex.hpp; sourceTree = "<group>"; };
+		62DDE2FD1F699F48002B1DE8 /* libnlopt_cxx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnlopt_cxx.a; path = 3rdParty/build/macosx/lib/libnlopt_cxx.a; sourceTree = SOURCE_ROOT; };
+		62DDE2FF1F699F66002B1DE8 /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = 3rdParty/build/macosx/Frameworks/boost.framework; sourceTree = SOURCE_ROOT; };
 		62DF0D1218ADC89400A5F2AF /* ranker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ranker.hpp; sourceTree = "<group>"; };
 		62E4E3A31B5DFA9A008440CC /* platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = platform.cpp; sourceTree = "<group>"; };
 		62E4E3A41B5DFA9A008440CC /* platform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = platform.hpp; sourceTree = "<group>"; };
@@ -683,13 +686,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62DDE3001F699F66002B1DE8 /* boost.framework in Frameworks */,
+				62DDE2FE1F699F48002B1DE8 /* libnlopt_cxx.a in Frameworks */,
 				6209AE291D7E6F0500697B76 /* libkstem.a in Frameworks */,
 				6209AE281D7E6EFC00697B76 /* libxslt.tbd in Frameworks */,
 				6209AE271D7E6EEF00697B76 /* JavaScriptCore.framework in Frameworks */,
 				6209AE251D7E6EEA00697B76 /* CoreFoundation.framework in Frameworks */,
 				62B09AD91CECD1AA00A031CB /* libjerome.a in Frameworks */,
 				62B09ADA1CECD1BA00A031CB /* libxml2.2.tbd in Frameworks */,
-				62B09ADB1CECD1BF00A031CB /* libnlopt_cxx.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -825,6 +829,8 @@
 		622EA2D31604D43600764667 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				62DDE2FF1F699F66002B1DE8 /* boost.framework */,
+				62DDE2FD1F699F48002B1DE8 /* libnlopt_cxx.a */,
 				6280598F1F05A35D00D6B08D /* boost.framework */,
 				62FA58C31CC99E1600641E2C /* libxml2.2.tbd */,
 				627818AF1CC825D800C344E4 /* ios */,
@@ -2475,15 +2481,21 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_LINK_OBJC_RUNTIME = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../build/osx/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/3rdParty/build/$(PLATFORM_NAME)/Frameworks",
+					"$(PROJECT_DIR)/3rdParty/build/macosx/Frameworks",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
-					"$(SRCROOT)/../build/osx/include",
+					"$(SRCROOT)/3rdParty/build/$(PLATFORM_NAME)/include",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
-				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../build/osx/lib";
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/3rdParty/build/$(PLATFORM_NAME)/lib",
+					"$(PROJECT_DIR)/3rdParty/build/macosx/lib",
+				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = jerome;
 				SDKROOT = macosx;
@@ -2499,15 +2511,21 @@
 				CLANG_LINK_OBJC_RUNTIME = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../build/osx/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/3rdParty/build/$(PLATFORM_NAME)/Frameworks",
+					"$(PROJECT_DIR)/3rdParty/build/macosx/Frameworks",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
-					"$(SRCROOT)/../build/osx/include",
+					"$(SRCROOT)/3rdParty/build/$(PLATFORM_NAME)/include",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
-				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../build/osx/lib";
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/3rdParty/build/$(PLATFORM_NAME)/lib",
+					"$(PROJECT_DIR)/3rdParty/build/macosx/lib",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = jerome;
 				SDKROOT = macosx;
