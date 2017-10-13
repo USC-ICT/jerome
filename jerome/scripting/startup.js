@@ -65,6 +65,7 @@ if (!Array.prototype.shuffle) {
   };
 }
 
+/* warning. This will break if one argument name is a prefix of another! */
 String.prototype.format = function() {
   s = this;
   if (arguments.length == 1 && arguments[0].constructor == Object) {
@@ -78,6 +79,51 @@ String.prototype.format = function() {
   }
   return s;
 };
+
+String.prototype.formatXML = function() {
+  s = this;
+  if (arguments.length == 1 && arguments[0].constructor == Object) {
+    for (var key in arguments[0]) {
+      s = s.replace(new RegExp("\\$" + key, "g"), arguments[0][key].escapeXML());
+    }
+  } else {
+    for (var i = 0; i < arguments.length; i++) {
+      s = s.replace(new RegExp("\\$" + (i + 1), "g"), arguments[i].escapeXML());
+    }
+  }
+  return s;
+};
+
+String.prototype.escapeJS = function() {
+  return this.replace(
+    new RegExp("[\\'\"]", "g"),
+    function (c) {
+      switch (c) {
+        case "\\": return "\\\\";
+        case "'": return "\\'";
+        case "\"": return "\\\"";
+      }
+    });
+}
+
+String.prototype.jsStringLiteral = function() {
+  return "'" + this.escapeJS() + "'";
+}
+
+String.prototype.escapeXML = function() {
+  return this.replace(
+    new RegExp("[<>&'\"]", "g"),
+    function (c) {
+      switch (c) {
+        case "<": return "&lt;";
+        case ">": return "&gt;";
+        case "&": return "&amp;";
+        case "'": return "&apos;";
+        case "\"": return "&quot;";
+      }
+    });
+}
+
 
 var _send = function(event, options, fnRaise) {
   var callback, timeoutId,

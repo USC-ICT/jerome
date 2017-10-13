@@ -88,18 +88,18 @@ Compiler.prototype = {
         '	<transition event="$eventID.*" target="$nextID">\n' +
         '	</transition>\n' +
         '</state>\n' +
-        '\n').format({
+        '\n').formatXML({
         thisID : thisID,
         nextID : this._nextID(),
         eventID : thisID,
         eventName : this.sendUtteranceEventName,
         eventType : jeromeEventType,
         eventTarget : jeromeEventTarget,
-        expr : inUtteranceID,
-        complete : thisID + ".complete",
-        interrupted : thisID + ".interrupted",
-        error : thisID + ".error",
-        name : this.name
+        expr : inUtteranceID.escapeJS(),
+        complete : (thisID + ".complete").escapeJS(),
+        interrupted : (thisID + ".interrupted").escapeJS(),
+        error : (thisID + ".error").escapeJS(),
+        name : this.name.escapeJS()
       });
 
     } else {
@@ -139,24 +139,13 @@ Compiler.prototype = {
       '		<cancel sendid="$eventID"/>\n'+
       '	</onexit>\n' +
       '</state>\n' +
-      '\n').format({
+      '\n').formatXML({
                    thisID : thisID,
                    nextID : this._nextID(),
                    eventName : thisID + '.tr',
                    delay : (Math.round(inDelaySeconds * 1000) + 'ms'),
                    eventID : thisID
                    });
-  },
-
-  _escape : function(s) {
-    s = s.replace("&", "&amp;");
-    s = s.replace("<", "&lt;");
-    s = s.replace(">", "&gt;");
-    s = s.replace("\r", "\\r");
-    s = s.replace("\n", "\\n");
-    s = s.replace("'", "\\&apos;");
-    s = s.replace("\"", "&quot;");
-    return s;
   },
 
   send : function(inCommand, inEvent) {
@@ -186,18 +175,18 @@ Compiler.prototype = {
       '	<transition event="$eventID.*" target="$nextID">\n' +
       '	</transition>\n' +
       '</state>\n' +
-      '\n').format({
+      '\n').formatXML({
       thisID : thisID,
       nextID : this._nextID(),
-      content : this._escape(inCommand),
+      content : inCommand.escapeJS(),
       eventID : thisID,
       eventName : this.sendCommandEventName,
       eventType : jeromeEventType,
       eventTarget : jeromeEventTarget,
-      complete : thisID + ".complete",
-      interrupted : thisID + ".interrupted",
-      error : thisID + ".error",
-      name : this.name
+      complete : (thisID + ".complete").escapeJS(),
+      interrupted : (thisID + ".interrupted").escapeJS(),
+      error : (thisID + ".error").escapeJS(),
+      name : this.name.escapeJS()
     });
 
   },
@@ -212,7 +201,7 @@ Compiler.prototype = {
                   '<state id="$thisID">\n' +
                   '	<transition target="final"/>\n' +
                   '</state>\n' +
-                  '\n').format({ thisID : thisID });
+                  '\n').formatXML({ thisID : thisID });
 
     thisID  = this._thisID();
 
@@ -238,7 +227,7 @@ Compiler.prototype = {
             '		<onentry>\n'+
             '     <send id="$eventID" event="$eventName"\n'+
             '					type="$eventType" target="$eventTarget">\n'+
-            '       <param name="machineName" expr="\'$thisName\'"/>\n'+
+            '       <param name="machineName" expr="\'$stringThisName\'"/>\n'+
             '     </send>\n'+
             '			<script>\n'+
             '				deleteStateMachine("$thisName");\n'+
@@ -246,12 +235,13 @@ Compiler.prototype = {
             '		</onentry>\n'+
             '	</state>\n' +
             '</scxml>\n' +
-            '\n').format({
+            '\n').formatXML({
                          eventID : thisID,
                          eventName : this.machineDoneEventName,
                          eventType : jeromeEventType,
                          eventTarget : jeromeEventTarget,
-                         thisName : this.name
+                         thisName : this.name,
+                         stringThisName : this.name.escapeJS()
                          });
   }
 };
