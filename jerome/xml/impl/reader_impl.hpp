@@ -69,9 +69,10 @@ namespace jerome {
         
         ~reader_impl()
         {
-          if (mReader) return;
+          if (!mReader) return;
           xmlTextReaderClose(mReader);
           xmlFreeTextReader(mReader);
+          mReader = nullptr;
         }
         
         bool isGood() const

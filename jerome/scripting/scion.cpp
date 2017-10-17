@@ -434,14 +434,20 @@ namespace jerome {
 		
 		// dom.getAttribute : function(node,attribute){}
 		// Return the attribute value of the attribute attribute on the given DOM node.
-		const char* ScionPlatform::Dom::getAttribute(XMLNode node, const String& attribute) {
-			return (const char*)xmlGetProp(node, (const xmlChar*)attribute.c_str());
+		String ScionPlatform::Dom::getAttribute(XMLNode node, const String& attribute) {
+      void* value = xmlGetProp(node, (const xmlChar*)attribute.c_str());
+      if (!value) {
+        return String("");
+      }
+      String result = String((const char*)value);
+      xmlFree(value);
+      return result;
 		};
 		
 		// dom.hasAttribute : function(node,attribute){}
 		// Return a boolean value indicating whether the node node has the attribute attribute.
 		bool ScionPlatform::Dom::hasAttribute(XMLNode node, const String& attribute) {
-			return xmlGetProp(node, (const xmlChar*)attribute.c_str());
+			return NULL != xmlHasProp(node, (const xmlChar*)attribute.c_str());
 		};
 		
 		// dom.namespaceURI : function(node){}
@@ -490,8 +496,13 @@ namespace jerome {
 			if (!node->parent)
 				return "";
 			if (0 == strcmp((const char*)node->name, "scxml")) {
-				return String("/scxml[@name='")
-					+ (const char*)xmlGetProp(node, (const xmlChar*)"name") + "']";
+        void* value = xmlGetProp(node, (const xmlChar*)"name");
+        if (!value) {
+          return String("/scxml");
+        }
+        String result = String("/scxml[@name='") + (const char*)value + "']";
+        xmlFree(value);
+        return result;
 			}
 			return xpathToNode(node->parent)
 				+ "/" + (const char*)node->name + "[" + std::to_string(elementIndex(node)) + "]";

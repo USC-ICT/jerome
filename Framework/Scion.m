@@ -25,21 +25,34 @@
 @end
 
 @interface ALXMLNode : NSObject
+@property (nonatomic, assign) BOOL releaseWhenDone;
 @property (nonatomic, assign) xmlNodePtr ptr;
 @end
 
 @implementation ALXMLNode
 + (instancetype)nodeWithPtr:(xmlNodePtr)ptr
 {
-  return [[ALXMLNode alloc] initWithPtr:ptr];
+  return [[ALXMLNode alloc] initWithPtr:ptr releaseWhenDone:NO];
 }
 
-- (instancetype)initWithPtr:(xmlNodePtr)ptr
++ (instancetype)nodeWithPtr:(xmlNodePtr)ptr releaseWhenDone:(BOOL)flag
+{
+  return [[ALXMLNode alloc] initWithPtr:ptr releaseWhenDone:flag];
+}
+
+- (instancetype)initWithPtr:(xmlNodePtr)ptr releaseWhenDone:(BOOL)flag
 {
   if (self = [super init]) {
+    self.releaseWhenDone = flag;
     self.ptr = ptr;
   }
   return self;
+}
+
+- (void)dealloc {
+  if (self.releaseWhenDone) {
+    xmlFreeNode(self.ptr);
+  }
 }
 @end
 
@@ -146,14 +159,18 @@
 
 - (NSString*)getAttribute:(ALXMLNode*)node :(NSString*)attribute
 {
-  const char* value =
-    (const char*)xmlGetProp(node.ptr, attribute.xmlString);
-  return value ? [NSString stringWithUTF8String:value] : nil;
+  void* value = xmlGetProp(node.ptr, attribute.xmlString);
+  if (!value) {
+    return nil;
+  }
+  NSString* result = [NSString stringWithUTF8String:value];
+  xmlFree(value);
+  return result;
 }
 
 - (BOOL)hasAttribute:(ALXMLNode*)node :(NSString*)attribute
 {
-  return NULL != xmlGetProp(node.ptr, attribute.xmlString);
+  return NULL != xmlHasProp(node.ptr, attribute.xmlString);
 }
 
 - (NSString*)namespaceURI:(ALXMLNode*)node
@@ -172,7 +189,8 @@
       //						theNs	= xmlNewNs(xmlDocGetRootElement(theDoc), (xmlChar*)nsURL, NULL);
     }
   }
-  return [ALXMLNode nodeWithPtr:xmlNewNode(theNs, localName.xmlString)];
+  return [ALXMLNode nodeWithPtr:xmlNewNode(theNs, localName.xmlString)
+                releaseWhenDone:YES];
 }
 
 - (void) setAttribute:(ALXMLNode*) node :(NSString*)name :(NSString*)value
@@ -182,6 +200,7 @@
 
 - (ALXMLNode*) appendChild:(ALXMLNode*)parent :(ALXMLNode*)child
 {
+  child.releaseWhenDone = false;
   xmlAddChild(parent.ptr, child.ptr);
   return child;
 }
@@ -197,10 +216,16 @@ static int elementIndex(xmlNodePtr node) {
 
 static NSString* xpathToNode(xmlNodePtr node) {
   if (!node->parent)
-				return [NSString string];
+    return [NSString string];
   if (0 == strcmp((const char*)node->name, "scxml")) {
-				return [NSString stringWithFormat:@"/scxml[@name='%s']",
-                (const char*)xmlGetProp(node, (const xmlChar*)"name")];
+    void* value = xmlGetProp(node, (const xmlChar*)"name");
+    if (!value) {
+      return @"/scxml";
+    }
+    NSString* result = [NSString stringWithFormat:@"/scxml[@name='%s']",
+                        (const char*)value];
+    xmlFree(value);
+    return result;
   }
   return [NSString stringWithFormat:@"%@/%s[%d]", xpathToNode(node->parent),
           (const char*)node->name, elementIndex(node)];

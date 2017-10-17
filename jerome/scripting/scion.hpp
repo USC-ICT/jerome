@@ -60,7 +60,7 @@ namespace jerome {
 			struct Dom {
 				static std::vector<XMLNode> getChildren(XMLNode node);
 				static js::String localName(XMLNode node);
-				static const char* getAttribute(XMLNode node, const js::String& attribute);
+				static js::String getAttribute(XMLNode node, const js::String& attribute);
 				static bool hasAttribute(XMLNode node, const js::String& attribute);
 				static const char* namespaceURI(XMLNode node);
 				static XMLNode createElementNS(xmlDocPtr doc, const char* ns, const js::String& localName);
