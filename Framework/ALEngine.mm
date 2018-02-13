@@ -82,9 +82,20 @@ using namespace jerome::npc;
   return self->_platformStorage;
 }
 
+struct membuf : std::streambuf
+{
+  membuf(char* begin, char* end) {
+    this->setg(begin, begin, end);
+  }
+};
+
 - (BOOL)readCollectionFromURL:(NSURL*)url error:(NSError **)outError
 {
-  std::ifstream	stream(url.absoluteURL.fileSystemRepresentation);
+  // we should be able load from remote URLs
+  //  std::ifstream  stream(url.absoluteURL.fileSystemRepresentation);
+  NSData* data = [NSData dataWithContentsOfURL:url];
+  membuf sbuf((char*)data.bytes, (char*)data.bytes + data.length);
+  std::istream stream(&sbuf);
   auto result = self.platform.loadCollection(stream);
   if (outError) {
     *outError = [NSError errorWithOptionalError:result];
@@ -100,7 +111,6 @@ using namespace jerome::npc;
     *outError = [NSError errorWithOptionalError:result];
   }
   return !result;
-  
 }
 
 - (void)doReadDialogueManagerFromSource:(NSString*)source
