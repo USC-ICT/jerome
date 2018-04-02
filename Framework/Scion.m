@@ -6,6 +6,8 @@
 //  Copyright © 2016 Anton Leuski & ICT/USC. All rights reserved.
 //
 
+#include <libxml/parser.h>
+
 #import "Scion.h"
 
 @interface NSString (xmlString)
