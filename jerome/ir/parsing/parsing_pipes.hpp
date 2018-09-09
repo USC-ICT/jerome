@@ -36,6 +36,7 @@ namespace jerome { namespace ir {
 		BOOST_PARAMETER_NAME(stem)
 		BOOST_PARAMETER_NAME(stopwords)
 		BOOST_PARAMETER_NAME(string)
+    BOOST_PARAMETER_NAME(index)
 	}
 
 	using namespace jerome::ir::filter;
@@ -67,16 +68,19 @@ namespace jerome { namespace ir {
           args[_stopwords | Stopper::defaultStopwords()];
         stream	= new Stopper(stream, stopwords);
 					
-				typename Index::Field*		unigrams =
-          args[_unigram_field | ((typename Index::Field*)nullptr)];
-				if (unigrams) 
-					stream	= new IndexWriter<Index>(stream, *unigrams);
+        Index* index  =
+          args[_index | ((Index*)nullptr)];
 
-				typename Index::Field*		bigrams =
-          args[_bigram_field | ((typename Index::Field*)nullptr)];
-				if (bigrams) {
+        String*		unigrams =
+          args[_unigram_field | ((String*)nullptr)];
+				if (index && unigrams)
+					stream	= new IndexWriter<Index>(stream, *index, *unigrams);
+
+				String*		bigrams =
+          args[_bigram_field | ((String*)nullptr)];
+				if (index && bigrams) {
 					stream	= new NGram(stream);
-					stream	= new IndexWriter<Index>(stream, *bigrams);
+					stream	= new IndexWriter<Index>(stream, *index, *bigrams);
 				}
 
 				return stream;
@@ -90,24 +94,29 @@ namespace jerome { namespace ir {
 	
 	}
 	
-	template <class Index>
-	class UniversalTokenPipe : public impl::TokenPipe<Index> {
-	public:
-		BOOST_PARAMETER_CONSTRUCTOR(
-			UniversalTokenPipe
-			, (impl::TokenPipe<Index>)
-			, keyword::tag
-			, (required 
-				(string,*) ) 
-			(optional 
-				(locale, 		(jerome::Locale))//,			(jerome::Locale()) )
-				(unigram_field,	(typename Index::Field*))//, 				((Field*)NULL) )
-				(bigram_field,	(typename Index::Field*))//, 				((Field*)NULL) )
-				(stem,			(bool))//, 				(true) )
-				(stopwords,		(Stopper::Stopwords*))//,	((Stopper::Stopword*)NULL) )
-				))
-	};
-		
+  template <class Index>
+  class UniversalTokenPipe : public impl::TokenPipe<Index> {
+  public:
+    BOOST_PARAMETER_CONSTRUCTOR(
+      UniversalTokenPipe
+      , (impl::TokenPipe<Index>)
+      , keyword::tag
+      ,
+      (required
+       (string,*)
+       )
+      (optional
+       (locale,     (jerome::Locale))//,      (jerome::Locale()) )
+       //,         ((Index*)NULL) )
+       (index,  (Index*))
+       (unigram_field,  (String*))//,         ((String*)NULL) )
+       (bigram_field,  (String*))//,         ((String*)NULL) )
+       (stem,      (bool))//,         (true) )
+       (stopwords,    (Stopper::Stopwords*))//,  ((Stopper::Stopword*)NULL) )
+       )
+    )
+  };
+
 	namespace impl {
 
 		template <class Index>
@@ -118,10 +127,12 @@ namespace jerome { namespace ir {
 				using namespace jerome::ir::keyword;
 				TokenStream	stream(new NonTokenizer(args[_string],
                                             args[_locale | jerome::Locale()]));
-				typename Index::Field* field	=
-          args[_field | ((typename Index::Field*)nullptr)];
-				if (field) 
-					stream	= new IndexWriter<Index>(stream, *field);
+			  String* fieldName	=
+          args[_field | ((String*)nullptr)];
+        Index* index  =
+          args[_index | ((Index*)nullptr)];
+				if (fieldName && index)
+					stream	= new IndexWriter<Index>(stream, *index, *fieldName);
 				return stream;
 			}	
 		public:
@@ -132,20 +143,24 @@ namespace jerome { namespace ir {
 		};		
 	}
 	
-	template <class Index>
-	class NonTokenizingPipe : public impl::NonTokenizingPipe<Index> {
-	public:
-		BOOST_PARAMETER_CONSTRUCTOR(
-			NonTokenizingPipe
-			, (impl::NonTokenizingPipe<Index>)
-			, keyword::tag
-			, (required 
-				(string,*) ) 
-			(optional 
-				(locale, 		(jerome::Locale))//,			(jerome::Locale()) )
-				(field,			(typename Index::Field*))//, 				((Field*)NULL) )
-				))
-	};
+  template <class Index>
+  class NonTokenizingPipe : public impl::NonTokenizingPipe<Index> {
+  public:
+    BOOST_PARAMETER_CONSTRUCTOR(
+      NonTokenizingPipe
+      , (impl::NonTokenizingPipe<Index>)
+      , keyword::tag
+      ,
+      (required
+       (string,*)
+       )
+      (optional
+       (locale,     (jerome::Locale))//,      (jerome::Locale()) )
+       (index,  (Index*))
+       (field,      (String*))//,         ((String*)NULL) )
+       )
+    )
+  };
 
 }}
 

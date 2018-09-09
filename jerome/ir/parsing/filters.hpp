@@ -109,15 +109,21 @@ namespace jerome {
 			 */
 			template <class Index>
 			class IndexWriter : public TokenFilter {
+        Index&      mIndex;
 				typename Index::Field&			mField;
 				typename Index::Term::size_type mDocumentID;
 			public:
-				IndexWriter(TokenStream inSource, typename Index::Field& inField)
-				: TokenFilter(inSource), mField(inField), mDocumentID(0) {}
+				IndexWriter(TokenStream inSource, Index& ioIndex, const String& inFieldName)
+				: TokenFilter(inSource)
+        , mIndex(ioIndex)
+        , mField(ioIndex.findField(inFieldName, true))
+        , mDocumentID(0)
+        {}
+        
 				bool getNextToken(Token& ioToken) {
 					if (mDocumentID == 0) mDocumentID = mField.addDocument()+1;
 					if (!TokenFilter::getNextToken(ioToken)) return false;
-					mField.add(mDocumentID-1, ioToken);
+					mIndex.addTerm(ioToken, mDocumentID-1, mField);
 					return true;
 				}
 			};

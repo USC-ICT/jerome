@@ -866,13 +866,6 @@
 			path = npc;
 			sourceTree = "<group>";
 		};
-		6241C7771757FACF009C5D55 /* lattices */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = lattices;
-			sourceTree = "<group>";
-		};
 		62527B641BBB490500767BA7 /* vhmsg_jerome */ = {
 			isa = PBXGroup;
 			children = (
@@ -1157,7 +1150,6 @@
 				620C62871B758D7D00FA2953 /* report */,
 				62990CCB1B6BEE6B00DEB2E8 /* training */,
 				6268B0281A0579FC00287DF4 /* parsing */,
-				6241C7771757FACF009C5D55 /* lattices */,
 				622F89D61512921500726296 /* analysis.hpp */,
 				62A252A9143661340008E65F /* collection.hpp */,
 				62457D8A144181A90084507E /* collection.cpp */,

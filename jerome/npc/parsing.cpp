@@ -74,12 +74,12 @@ namespace jerome {
       String  indexFieldName = model().at(INDEX_FIELD_KEY, "untokenized");
       
       const String& textp     = inObject.get(utteranceFieldName, empty);
-      typename result_type::Field* indexFieldPtr =
-        &ioIndex.findField(indexFieldName, true);
-      
+
       //		std::cout << textp << std::endl;
       TokenStream ts(new NonTokenizingPipe<result_type>
-                     (&textp, keyword::_field = indexFieldPtr));
+                     (&textp,
+                      keyword::_index = &ioIndex,
+                      keyword::_field = &indexFieldName));
       ts.run();
     }
 
@@ -94,16 +94,13 @@ namespace jerome {
       auto  bigramFieldName = model().at<String>(BIGRAM_INDEX_FIELD_KEY);
       
       const String& textp     = inObject.get(utteranceFieldName, empty);
-      typename result_type::Field* unigramFieldPtr =
-        &ioIndex.findField(unigramFieldName, true);
-      typename result_type::Field* bigramFieldPtr  =
-      bigramFieldName ? &ioIndex.findField(*bigramFieldName, true) : nullptr;
       
       //		std::cout << textp << std::endl;
       TokenStream ts(new UniversalTokenPipe<result_type>
                      (&textp,
-                      keyword::_unigram_field = unigramFieldPtr,
-                      keyword::_bigram_field = bigramFieldPtr));
+                      keyword::_index = &ioIndex,
+                      keyword::_unigram_field = &unigramFieldName,
+                      keyword::_bigram_field = bigramFieldName.get_ptr()));
       ts.run();
     }
 

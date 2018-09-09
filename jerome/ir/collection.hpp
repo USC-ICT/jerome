@@ -57,8 +57,7 @@ namespace jerome { namespace ir {
 		
 		class Term {
 		public:
-			
-			typedef uint8_t								freq_type;
+			typedef uint8_t								          freq_type;
 			// the idea is to separate frequencies from another information, e.g., term
 			// locations because it is easier to a. operate on, when frequencies are
 			// just a vector, b. customize -- avoid generating locations when they are not
@@ -67,9 +66,9 @@ namespace jerome { namespace ir {
 			typedef traits<Frequencies>::size_type  size_type;
 			
 		private:
-			size_type		mCollectionCount; // SUM tf
-			size_type		mDocumentCount;
-			Frequencies		mFrequencies;
+			size_type   mCollectionCount; // SUM tf
+			size_type   mDocumentCount;
+			Frequencies mFrequencies;
 			
 		public:
 			
@@ -82,17 +81,17 @@ namespace jerome { namespace ir {
 			}
 			
 			// number of documents the term appears in
-			const size_type		df() const { return mDocumentCount; }
+			const size_type df() const { return mDocumentCount; }
 			// total number of term occurences in the collection
-			const size_type		cf() const { return mCollectionCount; }
+			const size_type cf() const { return mCollectionCount; }
 			// term count for individual documents
-			const Frequencies&	tfs() const { return mFrequencies; }
+			const Frequencies& tfs() const { return mFrequencies; }
 			
 			static const Term& missing_term() {
 				return *_missing_term();
 			}
 			
-			void	add(size_type inDocumentID, const Token& inToken) {
+			void add(size_type inDocumentID, const Token& inToken) {
 				if (inDocumentID >= mFrequencies.size())
           jerome::resize(mFrequencies, inDocumentID+1);
 				
@@ -102,7 +101,7 @@ namespace jerome { namespace ir {
 				++mCollectionCount;
 			}
 			
-			void	addTerm(const Term& inTerm, std::size_t inOffset, std::size_t inCount) {
+			void addTerm(const Term& inTerm, std::size_t inOffset, std::size_t inCount) {
 				mDocumentCount += inTerm.mDocumentCount;
 				mCollectionCount += inTerm.mCollectionCount;
 
@@ -111,7 +110,7 @@ namespace jerome { namespace ir {
                                               mFrequencies, inOffset);
 			}
 			
-			void	optimize(Index& inIndex, Field& inField) {
+			void optimize(Index& inIndex, Field& inField) {
         jerome::resize(mFrequencies, (size_type)inIndex.documentCount());
 			}
       
@@ -261,9 +260,32 @@ namespace jerome { namespace ir {
 				myField.addField(f.second, docCount, docToAddCount);
 			}
 		}
-		
-		
-	};
+
+    void addTerm(const Token& inToken, typename Term::size_type inDocumentID, Field& ioField) {
+      ioField.add(inDocumentID, inToken, *this);
+    }
+
+//    TermID stringID(const String& inString) {
+//      return 0;
+//    }
+//
+//    optional<TermID> stringID(const String& inString) const {
+//      return 0;
+//    }
+//
+//    const Term& findTerm(const Field& inField, const String& text) const {
+//      auto termID = stringID(text);
+//      if (!termID) return Term::missing_term();
+//      return inField.findTerm(termID);
+//    }
+//
+//    explicit Index(int x) {
+//
+//    }
+//
+//  private:
+//    Index() = delete;
+  };
 	
 	class HeapIndex : public Index<HeapIndex> {
 		
