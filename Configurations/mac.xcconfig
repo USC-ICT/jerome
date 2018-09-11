@@ -1,0 +1,14 @@
+//
+//  Alfred.xcconfig
+//  Alfred
+//
+//  Created by Anton Leuski on 6/30/16.
+//
+//
+
+SDKROOT = macosx
+MACOSX_DEPLOYMENT_TARGET = 10.10
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @loader_path/../Frameworks
+COMBINE_HIDPI_IMAGES = YES
+
+VALID_ARCHS = x86_64

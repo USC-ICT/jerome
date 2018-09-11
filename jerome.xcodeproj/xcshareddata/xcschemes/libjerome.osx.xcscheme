@@ -33,8 +33,18 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "62262163198DAD7C00A0AA4E"
-               BuildableName = "jerome.osx Tests.xctest"
-               BlueprintName = "jerome.osx Tests"
+               BuildableName = "jerome.osxTests.xctest"
+               BlueprintName = "jerome.osxTests"
+               ReferencedContainer = "container:jerome.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "62D19FB72148692000E8C954"
+               BuildableName = "libjerome.osx.tests.xctest"
+               BlueprintName = "libjerome.osx.tests"
                ReferencedContainer = "container:jerome.xcodeproj">
             </BuildableReference>
          </TestableReference>

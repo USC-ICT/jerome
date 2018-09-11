@@ -1,0 +1,17 @@
+//
+//  Alfred.xcconfig
+//  Alfred
+//
+//  Created by Anton Leuski on 6/30/16.
+//
+//
+
+#include "App.xcconfig"
+#include "mac.xcconfig"
+
+COMBINE_HIDPI_IMAGES = YES
+INFOPLIST_FILE = Sources/apps/mac/App-Info.plist
+
+// Support Sparkle -- the library for app updates
+SPARKLE_BASE_URL_PART = /nld.ict.usc.edu/software
+SPARKLE_BASE_URL = https:/$(SPARKLE_BASE_URL_PART)

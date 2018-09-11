@@ -11,7 +11,7 @@
 #include <iostream>
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
-#include <jerome/npc/classifier.hpp>
+//#include <jerome/npc/classifier.hpp>
 #include <jerome/npc/model_cpp.hpp>
 #include <jerome/npc/parsing.hpp>
 #include <jerome/ir/evaluation.hpp>
@@ -21,24 +21,24 @@
 #include <boost/accumulators/statistics/mean.hpp>
 #pragma clang diagnostic pop
 
-#include <jerome/accumulators/statistics/average.hpp>
-#include <jerome/accumulators/statistics/f_measure.hpp>
-#include <jerome/accumulators/statistics/ranked_list.hpp>
-#include <jerome/accumulators/statistics/best_score_value.hpp>
-#include <jerome/accumulators/statistics/macro_average.hpp>
-#include <jerome/accumulators/statistics/micro_average.hpp>
+#include <jerome/ir/evaluation/accumulators/statistics/average.hpp>
+#include <jerome/ir/evaluation/accumulators/statistics/f_measure.hpp>
+//#include <jerome/ir/evaluation/accumulators/statistics/ranked_list.hpp>
+//#include <jerome/ir/evaluation/accumulators/statistics/best_score_value.hpp>
+#include <jerome/ir/evaluation/accumulators/statistics/macro_average.hpp>
+#include <jerome/ir/evaluation/accumulators/statistics/micro_average.hpp>
 
-#include <jerome/accumulators/collectors/collector.hpp>
-#include <jerome/accumulators/collectors/feature_collector.hpp>
-#include <jerome/accumulators/collectors/composite_collector.hpp>
+#include <jerome/ir/evaluation/collectors/collector.hpp>
+//#include <jerome/ir/evaluation/collectors/feature_collector.hpp>
+#include <jerome/ir/evaluation/collectors/composite_collector.hpp>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wshorten-64-to-32"
 #include <nlopt.hpp>
 #pragma clang diagnostic pop
 
-#include <jerome/ir/rm/distances_in_answer_space.hpp>
-#include <jerome/ir/rm/distances_in_mixed_space.hpp>
+//#include <jerome/ir/rm/distances_in_answer_space.hpp>
+//#include <jerome/ir/rm/distances_in_mixed_space.hpp>
 
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;

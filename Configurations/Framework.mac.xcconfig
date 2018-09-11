@@ -1,0 +1,12 @@
+//
+//  Alfred.xcconfig
+//  Alfred
+//
+//  Created by Anton Leuski on 6/30/16.
+//
+//
+
+#include "Framework.xcconfig"
+#include "mac.xcconfig"
+
+INFOPLIST_FILE = Sources/apps/mac/Framework-Info.plist

@@ -78,7 +78,7 @@ namespace js = jerome::javascript;
 
 - (void)test
 {
-	jerome::scripting::Engine	engine((jerome::npc::Collection()));
+	jerome::scripting::Engine	engine;
 	
 	bool testsAreDone = NO;
 	js::Context&	context(engine.context());
@@ -89,7 +89,7 @@ namespace js = jerome::javascript;
 			XCTFail(@"JS exception %@ while %@", @((const char*)exception), @(inExceptionContext.c_str()));
 		};
 		
-		context["scionTestsAreDone"] = [&] {
+		context["scionTestsAreDone"] = [&]() {
 			testsAreDone = YES;
 		};
 	});

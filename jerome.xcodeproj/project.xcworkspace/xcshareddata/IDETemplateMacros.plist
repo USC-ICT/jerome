@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>FILEHEADER</key>
+  <string>
+//  ___FILENAME___
+//
+//  Created by ___FULLUSERNAME___ on ___DATE___.
+//  ___COPYRIGHT___
+//
+//  This file is part of Jerome.
+//
+//  Jerome is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU Lesser General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  Jerome is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU Lesser General Public License for more details.
+//
+//  You should have received a copy of the GNU Lesser General Public License
+//  along with Jerome.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+//</string>
+</dict>
+</plist>
