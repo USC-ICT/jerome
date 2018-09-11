@@ -52,9 +52,9 @@ namespace jerome { namespace ir {
 		const Fields&		fields() const { return mFields; }
 		Fields&				fields() { return mFields; }
 		
-		struct field_not_found_exception : public Exception { using Exception::Exception; };
-		struct cannot_insert_field : public Exception { using Exception::Exception; };
-		
+    JEROME_EXCEPTION(field_not_found_exception)
+    JEROME_EXCEPTION(cannot_insert_field)
+	
 		class Term {
 		public:
 			typedef uint8_t								          freq_type;
@@ -179,9 +179,10 @@ namespace jerome { namespace ir {
 			}
 			
 		protected:
-			template <class Index> friend class filter::IndexWriter;
-			
-			void	add(typename Term::size_type inDocumentID, const Token& inToken) {
+			template <class> friend class filter::IndexWriter;
+      template <class> friend class Index;
+
+			void	add(typename Term::size_type inDocumentID, const Token& inToken, Index& ioIndex) {
         
 //        if (inDocumentID < mDocumentLengths.size() && mDocumentLengths[inDocumentID] >= 75) {
 //          return;

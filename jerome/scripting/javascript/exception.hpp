@@ -30,25 +30,20 @@ namespace jerome { namespace javascript {
 	struct Exception : public std::logic_error {
 		using std::logic_error::logic_error;
 	};
-	
-	struct get_property_undefined		: Exception{
-		 get_property_undefined() : Exception("get_property_undefined") {}};
-	struct set_property_undefined		: Exception{
-		 set_property_undefined() : Exception("set_property_undefined") {}};
-	struct delete_property_undefined	: Exception{
-		 delete_property_undefined() : Exception("delete_property_undefined") {}};
-	struct object_is_not_function		: Exception{
-		 object_is_not_function() : Exception("object_is_not_function") {}};
-	struct object_is_not_constructor	: Exception{
-		 object_is_not_constructor() : Exception("object_is_not_constructor") {}};
-	struct cannot_convert_object		: Exception{
-		 cannot_convert_object() : Exception("cannot_convert_object") {}};
-	struct illegal_arguments			: Exception{
-		 illegal_arguments() : Exception("illegal_arguments") {}};
-	struct immutable_property			: Exception{
-		 immutable_property() : Exception("immutable_property") {}};
-	struct not_in_call_context			: Exception{
-		 not_in_call_context() : Exception("not_in_call_context") {}};
+
+#define _EXCEPTION(name) \
+struct name : public std::logic_error { \
+name() : std::logic_error(#name) {} };
+	_EXCEPTION(get_property_undefined)
+	_EXCEPTION(set_property_undefined)
+	_EXCEPTION(delete_property_undefined)
+	_EXCEPTION(object_is_not_function)
+	_EXCEPTION(object_is_not_constructor)
+	_EXCEPTION(cannot_convert_object)
+	_EXCEPTION(illegal_arguments)
+	_EXCEPTION(immutable_property)
+	_EXCEPTION(not_in_call_context)
+#undef _EXCEPTION
 
 }}
 

@@ -40,8 +40,14 @@ namespace jerome {
       if (!strlen(s)) s = typeid(*this).name();
         return s;
     }
+    Exception() : parent_type("") {}
   };
-  
+
+  #define JEROME_EXCEPTION(name) \
+    struct name : public jerome::Exception { \
+    using jerome::Exception::Exception; \
+    name() : jerome::Exception(#name) {} };
+
   struct OptionalError;
   
   struct JEROME_SYMBOL_EXPORT Error : std::exception {

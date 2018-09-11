@@ -228,8 +228,7 @@ namespace jerome {
       
       typedef detail::ImmutableSet<String> field_names_type;
       
-      struct field_not_found_exception
-      : public Exception { using Exception::Exception; };
+      JEROME_EXCEPTION(field_not_found_exception)
       
       String  get(const String& key) const noexcept(false);
       String  get(const String& key, const String& inDefault) const;
