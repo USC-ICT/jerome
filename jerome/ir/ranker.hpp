@@ -172,7 +172,7 @@ namespace jerome {  namespace ir {
     : parent_type(inData)
     {}
     explicit Ranker(shared_ptr<implementation_type>&& inData)
-    : parent_type(std::forward<shared_ptr<implementation_type>>(inData))
+    : parent_type(std::move(inData))
     {}
 		
 	public:

@@ -159,7 +159,7 @@ namespace jerome {
     }
 
     explicit ReferenceClassInterface(shared_ptr<implementation_type>&& inData)
-      : mData(std::forward<shared_ptr<implementation_type>>(inData))
+      : mData(std::move(inData))
     {
     }
 

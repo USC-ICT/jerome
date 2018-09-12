@@ -100,8 +100,8 @@ namespace jerome { namespace javascript { namespace detail {
 		bool hasString;
 		CastableString() : hasString(false) {}
 		CastableString(const CastableString&) = delete;
-		CastableString(CastableString&& x) : mString(std::forward<String>(x.mString)), hasString(true) {}
-		CastableString(String&& s) : mString(std::forward<String>(s)), hasString(true) {}
+		CastableString(CastableString&& x) : mString(std::move(x.mString)), hasString(true) {}
+		CastableString(String&& s) : mString(std::move(s)), hasString(true) {}
 		operator const char*() const { return hasString ? mString.c_str() : nullptr; }
 	};
 	

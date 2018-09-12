@@ -25,7 +25,11 @@
 
 #include <string>
 #include <jerome/type/optional.hpp>
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdocumentation"
 #include <boost/algorithm/string.hpp>
+#pragma clang diagnostic pop
 
 #if defined(__ANDROID__)
 // Android NDK doesn't support these C++ functions. Thus we just

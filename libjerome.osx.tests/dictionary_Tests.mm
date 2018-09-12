@@ -23,8 +23,11 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wshorten-64-to-32"
 #pragma clang diagnostic ignored "-Wcomma"
+#pragma clang diagnostic ignored "-Wdocumentation"
+
 #include <boost/filesystem.hpp>
 #include <boost/optional/optional_io.hpp>
+#include <boost/interprocess/managed_mapped_file.hpp>
 #pragma clang diagnostic pop
 
 #include <jerome/ir/collection/dictionary.hpp>
@@ -32,6 +35,7 @@
 #import <XCTest/XCTest.h>
 
 using namespace jerome;
+using namespace jerome::ir;
 
 @interface CollectionDictionary : XCTestCase
   @end
@@ -147,6 +151,34 @@ struct Remover {
         }
         XCTAssert(dictionary.string2index(string3) != Dictionary::unknownIndex,
                   @"should be able to emplace into write-private");
+      }
+
+      {
+        Dictionary dictionary;
+
+        XCTAssert(dictionary.string2index("hello") == Dictionary::unknownIndex,
+                  @"the dictionary must be empty for strings");
+        XCTAssert(!dictionary.index2string(0),
+                  @"the dictionary must be empty for indices");
+        XCTAssert(dictionary.emplace(string1) != Dictionary::unknownIndex,
+                  @"should be able to insert const char*");
+        try {
+          XCTAssert(dictionary.emplace(string1) != Dictionary::unknownIndex,
+                    @"should be able to insert const char*");
+        } catch (const Dictionary::illegal_access_exception& error) {
+          XCTFail(@"should be able to emplace an existing string into a write-shared: %s", error.what());
+        }
+        XCTAssert(dictionary.string2index(string1) != Dictionary::unknownIndex,
+                  @"the inserted string is missing");
+        XCTAssert(dictionary.index2string(0),
+                  @"the inserted string is missing for indices");
+
+        XCTAssert(dictionary.emplace(std::string(string2)) != Dictionary::unknownIndex,
+                  @"should be able to insert std::string");
+        XCTAssert(dictionary.string2index(std::string(string1)) != Dictionary::unknownIndex,
+                  @"should be able to fin std::string");
+
+        dictionary.optimize();
       }
 
     } catch (const std::exception& error) {

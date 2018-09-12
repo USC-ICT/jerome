@@ -156,6 +156,8 @@
 		62D19FBD2148692100E8C954 /* libjerome.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D21604D43600764667 /* libjerome.a */; };
 		62D19FC32148692A00E8C954 /* dictionary_Tests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 625D39F421484F7A0038D20D /* dictionary_Tests.mm */; };
 		62D19FC42148698800E8C954 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62DDE2FF1F699F66002B1DE8 /* boost.framework */; };
+		62D19FC62148976300E8C954 /* dictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62D19FC52148976300E8C954 /* dictionary.cpp */; };
+		62D19FC72148976300E8C954 /* dictionary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62D19FC52148976300E8C954 /* dictionary.cpp */; };
 		62D56AF71987069400F09A32 /* cross_entropy_jelinek_mercer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62D56AF11987069400F09A32 /* cross_entropy_jelinek_mercer.cpp */; };
 		62D56AF81987069400F09A32 /* cross_entropy_jelinek_mercer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62D56AF11987069400F09A32 /* cross_entropy_jelinek_mercer.cpp */; };
 		62D56AF91987069400F09A32 /* jelinek_mercer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62D56AF51987069400F09A32 /* jelinek_mercer.cpp */; };
@@ -588,6 +590,7 @@
 		62D19FB82148692000E8C954 /* libjerome.osx.tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = libjerome.osx.tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		62D19FBA2148692100E8C954 /* libjerome_osx_tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = libjerome_osx_tests.m; sourceTree = "<group>"; };
 		62D19FBC2148692100E8C954 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		62D19FC52148976300E8C954 /* dictionary.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = dictionary.cpp; sourceTree = "<group>"; };
 		62D56AEC1987069400F09A32 /* distances_in_answer_space.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = distances_in_answer_space.hpp; sourceTree = "<group>"; };
 		62D56AED1987069400F09A32 /* distances_in_mixed_space.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = distances_in_mixed_space.hpp; sourceTree = "<group>"; };
 		62D56AF01987069400F09A32 /* collection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = collection.hpp; sourceTree = "<group>"; };
@@ -729,25 +732,25 @@
 		620A3F04197E4DC7000400E3 /* type */ = {
 			isa = PBXGroup;
 			children = (
+				62A662AC1D82294800299B42 /* algorithm.hpp */,
 				62AC3BBE1BBC967F0067C540 /* error.cpp */,
 				62AC3BBF1BBC967F0067C540 /* error.hpp */,
 				62C3275E1B962CFD001EB593 /* Factory.hpp */,
 				62527B811BBB6D2700767BA7 /* FunctionSignature.hpp */,
 				62AC3BC21BBC98090067C540 /* macros.hpp */,
+				62EAF81E1CE6AD7900A1BCA9 /* matrix_boost.hpp */,
+				62F5F9041CE6473500EECA12 /* matrix_eigen_sparse_vector_plugin.hpp */,
+				62EAF8211CE6AD8F00A1BCA9 /* matrix_eigen.hpp */,
 				620A3F07197E4EA8000400E3 /* matrix.cpp */,
 				620A3F05197E4DDE000400E3 /* matrix.hpp */,
-				62EAF81E1CE6AD7900A1BCA9 /* matrix_boost.hpp */,
-				62EAF8211CE6AD8F00A1BCA9 /* matrix_eigen.hpp */,
-				62F5F9041CE6473500EECA12 /* matrix_eigen_sparse_vector_plugin.hpp */,
 				62AC3BC11BBC971E0067C540 /* optional.hpp */,
 				62FF24891B90C5CB00C3504C /* ordered_multimap.hpp */,
 				620A3F0A197E50FC000400E3 /* random.hpp */,
 				6200F5561BA76288009828A4 /* Record.hpp */,
+				62D8A8291BF699F9005355B0 /* regex.hpp */,
+				626BB7E021484D3100FE6408 /* shared.hpp */,
 				62AC3BBC1BBC94C80067C540 /* string.cpp */,
 				620A3F06197E4DF9000400E3 /* string.hpp */,
-				62D8A8291BF699F9005355B0 /* regex.hpp */,
-				62A662AC1D82294800299B42 /* algorithm.hpp */,
-				626BB7E021484D3100FE6408 /* shared.hpp */,
 			);
 			path = type;
 			sourceTree = "<group>";
@@ -917,6 +920,7 @@
 			isa = PBXGroup;
 			children = (
 				625D39F321484E380038D20D /* dictionary.hpp */,
+				62D19FC52148976300E8C954 /* dictionary.cpp */,
 			);
 			path = collection;
 			sourceTree = "<group>";
@@ -1808,6 +1812,7 @@
 				6288C8AE163B5C6200191972 /* js_engine.cpp in Sources */,
 				62C3277C1B998A71001EB593 /* ModelWriterText.cpp in Sources */,
 				62E830E71B64752500847135 /* engine.cpp in Sources */,
+				62D19FC62148976300E8C954 /* dictionary.cpp in Sources */,
 				62F5F8E11CE2C0CE00EECA12 /* npc_model.cpp in Sources */,
 				6255E92A1B729A5200EA9402 /* parameters.cpp in Sources */,
 				622EA2EB1604F30400764667 /* weighting.cpp in Sources */,
@@ -1905,6 +1910,7 @@
 				6211C33D1B80717300F293DC /* stylesheet.cpp in Sources */,
 				6200F7381B84735F00CA121E /* reader.cpp in Sources */,
 				62B316F31D0F8B5B00D2E4E4 /* string.cpp in Sources */,
+				62D19FC72148976300E8C954 /* dictionary.cpp in Sources */,
 				62C327781B998A38001EB593 /* ModelWriterXML.cpp in Sources */,
 				620C62841B75764A00FA2953 /* irregular_verbs.cpp in Sources */,
 				62B316F41D0F8B8800D2E4E4 /* evaluation.cpp in Sources */,

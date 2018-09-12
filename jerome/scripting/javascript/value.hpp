@@ -88,7 +88,7 @@ namespace jerome { namespace javascript {
 
 		Value(Value&& inOther)
 		: parent_type(inOther.mValueRef)
-		, mContext(std::forward<Context>(inOther.mContext))
+		, mContext(std::move(inOther.mContext))
 		{
 			inOther.mValueRef = nullptr;
 			assert(mValueRef);
