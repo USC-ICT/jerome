@@ -57,9 +57,9 @@ namespace jerome { namespace ir {
         stream  = new Alphanumeric(stream);
 
 				String dictionaryPath				=
-          args[_dictionary | Dictionary::defaultDictionaryName()];
+        args[_dictionary | jerome::ir::filter::Dictionary::defaultDictionaryName()];
 				if (dictionaryPath.length())
-					stream 	= new Dictionary(stream, dictionaryPath);
+					stream 	= new jerome::ir::filter::Dictionary(stream, dictionaryPath);
 				
 				if (args[_stem | true]) 
 					stream	= new KStem(stream);

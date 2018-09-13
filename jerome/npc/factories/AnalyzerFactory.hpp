@@ -41,17 +41,32 @@ namespace jerome {
     typedef jerome::ir::Analyzer<Utterance, jerome::ir::HeapIndex> Analyzer;
 
     class AnalyzerFactory
-      : public RecordFactory<
+      : public Factory<
         AnalyzerFactory,
-				Analyzer>
+				Analyzer,
+        const jerome::ir::Dictionary&,
+        const Record&>
     {
-      typedef RecordFactory<
+      typedef Factory<
       AnalyzerFactory,
-      Analyzer> parent_type;
+      Analyzer,
+      const jerome::ir::Dictionary&,
+      const Record&> parent_type;
     public:
       AnalyzerFactory();
-			
-			template <typename AnalyzerImplementation>
+
+      typedef typename parent_type::object_type object_type;
+
+      using parent_type::make;
+
+      Result<object_type> make(const jerome::ir::Dictionary& inDictionary, const Record& inRecord)
+      {
+        return parent_type::make(inRecord.at<String>(parent_type::PROVIDER_KEY),
+                                 inDictionary,
+                                 inRecord);
+      }
+
+      template <typename AnalyzerImplementation>
 			void registerProvider();
     };
 
@@ -62,9 +77,9 @@ namespace jerome {
       {
 				static constexpr const char* IDENTIFIER = Impl::IDENTIFIER;
 				
-        Result<AnalyzerFactory::object_type> provide(const Record& inRecord) override
+        Result<AnalyzerFactory::object_type> provide(const jerome::ir::Dictionary& inDictionary, const Record& inRecord) override
         {
-					return Analyzer::make<Providable<Impl>>(String(IDENTIFIER), inRecord);
+					return Analyzer::make<Providable<Impl>>(String(IDENTIFIER), inDictionary, inRecord);
         }
       };
 		}

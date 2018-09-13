@@ -57,9 +57,13 @@ namespace jerome {
         JEROME_INTERNAL_RANKER_TYPES(parent_type)
         typedef parent_type::query_analyzer_type query_analyzer_type;
        
-        UtteranceCLRanker() = default;
+        UtteranceCLRanker()
+        : parent_type(jerome::ir::Dictionary())
+        {}
+
         UtteranceCLRanker(const State::ranker_model_type& inModel,
           const Data& data)
+        : parent_type(jerome::ir::Dictionary())
         {
           auto doc_weigh = AnswerWeightingFactory::sharedInstance()
           .make(inModel.at(ANSWER_WEIGHTING_KEY,
@@ -72,12 +76,14 @@ namespace jerome {
 					mModel.emplace(QUESTION_WEIGHTING_KEY, qry_weigh.value().model());
 
           auto doc_analyzer = AnalyzerFactory::sharedInstance()
-            .make(inModel.at(ANSWER_ANALYZER_KEY,
+          .make(document().index().dictionary(),
+                inModel.at(ANSWER_ANALYZER_KEY,
                              AnalyzerFactory::sharedInstance().predefinedModels().find("text-unigram+id")->second));
 					mModel.emplace(ANSWER_ANALYZER_KEY, doc_analyzer.value().model());
 
           auto qry_analyzer = AnalyzerFactory::sharedInstance()
-            .make(inModel.at(QUESTION_ANALYZER_KEY,
+            .make(document().index().dictionary(),
+                  inModel.at(QUESTION_ANALYZER_KEY,
                              AnalyzerFactory::sharedInstance().defaultModel()));
 					mModel.emplace(QUESTION_ANALYZER_KEY, qry_analyzer.value().model());
 
@@ -140,6 +146,9 @@ namespace jerome {
 
         result_type	operator() (const argument_type& query)
         {
+//          query_analyzer_type::result_type index(document().index().dictionary());
+//          analyzer().parse(query, index);
+//          return this->operator()(index);
           return this->operator()(analyzer()(query));
         }
         

@@ -48,8 +48,8 @@ namespace jerome {
 
       UtteranceAnalyzer() = delete;
       
-      UtteranceAnalyzer(const Record& inModel)
-      : parent_type(inModel.at(NAME_KEY, "UtteranceAnalyzer"))
+      UtteranceAnalyzer(const jerome::ir::Dictionary& inDictionary, const Record& inModel)
+      : parent_type(inDictionary, inModel.at(NAME_KEY, "UtteranceAnalyzer"))
       , mModel(inModel)
       {
       }
@@ -68,8 +68,8 @@ namespace jerome {
       static constexpr char const* IDENTIFIER = "jerome.analyzer.multi";
       static constexpr char const* ANALYZER_KEY = "analyzer";
 
-      MultiAnalyzer(const Record& inModel)
-      : parent_type(inModel)
+      MultiAnalyzer(const jerome::ir::Dictionary& inDictionary, const Record& inModel)
+      : parent_type(inDictionary, inModel)
       {
       }
 
@@ -85,8 +85,8 @@ namespace jerome {
     {
       typedef UtteranceAnalyzer parent_type;
     public:
-      Untokenized(const Record& inRecord)
-      : parent_type(inRecord)
+      Untokenized(const jerome::ir::Dictionary& inDictionary, const Record& inRecord)
+      : parent_type(inDictionary, inRecord)
       {
       }
       
@@ -103,8 +103,8 @@ namespace jerome {
     {
       typedef UtteranceAnalyzer parent_type;
     public:
-      Tokenized(const Record& inRecord)
-      : parent_type(inRecord)
+      Tokenized(const jerome::ir::Dictionary& inDictionary, const Record& inRecord)
+      : parent_type(inDictionary, inRecord)
       {
       }
 

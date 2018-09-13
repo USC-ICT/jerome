@@ -29,12 +29,17 @@ namespace jerome {
     
     struct MakeAnalyzersVisitor : public boost::static_visitor<> {
       List<Analyzer> analyzers;
+      jerome::ir::Dictionary dictionary;
+
+      explicit MakeAnalyzersVisitor(const jerome::ir::Dictionary& inDictionary)
+      : dictionary(inDictionary) {}
+
       template <typename T>
       void operator () (const T& value)
       {}
       void operator () (const Record& value)
       {
-        auto result = AnalyzerFactory::sharedInstance().make(value);
+        auto result = AnalyzerFactory::sharedInstance().make(dictionary, value);
         if (result) {
           analyzers.push_back(result.value());
         }
@@ -45,7 +50,7 @@ namespace jerome {
     {
       if (mAnalyzers) return *mAnalyzers;
       
-      MakeAnalyzersVisitor visitor;
+      MakeAnalyzersVisitor visitor(dictionary());
       for(const auto& v : model()) {
         if (v.first == ANALYZER_KEY) {
           boost::apply_visitor(visitor, v.second);

@@ -188,32 +188,35 @@ namespace jerome {  namespace ir {
 		typedef Q			query_type;
 		typedef Q			argument_type;
 		
-		template <class R>
-		RankerWithAnalyzer(const R& inRanker, const query_analyzer_type& inAnalyzer)
+    RankerWithAnalyzer(const jerome::ir::Dictionary& inDictionary)
+    : parent_type(inDictionary)
+    , mAnalyzer(inDictionary)
+    {}
+
+		//template <class R>
+		RankerWithAnalyzer(const RankerWithAnalyzer& inRanker, const query_analyzer_type& inAnalyzer)
 		: parent_type(inRanker)
 		, mAnalyzer(inAnalyzer)
 		{}
 
-		template <class R>
-		RankerWithAnalyzer(R&& inRanker, const query_analyzer_type& inAnalyzer)
-		: parent_type(std::forward<R>(inRanker))
+		//template <class R>
+		RankerWithAnalyzer(RankerWithAnalyzer&& inRanker, const query_analyzer_type& inAnalyzer)
+		: parent_type(std::forward<RankerWithAnalyzer>(inRanker))
 		, mAnalyzer(inAnalyzer)
 		{}
 		
-		template <class R>
-		RankerWithAnalyzer(const R& inRanker)
+		//template <class R>
+		RankerWithAnalyzer(const RankerWithAnalyzer& inRanker)
 		: parent_type(inRanker)
 		, mAnalyzer(inRanker.analyzer())
 		{}
 
-		template <class R>
-		RankerWithAnalyzer(R&& inRanker)
-		: parent_type(std::forward<R>(inRanker))
+		//template <class R>
+		RankerWithAnalyzer(RankerWithAnalyzer&& inRanker)
+		: parent_type(std::forward<RankerWithAnalyzer>(inRanker))
 		, mAnalyzer(inRanker.analyzer())
 		{}
 
-		RankerWithAnalyzer() {}
-		
 		using parent_type::operator();
 		
 		result_type		operator() (const query_type& query) {

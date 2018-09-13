@@ -26,6 +26,7 @@
 #include <jerome/types.hpp>
 #include <jerome/type/matrix.hpp>
 #include <jerome/ir/parsing/token.hpp>
+#include <jerome/ir/collection/dictionary.hpp>
 
 namespace jerome { namespace ir { namespace filter {
 	template <class Index> class IndexWriter;
@@ -280,20 +281,25 @@ namespace jerome { namespace ir {
 //      return inField.findTerm(termID);
 //    }
 //
-//    explicit Index(int x) {
-//
-//    }
-//
-//  private:
-//    Index() = delete;
+    explicit Index(Dictionary inDictionary) {
+
+    }
+
+    Dictionary dictionary() const { return mDictionary; }
+
+  private:
+    Index() = delete;
+    Dictionary mDictionary;
   };
 	
 	class HeapIndex : public Index<HeapIndex> {
-		
+    typedef Index<HeapIndex> parent_type;
+    using parent_type::parent_type;
 	};
 
 	class FileIndex : public Index<FileIndex> {
-		
+    typedef Index<FileIndex> parent_type;
+    using parent_type::parent_type;
 	};
 
 	

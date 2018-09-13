@@ -32,16 +32,20 @@ namespace jerome {
     namespace detail {
       template <class D, class Index>
       class AnalyzerImplementation {
+        jerome::ir::Dictionary mDictionary;
         String	mName;
       public:
         typedef	Index		result_type;
         typedef const D&	argument_type;
-        AnalyzerImplementation(const String& inName = "")
-        : mName(inName) {}
+        AnalyzerImplementation(const jerome::ir::Dictionary& inDictionary,
+                               const String& inName = "")
+        : mDictionary(inDictionary)
+        , mName(inName) {}
         virtual ~AnalyzerImplementation() {}
         const String& name() const { return this->mName; }
         virtual void parse(argument_type inObject, result_type& ioIndex) const {}
 				virtual Record model() const { return Record(); }
+        const jerome::ir::Dictionary& dictionary() const { return mDictionary; }
 			protected:
 				void setName(const String& inName) { mName = inName; }
       };
@@ -57,19 +61,19 @@ namespace jerome {
       typedef ReferenceClassInterface<implementation_type> parent_type;
       
       using parent_type::parent_type;
-            
+
       const String& name() const { return this->implementation().name(); }
-      
+
       void parse(argument_type inObject, result_type& ioIndex) const {
         this->implementation().parse(inObject, ioIndex); }
       
       result_type operator () (argument_type inObject) const {
-        result_type	indexedQuery;
+        result_type  indexedQuery(this->implementation().dictionary());
         this->parse(inObject, indexedQuery);
         indexedQuery.optimize();
         return indexedQuery;
       }
-      
+
       template <typename Impl, typename ...Args>
       static Analyzer make(Args&& ...args)
       {
@@ -80,8 +84,14 @@ namespace jerome {
 			{
 				return this->implementation().model();
 			}
-			
+
+      Analyzer(const jerome::ir::Dictionary& inDictionary)
+      : parent_type()
+      {}
+      
 		protected:
+      Analyzer() = delete;
+
 			template <typename Impl, typename ...Args>
 			static shared_ptr<Impl> make_impl(Args&& ...args)
 			{

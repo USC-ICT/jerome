@@ -45,6 +45,8 @@ struct Ranker : public jerome::ir::rm::Ranker<Q, A, Ranker<Q,A,L>> {
 	typedef	jerome::ir::rm::Ranker<Q, A, this_type>			parent_type;
 	
 	JEROME_INTERNAL_RANKER_TYPES(parent_type)
+
+  using parent_type::parent_type;
 	
 	typedef L												link_type;
 	typedef List<link_type>					link_list_type;
