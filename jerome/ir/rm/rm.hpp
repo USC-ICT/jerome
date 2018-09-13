@@ -84,7 +84,7 @@ namespace jerome { namespace ir { namespace rm {
 		typedef Index	index_type;
 		typedef Context<index_type> context_type;
 		
-    DocumentModel(jerome::ir::Dictionary inDictionary)
+    DocumentModel(jerome::ir::AlphabetPtr inDictionary)
 		: mIndex(inDictionary)
 		, mContext(mIndex)
 		{
@@ -120,7 +120,7 @@ namespace jerome { namespace ir { namespace rm {
 		typedef List<D> object_list_type;
 		typedef typename object_list_type::const_iterator	object_iterator_type;
 		
-		StoredDocumentModel(jerome::ir::Dictionary inDictionary)
+		StoredDocumentModel(jerome::ir::AlphabetPtr inDictionary)
 		: DocumentModel<Index>(inDictionary)
 		{
 		}
@@ -162,7 +162,7 @@ namespace jerome { namespace ir { namespace rm {
 		
 		const context_type& context() const { return model().context(); }
 
-    Desc(jerome::ir::Dictionary inDictionary)
+    Desc(jerome::ir::AlphabetPtr inDictionary)
     : mModel(inDictionary)
     {}
 
@@ -186,7 +186,7 @@ namespace jerome { namespace ir { namespace rm {
 		
 		JEROME_INTERNAL_RANKER_TYPES(_RT)
 						
-		Ranker(const jerome::ir::Dictionary& inDictionary)
+		Ranker(const jerome::ir::AlphabetPtr& inDictionary)
     : mQuery(inDictionary)
     , mDocument(inDictionary)
 		{

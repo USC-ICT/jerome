@@ -44,13 +44,13 @@ namespace jerome {
       : public Factory<
         AnalyzerFactory,
 				Analyzer,
-        const jerome::ir::Dictionary&,
+        const jerome::ir::AlphabetPtr&,
         const Record&>
     {
       typedef Factory<
       AnalyzerFactory,
       Analyzer,
-      const jerome::ir::Dictionary&,
+      const jerome::ir::AlphabetPtr&,
       const Record&> parent_type;
     public:
       AnalyzerFactory();
@@ -59,7 +59,7 @@ namespace jerome {
 
       using parent_type::make;
 
-      Result<object_type> make(const jerome::ir::Dictionary& inDictionary, const Record& inRecord)
+      Result<object_type> make(const jerome::ir::AlphabetPtr& inDictionary, const Record& inRecord)
       {
         return parent_type::make(inRecord.at<String>(parent_type::PROVIDER_KEY),
                                  inDictionary,
@@ -77,7 +77,7 @@ namespace jerome {
       {
 				static constexpr const char* IDENTIFIER = Impl::IDENTIFIER;
 				
-        Result<AnalyzerFactory::object_type> provide(const jerome::ir::Dictionary& inDictionary, const Record& inRecord) override
+        Result<AnalyzerFactory::object_type> provide(const jerome::ir::AlphabetPtr& inDictionary, const Record& inRecord) override
         {
 					return Analyzer::make<Providable<Impl>>(String(IDENTIFIER), inDictionary, inRecord);
         }

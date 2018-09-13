@@ -188,7 +188,7 @@ namespace jerome {  namespace ir {
 		typedef Q			query_type;
 		typedef Q			argument_type;
 		
-    RankerWithAnalyzer(const jerome::ir::Dictionary& inDictionary)
+    RankerWithAnalyzer(const AlphabetPtr& inDictionary)
     : parent_type(inDictionary)
     , mAnalyzer(inDictionary)
     {}

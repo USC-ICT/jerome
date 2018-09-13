@@ -24,49 +24,174 @@
 #define __jerome_ir_collection_dictionary_hpp
 
 #include <jerome/types.hpp>
-#include <jerome/type/shared.hpp>
+#include <jerome/type/persistence.hpp>
+#include "persistence_containers.hpp"
 
 namespace jerome { namespace ir {
 
   JEROME_EXCEPTION(illegal_access_exception)
 
   namespace detail {
-    class Dictionary;
-  }
-
-  struct Dictionary : public ReferenceClassInterface<detail::Dictionary> {
-    typedef ReferenceClassInterface<detail::Dictionary> parent_type;
-    using parent_type::parent_type;
 
     typedef uint64_t index_type;
-    typedef jerome::shared::Access access_type;
-    typedef illegal_access_exception illegal_access_exception;
 
-    static const index_type unknownIndex =
-    std::numeric_limits<index_type>::max();
+    typedef jerome::persistence::bidirectional_map<
+    persistence::string,
+    index_type,
+    jerome::persistence::void_allocator,
+    jerome::persistence::string_hash_type,
+    jerome::persistence::string_compare_type<persistence::string>
+    > persistent_bidirectional_map;
 
-    Dictionary(access_type inAccess, const char* inPath);
-    Dictionary();
+    typedef jerome::persistence::bidirectional_map<
+    std::string,
+    index_type,
+    std::allocator<void>,
+    jerome::persistence::string_hash_type,
+    jerome::persistence::string_compare_type<std::string>
+    > transient_bidirectional_map;
 
-    access_type access() const;
+    struct AlphabetImpl : public jerome::persistence::basic_storage<
+    persistent_bidirectional_map::storage_type,
+    transient_bidirectional_map::storage_type>
+    {
+      typedef jerome::persistence::basic_storage<
+      persistent_bidirectional_map::storage_type,
+      transient_bidirectional_map::storage_type> parent_type;
 
-    index_type
-    emplace(const std::string& inString);
+      using parent_type::parent_type;
 
-    index_type
-    emplace(const char* inString);
+      typedef jerome::ir::illegal_access_exception illegal_access_exception;
 
-    index_type
-    string2index(const std::string& inString) const;
+      template <typename S>
+      index_type
+      emplace(S inString) {
+        switch (access()) {
+          case access_type::read_only: {
+            auto index = string2index(inString);
+            if (index != unknownIndex) {
+              return index;
+            }
+            throw illegal_access_exception();
+          }
+          case access_type::write_shared: {
+            auto index = string2index(inString);
+            if (index != unknownIndex) {
+              return index;
+            }
+            index = persistent().get()->size();
+            int numberOfTries = 3;
+            while (true) {
+              try {
+                // emplace tries to allocate
+                // a node even if one already exists.
+                // That's why we check for it first.
+                assert(persistent().get());
+                persistent().get()->emplace(jerome::persistence::to_string(inString, persistent().get()->get_allocator()), index);
+                break;
+              } catch (const boost::interprocess::bad_alloc& error) {
+                if (--numberOfTries <= 0) throw error;
+                persistent().grow(persistent().storageSize());
+              }
+            }
+            return index;
+          }
+          case access_type::write_private: {
+            auto index = string2index(inString);
+            if (index != unknownIndex) {
+              return index;
+            }
+            assert(transient().get());
+            index = (persistent() ? persistent().get()->size() : 0)
+            + transient().get()->size();
+            transient().get()->emplace(std::string(inString), index);
+            return index;
+          }
+        }
+      }
 
-    index_type
-    string2index(const char* inString) const;
+      template <typename S>
+      index_type
+      string2index(const S& inString) const {
+        if (persistent()) {
+          auto iter = persistent().get()->get<persistent_bidirectional_map::first>().find(inString);
+          if (iter != persistent().get()->get<persistent_bidirectional_map::first>().end()) {
+            return iter->second;
+          }
+        }
+        if (transient()) {
+          auto iter = transient().get()->get<transient_bidirectional_map::first>().find(inString);
+          if (iter != transient().get()->get<transient_bidirectional_map::first>().end()) {
+            return iter->second;
+          }
+        }
+        return unknownIndex;
+      }
 
-    jerome::optional<std::string>
-    index2string(index_type inIndex) const;
+      jerome::optional<std::string>
+      index2string(index_type inIndex) const {
+        if (persistent()) {
+          auto iter = persistent().get()->get<persistent_bidirectional_map::second>().find(inIndex);
+          if (iter != persistent().get()->get<persistent_bidirectional_map::second>().end()) {
+            return std::to_string(iter->first);
+          }
+        }
+        if (transient()) {
+          auto iter = transient().get()->get<transient_bidirectional_map::second>().find(inIndex);
+          if (iter != transient().get()->get<transient_bidirectional_map::second>().end()) {
+            return iter->first;
+          }
+        }
+        return jerome::optional<std::string>();
+      }
 
-    void optimize();
-  };
+      void
+      optimize() {
+        persistent().shrinkToFit();
+      }
+
+      static const index_type unknownIndex =
+      std::numeric_limits<index_type>::max();
+
+    };
+  }
+
+  typedef detail::AlphabetImpl Alphabet;
+  typedef std::shared_ptr<Alphabet> AlphabetPtr;
+
+//  struct Dictionary : public ReferenceClassInterface<detail::Dictionary> {
+//    typedef ReferenceClassInterface<detail::Dictionary> parent_type;
+//    using parent_type::parent_type;
+//
+//    typedef uint64_t index_type;
+//    typedef jerome::persistence::Access access_type;
+//    typedef illegal_access_exception illegal_access_exception;
+//
+//    static const index_type unknownIndex =
+//    std::numeric_limits<index_type>::max();
+//
+//    Dictionary(access_type inAccess, const char* inPath);
+//    Dictionary();
+//
+//    access_type access() const;
+//
+//    index_type
+//    emplace(const std::string& inString);
+//
+//    index_type
+//    emplace(const char* inString);
+//
+//    index_type
+//    string2index(const std::string& inString) const;
+//
+//    index_type
+//    string2index(const char* inString) const;
+//
+//    jerome::optional<std::string>
+//    index2string(index_type inIndex) const;
+//
+//    void optimize();
+//  };
 
 
 }}

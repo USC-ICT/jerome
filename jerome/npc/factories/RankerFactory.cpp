@@ -58,12 +58,12 @@ namespace jerome {
         typedef parent_type::query_analyzer_type query_analyzer_type;
        
         UtteranceCLRanker()
-        : parent_type(jerome::ir::Dictionary())
+        : parent_type(jerome::ir::AlphabetPtr())
         {}
 
         UtteranceCLRanker(const State::ranker_model_type& inModel,
           const Data& data)
-        : parent_type(jerome::ir::Dictionary())
+        : parent_type(jerome::ir::AlphabetPtr())
         {
           auto doc_weigh = AnswerWeightingFactory::sharedInstance()
           .make(inModel.at(ANSWER_WEIGHTING_KEY,

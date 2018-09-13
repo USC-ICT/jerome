@@ -1,5 +1,5 @@
 //
-//  shared.hpp
+//  persistence.hpp
 //
 //  Created by Anton Leuski on 9/11/18.
 //  Copyright © 2018 Anton Leuski & ICT/USC. All rights reserved.
@@ -20,8 +20,8 @@
 //  along with Jerome.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef __jerome_type_shared_hpp
-#define __jerome_type_shared_hpp
+#ifndef __jerome_type_persistence_hpp
+#define __jerome_type_persistence_hpp
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wshorten-64-to-32"
@@ -35,7 +35,7 @@
 #pragma clang diagnostic pop
 
 namespace jerome {
-  namespace shared {
+  namespace persistence {
     typedef boost::interprocess::managed_mapped_file::segment_manager  segment_manager_t;
     typedef boost::interprocess::allocator<void, segment_manager_t> void_allocator;
     typedef void_allocator::rebind<char>::other char_allocator;
@@ -48,6 +48,38 @@ namespace jerome {
     inline string to_string(const char* inString, const string::allocator_type inAllocator) {
       return string(inString, inAllocator);
     }
+
+    struct string_hash_type {
+      std::size_t operator()(const char* val) const
+      {
+        return boost::hash_range(val, val + strlen(val));
+      }
+      template <typename T>
+      std::size_t operator()(T const& val) const
+      {
+        return boost::hash_range(val.begin(), val.end());
+      }
+    };
+
+    template <typename S>
+    struct string_compare_type {
+      bool operator()(const char* inX,
+                      const S& inY) const
+      {
+        return 0 == strcmp(inX, inY.c_str());
+      }
+      bool operator()(const std::string& inX,
+                      const S& inY) const
+      {
+        return 0 == strcmp(inX.c_str(), inY.c_str());
+      }
+
+      template <typename T>
+      bool operator()(const T& inX, const T& inY) const
+      {
+        return inX == inY;
+      }
+    };
 
     enum Access {
       read_only, write_shared, write_private
@@ -68,13 +100,13 @@ namespace jerome {
         mFile.flush();
       }
 
-      const shared::void_allocator& allocator() const { return mAllocator; }
+      const void_allocator& allocator() const { return mAllocator; }
       const boost::interprocess::managed_mapped_file& file() const { return mFile; }
       boost::interprocess::managed_mapped_file& file() { return mFile; }
 
     private:
       boost::interprocess::managed_mapped_file mFile;
-      shared::void_allocator mAllocator;
+      void_allocator mAllocator;
     };
 
     template <typename T>
@@ -138,7 +170,9 @@ namespace jerome {
       std::unique_ptr<MappedFile> mFile;
       pointer_type mObject;
 
-      const shared::void_allocator& allocator() const { return mFile->allocator(); }
+      MappedPointer(const MappedPointer&) = delete;
+
+      const void_allocator& allocator() const { return mFile->allocator(); }
       const boost::interprocess::managed_mapped_file& file() const { return mFile->file(); }
       boost::interprocess::managed_mapped_file& file() { return mFile->file(); }
 
@@ -159,9 +193,9 @@ namespace jerome {
 }
 
 namespace std {
-  inline std::string to_string(const jerome::shared::string& inString) {
+  inline std::string to_string(const jerome::persistence::string& inString) {
     return std::string(inString.begin(), inString.end());
   }
 }
 
-#endif // defined __jerome_type_shared_hpp
+#endif // defined __jerome_type_persistence_hpp

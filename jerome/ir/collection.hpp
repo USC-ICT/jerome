@@ -281,15 +281,15 @@ namespace jerome { namespace ir {
 //      return inField.findTerm(termID);
 //    }
 //
-    explicit Index(Dictionary inDictionary) {
+    explicit Index(AlphabetPtr inDictionary) {
 
     }
 
-    Dictionary dictionary() const { return mDictionary; }
+    AlphabetPtr dictionary() const { return mDictionary; }
 
   private:
     Index() = delete;
-    Dictionary mDictionary;
+    AlphabetPtr mDictionary;
   };
 	
 	class HeapIndex : public Index<HeapIndex> {

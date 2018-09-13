@@ -32,12 +32,12 @@ namespace jerome {
     namespace detail {
       template <class D, class Index>
       class AnalyzerImplementation {
-        jerome::ir::Dictionary mDictionary;
+        AlphabetPtr mDictionary;
         String	mName;
       public:
         typedef	Index		result_type;
         typedef const D&	argument_type;
-        AnalyzerImplementation(const jerome::ir::Dictionary& inDictionary,
+        AnalyzerImplementation(const AlphabetPtr& inDictionary,
                                const String& inName = "")
         : mDictionary(inDictionary)
         , mName(inName) {}
@@ -45,7 +45,7 @@ namespace jerome {
         const String& name() const { return this->mName; }
         virtual void parse(argument_type inObject, result_type& ioIndex) const {}
 				virtual Record model() const { return Record(); }
-        const jerome::ir::Dictionary& dictionary() const { return mDictionary; }
+        const AlphabetPtr& dictionary() const { return mDictionary; }
 			protected:
 				void setName(const String& inName) { mName = inName; }
       };
@@ -85,7 +85,7 @@ namespace jerome {
 				return this->implementation().model();
 			}
 
-      Analyzer(const jerome::ir::Dictionary& inDictionary)
+      Analyzer(const AlphabetPtr& inDictionary)
       : parent_type()
       {}
       

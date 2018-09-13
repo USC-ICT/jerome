@@ -29,9 +29,9 @@ namespace jerome {
     
     struct MakeAnalyzersVisitor : public boost::static_visitor<> {
       List<Analyzer> analyzers;
-      jerome::ir::Dictionary dictionary;
+      jerome::ir::AlphabetPtr dictionary;
 
-      explicit MakeAnalyzersVisitor(const jerome::ir::Dictionary& inDictionary)
+      explicit MakeAnalyzersVisitor(const jerome::ir::AlphabetPtr& inDictionary)
       : dictionary(inDictionary) {}
 
       template <typename T>

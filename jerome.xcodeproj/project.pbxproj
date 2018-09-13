@@ -452,7 +452,7 @@
 		6268B0341A057A1800287DF4 /* parsing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = parsing.cpp; sourceTree = "<group>"; };
 		6268B0381A057A3800287DF4 /* token.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = token.hpp; sourceTree = "<group>"; };
 		6268B0391A057A5700287DF4 /* filters.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filters.hpp; sourceTree = "<group>"; };
-		626BB7E021484D3100FE6408 /* shared.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shared.hpp; sourceTree = "<group>"; };
+		626BB7E021484D3100FE6408 /* persistence.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = persistence.hpp; sourceTree = "<group>"; };
 		62750A2C1D835BB2004ABECE /* Evaluate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Evaluate.cpp; sourceTree = "<group>"; };
 		62750A2D1D835BB2004ABECE /* Evaluate.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Evaluate.hpp; sourceTree = "<group>"; };
 		62778F3218FC8D07007F7FD2 /* functions.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = functions.hpp; sourceTree = "<group>"; };
@@ -591,6 +591,7 @@
 		62D19FBA2148692100E8C954 /* libjerome_osx_tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = libjerome_osx_tests.m; sourceTree = "<group>"; };
 		62D19FBC2148692100E8C954 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		62D19FC52148976300E8C954 /* dictionary.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = dictionary.cpp; sourceTree = "<group>"; };
+		62D19FC8214AE92300E8C954 /* persistence_containers.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = persistence_containers.hpp; sourceTree = "<group>"; };
 		62D56AEC1987069400F09A32 /* distances_in_answer_space.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = distances_in_answer_space.hpp; sourceTree = "<group>"; };
 		62D56AED1987069400F09A32 /* distances_in_mixed_space.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = distances_in_mixed_space.hpp; sourceTree = "<group>"; };
 		62D56AF01987069400F09A32 /* collection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = collection.hpp; sourceTree = "<group>"; };
@@ -748,7 +749,7 @@
 				620A3F0A197E50FC000400E3 /* random.hpp */,
 				6200F5561BA76288009828A4 /* Record.hpp */,
 				62D8A8291BF699F9005355B0 /* regex.hpp */,
-				626BB7E021484D3100FE6408 /* shared.hpp */,
+				626BB7E021484D3100FE6408 /* persistence.hpp */,
 				62AC3BBC1BBC94C80067C540 /* string.cpp */,
 				620A3F06197E4DF9000400E3 /* string.hpp */,
 			);
@@ -921,6 +922,7 @@
 			children = (
 				625D39F321484E380038D20D /* dictionary.hpp */,
 				62D19FC52148976300E8C954 /* dictionary.cpp */,
+				62D19FC8214AE92300E8C954 /* persistence_containers.hpp */,
 			);
 			path = collection;
 			sourceTree = "<group>";
