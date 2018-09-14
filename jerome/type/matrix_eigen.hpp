@@ -43,6 +43,7 @@
 namespace jerome {
   
   template<class T> using Vector = Eigen::Matrix<T, Eigen::Dynamic, 1>;
+  template<class T> using VectorSham = Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, 1>>;
   // sparse array
   template<class T> using SparseVector = Eigen::SparseVector<T, 0, std::ptrdiff_t>;
   
@@ -66,7 +67,13 @@ namespace jerome {
     : rowCount(m.rows()), columnCount(m.cols())
     {}
   };
-  
+
+  template <typename T>
+  inline VectorSham<T> sham(const std::vector<T>& inVector)
+  {
+    return VectorSham<T>(const_cast<T*>(inVector.data()), inVector.size());
+  }
+
   inline auto WeightMatrixZero(const MatrixSize& size)
   -> decltype(WeightMatrix::Zero(size.rowCount, size.columnCount))
   {

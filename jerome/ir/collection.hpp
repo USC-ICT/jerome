@@ -133,8 +133,8 @@ namespace jerome { namespace ir {
 			
 		public:
       typedef std::unordered_map<TermID, Term>    Terms;
-			typedef Vector<uint32_t>	DocumentLengths;
-      typedef traits<DocumentLengths>::size_type			size_type;
+      typedef std::vector<uint32_t>	DocumentLengths;
+      typedef DocumentLengths::size_type			size_type;
 			
 		private:
 			Terms			mTerms;
@@ -203,7 +203,7 @@ namespace jerome { namespace ir {
 				}
 
         if (inDocumentID >= mDocumentLengths.size()) {
-          jerome::resize(mDocumentLengths, inDocumentID+1);
+          resize(mDocumentLengths, inDocumentID+1);
           set_value_at_index_in_vector(0, inDocumentID, mDocumentLengths);
         }
         increment_value_at_index_in_vector(inDocumentID, mDocumentLengths);
@@ -212,13 +212,32 @@ namespace jerome { namespace ir {
 			
 			typename Term::size_type	addDocument() {
         auto newDocumentIndex  = mDocumentLengths.size();
-        jerome::resize(mDocumentLengths, newDocumentIndex+1);
+        resize(mDocumentLengths, newDocumentIndex+1);
         set_value_at_index_in_vector(0, newDocumentIndex, mDocumentLengths);
 				return (typename Term::size_type)newDocumentIndex;
 			}
 			
+      template <typename M, typename S>
+      inline void resize(M& m, S s)
+      {
+        m.resize(s);
+      }
+
+      template <typename X, typename I, typename V>
+      inline auto set_value_at_index_in_vector(X&& x, const I& i, V& v)
+      -> decltype(v[i])
+      {
+        return v[i] = x;
+      }
+
+      template <typename I, typename V>
+      inline auto increment_value_at_index_in_vector(const I& i, V& v)
+      -> decltype(v[i])
+      {
+        return v[i] += 1;
+      }
 		};
-		
+
     typename Index::Field::size_type	documentCount() const {
       typename Field::size_type	count	= 0;
       for(const typename Fields::value_type& i : fields()) {
