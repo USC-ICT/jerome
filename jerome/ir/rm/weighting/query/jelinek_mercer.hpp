@@ -74,7 +74,7 @@ namespace jerome {
                 double    wIndep    = collection_weight<Index>(ti, field);
                 if (wIndep == 0)
                   throw Exception(
-                    std::string() + "Collection statistic for term " + te.first
+                                  std::string() + "Collection statistic for term " + std::to_string(te.first)
                     //												+ " with Cf=" //+ (int)ti.cf()
                     //												+ " epsilon=" + epsilon
                     //												+ " ColSize=" + cs

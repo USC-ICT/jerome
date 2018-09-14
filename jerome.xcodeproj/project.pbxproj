@@ -2152,6 +2152,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 625D39FE21485C740038D20D /* Debug.xcconfig */;
 			buildSettings = {
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-ftemplate-backtrace-limit=0",
+				);
 			};
 			name = Debug;
 		};
@@ -2159,6 +2163,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 625D3A0221485C740038D20D /* Release.xcconfig */;
 			buildSettings = {
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-ftemplate-backtrace-limit=0",
+				);
 			};
 			name = Release;
 		};

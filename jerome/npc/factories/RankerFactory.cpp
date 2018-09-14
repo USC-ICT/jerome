@@ -76,13 +76,13 @@ namespace jerome {
 					mModel.emplace(QUESTION_WEIGHTING_KEY, qry_weigh.value().model());
 
           auto doc_analyzer = AnalyzerFactory::sharedInstance()
-          .make(document().index().dictionary(),
+          .make(document().index().alphabet(),
                 inModel.at(ANSWER_ANALYZER_KEY,
                              AnalyzerFactory::sharedInstance().predefinedModels().find("text-unigram+id")->second));
 					mModel.emplace(ANSWER_ANALYZER_KEY, doc_analyzer.value().model());
 
           auto qry_analyzer = AnalyzerFactory::sharedInstance()
-            .make(document().index().dictionary(),
+            .make(document().index().alphabet(),
                   inModel.at(QUESTION_ANALYZER_KEY,
                              AnalyzerFactory::sharedInstance().defaultModel()));
 					mModel.emplace(QUESTION_ANALYZER_KEY, qry_analyzer.value().model());

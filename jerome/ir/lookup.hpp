@@ -80,7 +80,9 @@ namespace jerome { namespace ir {
     
     typedef typename TargetIndex::Term::size_type term_index_type;
     typedef typename TargetIndex::Term::freq_type term_freq_type;
-    
+
+    assert(inQuery.alphabet() == inIndex.alphabet());
+
     for(const auto& field : inQuery.fields()) {
       try {
         // find the field in target index. throws an exception

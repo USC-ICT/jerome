@@ -38,9 +38,10 @@ namespace jerome { namespace ir {
 	class Index {
 	public:
 		class Field;
-		
-		typedef StringMap<Field>				Fields;
-		typedef typename StringMap<Field>::size_type	size_type;
+
+    typedef Alphabet::index_type    TermID;
+		typedef std::unordered_map<TermID, Field>		Fields;
+    typedef typename Fields::size_type	size_type;
 		
 	private:
 		uint32_t		version;
@@ -131,7 +132,7 @@ namespace jerome { namespace ir {
 		class Field {
 			
 		public:
-			typedef StringMap<Term>	Terms;
+      typedef std::unordered_map<TermID, Term>    Terms;
 			typedef Vector<uint32_t>	DocumentLengths;
       typedef traits<DocumentLengths>::size_type			size_type;
 			
@@ -154,11 +155,15 @@ namespace jerome { namespace ir {
 			const size_type			cs()				const { return mTotalTermCount; }
 			const DocumentLengths&	documentLengths()	const { return mDocumentLengths; }
 			size_type				documentCount()		const { return mDocumentLengths.size(); }
-			const Term&				findTerm(const String& text) const {
-				typename Terms::const_iterator i = terms().find(text);
-				return i == terms().end() ? Term::missing_term() : i->second;
-			}
-			
+//      const Term&        findTerm(const String& text) const {
+//        typename Terms::const_iterator i = terms().find(text);
+//        return i == terms().end() ? Term::missing_term() : i->second;
+//      }
+      const Term&        findTerm(TermID inTermID) const {
+        auto i = terms().find(inTermID);
+        return i == terms().end() ? Term::missing_term() : i->second;
+      }
+
 			void	optimize(Index& inIndex) {
 				for(typename Terms::value_type& f : mTerms) {
 					f.second.optimize(inIndex, *this);
@@ -189,9 +194,10 @@ namespace jerome { namespace ir {
 //          return;
 //        }
 
-				typename Terms::iterator p = mTerms.find(inToken.text());
+        TermID termID = ioIndex.stringID(inToken.text());
+				auto p = mTerms.find(termID);
 				if (p == mTerms.end()) {
-					mTerms.emplace(inToken.text(), Term(inDocumentID, inToken));
+					mTerms.emplace(termID, Term(inDocumentID, inToken));
 				} else {
 					p->second.add(inDocumentID, inToken);
 				}
@@ -227,26 +233,39 @@ namespace jerome { namespace ir {
 			}
 		}
 		
-		const Field&	findField(const String& inFieldName) const {
+    const Field&  findField(TermID inFieldNameID) const {
+      if (fields().empty())
+        throw _field_not_found_exception(inFieldNameID);
+
+      auto  i  = fields().find(inFieldNameID);
+      if (i == fields().end()) {
+        throw _field_not_found_exception(inFieldNameID);
+      }
+      return i->second;
+    }
+
+    const Field&	findField(const String& inFieldName) const {
 			if (fields().empty())
 				throw field_not_found_exception(inFieldName);
-			
-			typename Fields::const_iterator	i	= fields().find(inFieldName);
-			if (i == fields().end()) {
-				throw field_not_found_exception(inFieldName);
-			}
-			return i->second;
+
+      auto fieldID = stringID(inFieldName);
+      if (!fieldID) {
+        throw field_not_found_exception(inFieldName);
+      }
+
+      return findField(*fieldID);
 		}
 		
 		Field&	findField(const String& inFieldName, bool inCreateIfNotFound) {
-			typename Fields::iterator	i	= fields().find(inFieldName);
+      TermID fieldID = stringID(inFieldName);
+			auto i	= fields().find(fieldID);
 			if (i != fields().end())
 				return i->second;
 			
 			if (!inCreateIfNotFound)
 				throw field_not_found_exception(inFieldName);
 			
-			std::pair<typename Fields::iterator, bool>	p = fields().emplace(inFieldName, Field());
+			auto	p = fields().emplace(fieldID, Field());
 			if (!p.second)
 				throw cannot_insert_field(inFieldName);
 			
@@ -267,29 +286,36 @@ namespace jerome { namespace ir {
       ioField.add(inDocumentID, inToken, *this);
     }
 
-//    TermID stringID(const String& inString) {
-//      return 0;
-//    }
-//
-//    optional<TermID> stringID(const String& inString) const {
-//      return 0;
-//    }
-//
-//    const Term& findTerm(const Field& inField, const String& text) const {
-//      auto termID = stringID(text);
-//      if (!termID) return Term::missing_term();
-//      return inField.findTerm(termID);
-//    }
-//
-    explicit Index(AlphabetPtr inDictionary) {
-
+    TermID stringID(const String& inString) {
+      return mAlphabet->emplace(inString);
     }
 
-    AlphabetPtr dictionary() const { return mDictionary; }
+    optional<TermID> stringID(const String& inString) const {
+      auto termID = mAlphabet->string2index(inString);
+      return termID == Alphabet::unknownIndex ? optional<TermID>() : optional<TermID>(termID);
+    }
+
+    const Term& findTerm(const Field& inField, const String& text) const {
+      auto termID = stringID(text);
+      if (!termID) return Term::missing_term();
+      return inField.findTerm(termID);
+    }
+
+    explicit Index(AlphabetPtr inAlphabet)
+    : mAlphabet(inAlphabet)
+    {
+    }
+
+    AlphabetPtr alphabet() const { return mAlphabet; }
 
   private:
     Index() = delete;
-    AlphabetPtr mDictionary;
+    AlphabetPtr mAlphabet;
+
+    field_not_found_exception _field_not_found_exception(TermID inID) const {
+      auto name = mAlphabet->index2string(inID);
+      return field_not_found_exception(name ? *name : std::string("unknown field"));
+    }
   };
 	
 	class HeapIndex : public Index<HeapIndex> {

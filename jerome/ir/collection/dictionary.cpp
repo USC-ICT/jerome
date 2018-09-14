@@ -27,47 +27,4 @@
 #include "persistence_containers.hpp"
 
 namespace jerome { namespace ir {
-
-
-//  Dictionary::Dictionary(access_type inAccess, const char* inPath)
-//  : parent_type(std::make_shared<detail::Dictionary>(inAccess, inPath))
-//  {}
-//
-//  Dictionary::Dictionary()
-//  : parent_type(std::make_shared<detail::Dictionary>())
-//  {}
-//
-//  Dictionary::access_type Dictionary::access() const {
-//    return implementation().access();
-//  }
-//
-//  Dictionary::index_type
-//  Dictionary::emplace(const std::string& inString) {
-//    return implementation().emplace(inString);
-//  }
-//
-//  Dictionary::index_type
-//  Dictionary::emplace(const char* inString) {
-//    return implementation().emplace(inString);
-//  }
-//
-//  Dictionary::index_type
-//  Dictionary::string2index(const std::string& inString) const {
-//    return implementation().string2index(inString);
-//  }
-//
-//  Dictionary::index_type
-//  Dictionary::string2index(const char* inString) const {
-//    return implementation().string2index(inString);
-//  }
-//
-//  jerome::optional<std::string>
-//  Dictionary::index2string(index_type inIndex) const {
-//    return implementation().index2string(inIndex);
-//  }
-//
-//  void Dictionary::optimize() {
-//    return implementation().optimize();
-//  }
-
 }}

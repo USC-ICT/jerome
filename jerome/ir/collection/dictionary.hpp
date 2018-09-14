@@ -62,6 +62,7 @@ namespace jerome { namespace ir {
       using parent_type::parent_type;
 
       typedef jerome::ir::illegal_access_exception illegal_access_exception;
+      typedef persistent_bidirectional_map::value_type::second_type index_type;
 
       template <typename S>
       index_type
