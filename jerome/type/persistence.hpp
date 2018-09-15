@@ -112,7 +112,7 @@ namespace jerome {
     template <typename T>
     struct MappedPointer {
       typedef T element_type;
-      typedef element_type* pointer_type;
+      typedef element_type* pointer;
 
       const Access access;
       const std::string path;
@@ -142,8 +142,8 @@ namespace jerome {
       , initialSize(inInitialSize)
       {loadObject();}
 
-      pointer_type get() { return mObject; }
-      const pointer_type get() const { return mObject; }
+      pointer get() { return mObject; }
+      const pointer get() const { return mObject; }
 
       void grow(std::size_t inAdditionalBytes) {
         if (!mFile) return;
@@ -168,7 +168,7 @@ namespace jerome {
 
     private:
       std::unique_ptr<MappedFile> mFile;
-      pointer_type mObject;
+      pointer mObject;
 
       MappedPointer(const MappedPointer&) = delete;
 
@@ -190,6 +190,113 @@ namespace jerome {
     };
   }
 
+  template <
+    typename V, typename I,
+    template<class, class> class VC = std::vector,
+    class Allocator = std::allocator<void>
+  >
+  struct sparse_vector {
+
+    typedef V value_type;
+    typedef value_type* pointer;
+    typedef const value_type* const_pointer;
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
+    typedef I index_type;
+    typedef std::size_t size_type;
+
+    const_pointer data() const { return mValues.data(); }
+    const index_type* indicies() const { return mIndices.data(); }
+    size_type size() const { return mSize; }
+    size_type entry_count() const { return mValues.size(); }
+
+    sparse_vector()
+    : mValues()
+    , mIndices()
+    , mSize(0)
+    {}
+
+    reference at(index_type pos) {
+      if (pos < 0 || pos >= size()) {
+        throw std::out_of_range(std::string("index ") + std::to_string(pos)
+                                + " out of range " + " [0.."
+                                + std::to_string(size()) + "[");
+      }
+      if (mIndices.size() > 0 && pos == mIndices.back()) {
+        return mValues.back();
+      }
+      auto iter = std::lower_bound(mIndices.begin(), mIndices.end(), pos);
+      if (iter == mIndices.end() || *iter != pos) {
+        if (entry_count() >= capacity()) {
+          reserve(1+entry_count());
+          iter = std::lower_bound(mIndices.begin(), mIndices.end(), pos);
+        }
+        mIndices.insert(iter, pos);
+        return *mValues.insert(mValues.begin()+std::distance(mIndices.begin(), iter),
+                               value_type());
+      } else {
+        return *(mValues.begin()+std::distance(mIndices.begin(), iter));
+      }
+    }
+
+    const_reference at(index_type pos) const {
+      if (pos < 0 || pos >= size()) {
+        throw std::out_of_range(std::string("index ") + pos
+                                + " out of range " + " [0.." + size() + "[");
+      }
+      if (mIndices.size() > 0 && pos == mIndices.back()) {
+        return mValues.back();
+      }
+      auto iter = std::lower_bound(mIndices.begin(), mIndices.end(), pos);
+      if (iter == mIndices.end() || *iter != pos) {
+        return value_type();
+      } else {
+        return *(mValues.begin()+std::distance(mIndices.begin(), iter));
+      }
+    }
+
+    // appends the other sparse vector, assuming it starts at inOffset
+    void append(const sparse_vector& inOther, index_type inOffset) {
+      resize(max(size(), inOffset + inOther.size()));
+      reserve(entry_count() + inOther.entry_count());
+      auto start = entry_count();
+      for(size_type i = 0; i < inOther.mIndices.size(); ++i) {
+        mValues[start+i] = inOther.mValues[i];
+        mIndices[start+i] = inOther.mIndices[i]+inOffset;
+      }
+    }
+
+    void shrink_to_fit() {
+      mValues.shrink_to_fit();
+      mIndices.shrink_to_fit();
+    }
+
+    void resize(size_type inNewSize) {
+      if (inNewSize < mSize) {
+        index_type i = 0;
+        for(; i < mIndices.size() && mIndices[i] < inNewSize; ++i);
+        mValues.resize(i);
+        mIndices.resize(i);
+      }
+      mSize = inNewSize;
+    }
+
+    void reserve(size_type inNewCapacity) {
+      mValues.reserve(inNewCapacity);
+      mIndices.reserve(inNewCapacity);
+    }
+
+    size_type capacity() const {
+      return std::min(mValues.capacity(), mIndices.capacity());
+    }
+
+    private:
+    typedef VC<value_type, typename Allocator::template rebind<value_type>::other> values_type;
+    typedef VC<index_type, typename Allocator::template rebind<index_type>::other> indices_type;
+    values_type mValues;
+    indices_type mIndices;
+    index_type mSize;
+  };
 }
 
 namespace std {

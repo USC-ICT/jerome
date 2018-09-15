@@ -43,10 +43,13 @@
 namespace jerome {
   
   template<class T> using Vector = Eigen::Matrix<T, Eigen::Dynamic, 1>;
-  template<class T> using VectorSham = Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, 1>>;
   // sparse array
   template<class T> using SparseVector = Eigen::SparseVector<T, 0, std::ptrdiff_t>;
-  
+
+  // Note this a column major matrix
+  template<class T> using TermFrequencies = Eigen::Map<const Eigen::SparseMatrix<T, 0, std::ptrdiff_t>>;
+ // template<class T> using TermFrequencies = Eigen::Map<const SparseVector<T>>;
+
   typedef Eigen::Matrix<WeightValue, Eigen::Dynamic, Eigen::Dynamic>	WeightMatrix;
   typedef Eigen::Matrix<WeightValue, Eigen::Dynamic, 1>               WeightVector;
   typedef Eigen::SparseVector<WeightValue, 0, std::ptrdiff_t>         SparseWeightVector;
@@ -69,9 +72,15 @@ namespace jerome {
   };
 
   template <typename T>
-  inline VectorSham<T> sham(const std::vector<T>& inVector)
+  inline Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, 1>> sham(std::vector<T>& inVector)
   {
-    return VectorSham<T>(const_cast<T*>(inVector.data()), inVector.size());
+    return Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, 1>>(inVector.data(), inVector.size());
+  }
+
+  template <typename T>
+  inline Eigen::Map<const Eigen::Matrix<T, Eigen::Dynamic, 1>> sham(const std::vector<T>& inVector)
+  {
+    return Eigen::Map<const Eigen::Matrix<T, Eigen::Dynamic, 1>>(inVector.data(), inVector.size());
   }
 
   inline auto WeightMatrixZero(const MatrixSize& size)
@@ -230,12 +239,19 @@ namespace jerome {
   }
 
   template <typename V, typename OP>
-  inline void for_each(const V& v, OP&& op) {
-    for (typename V::InnerIterator E(v); E; ++E) {
+  inline void for_each(const SparseVector<V>& v, OP&& op) {
+    for (typename SparseVector<V>::InnerIterator E(v); E; ++E) {
       op(E.index(), E.value());
     }
   }
-  
+
+  template <typename V, typename OP>
+  inline void for_each(const TermFrequencies<V>& v, OP&& op) {
+    for (typename TermFrequencies<V>::InnerIterator E(v, 0); E; ++E) {
+      op(E.index(), E.value());
+    }
+  }
+
   template <typename A, typename B, typename C>
   inline void sparse_outer_prod_add_to(const A& a, const B& b, C& c) {
     for (typename A::InnerIterator a_it(a); a_it; ++a_it) {

@@ -37,7 +37,89 @@ namespace jerome { namespace ir {
 	template <class IndexStorage>
 	class Index {
 	public:
-		class Field;
+    class Field;
+
+    class Term {
+      public:
+      typedef uint8_t                         freq_type;
+      // the idea is to separate frequencies from another information, e.g., term
+      // locations because it is easier to a. operate on, when frequencies are
+      // just a vector, b. customize -- avoid generating locations when they are not
+      // needed.
+      typedef TermFrequencies<freq_type>      Frequencies;
+      typedef traits<Frequencies>::size_type  size_type;
+
+      // number of documents the term appears in
+      const size_type df() const { return mDocumentCount; }
+      // total number of term occurences in the collection
+      const size_type cf() const { return mCollectionCount; }
+      // term count for individual documents
+      Frequencies tfs() const {
+        // Note this a column major matrix
+        // we will make Nx1 matrix
+        return Frequencies(mFrequencies.size(), 1, mFrequencies.entry_count(),
+                           mOuterIndices, mFrequencies.indicies(),
+                           mFrequencies.data());
+      }
+
+      static const Term& missing_term() {
+        return *_missing_term();
+      }
+
+      bool isMissing() const {
+        return this == Term::_missing_term();
+      }
+
+      private:
+      size_type   mCollectionCount; // SUM tf
+      // in theory, we can use the number of nonzero entries in the
+      // mFrequencies for this, bu what if some are zeroes?
+      size_type   mDocumentCount;
+      // aux pieces needed to map the frequencies to the Eigen matrix;
+      Frequencies::StorageIndex mOuterIndices[2];
+      jerome::sparse_vector<freq_type, Frequencies::StorageIndex> mFrequencies;
+
+      Term()
+      : mCollectionCount(0)
+      , mDocumentCount(0)
+      , mOuterIndices {0,0}
+      , mFrequencies()
+      {}
+
+      void addOccurenceInDocument(size_type inDocumentID) {
+        if (inDocumentID >= mFrequencies.size()) {
+          mFrequencies.resize(inDocumentID+1);
+        }
+        // can throw
+        auto count = (mFrequencies.at(inDocumentID) += 1);
+        if (count == 1) {
+          mDocumentCount += 1;
+        }
+        mCollectionCount += 1;
+        mOuterIndices[1] = mFrequencies.entry_count();
+      }
+
+      void addTerm(const Term& inTerm, std::size_t inOffset, size_type inCount) {
+        // can throw
+        mFrequencies.append(inTerm.mFrequencies, inOffset);
+        mCollectionCount += inTerm.mCollectionCount;
+        mDocumentCount += inTerm.mDocumentCount;
+        mOuterIndices[1] = mFrequencies.entry_count();
+      }
+
+      void finalize(size_type inFinalSize) {
+        mFrequencies.resize(inFinalSize);
+        mFrequencies.shrink_to_fit();
+      }
+
+      private:
+      friend class Field;
+      static const Term* _missing_term() {
+        // STATIC
+        static auto s_missing_term = new Term;
+        return s_missing_term;
+      }
+    };
 
     typedef Alphabet::index_type    TermID;
 		typedef std::unordered_map<TermID, Field>		Fields;
@@ -56,79 +138,7 @@ namespace jerome { namespace ir {
 		
     JEROME_EXCEPTION(field_not_found_exception)
     JEROME_EXCEPTION(cannot_insert_field)
-	
-		class Term {
-		public:
-			typedef uint8_t								          freq_type;
-			// the idea is to separate frequencies from another information, e.g., term
-			// locations because it is easier to a. operate on, when frequencies are
-			// just a vector, b. customize -- avoid generating locations when they are not
-			// needed.
-			typedef SparseVector<freq_type>         Frequencies;
-			typedef traits<Frequencies>::size_type  size_type;
-			
-		private:
-			size_type   mCollectionCount; // SUM tf
-			size_type   mDocumentCount;
-			Frequencies mFrequencies;
-			
-		public:
-			
-			Term() : mCollectionCount(0), mDocumentCount(0) {}
-			
-			explicit Term(size_type inDocumentID, const Token& inToken)
-			: mCollectionCount(0), mDocumentCount(0), mFrequencies(0)
-			{
-				add(inDocumentID, inToken);
-			}
-			
-			// number of documents the term appears in
-			const size_type df() const { return mDocumentCount; }
-			// total number of term occurences in the collection
-			const size_type cf() const { return mCollectionCount; }
-			// term count for individual documents
-			const Frequencies& tfs() const { return mFrequencies; }
-			
-			static const Term& missing_term() {
-				return *_missing_term();
-			}
-			
-			void add(size_type inDocumentID, const Token& inToken) {
-				if (inDocumentID >= mFrequencies.size())
-          jerome::resize(mFrequencies, inDocumentID+1);
-				
-				freq_type count = (increment_value_at_index_in_vector(inDocumentID, mFrequencies));
-        if (count == 1) ++mDocumentCount;
-        
-				++mCollectionCount;
-			}
-			
-			void addTerm(const Term& inTerm, std::size_t inOffset, std::size_t inCount) {
-				mDocumentCount += inTerm.mDocumentCount;
-				mCollectionCount += inTerm.mCollectionCount;
 
-        jerome::resize(mFrequencies, inOffset+inCount);
-        append_sparse_vector_to_sparse_vector(inTerm.mFrequencies,
-                                              mFrequencies, inOffset);
-			}
-			
-			void optimize(Index& inIndex, Field& inField) {
-        jerome::resize(mFrequencies, (size_type)inIndex.documentCount());
-			}
-      
-      bool isMissing() const {
-        return this == Term::_missing_term();
-      }
-    
-    private:
-      static const Term* _missing_term() {
-        // STATIC
-        static auto s_missing_term = new Term;
-        return s_missing_term;
-      }
-      
-		};
-		
 		class Field {
 			
 		public:
@@ -142,12 +152,6 @@ namespace jerome { namespace ir {
 			DocumentLengths	mDocumentLengths;
 			
 		public:
-			
-			explicit Field()
-			: mTotalTermCount(0)
-      , mDocumentLengths((size_type)0)
-      {
-      }
 			
 			// all terms
 			const Terms&			terms()				const { return mTerms; }
@@ -164,10 +168,20 @@ namespace jerome { namespace ir {
         return i == terms().end() ? Term::missing_term() : i->second;
       }
 
-			void	optimize(Index& inIndex) {
+      private:
+
+      explicit Field()
+      : mTotalTermCount(0)
+      , mDocumentLengths((size_type)0)
+      {
+      }
+
+			void	optimize(size_type inDocumentCount) {
 				for(typename Terms::value_type& f : mTerms) {
-					f.second.optimize(inIndex, *this);
+					f.second.finalize(inDocumentCount);
 				}
+        mDocumentLengths.resize(inDocumentCount);
+        mDocumentLengths.shrink_to_fit();
 			}
 			
 			void	addField(const Field& inField, std::size_t inOffset, std::size_t inCount) {
@@ -178,14 +192,13 @@ namespace jerome { namespace ir {
 					}
 					p->second.addTerm(t.second, inOffset, inCount);
 				}
-        jerome::resize(mDocumentLengths, inOffset+inCount);
-        append_vector_to_vector(inField.mDocumentLengths, mDocumentLengths,
-                                inOffset);
+        _resizeDocumentLengths(inOffset+inCount);
+        _appendToDocumentLengths(inField.mDocumentLengths, inOffset);
 				mTotalTermCount += inField.mTotalTermCount;
 			}
 			
 		protected:
-			template <class> friend class filter::IndexWriter;
+      template <class> friend class filter::IndexWriter;
       template <class> friend class Index;
 
 			void	add(typename Term::size_type inDocumentID, const Token& inToken, Index& ioIndex) {
@@ -195,60 +208,55 @@ namespace jerome { namespace ir {
 //        }
 
         TermID termID = ioIndex.stringID(inToken.text());
+
 				auto p = mTerms.find(termID);
 				if (p == mTerms.end()) {
-					mTerms.emplace(termID, Term(inDocumentID, inToken));
-				} else {
-					p->second.add(inDocumentID, inToken);
+					p = mTerms.emplace(termID, Term()).first;
 				}
+        p->second.addOccurenceInDocument(inDocumentID);
 
         if (inDocumentID >= mDocumentLengths.size()) {
-          resize(mDocumentLengths, inDocumentID+1);
-          set_value_at_index_in_vector(0, inDocumentID, mDocumentLengths);
+          _resizeDocumentLengths(inDocumentID+1);
         }
-        increment_value_at_index_in_vector(inDocumentID, mDocumentLengths);
-        ++mTotalTermCount;
+        _incrementDocumentLength(inDocumentID);
+        mTotalTermCount += 1;
 			}
 			
 			typename Term::size_type	addDocument() {
         auto newDocumentIndex  = mDocumentLengths.size();
-        resize(mDocumentLengths, newDocumentIndex+1);
-        set_value_at_index_in_vector(0, newDocumentIndex, mDocumentLengths);
+        _resizeDocumentLengths(newDocumentIndex+1);
 				return (typename Term::size_type)newDocumentIndex;
 			}
-			
-      template <typename M, typename S>
-      inline void resize(M& m, S s)
+
+      inline void _appendToDocumentLengths(const DocumentLengths& inOther,
+                                           size_type inOffset)
       {
-        m.resize(s);
+        for(auto i = 0; i < inOther.size(); ++i) {
+          mDocumentLengths[inOffset+1] = inOther[i];
+        }
       }
 
-      template <typename X, typename I, typename V>
-      inline auto set_value_at_index_in_vector(X&& x, const I& i, V& v)
-      -> decltype(v[i])
-      {
-        return v[i] = x;
+      inline void _resizeDocumentLengths(size_type inNewSize) {
+        mDocumentLengths.resize(inNewSize, 0);
       }
 
-      template <typename I, typename V>
-      inline auto increment_value_at_index_in_vector(const I& i, V& v)
-      -> decltype(v[i])
-      {
-        return v[i] += 1;
+      inline void _incrementDocumentLength(size_type inDocumentID) {
+        mDocumentLengths[inDocumentID] += 1;
       }
 		};
 
     typename Index::Field::size_type	documentCount() const {
       typename Field::size_type	count	= 0;
-      for(const typename Fields::value_type& i : fields()) {
+      for(const auto& i : fields()) {
         count = std::max(count, i.second.documentCount());
       }
       return count;
     }
     
 		void	optimize() {
-			for(typename Fields::value_type& f : mFields) {
-				f.second.optimize(*this);
+      auto size = documentCount();
+			for(auto& f : mFields) {
+				f.second.optimize(size);
 			}
 		}
 		
@@ -293,9 +301,10 @@ namespace jerome { namespace ir {
 		
 		void	addIndex(const Index& inIndex)
 		{
+      assert(alphabet() == inIndex.alphabet());
 			std::size_t	docCount = documentCount();
 			std::size_t docToAddCount	= inIndex.documentCount();
-			for(const typename Fields::value_type& f : inIndex.fields()) {
+			for(const auto& f : inIndex.fields()) {
 				Field&	myField(findField(f.first, true));
 				myField.addField(f.second, docCount, docToAddCount);
 			}
@@ -345,6 +354,9 @@ namespace jerome { namespace ir {
 	class FileIndex : public Index<FileIndex> {
     typedef Index<FileIndex> parent_type;
     using parent_type::parent_type;
+
+    public:
+    FileIndex(const String& inPath);
 	};
 
 	
