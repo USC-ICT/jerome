@@ -21,6 +21,10 @@
 //  along with Jerome.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#if EIGEN_WORLD_VERSION <= 3 && EIGEN_MAJOR_VERSION < 3
+
+// add this for the "older" version
+
 void conservativeResize(Index newSize)
 {
   if (newSize < m_size)
@@ -32,3 +36,4 @@ void conservativeResize(Index newSize)
   m_size = newSize;
 }
 
+#endif
