@@ -19,8 +19,10 @@ then
 fi
 
 pushd "${src_dir}"
-	eigen_name="eigen-eigen-07105f7124f9"
-	tar -xkf eigen-3.2.8.tar.bz2
+#	eigen_name="eigen-eigen-07105f7124f9"
+	eigen_name="eigen-eigen-b3f3d4950030"
+#	tar -xkf eigen-3.2.8.tar.bz2
+	tar -xkf eigen-3.3.5.tar.bz2
 	pushd "${eigen_name}"
 		mkdir "build"
 		pushd "build"
