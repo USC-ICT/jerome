@@ -81,20 +81,12 @@ namespace jerome { namespace ir {
               return index;
             }
             index = persistent().get()->size();
-            int numberOfTries = 3;
-            while (true) {
-              try {
-                // emplace tries to allocate
-                // a node even if one already exists.
-                // That's why we check for it first.
-                assert(persistent().get());
-                persistent().get()->emplace(jerome::persistence::to_string(inString, persistent().get()->get_allocator()), index);
-                break;
-              } catch (const boost::interprocess::bad_alloc& error) {
-                if (--numberOfTries <= 0) throw error;
-                persistent().grow(persistent().storageSize());
-              }
-            }
+            persistent().perform([&]{
+              assert(persistent().get());
+              persistent().get()->emplace(
+                jerome::persistence::to_string(
+                  inString, persistent().get()->get_allocator()), index);
+            });
             return index;
           }
           case access_type::write_private: {
@@ -194,6 +186,11 @@ namespace jerome { namespace ir {
 //    void optimize();
 //  };
 
+  namespace index {
+    template <class Index>
+    struct indexTraits {
+    };
+  }
 
 }}
 #endif // defined __jerome_ir_collection_dictionary_hpp

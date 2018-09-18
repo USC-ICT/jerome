@@ -138,10 +138,10 @@ namespace jerome {
                                const typename Index::Field& field)
           const
           -> decltype(jerome::sparse_scale_div_by(matrix_cast<double>(term.tfs()), lambda().value(),
-                                                  matrix_cast<double>(jerome::sham(field.documentLengths()))))
+                                                  matrix_cast<double>(field.documentLengths())))
           {
             return jerome::sparse_scale_div_by(matrix_cast<double>(term.tfs()), lambda().value(),
-                                matrix_cast<double>(jerome::sham(field.documentLengths())));
+                                matrix_cast<double>(field.documentLengths()));
           }
 
           using parent_type::accept;

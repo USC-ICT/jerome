@@ -48,7 +48,8 @@ namespace jerome {
 
   // Note this a column major matrix
   template<class T> using TermFrequencies = Eigen::Map<const Eigen::SparseMatrix<T, 0, std::ptrdiff_t>>;
- // template<class T> using TermFrequencies = Eigen::Map<const SparseVector<T>>;
+
+  template<class T> using DocumentLengths = Eigen::Map<const Eigen::Matrix<T, Eigen::Dynamic, 1>>;
 
   typedef Eigen::Matrix<WeightValue, Eigen::Dynamic, Eigen::Dynamic>	WeightMatrix;
   typedef Eigen::Matrix<WeightValue, Eigen::Dynamic, 1>               WeightVector;
@@ -70,18 +71,6 @@ namespace jerome {
     : rowCount(m.rows()), columnCount(m.cols())
     {}
   };
-
-  template <typename T>
-  inline Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, 1>> sham(std::vector<T>& inVector)
-  {
-    return Eigen::Map<Eigen::Matrix<T, Eigen::Dynamic, 1>>(inVector.data(), inVector.size());
-  }
-
-  template <typename T>
-  inline Eigen::Map<const Eigen::Matrix<T, Eigen::Dynamic, 1>> sham(const std::vector<T>& inVector)
-  {
-    return Eigen::Map<const Eigen::Matrix<T, Eigen::Dynamic, 1>>(inVector.data(), inVector.size());
-  }
 
   inline auto WeightMatrixZero(const MatrixSize& size)
   -> decltype(WeightMatrix::Zero(size.rowCount, size.columnCount))

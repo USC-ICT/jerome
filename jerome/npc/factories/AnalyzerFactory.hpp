@@ -33,7 +33,7 @@ namespace jerome {
 	namespace ir {
 		template <typename, typename>
 		struct Analyzer;
-		class HeapIndex;		
+		struct HeapIndex;		
 	}
 
   namespace npc {

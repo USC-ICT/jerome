@@ -33,6 +33,7 @@
 #include <boost/multi_index/hashed_index.hpp>
 #include <boost/interprocess/containers/pair.hpp>
 #include <boost/interprocess/containers/vector.hpp>
+#include <boost/unordered_map.hpp>
 
 #pragma clang diagnostic pop
 
@@ -79,6 +80,16 @@ namespace jerome { namespace persistence {
     > storage_type;
   };
 
+  template <typename ...Args>
+  struct MappedPointerInitializer<boost::multi_index::multi_index_container<Args...>> {
+    typedef boost::multi_index::multi_index_container<Args...> element_type;
+    static element_type* find_or_create(MappedFile& mappedFile, const char* objectName) {
+      return mappedFile.file()
+      .find_or_construct<element_type>(objectName)(typename element_type::ctor_args_list(),
+                                                   mappedFile.allocator());
+    }
+  };
+
   template <
   typename First,
   typename Second,
@@ -87,24 +98,14 @@ namespace jerome { namespace persistence {
   typename FirstEqualTo = std::equal_to<First>
   >
   struct map {
-    struct first {};
-    struct second {};
-
-    typedef boost::interprocess::pair<First, Second> value_type;
-
-    typedef boost::multi_index::multi_index_container<
-    value_type,
-    boost::multi_index::indexed_by<
-    boost::multi_index::hashed_unique<
-    boost::multi_index::tag<first>,
-    boost::multi_index::member<
-    value_type,
-    typename value_type::first_type,
-    &value_type::first
-    >,
-    FirstHash, FirstEqualTo
-    >
-    >,
+    typedef First key_type;
+    typedef Second mapped_type;
+    typedef std::pair<const key_type, mapped_type> value_type;
+    typedef boost::unordered_map<
+    key_type,
+    mapped_type,
+    FirstHash,
+    FirstEqualTo,
     typename Allocator::template rebind<value_type>::other
     > storage_type;
   };

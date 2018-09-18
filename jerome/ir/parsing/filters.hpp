@@ -110,8 +110,8 @@ namespace jerome {
 			template <class Index>
 			class IndexWriter : public TokenFilter {
         Index&      mIndex;
-				typename Index::Field&			mField;
-				typename Index::Term::size_type mDocumentID;
+				typename Index::field_type&			mField;
+				typename Index::term_type::size_type mDocumentID;
 			public:
 				IndexWriter(TokenStream inSource, Index& ioIndex, const String& inFieldName)
 				: TokenFilter(inSource)

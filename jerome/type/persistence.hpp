@@ -109,46 +109,105 @@ namespace jerome {
       void_allocator mAllocator;
     };
 
+    struct MappedPointerBase {
+      std::size_t storageSize() const {
+        return mFile ? mFile->file().get_size() : 0;
+      }
+
+      operator bool () const { return (bool)mFile; }
+
+      Access access() const { return mAccess; }
+
+      const void_allocator& allocator() const {
+        return mFile->allocator();
+      }
+
+      const boost::interprocess::managed_mapped_file& file() const {
+        return mFile->file();
+      }
+
+    protected:
+      MappedPointerBase(Access inAccess,
+                        const std::string& inPath,
+                        std::size_t inInitialSize)
+      : mAccess(inAccess)
+      , mPath(inPath)
+      , mInitialSize(inInitialSize)
+      , mFile(nullptr)
+      {}
+
+      const Access mAccess;
+      const std::string mPath;
+      const std::size_t mInitialSize;
+      std::unique_ptr<MappedFile> mFile;
+
+      MappedPointerBase(const MappedPointerBase&) = delete;
+
+      boost::interprocess::managed_mapped_file& file() {
+        return mFile->file();
+      }
+
+      void initializeFile() {
+        mFile = std::unique_ptr<MappedFile>(new MappedFile(mAccess,
+                                                           mPath.c_str(),
+                                                           mInitialSize));
+      }
+    };
+
     template <typename T>
-    struct MappedPointer {
+    struct MappedPointerInitializer {
+      typedef T element_type;
+      static T* find_or_create(MappedFile& mappedFile, const char* objectName) {
+        return mappedFile.file()
+          .find_or_construct<T>(objectName)(mappedFile.allocator());
+      }
+    };
+
+    template <typename T>
+    struct MappedPointer : public MappedPointerBase {
       typedef T element_type;
       typedef element_type* pointer;
-
-      const Access access;
-      const std::string path;
-      const std::size_t initialSize;
+      typedef MappedPointerBase parent_type;
 
       MappedPointer()
-      : access(Access::read_only)
-      , path("")
-      , initialSize(0)
-      , mFile(nullptr)
+      : parent_type(Access::read_only, "", 0)
       , mObject(nullptr)
       {}
 
       MappedPointer(Access inAccess,
                     const char* inPath,
                     std::size_t inInitialSize = 1024*4)
-      : access(inAccess)
-      , path(inPath)
-      , initialSize(inInitialSize)
+      : parent_type(inAccess, inPath, inInitialSize)
       {loadObject();}
 
       MappedPointer(Access inAccess,
                     const std::string& inPath,
                     std::size_t inInitialSize = 1024*4)
-      : access(inAccess)
-      , path(inPath)
-      , initialSize(inInitialSize)
+      : parent_type(inAccess, inPath, inInitialSize)
       {loadObject();}
 
+      /// avoid capturing this pointer at any cost!
       pointer get() { return mObject; }
       const pointer get() const { return mObject; }
+
+      template <typename F>
+      auto perform(F inFunction, int numberOfTries = 10)
+      -> decltype(inFunction())
+      {
+        while (true) {
+          try {
+            return inFunction();
+          } catch (const boost::interprocess::bad_alloc& error) {
+            if (--numberOfTries <= 0) throw;
+            grow(storageSize());
+          }
+        }
+      }
 
       void grow(std::size_t inAdditionalBytes) {
         if (!mFile) return;
         mFile = nullptr;
-        boost::interprocess::managed_mapped_file::grow(path.c_str(),
+        boost::interprocess::managed_mapped_file::grow(mPath.c_str(),
                                                        inAdditionalBytes);
         loadObject();
       }
@@ -156,36 +215,23 @@ namespace jerome {
       void shrinkToFit() {
         if (!mFile) return;
         mFile = nullptr;
-        boost::interprocess::managed_mapped_file::shrink_to_fit(path.c_str());
+        boost::interprocess::managed_mapped_file::shrink_to_fit(mPath.c_str());
         loadObject();
       }
 
-      std::size_t storageSize() const {
-        return mFile ? mFile->file().get_size() : 0;
-      }
-
-      operator bool () const { return (bool)mFile; }
-
     private:
-      std::unique_ptr<MappedFile> mFile;
       pointer mObject;
+
+      friend parent_type;
 
       MappedPointer(const MappedPointer&) = delete;
 
-      const void_allocator& allocator() const { return mFile->allocator(); }
-      const boost::interprocess::managed_mapped_file& file() const { return mFile->file(); }
-      boost::interprocess::managed_mapped_file& file() { return mFile->file(); }
-
       void loadObject() {
-        mFile = std::unique_ptr<MappedFile>(new MappedFile(access,
-                                                           path.c_str(),
-                                                           initialSize));
+        initializeFile();
         auto objectName = "Root";
-        mObject = access == Access::read_only
+        mObject = access() == Access::read_only
         ? mFile->file().find<element_type>(objectName).first
-        : mFile->file()
-        .find_or_construct<element_type>(objectName)(typename element_type::ctor_args_list(),
-                                                     mFile->allocator());
+        : MappedPointerInitializer<element_type>::find_or_create(*mFile, objectName);
       }
     };
   }

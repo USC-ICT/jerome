@@ -65,7 +65,8 @@ namespace jerome {
     , mSize(0)
     {}
 
-    reference at(index_type pos) {
+    reference at(index_type pos) // can throw
+    {
       if (pos < 0 || pos >= size()) {
         throw std::out_of_range(std::string("index ") + std::to_string(pos)
                                 + " out of range " + " [0.."
@@ -76,19 +77,23 @@ namespace jerome {
       }
       auto iter = std::lower_bound(mIndices.begin(), mIndices.end(), pos);
       if (iter == mIndices.end() || *iter != pos) {
+        // this exceution order is important, we preallocate space first, so if
+        // an allocation exception is thrown, we have the data in a
+        // consistent state.
         if (entry_count() >= capacity()) {
-          reserve(1+entry_count());
+          reserve(1+entry_count()); // can throw
           iter = std::lower_bound(mIndices.begin(), mIndices.end(), pos);
         }
-        mIndices.insert(iter, pos);
+        mIndices.insert(iter, pos); // can throw
         return *mValues.insert(mValues.begin()+std::distance(mIndices.begin(), iter),
-                               value_type());
+                               value_type()); // can throw
       } else {
         return *(mValues.begin()+std::distance(mIndices.begin(), iter));
       }
     }
 
-    const_reference at(index_type pos) const {
+    const_reference at(index_type pos) const // can throw
+    {
       if (pos < 0 || pos >= size()) {
         throw std::out_of_range(std::string("index ") + pos
                                 + " out of range " + " [0.." + size() + "[");
@@ -105,9 +110,11 @@ namespace jerome {
     }
 
     // appends the other sparse vector, assuming it starts at inOffset
-    void append(const sparse_vector& inOther, index_type inOffset) {
-      resize(max(size(), inOffset + inOther.size()));
-      reserve(entry_count() + inOther.entry_count());
+    // todo make it a template
+    void append(const sparse_vector& inOther, index_type inOffset) // can throw
+    {
+      reserve(entry_count() + inOther.entry_count()); // can throw
+      resize(std::max(size(), inOffset + inOther.size()));
       auto start = entry_count();
       for(size_type i = 0; i < inOther.mIndices.size(); ++i) {
         mValues[start+i] = inOther.mValues[i];
@@ -130,9 +137,10 @@ namespace jerome {
       mSize = inNewSize;
     }
 
-    void reserve(size_type inNewCapacity) {
-      mValues.reserve(inNewCapacity);
-      mIndices.reserve(inNewCapacity);
+    void reserve(size_type inNewCapacity) // can throw
+    {
+      mValues.reserve(inNewCapacity); // can throw
+      mIndices.reserve(inNewCapacity); // can throw
     }
 
     size_type capacity() const {
