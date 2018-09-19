@@ -43,8 +43,15 @@ namespace jerome {
 			
 		public:
 			
-			Token(const String& inText = "", size_type inOffset = 0, size_type inLength = 0, uint32_t inType = 0) :
-			mText(inText), mOffset(inOffset), mLength(inLength), mType(inType) {}
+			Token(const String& inText = "",
+            size_type inOffset = 0,
+            size_type inLength = 0,
+            uint32_t inType = 0)
+      : mText(inText)
+      , mOffset(inOffset)
+      , mLength(inLength)
+      , mType(inType)
+      {}
 			
 			Token(const String::value_type* inText, size_type inOffset, size_type inLength, uint32_t inType = 0) :
 			mText(inText+inOffset, inLength), mOffset(inOffset), mLength(inLength), mType(inType) {}

@@ -20,8 +20,15 @@
 //  along with Jerome.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
+#pragma clang diagnostic ignored "-Wcomma"
+#pragma clang diagnostic ignored "-Wdocumentation"
+
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+
+#pragma clang diagnostic pop
 
 #include "file_index.hpp"
 

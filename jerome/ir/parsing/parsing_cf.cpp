@@ -26,168 +26,155 @@
 
 namespace jerome { 
 
-	static String stringFromCFString(CFStringRef inString) {
-		const char*	constBuffer	= CFStringGetCStringPtr(inString, kCFStringEncodingUTF8);
-		if (constBuffer != NULL) return String(constBuffer);
+  namespace cf {
+    String::String(const jerome::String& inString)
+    : parent_type(CFStringCreateWithCString(kCFAllocatorDefault,
+                                            inString.c_str(),
+                                            kCFStringEncodingUTF8))
+    {
+      release();
+    }
 
-		CFIndex		length 		= 4*CFStringGetLength(inString);
-		char*		buffer		= new char[length];
-		if (buffer && CFStringGetCString(inString, buffer, length, kCFStringEncodingUTF8)) {
-			String	result(buffer);
-			delete[] buffer;
-			return result;
-		} else {
-			String	result;
-			delete[] buffer;
-			return result;
-		}
-	}
+    String::operator jerome::String () const {
+      const char*  constBuffer  = CFStringGetCStringPtr(value(),
+                                                        kCFStringEncodingUTF8);
+      if (constBuffer != NULL) return jerome::String(constBuffer);
 
-	namespace detail {
-		LocaleImpl::LocaleImpl(CFLocaleRef inLocale) {
-			mLocale	= inLocale;
-			CFRetain(mLocale);
-		}
-		LocaleImpl::LocaleImpl(const String& inName) {
-			CFStringRef	name	= CFStringCreateWithCString(kCFAllocatorDefault,
-																										inName.c_str(), kCFStringEncodingUTF8);
-			mLocale	= CFLocaleCreate(kCFAllocatorDefault, name);
-			CFRelease(name);
-		}
-		LocaleImpl::~LocaleImpl() {
-			CFRelease(mLocale);
-		}
-	}
+      CFIndex length = 4*CFStringGetLength(value());
+      auto buffer = std::make_unique<char>(length);
+      if (buffer && CFStringGetCString(value(), buffer.get(),
+                                       length, kCFStringEncodingUTF8))
+      {
+        return jerome::String(buffer.get());
+      } else {
+        return jerome::String();
+      }
+    }
+  }
 
-	static Locale	kDefaultLocale(CFLocaleCopyCurrent());
-
-	Locale::Locale(CFLocaleRef inLocale)
-	: parent_type(shared_ptr<implementation_type>(new detail::LocaleImpl(inLocale)))
-	{
-	}
+  static Locale	kDefaultLocale(Locale::move(CFLocaleCopyCurrent()));
 
 	Locale::Locale(const String& inLocale)
-	: parent_type(shared_ptr<implementation_type>(new detail::LocaleImpl(inLocale)))
+  : parent_type(Locale::move(CFLocaleCreate(kCFAllocatorDefault, cf::String(inLocale))))
 	{
 	}
 
-	Locale::Locale() {
-		*this = kDefaultLocale;
+	Locale::Locale()
+  : parent_type(kDefaultLocale)
+  {
 	}
 
 	void Locale::global(const String& inLocale) {
-		kDefaultLocale		= Locale(inLocale);
+		kDefaultLocale = Locale(inLocale);
 	}
 
 	namespace ir {
 
-	Tokenizer::Tokenizer(CFStringRef inString, jerome::Locale const & inLocale)
-	: mLocale(inLocale)
-	{
-		CFRetain(inString);
-		init(inString);
-	} 
+    Tokenizer::Tokenizer(CFStringRef inString,
+                         jerome::Locale const & inLocale)
+    : mLocale(inLocale)
+    , mString(inString)
+    , mTokenizer(init(mString, mLocale))
+    {
+    }
 
-	Tokenizer::Tokenizer(const String* inString, jerome::Locale const & inLocale) 
-	: mLocale(inLocale)
-	{
-		init(CFStringCreateWithCString(kCFAllocatorDefault, inString->c_str(),
-                                   kCFStringEncodingUTF8));
-	}
+    Tokenizer::Tokenizer(const String* inString, jerome::Locale const & inLocale)
+    : mLocale(inLocale)
+    , mString(*inString)
+    , mTokenizer(init(mString, mLocale))
+    {
+    }
 
-	Tokenizer::~Tokenizer() {
-		CFRelease(mTokenizer);
-		CFRelease(mString);
-	}
+    cf::basic_object<CFStringTokenizerRef>
+    Tokenizer::init(CFStringRef inString, CFLocaleRef inLocale) {
+      auto tokenzer = CFStringTokenizerCreate(kCFAllocatorDefault,
+                                              inString,
+                                              CFRangeMake(0, CFStringGetLength(inString)),
+                                              kCFStringTokenizerUnitWordBoundary,
+                                              inLocale);
+      return cf::basic_object<CFStringTokenizerRef>::move(tokenzer);
+    }
 
-	void 
-	Tokenizer::init(CFStringRef inString) {
-		mString	= inString;
-		mTokenizer = CFStringTokenizerCreate(kCFAllocatorDefault,
-                                         mString,
-                                         CFRangeMake(0, CFStringGetLength(mString)),
-                                         kCFStringTokenizerUnitWordBoundary,
-                                         locale().locale());
-	}
+    bool
+    Tokenizer::getNextToken(Token& ioToken) {
+      auto	tokenType	= CFStringTokenizerAdvanceToNextToken(mTokenizer);
+      if (tokenType == kCFStringTokenizerTokenNone) return false;
 
-	bool
-	Tokenizer::getNextToken(Token& ioToken) {
-		CFStringTokenizerTokenType	tokenType	= CFStringTokenizerAdvanceToNextToken(mTokenizer);
-		if (tokenType == kCFStringTokenizerTokenNone) return false;
-		
-		CFRange		range		= CFStringTokenizerGetCurrentTokenRange(mTokenizer);
-		CFStringRef	substring	= CFStringCreateWithSubstring(kCFAllocatorDefault, mString, range);
-		ioToken = Token(stringFromCFString(substring),
-                    (Token::size_type)range.location, // silence warnings
-                    (Token::size_type)range.length);
-		CFRelease(substring);
-		return true;
-	}
+      CFRange		range		= CFStringTokenizerGetCurrentTokenRange(mTokenizer);
+      cf::String	substring(cf::String::move(CFStringCreateWithSubstring(kCFAllocatorDefault, mString, range)));
+      ioToken = Token((String)substring,
+                      (Token::size_type)range.location, // silence warnings
+                      (Token::size_type)range.length);
+      return true;
+    }
 
-	NonTokenizer::NonTokenizer(CFStringRef inString, jerome::Locale const & inLocale)
-	: mToken(stringFromCFString(inString), 0, (Token::size_type)CFStringGetLength(inString))
-	, mLocale(inLocale)
-	, mHasToken(true)
-	{
-	
-	}
+    NonTokenizer::NonTokenizer(CFStringRef inString,
+                               jerome::Locale const & inLocale)
+    : mToken((String)cf::String(inString), 0, (Token::size_type)CFStringGetLength(inString))
+    , mLocale(inLocale)
+    , mHasToken(true)
+    {
 
-	NonTokenizer::NonTokenizer(const String* inString, jerome::Locale const & inLocale) 
-	: mToken(*inString, 0, (Token::size_type)inString->length())
-	, mLocale(inLocale)
-	, mHasToken(true)
-	{
-//		std::cout<< locale().name() << std::endl;
-	}
+    }
+
+    NonTokenizer::NonTokenizer(const String* inString,
+                               jerome::Locale const & inLocale)
+    : mToken(*inString, 0, (Token::size_type)inString->length())
+    , mLocale(inLocale)
+    , mHasToken(true)
+    {
+      //		std::cout<< locale().name() << std::endl;
+    }
 
 	namespace filter {
 
 // -----------------------------------------------------------------------------	
 #pragma mark - Lowercase
 	
-	bool Lowercase::getNextToken(Token& ioToken) {
-		if (!TokenFilter::getNextToken(ioToken)) return false;
+    bool Lowercase::getNextToken(Token& ioToken) {
+      if (!TokenFilter::getNextToken(ioToken)) return false;
 
-		CFStringRef			string 			= CFStringCreateWithCString(kCFAllocatorDefault, ioToken.text().c_str(), kCFStringEncodingUTF8);
-		CFMutableStringRef	lowerCaseString = CFStringCreateMutableCopy(kCFAllocatorDefault, 0, string);
-		CFStringLowercase(lowerCaseString, locale().locale());
-	
-		if (kCFCompareEqualTo != CFStringCompare(string, lowerCaseString, kCFCompareNonliteral)) {
-			ioToken.text() = stringFromCFString(lowerCaseString);
-		}
-		
-		CFRelease(lowerCaseString);
-		CFRelease(string);
-		
-		return true;
-	}
+      cf::String	string(ioToken.text());
+      CFMutableStringRef	lowerCaseString =
+      CFStringCreateMutableCopy(kCFAllocatorDefault, 0, string);
+      CFStringLowercase(lowerCaseString, locale());
+      cf::String   lowercased(cf::String::move(lowerCaseString));
+
+      if (kCFCompareEqualTo
+          != CFStringCompare(string, lowercased, kCFCompareNonliteral))
+      {
+        ioToken.text() = (String)lowercased;
+      }
+
+      return true;
+    }
 
 	// -----------------------------------------------------------------------------	
 #pragma mark - Alphanumeric
 
-	static bool isStringMemberOfCharSet(CFStringRef inString, CFCharacterSetRef inCharSet) {
-		CFIndex					length = CFStringGetLength(inString);
-		CFStringInlineBuffer 	inlineBuffer;
-		
-		CFStringInitInlineBuffer(inString, &inlineBuffer, CFRangeMake(0, length));
-		 
-		for (CFIndex cnt = 0; cnt < length; ++cnt) {
-			 UniChar ch = CFStringGetCharacterFromInlineBuffer(&inlineBuffer, cnt);
-			 if (CFCharacterSetIsCharacterMember(inCharSet, ch)) return true;
-		}
-		return false;
-	}
+    static bool isStringMemberOfCharSet(CFStringRef inString,
+                                        CFCharacterSetRef inCharSet)
+    {
+      CFIndex					length = CFStringGetLength(inString);
+      CFStringInlineBuffer 	inlineBuffer;
 
-	bool CharSet::getNextToken(Token& ioToken) {
-		while(TokenFilter::getNextToken(ioToken)) {
-			CFStringRef	string 	= CFStringCreateWithCString(kCFAllocatorDefault, ioToken.text().c_str(), kCFStringEncodingUTF8);
-			bool		keep	= isStringMemberOfCharSet(string, mCharSet);
-			CFRelease(string);
-			if (keep) return true;
-		}
-		
-		return false;
-	}
+      CFStringInitInlineBuffer(inString, &inlineBuffer,
+                               CFRangeMake(0, length));
+
+      for (CFIndex cnt = 0; cnt < length; ++cnt) {
+        UniChar ch = CFStringGetCharacterFromInlineBuffer(&inlineBuffer, cnt);
+        if (CFCharacterSetIsCharacterMember(inCharSet, ch)) return true;
+      }
+      return false;
+    }
+
+    bool CharSet::getNextToken(Token& ioToken) {
+      while(TokenFilter::getNextToken(ioToken)) {
+        cf::String string(ioToken.text());
+        if (isStringMemberOfCharSet(string, mCharSet)) return true;
+      }
+      return false;
+    }
 	
 	} // namespace filter
 }}
