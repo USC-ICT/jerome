@@ -1,8 +1,8 @@
 //
-//  collection.cpp
+//  filesystem.hpp
 //
-//  Created by Anton Leuski on 10/9/11.
-//  Copyright (c) 2015 ICT/USC. All rights reserved.
+//  Created by Anton Leuski on 9/18/18.
+//  Copyright © 2018 Anton Leuski & ICT/USC. All rights reserved.
 //
 //  This file is part of Jerome.
 //
@@ -20,9 +20,13 @@
 //  along with Jerome.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include <jerome/ir/collection.hpp>
+#ifndef __jerome_type_filesystem_hpp
+#define __jerome_type_filesystem_hpp
 
-namespace jerome { namespace ir {
+#include <boost/filesystem.hpp>
 
+namespace jerome {
+  namespace fs = boost::filesystem;
+}
 
-}}
+#endif // defined filesystem_hpp

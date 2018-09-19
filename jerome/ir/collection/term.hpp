@@ -34,7 +34,7 @@ namespace jerome {
         template<class, class> class VC = std::vector,
         class Allocator = std::allocator<void>
       >
-      struct Term {
+      struct BasicTerm {
         typedef uint8_t                         freq_type;
         // the idea is to separate frequencies from another information, e.g., term
         // locations because it is easier to a. operate on, when frequencies are
@@ -75,22 +75,22 @@ namespace jerome {
                              frequencies_store().data());
         }
 
-        static const Term& missing_term() {
+        static const BasicTerm& missing_term() {
           return *_missing_term();
         }
 
         bool isMissing() const {
-          return this == Term::_missing_term();
+          return this == BasicTerm::_missing_term();
         }
 
-        Term(const allocator_type& inAllocator)
+        BasicTerm(const allocator_type& inAllocator)
         : mCollectionCount(0)
         , mDocumentCount(0)
         , mOuterIndices {0,0}
         , mFrequencies(inAllocator)
         {}
 
-        Term()
+        BasicTerm()
         : mCollectionCount(0)
         , mDocumentCount(0)
         , mOuterIndices {0,0}
@@ -123,7 +123,7 @@ namespace jerome {
           mOuterIndices[1] = frequencies_store().entry_count();
         }
 
-        void addTerm(const Term& inTerm, std::size_t inOffset,
+        void addTerm(const BasicTerm& inTerm, std::size_t inOffset,
                      size_type inCount) // can throw
         {
           frequencies_store().append(inTerm.frequencies_store(), inOffset); // can throw
@@ -140,9 +140,9 @@ namespace jerome {
         private:
 
         template <class> friend struct BasicField;
-        static const Term* _missing_term() {
+        static const BasicTerm* _missing_term() {
           // STATIC
-          static auto s_missing_term = new Term;
+          static auto s_missing_term = new BasicTerm;
           return s_missing_term;
         }
       };

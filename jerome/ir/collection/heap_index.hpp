@@ -44,7 +44,7 @@ namespace jerome { namespace ir { namespace index {
   struct indexTraits<HeapField> {
     typedef Alphabet::index_type    term_id_type;
     typedef uint32_t                document_length_type;
-    typedef Term<
+    typedef BasicTerm<
       std::vector,
       std::allocator<void>
     > term_type;
@@ -66,6 +66,7 @@ namespace jerome { namespace ir { namespace index {
 
   private:
     friend parent_type;
+    friend struct jerome::ir::HeapIndex;
 
     Terms mTerms;
     document_length_vector_type mDocumentLengths;
@@ -111,7 +112,11 @@ namespace jerome { namespace ir {
 
   private:
     friend parent_type;
-    Field makeField(const String& inName); // todo implement
+    Field makeField(const String& inName)
+    {
+      return Field();
+    }
+
   };
 }}
 

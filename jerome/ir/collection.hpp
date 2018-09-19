@@ -23,15 +23,7 @@
 #ifndef __jerome_ir_collection_hpp__
 #define __jerome_ir_collection_hpp__
 
-//#include <jerome/types.hpp>
-//#include <jerome/type/matrix.hpp>
-//#include <jerome/type/sparse_vector.hpp>
-//#include <jerome/ir/parsing/token.hpp>
-//#include <jerome/ir/collection/dictionary.hpp>
 #include <jerome/ir/collection/file_index.hpp>
 #include <jerome/ir/collection/heap_index.hpp>
-
-namespace jerome { namespace ir {
-}}
 
 #endif // defined __jerome_ir_collection_hpp__

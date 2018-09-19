@@ -34,6 +34,8 @@
 
 #pragma clang diagnostic pop
 
+#include <jerome/type/filesystem.hpp>
+
 namespace jerome {
   namespace persistence {
     typedef boost::interprocess::managed_mapped_file::segment_manager  segment_manager_t;
@@ -86,12 +88,12 @@ namespace jerome {
     };
 
     struct MappedFile {
-      MappedFile(Access inAccess, const char* inPath, std::size_t inInitialSize = 1024*4)
+      MappedFile(Access inAccess, const fs::path& inPath, std::size_t inInitialSize = 1024*4)
       : mFile(inAccess == write_shared
-              ? boost::interprocess::managed_mapped_file(boost::interprocess::open_or_create, inPath, inInitialSize)
+              ? boost::interprocess::managed_mapped_file(boost::interprocess::open_or_create, inPath.c_str(), inInitialSize)
               : inAccess == read_only
-              ? boost::interprocess::managed_mapped_file(boost::interprocess::open_read_only, inPath)
-              : boost::interprocess::managed_mapped_file(boost::interprocess::open_copy_on_write, inPath))
+              ? boost::interprocess::managed_mapped_file(boost::interprocess::open_read_only, inPath.c_str())
+              : boost::interprocess::managed_mapped_file(boost::interprocess::open_copy_on_write, inPath.c_str()))
       , mAllocator(mFile.get_segment_manager())
       {}
 
@@ -128,7 +130,7 @@ namespace jerome {
 
     protected:
       MappedPointerBase(Access inAccess,
-                        const std::string& inPath,
+                        const fs::path& inPath,
                         std::size_t inInitialSize)
       : mAccess(inAccess)
       , mPath(inPath)
@@ -136,8 +138,10 @@ namespace jerome {
       , mFile(nullptr)
       {}
 
+      MappedPointerBase(MappedPointerBase&& inOther) = default;
+
       const Access mAccess;
-      const std::string mPath;
+      const fs::path mPath;
       const std::size_t mInitialSize;
       std::unique_ptr<MappedFile> mFile;
 
@@ -149,7 +153,7 @@ namespace jerome {
 
       void initializeFile() {
         mFile = std::unique_ptr<MappedFile>(new MappedFile(mAccess,
-                                                           mPath.c_str(),
+                                                           mPath,
                                                            mInitialSize));
       }
     };
@@ -174,14 +178,10 @@ namespace jerome {
       , mObject(nullptr)
       {}
 
-      MappedPointer(Access inAccess,
-                    const char* inPath,
-                    std::size_t inInitialSize = 1024*4)
-      : parent_type(inAccess, inPath, inInitialSize)
-      {loadObject();}
+      MappedPointer(MappedPointer&& inOther) = default;
 
       MappedPointer(Access inAccess,
-                    const std::string& inPath,
+                    const fs::path& inPath,
                     std::size_t inInitialSize = 1024*4)
       : parent_type(inAccess, inPath, inInitialSize)
       {loadObject();}

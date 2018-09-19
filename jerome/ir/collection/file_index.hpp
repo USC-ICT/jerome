@@ -23,6 +23,7 @@
 #ifndef __jerome_ir_collection_file_index_hpp
 #define __jerome_ir_collection_file_index_hpp
 
+#include <jerome/type/filesystem.hpp>
 #include <jerome/type/persistence.hpp>
 #include <jerome/ir/collection/field.hpp>
 #include <jerome/ir/collection/index.hpp>
@@ -49,7 +50,7 @@ namespace jerome { namespace ir { namespace index {
   struct indexTraits<FileField> {
     typedef Alphabet::index_type    term_id_type;
     typedef uint32_t                document_length_type;
-    typedef Term<
+    typedef BasicTerm<
       boost::interprocess::vector,
       jerome::persistence::void_allocator
     > term_type;
@@ -76,17 +77,13 @@ namespace jerome { namespace ir { namespace index {
 
   private:
     friend parent_type;
+    friend struct jerome::ir::FileIndex;
 
     persistence::MappedPointer<Terms>  mTerms;
     persistence::MappedPointer<document_length_vector_type>  mDocumentLengths;
 
-    FileField(const String& inName,
-              persistence::Access inAccess,
-              const String& inIndexPath)
-    : parent_type()
-    , mTerms(inAccess, inIndexPath + "/" + inName + ".term.bin")
-    , mDocumentLengths(inAccess, inIndexPath + "/" + inName + ".dl.bin")
-    {}
+    FileField(persistence::Access inAccess,
+              const fs::path& inPath);
 
     Terms& _terms() { return *mTerms.get(); }
     const document_length_vector_type&  _documentLengths() const {
@@ -157,6 +154,9 @@ namespace jerome { namespace ir { namespace index {
 }}}
 
 namespace jerome { namespace ir {
+
+  JEROME_EXCEPTION(unsupported_index_version)
+
   using namespace index;
   class FileIndex : public Index<FileIndex> {
     typedef Index<FileIndex> parent_type;
@@ -170,11 +170,22 @@ namespace jerome { namespace ir {
     typedef typename parent_type::Fields Fields;
     typedef typename parent_type::size_type size_type;
 
-    FileIndex(const String& inPath);
+    FileIndex(persistence::Access inAccess,
+              const fs::path& inPath,
+              AlphabetPtr inAlphabet = nullptr);
+
+    const fs::path& path() const { return mPath; }
+    persistence::Access access() const { return mAccess; }
 
   private:
     friend parent_type;
-    Field makeField(const String& inName); // todo implement
+    fs::path mPath;
+    persistence::Access mAccess;
+
+    auto makeField(const String& inName) -> Field;
+    auto read();
+    auto write();
+    auto infoPath() const -> fs::path;
   };
 }}
 

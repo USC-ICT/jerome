@@ -36,11 +36,10 @@ namespace jerome { namespace ir { namespace index {
     typedef typename indexTraits<Derived>::allocator_type allocator_type;
     typedef typename field_type::term_type term_type;
     typedef typename field_type::TermID TermID;
-    typedef std::unordered_map<TermID, field_type>    Fields;
+    typedef std::unordered_map<String, field_type>    Fields;
     typedef typename Fields::size_type  size_type;
 
   private:
-    uint32_t    version;
     Fields      mFields;
 
   public:
@@ -68,39 +67,27 @@ namespace jerome { namespace ir { namespace index {
       }
     }
 
-    const field_type&  findField(TermID inFieldNameID) const {
-      if (fields().empty())
-        throw _field_not_found_exception(inFieldNameID);
-
-      auto  i  = fields().find(inFieldNameID);
-      if (i == fields().end()) {
-        throw _field_not_found_exception(inFieldNameID);
-      }
-      return i->second;
-    }
-
     const field_type&  findField(const String& inFieldName) const {
       if (fields().empty())
         throw field_not_found_exception(inFieldName);
 
-      auto fieldID = stringID(inFieldName);
-      if (!fieldID) {
+      auto  i  = fields().find(inFieldName);
+      if (i == fields().end()) {
         throw field_not_found_exception(inFieldName);
       }
-
-      return findField(*fieldID);
+      return i->second;
     }
 
     field_type&  findField(const String& inFieldName, bool inCreateIfNotFound) {
-      TermID fieldID = stringID(inFieldName);
-      auto i  = fields().find(fieldID);
+      auto i  = fields().find(inFieldName);
       if (i != fields().end())
         return i->second;
 
       if (!inCreateIfNotFound)
         throw field_not_found_exception(inFieldName);
 
-      auto  p = fields().emplace(fieldID, static_cast<Derived*>(this)->makeField(inFieldName));
+      auto  p = fields().emplace(inFieldName,
+                                 static_cast<Derived*>(this)->makeField(inFieldName));
       if (!p.second)
         throw cannot_insert_field(inFieldName);
 

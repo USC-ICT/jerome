@@ -37,6 +37,8 @@
 
 #pragma clang diagnostic pop
 
+#include <jerome/type/filesystem.hpp>
+
 namespace jerome { namespace persistence {
 
   template <
@@ -130,7 +132,7 @@ namespace jerome { namespace persistence {
     typedef MappedPointer<persistent_storage_type> persistent_type;
     typedef Access access_type;
 
-    basic_storage(access_type inAccess, const char* inPath)
+    basic_storage(access_type inAccess, const fs::path& inPath)
     : mAccess(inAccess)
     , mPersistent(inAccess == access_type::write_private
                   ? access_type::read_only
