@@ -30,80 +30,98 @@ namespace jerome {
 	namespace ir {
 		
 		// -----------------------------------------------------------------------------
-		
-		class Token {
-		public:
-			typedef uint32_t	size_type;
-			
+
+    namespace detail {
+      struct TokenBase {
+        typedef uint32_t  size_type;
+
+        TokenBase(size_type inOffset = 0,
+                  size_type inLength = 0,
+                  uint32_t inType = 0)
+        : mOffset(inOffset)
+        , mLength(inLength)
+        , mType(inType)
+        {}
+
+        TokenBase(TokenBase&&) = default;
+        TokenBase(const TokenBase&) = default;
+        TokenBase& operator = (TokenBase&& inSource) = default;
+        TokenBase& operator = (const TokenBase& inSource) = default;
+
+        size_type    offset()   const { return mOffset; }
+        size_type    length()   const { return mLength; }
+        size_type    end()    const { return offset() + length(); }
+        uint32_t    type()     const { return mType; }
+
+        size_type&    offset()   { return mOffset; }
+        size_type&    length()   { return mLength; }
+        uint32_t&    type()     { return mType; }
+      private:
+        size_type    mOffset;
+        size_type    mLength;
+        uint32_t    mType;
+      };
+    }
+
+    template <class S = String>
+    class BasicToken : public detail::TokenBase {
+      typedef S value_type;
+      typedef detail::TokenBase parent_type;
+
 		private:
-			String			mText;
-			size_type		mOffset;
-			size_type		mLength;
-			uint32_t		mType;
-			
+			value_type			mText;
+
 		public:
-			
-			Token(const String& inText = "",
-            size_type inOffset = 0,
-            size_type inLength = 0,
-            uint32_t inType = 0)
-      : mText(inText)
-      , mOffset(inOffset)
-      , mLength(inLength)
-      , mType(inType)
+      using parent_type::parent_type;
+
+			BasicToken(const value_type& inText = value_type(),
+                 size_type inOffset = 0,
+                 size_type inLength = 0,
+                 uint32_t inType = 0)
+      : parent_type(inOffset, inLength, inType)
+      , mText(inText)
       {}
 			
-			Token(const String::value_type* inText, size_type inOffset, size_type inLength, uint32_t inType = 0) :
-			mText(inText+inOffset, inLength), mOffset(inOffset), mLength(inLength), mType(inType) {}
+			BasicToken(const String::value_type* inText,
+                 size_type inOffset,
+                 size_type inLength,
+                 uint32_t inType = 0)
+      : parent_type(inOffset, inLength, inType)
+			, mText(inText+inOffset, inLength)
+      {}
 			
-			Token(const String::value_type* inText, size_type inTextLength, size_type inOffset, size_type inLength, uint32_t inType = 0) :
-			mText(inText, inTextLength), mOffset(inOffset), mLength(inLength), mType(inType) {}
-			
-			Token(const Token& inSource)
-			: mText(inSource.mText)
-			, mOffset(inSource.mOffset)
-			, mLength(inSource.mLength)
-			, mType(inSource.mType)
-			{}
-			
-			Token(Token&& inSource)
-			: mText(std::move(inSource.mText))
-			, mOffset(inSource.mOffset)
-			, mLength(inSource.mLength)
-			, mType(inSource.mType)
-			{}
-			
-			Token& operator = (const Token& inSource)
-			{
-				mText	= inSource.mText;
-				mOffset = inSource.mOffset;
-				mLength = inSource.mLength;
-				mType	= inSource.mType;
-				return *this;
-			}
-			
-			Token& operator = (Token&& inSource)
-			{
-				mText	= std::move(inSource.mText);
-				mOffset = inSource.mOffset;
-				mLength = inSource.mLength;
-				mType	= inSource.mType;
-				return *this;
-			}
-			
+			BasicToken(const String::value_type* inText,
+                 size_type inTextLength,
+                 size_type inOffset,
+                 size_type inLength,
+                 uint32_t inType = 0)
+      : parent_type(inOffset, inLength, inType)
+      ,  mText(inText, inTextLength)
+      {}
+
 			const String&	text() 		const { return mText; }
-			size_type		offset() 	const { return mOffset; }
-			size_type		length() 	const { return mLength; }
-			size_type		end()		const { return offset() + length(); }
-			uint32_t		type() 		const { return mType; }
-			
 			String&			text()		{ return mText; }
-			size_type&		offset() 	{ return mOffset; }
-			size_type&		length() 	{ return mLength; }
-			uint32_t&		type() 		{ return mType; }
-			
-			Token& operator += (const Token& inToken);
+
+      BasicToken& operator += (const BasicToken& inToken) {
+        if (text().size() > 0) {
+          text() += ngramSeparator();
+        } else {
+          type() = inToken.type();
+        }
+        text()    += inToken.text();
+        size_type  finish  = std::max(end(), inToken.end());
+        offset()  = std::min(offset(), inToken.offset());
+        length()  = finish - offset();
+        return *this;
+      }
+
+      static value_type ngramSeparator() {
+        static const value_type separator = "_";
+        return separator;
+      }
 		};
+
+    typedef BasicToken<String>  Token;
 		
 		// -----------------------------------------------------------------------------
 		

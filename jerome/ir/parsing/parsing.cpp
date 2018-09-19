@@ -31,30 +31,17 @@ extern "C" {
 	void stem(char *term, char *stem);
 }
 
+//static void test() {
+//  jerome::stream::Concrete x;
+//  jerome::stream::Concrete y;
+//  y.setSource(jerome::stream::Concrete());
+//  y.drain();
+//}
+
 namespace jerome { namespace ir {
-
-  // STATIC
-	static const String 	kNGramSeparator	= String("_");
-
 	namespace i {
 		const jerome::Locale	TokenStreamImpl::kDefaultLocale	= jerome::Locale();
-
 	}
-	
-	Token& Token::operator+= (const Token& inToken) {
-		if (text().size() > 0) {
-			text() += kNGramSeparator;
-		} else {
-			type() = inToken.type();
-		}
-		text()		+= inToken.text();
-		Token::size_type	finish	= std::max(end(), inToken.end());
-		offset()	= std::min(offset(), inToken.offset());
-		length()	= finish - offset();
-
-		return *this;
-	}
-	
 
 namespace filter {	
 
@@ -327,7 +314,7 @@ namespace filter {
 			mCount(inCount), 
 			mIndex(0) 
 	{
-		mTokens.push_back(Token(kNGramSeparator, 0, 0));
+    mTokens.push_back(Token(Token::ngramSeparator(), 0, 0));
 	}
 
 	
@@ -337,9 +324,9 @@ namespace filter {
 		while (mIndex <= 0) {
 			bool result = TokenFilter::getNextToken(ioToken);
 			if (!result) {
-				if (mTokens.back().text() == kNGramSeparator)
+				if (mTokens.back().text() == Token::ngramSeparator())
 					return false;
-				ioToken = Token(kNGramSeparator, mTokens.back().end(), 0);
+				ioToken = Token(Token::ngramSeparator(), mTokens.back().end(), 0);
 			}
 			mTokens.push_back(ioToken);
 			if (mTokens.size() > mCount) {

@@ -34,7 +34,6 @@ namespace jerome {
 		static void global(const String& inLocaleString);
 	};
 
-
 	namespace ir {
 
 // -----------------------------------------------------------------------------	

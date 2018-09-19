@@ -32,13 +32,17 @@
 #include <jerome/ir/collection.hpp>
 #include <jerome/ir/parsing/filters.hpp>
 
+//#undef JEROME_IOS
+
 #ifdef JEROME_IOS
 #	include <jerome/ir/parsing/parsing_cf.hpp>
 #elif defined(JEROME_ANDROID)
-#warning "Fix locale and Unicodde support!"
+#warning "Fix locale and Unicode support!"
 // Android NDK doesn't support cf, and boost locale is a pain to built.
-// Thus we skip the whole boost local and create another parsing_std parser that uses only standatd C++.
-// This parser only works for simple token parsing and does not support different locale or Unicode.
+// Thus we skip the whole boost local and create another parsing_std
+// parser that uses only standatd C++.
+// This parser only works for simple token parsing and does not support
+// different locale or Unicode.
 #   include <jerome/ir/parsing/parsing_std.hpp>
 #else
 #	include <jerome/ir/parsing/parsing_icu.hpp>
