@@ -23,6 +23,8 @@
 #ifndef __jerome_ir_collection_heap_index_hpp
 #define __jerome_ir_collection_heap_index_hpp
 
+#include <jerome/ir/collection/term.hpp>
+#include <jerome/ir/collection/field.hpp>
 #include <jerome/ir/collection/index.hpp>
 
 namespace jerome { namespace ir {

@@ -25,86 +25,13 @@
 #ifdef JEROME_IOS
 
 namespace jerome { 
-
-  namespace cf {
-    String::String(const jerome::String& inString)
-    : parent_type(CFStringCreateWithCString(kCFAllocatorDefault,
-                                            inString.c_str(),
-                                            kCFStringEncodingUTF8))
-    {
-      release();
-    }
-
-    String::operator jerome::String () const {
-      const char*  constBuffer  = CFStringGetCStringPtr(value(),
-                                                        kCFStringEncodingUTF8);
-      if (constBuffer != NULL) return jerome::String(constBuffer);
-
-      CFIndex length = 4*CFStringGetLength(value());
-      auto buffer = std::make_unique<char>(length);
-      if (buffer && CFStringGetCString(value(), buffer.get(),
-                                       length, kCFStringEncodingUTF8))
-      {
-        return jerome::String(buffer.get());
-      } else {
-        return jerome::String();
-      }
-    }
-  }
-
-  static Locale	kDefaultLocale(Locale::move(CFLocaleCopyCurrent()));
-
-	Locale::Locale(const String& inLocale)
-  : parent_type(Locale::move(CFLocaleCreate(kCFAllocatorDefault, cf::String(inLocale))))
-	{
-	}
-
-	Locale::Locale()
-  : parent_type(kDefaultLocale)
-  {
-	}
-
-	void Locale::global(const String& inLocale) {
-		kDefaultLocale = Locale(inLocale);
-	}
-
 	namespace ir {
-
-    Tokenizer::Tokenizer(CFStringRef inString,
-                         jerome::Locale const & inLocale)
-    : mLocale(inLocale)
-    , mString(inString)
-    , mTokenizer(init(mString, mLocale))
-    {
-    }
-
-    Tokenizer::Tokenizer(const String* inString, jerome::Locale const & inLocale)
-    : mLocale(inLocale)
-    , mString(*inString)
-    , mTokenizer(init(mString, mLocale))
-    {
-    }
-
-    cf::basic_object<CFStringTokenizerRef>
-    Tokenizer::init(CFStringRef inString, CFLocaleRef inLocale) {
-      auto tokenzer = CFStringTokenizerCreate(kCFAllocatorDefault,
-                                              inString,
-                                              CFRangeMake(0, CFStringGetLength(inString)),
-                                              kCFStringTokenizerUnitWordBoundary,
-                                              inLocale);
-      return cf::basic_object<CFStringTokenizerRef>::move(tokenzer);
-    }
 
     bool
     Tokenizer::getNextToken(Token& ioToken) {
-      auto	tokenType	= CFStringTokenizerAdvanceToNextToken(mTokenizer);
-      if (tokenType == kCFStringTokenizerTokenNone) return false;
-
-      CFRange		range		= CFStringTokenizerGetCurrentTokenRange(mTokenizer);
-      cf::String	substring(cf::String::move(CFStringCreateWithSubstring(kCFAllocatorDefault, mString, range)));
-      ioToken = Token((String)substring,
-                      (Token::size_type)range.location, // silence warnings
-                      (Token::size_type)range.length);
+      auto token = mTokenizer.nextToken<Token>();
+      if (token.isEOS()) return false;
+      ioToken = token;
       return true;
     }
 

@@ -31,13 +31,6 @@ extern "C" {
 	void stem(char *term, char *stem);
 }
 
-//static void test() {
-//  jerome::stream::Concrete x;
-//  jerome::stream::Concrete y;
-//  y.setSource(jerome::stream::Concrete());
-//  y.drain();
-//}
-
 namespace jerome { namespace ir {
 	namespace i {
 		const jerome::Locale	TokenStreamImpl::kDefaultLocale	= jerome::Locale();

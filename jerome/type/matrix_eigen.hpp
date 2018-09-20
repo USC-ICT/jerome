@@ -33,8 +33,15 @@
 #define EIGEN_SPARSEVECTOR_PLUGIN "jerome/type/matrix_eigen_sparse_vector_plugin.hpp"
 #endif
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
+#pragma clang diagnostic ignored "-Wcomma"
+#pragma clang diagnostic ignored "-Wdocumentation"
+
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/Sparse>
+
+#pragma clang diagnostic pop
 
 #if __jerome_had_no_EIGEN_SPARSEVECTOR_PLUGIN__
 #undef EIGEN_SPARSEVECTOR_PLUGIN

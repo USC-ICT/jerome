@@ -47,6 +47,14 @@
                BlueprintName = "libjerome.osx.tests"
                ReferencedContainer = "container:jerome.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "CollectionDictionary">
+               </Test>
+               <Test
+                  Identifier = "libjerome_osx_tests">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
       <MacroExpansion>

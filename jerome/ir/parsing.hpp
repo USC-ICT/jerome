@@ -28,8 +28,11 @@
 #include <boost/parameter.hpp>
 #include <jerome/types.hpp>
 
+#ifdef JEROME_IOS
+# include <jerome/ir/parsing/cf/cf_locale.hpp>
+#endif
+
 #include <jerome/ir/parsing/token.hpp>
-#include <jerome/ir/collection.hpp>
 #include <jerome/ir/parsing/filters.hpp>
 
 //#undef JEROME_IOS
@@ -49,6 +52,5 @@
 #endif
 
 #include <jerome/ir/parsing/parsing_pipes.hpp>
-
 
 #endif // defined __jerome_ir_parsing_hpp__

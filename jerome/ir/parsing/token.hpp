@@ -24,9 +24,6 @@
 #define __jerome_ir_parsing_token_hpp__
 
 namespace jerome {
-	
-	class Locale;
-	
 	namespace ir {
 		
 		// -----------------------------------------------------------------------------
@@ -56,6 +53,12 @@ namespace jerome {
         size_type&    offset()   { return mOffset; }
         size_type&    length()   { return mLength; }
         uint32_t&    type()     { return mType; }
+
+        static constexpr const uint32_t kEOSType = -1;
+        static constexpr const uint32_t kBOSType = -2;
+
+        bool isEOS() const { return type() == kEOSType; }
+        bool isBOS() const { return type() == kBOSType; }
       private:
         size_type    mOffset;
         size_type    mLength;
@@ -65,13 +68,10 @@ namespace jerome {
 
     template <class S = String>
     class BasicToken : public detail::TokenBase {
-      typedef S value_type;
       typedef detail::TokenBase parent_type;
 
-		private:
-			value_type			mText;
-
 		public:
+      typedef S value_type;
       using parent_type::parent_type;
 
 			BasicToken(const value_type& inText = value_type(),
@@ -85,7 +85,7 @@ namespace jerome {
 			BasicToken(const String::value_type* inText,
                  size_type inOffset,
                  size_type inLength,
-                 uint32_t inType = 0)
+                 uint32_t inType)
       : parent_type(inOffset, inLength, inType)
 			, mText(inText+inOffset, inLength)
       {}
@@ -94,13 +94,13 @@ namespace jerome {
                  size_type inTextLength,
                  size_type inOffset,
                  size_type inLength,
-                 uint32_t inType = 0)
+                 uint32_t inType)
       : parent_type(inOffset, inLength, inType)
       ,  mText(inText, inTextLength)
       {}
 
-			const String&	text() 		const { return mText; }
-			String&			text()		{ return mText; }
+			const value_type&	text() 		const { return mText; }
+			value_type&			text()		{ return mText; }
 
       BasicToken& operator += (const BasicToken& inToken) {
         if (text().size() > 0) {
@@ -119,7 +119,28 @@ namespace jerome {
         static const value_type separator = "_";
         return separator;
       }
-		};
+
+      static const BasicToken& eos() {
+        static const BasicToken token("", 0, 0, kEOSType);
+        return token;
+      }
+
+      static const BasicToken& bos() {
+        static const BasicToken token("", 0, 0, kBOSType);
+        return token;
+      }
+    private:
+      value_type      mText;
+    };
+
+    template <typename T>
+    inline std::ostream& operator << (std::ostream& outs, const BasicToken<T>& o) {
+      return outs << "{"
+        << "\"" << o.text() << "\", "
+        << "(" << o.type() << ")"
+        << "[" << o.offset() << "," << o.end() << "]"
+        << "}";
+    }
 
     typedef BasicToken<String>  Token;
 		

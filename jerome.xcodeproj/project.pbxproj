@@ -93,6 +93,13 @@
 		627818C51CC8322700C344E4 /* ObjectiveC++.mm in Sources */ = {isa = PBXBuildFile; fileRef = 627818C11CC8322700C344E4 /* ObjectiveC++.mm */; };
 		628059901F05A35D00D6B08D /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6280598F1F05A35D00D6B08D /* boost.framework */; };
 		628059911F05BC2600D6B08D /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6280598F1F05A35D00D6B08D /* boost.framework */; };
+		6283F7CD2152D27B004C8265 /* parsing_Tests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6283F7CC2152D27B004C8265 /* parsing_Tests.mm */; };
+		6283F7D22152D91D004C8265 /* cf_string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6283F7D12152D91D004C8265 /* cf_string.cpp */; };
+		6283F7D32152D91D004C8265 /* cf_string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6283F7D12152D91D004C8265 /* cf_string.cpp */; };
+		6283F7D72152D9B3004C8265 /* cf_locale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6283F7D52152D9B3004C8265 /* cf_locale.cpp */; };
+		6283F7D82152D9B3004C8265 /* cf_locale.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6283F7D52152D9B3004C8265 /* cf_locale.cpp */; };
+		6283F7DD215319D9004C8265 /* cf_tokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6283F7DB215319D9004C8265 /* cf_tokenizer.cpp */; };
+		6283F7DE215319D9004C8265 /* cf_tokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6283F7DB215319D9004C8265 /* cf_tokenizer.cpp */; };
 		6288C8AE163B5C6200191972 /* js_engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8AC163B5C6200191972 /* js_engine.cpp */; };
 		6288C8AF163B5C6200191972 /* js_engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8AC163B5C6200191972 /* js_engine.cpp */; };
 		6288C8BB1651DD0F00191972 /* async.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8B91651DD0E00191972 /* async.cpp */; };
@@ -470,6 +477,14 @@
 		627818CA1CC8341600C344E4 /* copy_headers.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = copy_headers.sh; sourceTree = "<group>"; };
 		6280598F1F05A35D00D6B08D /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = 3rdParty/build/osx/Frameworks/boost.framework; sourceTree = SOURCE_ROOT; };
 		6283F7CB2151B126004C8265 /* filesystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filesystem.hpp; sourceTree = "<group>"; };
+		6283F7CC2152D27B004C8265 /* parsing_Tests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = parsing_Tests.mm; sourceTree = "<group>"; };
+		6283F7CF2152D670004C8265 /* object.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = object.hpp; sourceTree = "<group>"; };
+		6283F7D02152D8E5004C8265 /* cf_string.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = cf_string.hpp; sourceTree = "<group>"; };
+		6283F7D12152D91D004C8265 /* cf_string.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cf_string.cpp; sourceTree = "<group>"; };
+		6283F7D52152D9B3004C8265 /* cf_locale.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cf_locale.cpp; sourceTree = "<group>"; };
+		6283F7D62152D9B3004C8265 /* cf_locale.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = cf_locale.hpp; sourceTree = "<group>"; };
+		6283F7DB215319D9004C8265 /* cf_tokenizer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cf_tokenizer.cpp; sourceTree = "<group>"; };
+		6283F7DC215319D9004C8265 /* cf_tokenizer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = cf_tokenizer.hpp; sourceTree = "<group>"; };
 		6288C8AC163B5C6200191972 /* js_engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = js_engine.cpp; sourceTree = "<group>"; };
 		6288C8AD163B5C6200191972 /* js_engine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = js_engine.hpp; sourceTree = "<group>"; };
 		6288C8B91651DD0E00191972 /* async.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = async.cpp; sourceTree = "<group>"; };
@@ -910,6 +925,7 @@
 		6268B0281A0579FC00287DF4 /* parsing */ = {
 			isa = PBXGroup;
 			children = (
+				6283F7CE2152D65E004C8265 /* cf */,
 				6268B0291A0579FC00287DF4 /* parsing_cf.cpp */,
 				6268B02A1A0579FC00287DF4 /* parsing_cf.hpp */,
 				6268B02B1A0579FC00287DF4 /* parsing_icu.cpp */,
@@ -1044,6 +1060,20 @@
 			);
 			name = Jerome;
 			path = Framework;
+			sourceTree = "<group>";
+		};
+		6283F7CE2152D65E004C8265 /* cf */ = {
+			isa = PBXGroup;
+			children = (
+				6283F7D52152D9B3004C8265 /* cf_locale.cpp */,
+				6283F7D62152D9B3004C8265 /* cf_locale.hpp */,
+				6283F7D12152D91D004C8265 /* cf_string.cpp */,
+				6283F7D02152D8E5004C8265 /* cf_string.hpp */,
+				6283F7DB215319D9004C8265 /* cf_tokenizer.cpp */,
+				6283F7DC215319D9004C8265 /* cf_tokenizer.hpp */,
+				6283F7CF2152D670004C8265 /* object.hpp */,
+			);
+			path = cf;
 			sourceTree = "<group>";
 		};
 		628F1563199164440050F485 /* javascript */ = {
@@ -1337,6 +1367,7 @@
 				625D39F421484F7A0038D20D /* dictionary_Tests.mm */,
 				62D19FBA2148692100E8C954 /* libjerome_osx_tests.m */,
 				62D19FBC2148692100E8C954 /* Info.plist */,
+				6283F7CC2152D27B004C8265 /* parsing_Tests.mm */,
 			);
 			path = libjerome.osx.tests;
 			sourceTree = "<group>";
@@ -1803,6 +1834,7 @@
 				6200F5591BAA04AD009828A4 /* evaluation.cpp in Sources */,
 				6211C3191B7F212C00F293DC /* writer.cpp in Sources */,
 				6211C33C1B80717300F293DC /* stylesheet.cpp in Sources */,
+				6283F7D72152D9B3004C8265 /* cf_locale.cpp in Sources */,
 				62C3276D1B963286001EB593 /* ReporterFactory.cpp in Sources */,
 				6200F7371B84735F00CA121E /* reader.cpp in Sources */,
 				62AC3BBD1BBC94C80067C540 /* string.cpp in Sources */,
@@ -1815,6 +1847,7 @@
 				6221391D1BACBEDB009BE083 /* Trainer.cpp in Sources */,
 				6223D52E215174F9002DA069 /* file_index.cpp in Sources */,
 				62C4AA731B7D5B7C00B8A47A /* XMLReporter.cpp in Sources */,
+				6283F7D22152D91D004C8265 /* cf_string.cpp in Sources */,
 				62C327711B96329E001EB593 /* WeightingFactory.cpp in Sources */,
 				6288C8BB1651DD0F00191972 /* async.cpp in Sources */,
 				62092D5C16BB22E5003001AC /* scion.cpp in Sources */,
@@ -1828,6 +1861,7 @@
 				6288C8AE163B5C6200191972 /* js_engine.cpp in Sources */,
 				62C3277C1B998A71001EB593 /* ModelWriterText.cpp in Sources */,
 				62E830E71B64752500847135 /* engine.cpp in Sources */,
+				6283F7DD215319D9004C8265 /* cf_tokenizer.cpp in Sources */,
 				62D19FC62148976300E8C954 /* dictionary.cpp in Sources */,
 				62F5F8E11CE2C0CE00EECA12 /* npc_model.cpp in Sources */,
 				6255E92A1B729A5200EA9402 /* parameters.cpp in Sources */,
@@ -1906,6 +1940,7 @@
 			files = (
 				62D19FBB2148692100E8C954 /* libjerome_osx_tests.m in Sources */,
 				62D19FC32148692A00E8C954 /* dictionary_Tests.mm in Sources */,
+				6283F7CD2152D27B004C8265 /* parsing_Tests.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1926,10 +1961,12 @@
 				6200F7381B84735F00CA121E /* reader.cpp in Sources */,
 				62B316F31D0F8B5B00D2E4E4 /* string.cpp in Sources */,
 				62D19FC72148976300E8C954 /* dictionary.cpp in Sources */,
+				6283F7D82152D9B3004C8265 /* cf_locale.cpp in Sources */,
 				62C327781B998A38001EB593 /* ModelWriterXML.cpp in Sources */,
 				620C62841B75764A00FA2953 /* irregular_verbs.cpp in Sources */,
 				62B316F41D0F8B8800D2E4E4 /* evaluation.cpp in Sources */,
 				62C327661B9631D4001EB593 /* RankerFactory.cpp in Sources */,
+				6283F7DE215319D9004C8265 /* cf_tokenizer.cpp in Sources */,
 				62F5F8E21CE2C0CE00EECA12 /* npc_model.cpp in Sources */,
 				622BF9951B82D472001588C7 /* PlatformJSInterface.cpp in Sources */,
 				6268B0361A057A1800287DF4 /* parsing.cpp in Sources */,
@@ -1942,6 +1979,7 @@
 				6223D52F215174F9002DA069 /* file_index.cpp in Sources */,
 				6268B0321A0579FC00287DF4 /* parsing_icu.cpp in Sources */,
 				620346751D8C9996008C7608 /* parsing.cpp in Sources */,
+				6283F7D32152D91D004C8265 /* cf_string.cpp in Sources */,
 				62D56AF81987069400F09A32 /* cross_entropy_jelinek_mercer.cpp in Sources */,
 				62C327811B9AC258001EB593 /* model_impl.cpp in Sources */,
 				62FAE740161155500065D358 /* types.cpp in Sources */,

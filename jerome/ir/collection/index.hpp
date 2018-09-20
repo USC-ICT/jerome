@@ -25,7 +25,7 @@
 
 #include <jerome/ir/collection/dictionary.hpp>
 #include <jerome/ir/collection/field.hpp>
-#include <jerome/ir/parsing/token.hpp>
+#include <jerome/ir/parsing.hpp>
 
 namespace jerome { namespace ir { namespace index {
 
