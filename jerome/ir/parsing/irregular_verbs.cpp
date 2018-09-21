@@ -23,9 +23,7 @@
 #include <cstdlib>
 #include "irregular_verbs.hpp"
 
-namespace jerome {
-namespace ir {
-namespace filter {
+namespace jerome { namespace ir { namespace filter {
 
 const char * const irregular_verbs[] {
 "abidden", "abide",
@@ -741,6 +739,22 @@ const char * const irregular_verbs[] {
 
 const std::size_t irregular_verbs_size = sizeof(irregular_verbs) / sizeof(*irregular_verbs);
 
-}
-}
-}
+  static auto
+  make_shared_map(const char * const inPairs[],
+                  const std::size_t inWordCount)
+  {
+    auto map = std::make_shared<std::unordered_map<String, String>>();
+    for(unsigned i = 0; i < inWordCount-1; i += 2) {
+      map->emplace(inPairs[i], inPairs[i+1]);
+    }
+    return map;
+  }
+
+  shared_ptr<std::unordered_map<String, String>>
+  shared_irregular_verbs()
+  {
+    static auto map = make_shared_map(irregular_verbs, irregular_verbs_size);
+    return map;
+  }
+
+}}}

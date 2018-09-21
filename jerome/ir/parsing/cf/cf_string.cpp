@@ -62,6 +62,44 @@ namespace jerome { namespace cf {
                                            value(), CFRange {pos, count});
     return String(String::move(tmp));
   }
+
+  String lowercased(const String& string, const Locale& inLocale) {
+    CFMutableStringRef  lowerCaseString =
+    CFStringCreateMutableCopy(kCFAllocatorDefault, 0, string);
+    CFStringLowercase(lowerCaseString, inLocale);
+    return String(String::move(lowerCaseString));
+  }
+
+  static bool isStringMemberOfCharSet(CFStringRef inString,
+                                      CFCharacterSetRef inCharSet)
+  {
+    CFIndex          length = CFStringGetLength(inString);
+    CFStringInlineBuffer   inlineBuffer;
+
+    CFStringInitInlineBuffer(inString, &inlineBuffer,
+                             CFRangeMake(0, length));
+
+    for (CFIndex cnt = 0; cnt < length; ++cnt) {
+      UniChar ch = CFStringGetCharacterFromInlineBuffer(&inlineBuffer, cnt);
+      if (CFCharacterSetIsCharacterMember(inCharSet, ch)) return true;
+    }
+    return false;
+  }
+
+  bool isAlpha(const String& string,
+               const Locale& inLocale)
+  {
+    auto set = CFCharacterSetGetPredefined(kCFCharacterSetLetter);
+    return isStringMemberOfCharSet(string, set);
+  }
+
+  bool isAlphanumeric(const String& string,
+                      const Locale& inLocale)
+  {
+    auto set = CFCharacterSetGetPredefined(kCFCharacterSetAlphaNumeric);
+    return isStringMemberOfCharSet(string, set);
+  }
+
 }}
 
 #endif

@@ -23,11 +23,11 @@
 #ifndef __jerome_ir_parsing_token_hpp__
 #define __jerome_ir_parsing_token_hpp__
 
+#include <jerome/types.hpp>
+#include <jerome/ir/parsing/parsing_fwd.hpp>
+
 namespace jerome {
 	namespace ir {
-		
-		// -----------------------------------------------------------------------------
-
     namespace detail {
       struct TokenBase {
         typedef uint32_t  size_type;
@@ -74,7 +74,26 @@ namespace jerome {
       typedef S value_type;
       using parent_type::parent_type;
 
-			BasicToken(const value_type& inText = value_type(),
+      template <class Other>
+      BasicToken(const BasicToken<Other>& inOther)
+      : parent_type(inOther)
+      , mText(inOther.text())
+      {}
+
+      template <class Other>
+      BasicToken(BasicToken<Other>&& inOther)
+      : parent_type(std::move(inOther))
+      , mText(std::move(inOther.text()))
+      {}
+
+      template <class Other>
+      BasicToken(const value_type& inText,
+                 const Other& inOther)
+      : parent_type(inOther)
+      , mText(inText)
+      {}
+
+      BasicToken(const value_type& inText = value_type(),
                  size_type inOffset = 0,
                  size_type inLength = 0,
                  uint32_t inType = 0)

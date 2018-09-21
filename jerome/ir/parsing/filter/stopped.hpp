@@ -1,8 +1,8 @@
 //
-//  irregular_verbs.hpp
+//  stopped.hpp
 //
-//  Created by Anton Leuski on 8/7/15.
-//  Copyright (c) 2015 ICT/USC. All rights reserved.
+//  Created by Anton Leuski on 9/20/18.
+//  Copyright © 2018 Anton Leuski & ICT/USC. All rights reserved.
 //
 //  This file is part of Jerome.
 //
@@ -20,17 +20,8 @@
 //  along with Jerome.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef __jerome_ir_parsing_irregular_verbs_hpp__
-#define __jerome_ir_parsing_irregular_verbs_hpp__
+#ifndef __jerome_ir_parsing_filter_stopped_hpp
+#define __jerome_ir_parsing_filter_stopped_hpp
 
-#include <jerome/types.hpp>
 
-namespace jerome { namespace ir { namespace filter {
-
-  extern const char * const irregular_verbs[];
-  extern const std::size_t irregular_verbs_size;
-
-  shared_ptr<std::unordered_map<String, String>> shared_irregular_verbs();
-}}}
-
-#endif // defined __jerome_ir_parsing_irregular_verbs_hpp__
+#endif // defined __jerome_ir_parsing_filter_stopped_hpp

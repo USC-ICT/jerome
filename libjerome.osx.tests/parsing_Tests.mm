@@ -26,7 +26,6 @@
 #pragma clang diagnostic ignored "-Wshorten-64-to-32"
 #pragma clang diagnostic ignored "-Wcomma"
 #pragma clang diagnostic ignored "-Wdocumentation"
-#include <boost/range.hpp>
 #include <boost/range/algorithm.hpp>
 #pragma clang diagnostic pop
 
@@ -52,24 +51,54 @@ using namespace jerome::ir;
   [super tearDown];
 }
 
-static const char* text = "Hello World!";
-static jerome::String test { text };
+static jerome::String test =
+  u8"Hello World! 57 We'll overcome, willn't we? We're groot. Привет 57!";
 
-- (void)test
+- (void)test01
 {
   boost::for_each(test,
                   [&] (const auto& x) { std::cout << x << std::endl; });
 }
 
-- (void)testTokenized
+- (void)test02Tokenized
 {
   boost::for_each(test | adaptors::tokenized(), [&]
                   (const auto& x) { std::cout << x << std::endl; });
 }
 
-- (void)testUntokenized
+- (void)test03Untokenized
 {
   boost::for_each(test | adaptors::untokenized, [&]
+                  (const auto& x) { std::cout << x << std::endl; });
+}
+
+- (void)test04Lowercased
+{
+  boost::for_each(test
+                  | adaptors::tokenized()
+                  | filter::lowercased
+                  , [&]
+                  (const auto& x) { std::cout << x << std::endl; });
+}
+
+- (void)test05Alpha
+{
+  boost::for_each(test
+                  | adaptors::tokenized()
+                  | filter::lowercased
+                  | filter::filtered(alpha)
+                  , [&]
+                  (const auto& x) { std::cout << x << std::endl; });
+}
+
+- (void)test06Contractions
+{
+  boost::for_each(test
+                  | adaptors::tokenized()
+                  | filter::lowercased
+                  | filter::filtered(alphanumeric)
+                  | filter::expanded_contractions
+                  , [&]
                   (const auto& x) { std::cout << x << std::endl; });
 }
 

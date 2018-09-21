@@ -24,6 +24,7 @@
 #define __jerome_ir_parsing_parsing_pipes_hpp__
 
 //#include "parsing.h"
+#include <boost/parameter.hpp>
 
 namespace jerome { namespace ir {
 

@@ -22,96 +22,14 @@
 
 #ifndef __jerome_ir_parsing_filters_hpp__
 #define __jerome_ir_parsing_filters_hpp__
+#include <boost/range/adaptor/transformed.hpp>
 
 namespace jerome {
-
-//  namespace stream {
-//    template <class Derived, typename Result, Result DF>
-//    struct Filter {
-//      typedef Result result_type;
-//    private:
-//      struct HolderBase {
-//        virtual ~HolderBase() {}
-//        virtual result_type process(Filter* ioFilter) = 0;
-//      };
-//
-//      template <class Source>
-//      struct Holder : public HolderBase {
-//        Holder(Source& inSource)
-//        : mSource(inSource)
-//        {}
-//        result_type process(Filter* ioFilter) override {
-//          return ioFilter->process(this->mSource);
-//        }
-//      private:
-//        Source& mSource;
-//      };
-//
-//      std::unique_ptr<HolderBase> mHolder;
-//
-//      template <class Source>
-//      result_type process(Source& ioSource) {
-//        return static_cast<Derived*>(this)->process(ioSource);
-//      }
-//    public:
-//
-//      result_type eos() const { return DF; }
-//
-//      template <class Source>
-//      void setSource(Source& inSource) {
-//        mHolder = std::unique_ptr<HolderBase>(new Holder<Source>(inSource));
-//      }
-//
-//      result_type next() {
-//        return mHolder ? mHolder->process(this) : eos();
-//      }
-//
-//      void drain() {
-//        while (eos() != next());
-//      }
-//    };
-//
-//    template <class First, class Second>
-//    struct Combined {
-//      typedef typename Second::result_type result_type;
-//
-//      Combined(First&& inFirst, Second&& inSecond)
-//      : mFirst(std::move(inFirst))
-//      , mSecond(std::move(inSecond))
-//      {
-//        mSecond.setSource(mFirst);
-//      }
-//      
-//      result_type next() {
-//        return mSecond.next();
-//      }
-//
-//    private:
-//      First mFirst;
-//      Second mSecond;
-//    };
-//
-//    struct Concrete : public Filter<Concrete, int, 0> {
-//      typedef Filter<Concrete, int, 0> parent_type;
-//      typedef parent_type::result_type result_type;
-//      Concrete()
-//      : count(5)
-//      {}
-//
-//      template <class Source>
-//      result_type process(Source& ioSource) {
-//        return count > 0 ? --count : ioSource.next();
-//      }
-//
-//    private:
-//      int count;
-//    };
-//  }
-
 	namespace ir {
 
 		namespace filter {
-			
+
+
 			/**
 			 * convert toke to lowercase
 			 */
@@ -227,7 +145,7 @@ namespace jerome {
 			};
 			
 		}
-		
-	}} // namespace jerome::ir
+
+}} // namespace jerome::ir
 
 #endif // defined __jerome_ir_parsing_filters_hpp__

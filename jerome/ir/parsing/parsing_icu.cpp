@@ -22,7 +22,7 @@
 
 #include <jerome/ir/parsing.hpp>
 
-#ifndef JEROME_IOS
+#if JEROME_PARSING == JEROME_PARSING_ICU
 
 #include <boost/algorithm/algorithm.hpp>
 #include <boost/algorithm/string.hpp>

@@ -6,9 +6,8 @@
 //  Copyright (c) 2016 USC/ICT. All rights reserved.
 //
 
-#include <jerome/ir/parsing.hpp>
 #ifdef JEROME_ANDROID // Android only build
-
+#include <jerome/ir/parsing.hpp>
 #include <unicode/uchar.h>
 //#include <boost/locale.hpp>
 

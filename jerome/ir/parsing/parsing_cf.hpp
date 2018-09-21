@@ -87,21 +87,35 @@ namespace jerome {
       /**
        * filter out tokens that do not contain any alphanumeric characters, i.e., punctuation
        */
-      class Alphanumeric : public CharSet {
+      class Alphanumeric : public TokenFilter {
       public:
         Alphanumeric(TokenStream inSource)
-        : CharSet(inSource, CFCharacterSetGetPredefined(kCFCharacterSetAlphaNumeric))
+        : TokenFilter(inSource)
         {}
+        bool getNextToken(Token& ioToken) {
+          while(TokenFilter::getNextToken(ioToken)) {
+            if (isAlphanumeric(cf::String(ioToken.text()), locale())) return true;
+          }
+          return false;
+        }
+
       };
 
       /**
        * filter out tokens that do not contain any alpha characters, i.e., numbers & punctuation
        */
-      class Alpha : public CharSet {
+      class Alpha : public TokenFilter {
       public:
         Alpha(TokenStream inSource)
-        : CharSet(inSource, CFCharacterSetGetPredefined(kCFCharacterSetLetter))
+        : TokenFilter(inSource)
         {}
+        bool getNextToken(Token& ioToken) {
+          while(TokenFilter::getNextToken(ioToken)) {
+            if (isAlpha(cf::String(ioToken.text()), locale())) return true;
+          }
+          return false;
+        }
+
       };
     }
   }

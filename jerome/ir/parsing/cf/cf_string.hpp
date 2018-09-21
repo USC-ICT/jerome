@@ -24,22 +24,95 @@
 #define __jerome_ir_parsing_cf_string_hpp
 
 #include <jerome/ir/parsing/cf/object.hpp>
+#include <jerome/ir/parsing/cf/cf_locale.hpp>
+#include <jerome/ir/parsing/parsing_fwd.hpp>
 
-namespace jerome { namespace cf {
-  struct String : public basic_object<CFStringRef> {
-    typedef basic_object<CFStringRef> parent_type;
-    using parent_type::parent_type;
-    typedef CFIndex size_type;
+namespace jerome {
+  namespace cf {
+    struct String : public basic_object<CFStringRef> {
+      typedef basic_object<CFStringRef> parent_type;
+      using parent_type::parent_type;
+      typedef CFIndex size_type;
 
-    String(const jerome::String& inString);
-    String(const char* inBytes, size_type inCount);
-    String substr(size_type pos, size_type count);
-    explicit operator jerome::String () const;
+      String(const jerome::String& inString);
+      String(const char* inBytes, size_type inCount);
+      String substr(size_type pos, size_type count);
+      explicit operator jerome::String () const;
+    };
+
+    inline std::ostream& operator << (std::ostream& outs, const String& o) {
+      return outs << (jerome::String)o;
+    }
+
+    String lowercased(const String& string,
+                      const Locale& inLocale = Locale());
+
+    bool isAlpha(const String& string,
+                 const Locale& inLocale = Locale());
+
+    bool isAlphanumeric(const String& string,
+                        const Locale& inLocale = Locale());
+  }
+
+  template <>
+  struct Lowercased<cf::String> {
+    using result_type = cf::String;
+    result_type operator () (const cf::String& inString,
+                             const Locale& inLocale = Locale()) const
+    {
+      return cf::lowercased(inString, inLocale);
+    }
   };
 
-  inline std::ostream& operator << (std::ostream& outs, const String& o) {
-    return outs << (jerome::String)o;
-  }
-}}
+  template <>
+  struct Lowercased<String> {
+    using result_type = String;
+    result_type operator () (const String& inString,
+                             const Locale& inLocale = Locale()) const
+    {
+      return (String)cf::lowercased(cf::String(inString), inLocale);
+    }
+  };
+
+  template <>
+  struct IsAlpha<cf::String> {
+    using result_type = bool;
+    result_type operator () (const cf::String& inString,
+                             const Locale& inLocale = Locale()) const
+    {
+      return cf::isAlpha(inString, inLocale);
+    }
+  };
+
+  template <>
+  struct IsAlpha<String> {
+    using result_type = bool;
+    result_type operator () (const String& inString,
+                             const Locale& inLocale = Locale()) const
+    {
+      return cf::isAlpha(cf::String(inString), inLocale);
+    }
+  };
+
+  template <>
+  struct IsAlphanumeric<cf::String> {
+    using result_type = bool;
+    result_type operator () (const cf::String& inString,
+                             const Locale& inLocale = Locale()) const
+    {
+      return cf::isAlphanumeric(inString, inLocale);
+    }
+  };
+
+  template <>
+  struct IsAlphanumeric<String> {
+    using result_type = bool;
+    result_type operator () (const String& inString,
+                             const Locale& inLocale = Locale()) const
+    {
+      return cf::isAlphanumeric(cf::String(inString), inLocale);
+    }
+  };
+}
 
 #endif // defined __jerome_ir_parsing_cf_string_hpp

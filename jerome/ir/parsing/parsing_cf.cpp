@@ -20,9 +20,9 @@
 //  along with Jerome.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include <jerome/ir/parsing.hpp>
-
 #ifdef JEROME_IOS
+
+#include <jerome/ir/parsing.hpp>
 
 namespace jerome { 
 	namespace ir {
@@ -62,15 +62,12 @@ namespace jerome {
       if (!TokenFilter::getNextToken(ioToken)) return false;
 
       cf::String	string(ioToken.text());
-      CFMutableStringRef	lowerCaseString =
-      CFStringCreateMutableCopy(kCFAllocatorDefault, 0, string);
-      CFStringLowercase(lowerCaseString, locale());
-      cf::String   lowercased(cf::String::move(lowerCaseString));
+      auto lowercasedString = lowercased(string, locale());
 
       if (kCFCompareEqualTo
-          != CFStringCompare(string, lowercased, kCFCompareNonliteral))
+          != CFStringCompare(string, lowercasedString, kCFCompareNonliteral))
       {
-        ioToken.text() = (String)lowercased;
+        ioToken.text() = (String)lowercasedString;
       }
 
       return true;

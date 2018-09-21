@@ -23,34 +23,35 @@
 #ifndef __jerome_ir_parsing_hpp__
 #define __jerome_ir_parsing_hpp__
 
-#include <exception>
-#include <list>
-#include <boost/parameter.hpp>
 #include <jerome/types.hpp>
-
-#ifdef JEROME_IOS
-# include <jerome/ir/parsing/cf/cf_locale.hpp>
-#endif
+#include <jerome/ir/parsing/parsing_fwd.hpp>
 
 #include <jerome/ir/parsing/token.hpp>
 #include <jerome/ir/parsing/filters.hpp>
 
 //#undef JEROME_IOS
 
-#ifdef JEROME_IOS
+#if JEROME_PARSING == JEROME_PARSING_CF
 #	include <jerome/ir/parsing/parsing_cf.hpp>
-#elif defined(JEROME_ANDROID)
+#elif JEROME_PARSING == JEROME_PARSING_STD
 #warning "Fix locale and Unicode support!"
 // Android NDK doesn't support cf, and boost locale is a pain to built.
 // Thus we skip the whole boost local and create another parsing_std
 // parser that uses only standatd C++.
 // This parser only works for simple token parsing and does not support
 // different locale or Unicode.
-#   include <jerome/ir/parsing/parsing_std.hpp>
-#else
+# include <jerome/ir/parsing/parsing_std.hpp>
+#elif JEROME_PARSING == JEROME_PARSING_ICU
 #	include <jerome/ir/parsing/parsing_icu.hpp>
+#else
+# error "unknown value for JEROME_PARSING"
 #endif
 
 #include <jerome/ir/parsing/parsing_pipes.hpp>
+
+#include <jerome/ir/parsing/filter/alpha.hpp>
+#include <jerome/ir/parsing/filter/contractions.hpp>
+#include <jerome/ir/parsing/filter/dictionary.hpp>
+#include <jerome/ir/parsing/filter/lowercased.hpp>
 
 #endif // defined __jerome_ir_parsing_hpp__
