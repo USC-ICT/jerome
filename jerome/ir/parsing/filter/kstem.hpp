@@ -23,5 +23,28 @@
 #ifndef __jerome_ir_parsing_filter_kstem_hpp
 #define __jerome_ir_parsing_filter_kstem_hpp
 
+#include <jerome/types.hpp>
+#include <jerome/ir/parsing/parsing_fwd.hpp>
+#include <jerome/ir/parsing/token.hpp>
+
+namespace jerome { namespace ir { namespace filter {
+  namespace filter_detail {
+    struct kstem_holder {
+      typedef ir::BasicToken<String> result_type;
+      result_type operator() (const result_type& inToken) const {
+        if (inToken.isEOS() || inToken.isBOS()) return inToken;
+        auto length = inToken.text().length();
+        std::unique_ptr<char>  thestem(new char[2*length]);
+        stem(inToken.text().c_str(), thestem.get());
+        if (!strcmp(inToken.text().c_str(), thestem.get())) return inToken;
+        return result_type(String(thestem.get()), inToken);
+      }
+    private:
+      static void stem(const char* inString, char* outStem);
+    };
+  }
+  const filter_detail::kstem_holder kstem =
+  filter_detail::kstem_holder();
+}}}
 
 #endif // defined __jerome_ir_parsing_filter_kstem_hpp

@@ -23,5 +23,34 @@
 #ifndef __jerome_ir_parsing_filter_stopped_hpp
 #define __jerome_ir_parsing_filter_stopped_hpp
 
+#include <jerome/types.hpp>
+#include <jerome/ir/parsing/parsing_fwd.hpp>
+#include <jerome/ir/parsing/token.hpp>
+
+namespace jerome { namespace ir { namespace filter {
+  namespace filter_detail {
+    template <typename S>
+    struct not_in_set_holder {
+      typedef S element_type;
+      typedef shared_ptr<std::unordered_set<element_type>> set_type;
+      const set_type set;
+      not_in_set_holder(const set_type& inSet)
+      : set(inSet)
+      {}
+      not_in_set_holder operator() (const set_type& inSet) const {
+        return not_in_set_holder(inSet);
+      }
+
+      bool operator() (const ir::BasicToken<element_type>& inToken) const {
+        if (inToken.isEOS() || inToken.isBOS()) return true;
+        return set->find(inToken.text()) == set->end();
+      }
+    };
+
+    shared_ptr<std::unordered_set<String>> defaultStopwords();
+  }
+  const auto not_stopword =
+  filter_detail::not_in_set_holder<String>(filter_detail::defaultStopwords());
+}}}
 
 #endif // defined __jerome_ir_parsing_filter_stopped_hpp

@@ -50,8 +50,13 @@
 #include <jerome/ir/parsing/parsing_pipes.hpp>
 
 #include <jerome/ir/parsing/filter/alpha.hpp>
+#include <jerome/ir/parsing/filter/as_token.hpp>
 #include <jerome/ir/parsing/filter/contractions.hpp>
 #include <jerome/ir/parsing/filter/dictionary.hpp>
+#include <jerome/ir/parsing/filter/kstem.hpp>
 #include <jerome/ir/parsing/filter/lowercased.hpp>
+#include <jerome/ir/parsing/filter/ngram.hpp>
+#include <jerome/ir/parsing/filter/stopped.hpp>
+#include <jerome/ir/parsing/filter/tokenized.hpp>
 
 #endif // defined __jerome_ir_parsing_hpp__

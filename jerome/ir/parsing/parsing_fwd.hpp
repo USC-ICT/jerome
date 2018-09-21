@@ -65,4 +65,18 @@ namespace jerome {
 }
 #endif
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
+#pragma clang diagnostic ignored "-Wcomma"
+#pragma clang diagnostic ignored "-Wdocumentation"
+#include <boost/range.hpp>
+#include <boost/range/adaptor/filtered.hpp>
+#include <boost/range/adaptor/transformed.hpp>
+#pragma clang diagnostic pop
+
+namespace jerome { namespace ir { namespace filter {
+  const auto filtered = boost::adaptors::filtered;
+  const auto transformed = boost::adaptors::transformed;
+}}}
+
 #endif // defined parsing_fwd_hpp

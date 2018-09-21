@@ -24,77 +24,28 @@
 #define __jerome_ir_parsing_filter_dictionary_hpp
 
 #include <jerome/ir/parsing/parsing_fwd.hpp>
+#include <jerome/ir/parsing/irregular_verbs.hpp>
 
-namespace jerome {
+namespace jerome { namespace ir { namespace filter {
+  namespace filter_detail {
+    struct dictionary_holder {
+      typedef shared_ptr<std::unordered_map<String, String>> dictionary_type;
+      const dictionary_type dictionary;
+      dictionary_holder(const dictionary_type& inDictionary)
+      : dictionary(inDictionary)
+      {}
 
-  struct DictionaryMapper
-  {
-    typedef shared_ptr<std::unordered_map<String, String>> dictionary_type;
-
-    DictionaryMapper(const dictionary_type& inDictionary)
-    : mDictionary(inDictionary)
-    {}
-
-    DictionaryMapper(const DictionaryMapper&) = default;
-    DictionaryMapper(DictionaryMapper&&) = default;
-
-    typedef ir::BasicToken<String> result_type;
-    result_type operator() (const result_type& inToken) const {
-      if (inToken.isEOS() || inToken.isBOS()) return inToken;
-      auto iter = mDictionary->find(inToken.text());
-      if (iter == mDictionary->end()) return inToken;
-      return result_type(iter->second, inToken);
-    }
-
-  private:
-    shared_ptr<std::unordered_map<String, String>> mDictionary;
-  };
-
-//  namespace ir {
-//    namespace filter {
-//      namespace filter_detail {
-//        struct lowercased_holder {
-//          const Locale locale;
-//          lowercased_holder(const Locale& inLocale = Locale())
-//          : locale(inLocale)
-//          {}
-//          lowercased_holder operator() (const Locale& inLocale) const {
-//            return lowercased_holder(inLocale);
-//          }
-//        };
-//      }
-//      const filter_detail::lowercased_holder lowercased =
-//      filter_detail::lowercased_holder();
-//    }
-//  }
-//
-//  template <class SinglePassRange>
-//  inline auto
-//  operator|(SinglePassRange& r,
-//            const ir::filter::filter_detail::lowercased_holder& f)
-//  {
-//    typedef typename SinglePassRange::value_type value_t;
-//    auto binded = std::bind(Lowercased<value_t>(),
-//                            std::placeholders::_1, f.locale);
-//    return boost::transformed_range<
-//    decltype(binded),
-//    SinglePassRange
-//    >(binded, r);
-//  }
-//
-//  template <class SinglePassRange>
-//  inline auto
-//  operator|(const SinglePassRange& r,
-//            const ir::filter::filter_detail::lowercased_holder& f)
-//  {
-//    typedef typename SinglePassRange::value_type value_t;
-//    auto binded = std::bind(Lowercased<value_t>(),
-//                            std::placeholders::_1, f.locale);
-//    return boost::transformed_range<
-//    decltype(binded),
-//    const SinglePassRange
-//    >(binded, r);
-//  }
-}
+      typedef ir::BasicToken<String> result_type;
+      result_type operator() (const result_type& inToken) const {
+        if (inToken.isEOS() || inToken.isBOS()) return inToken;
+        auto iter = dictionary->find(inToken.text());
+        if (iter == dictionary->end()) return inToken;
+        return result_type(iter->second, inToken);
+      }
+    };
+  }
+  const filter_detail::dictionary_holder stem_irregular_verbs =
+  filter_detail::dictionary_holder(shared_irregular_verbs());
+}}}
 
 #endif // defined __jerome_ir_parsing_filter_dictionary_hpp

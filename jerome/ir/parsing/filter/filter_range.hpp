@@ -74,7 +74,6 @@ namespace jerome {
   };
 
   // bool op(value&, iterator&)
-
   template <class Function, class Iterator>
   struct functional_filter_iterator : public boost::iterator_facade<
     functional_filter_iterator<Function, Iterator>,
@@ -82,40 +81,74 @@ namespace jerome {
     boost::single_pass_traversal_tag
   >
   {
-    functional_filter_iterator()
-    : mIsAtEnd(true)
-    {}
-
-    functional_filter_iterator(Function f, Iterator inIter, bool atEnd = false)
-    : mFunction(f)
-    , mSource(inIter)
-    , mIsAtEnd(atEnd)
-    { _advance(); }
-
     typedef Iterator source_iterator_type;
     typedef typename Function::result_type value_type;
   private:
+    // making the internals mutable. Iterator concept asserts that
+    // dereferencing is non-mutable. If we do a transform, we might not have
+    // a value from the current state of the source iterator and need to
+    // advance it. Or, the transform is costly, so we want to cache the
+    // result.
+    // We can do pre-roll, when we compute and cache the value after
+    // advancement. But that means we have to pre-roll in the constructor
+    // as well so the first dereference has something. It requires that
+    // the source iterator is ready to dereference at the point of assignment.
+    struct Storage {
+      Function function;
+      source_iterator_type source;
+      value_type value;
+      bool isAtEnd;
+      bool hasValue;
+      Storage(Function f, Iterator inIter)
+      : function(f)
+      , source(inIter)
+      , isAtEnd(false)
+      , hasValue(false)
+      {}
+      Storage(Iterator inIter)
+      : source(inIter)
+      , isAtEnd(true)
+      , hasValue(false)
+      {}
+      Storage()
+      : isAtEnd(true)
+      , hasValue(false)
+      {}
+      void advance() {
+        hasValue = false;
+      }
+      value_type& get() {
+        if (hasValue || isAtEnd) return value;
+        isAtEnd = !function(value, source);
+        hasValue = true;
+        return value;
+      }
+      bool equals(Storage const& other) {
+        return other.isAtEnd == isAtEnd && other.source == source;
+      }
+    };
+  public:
+    functional_filter_iterator(Iterator inIter)
+    : mStorage(inIter)
+    {}
+
+    functional_filter_iterator(Function f, Iterator inIter)
+    : mStorage(f, inIter)
+    {}
+
+  private:
     friend class boost::iterator_core_access;
     typedef functional_filter_iterator<Function, Iterator> this_t;
+    mutable Storage mStorage;
 
-    Function mFunction;
-    source_iterator_type mSource;
-    mutable value_type mValue;
-    bool mIsAtEnd;
-
-    void _advance() {
-      if (mIsAtEnd) return;
-      mIsAtEnd = !mFunction(mValue, mSource);
-    }
-
-    void increment() { _advance(); }
+    void increment() { mStorage.advance(); }
 
     bool equal(this_t const& other) const
     {
-      return this->mIsAtEnd == other.mIsAtEnd && mIsAtEnd;
+      return this->storage.equals(other.storage);
     }
 
-    value_type& dereference() const { return mValue; }
+    value_type& dereference() const { return mStorage.get(); }
   };
 
   template <class F, class R>
@@ -132,7 +165,7 @@ namespace jerome {
     typedef boost::iterator_range<iter_t> parent_t;
   public:
     filter_range(F f, R& r)
-    : parent_t(iter_t(f, boost::begin(r)), iter_t())
+    : parent_t(iter_t(f, boost::begin(r)), iter_t(boost::end(r)))
     {}
   };
 }
