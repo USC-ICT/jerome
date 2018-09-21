@@ -145,7 +145,7 @@ namespace jerome {
 
     bool equal(this_t const& other) const
     {
-      return this->storage.equals(other.storage);
+      return this->mStorage.equals(other.mStorage);
     }
 
     value_type& dereference() const { return mStorage.get(); }

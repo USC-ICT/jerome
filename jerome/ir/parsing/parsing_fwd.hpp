@@ -79,4 +79,6 @@ namespace jerome { namespace ir { namespace filter {
   const auto transformed = boost::adaptors::transformed;
 }}}
 
+# include <jerome/ir/parsing/stream.hpp>
+
 #endif // defined parsing_fwd_hpp

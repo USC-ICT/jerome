@@ -508,6 +508,7 @@
 		6283F7F121554E65004C8265 /* shared_containers.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shared_containers.hpp; sourceTree = "<group>"; };
 		6283F7F2215564A7004C8265 /* kstem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = kstem.cpp; sourceTree = "<group>"; };
 		6283F7F621556856004C8265 /* stopped.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = stopped.cpp; sourceTree = "<group>"; };
+		6283F7F921558726004C8265 /* stream.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = stream.hpp; sourceTree = "<group>"; };
 		6288C8AC163B5C6200191972 /* js_engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = js_engine.cpp; sourceTree = "<group>"; };
 		6288C8AD163B5C6200191972 /* js_engine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = js_engine.hpp; sourceTree = "<group>"; };
 		6288C8B91651DD0E00191972 /* async.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = async.cpp; sourceTree = "<group>"; };
@@ -950,6 +951,7 @@
 		6268B0281A0579FC00287DF4 /* parsing */ = {
 			isa = PBXGroup;
 			children = (
+				6283F7F921558726004C8265 /* stream.hpp */,
 				6283F7DF215400BC004C8265 /* filter */,
 				6283F7CE2152D65E004C8265 /* cf */,
 				6268B0291A0579FC00287DF4 /* parsing_cf.cpp */,

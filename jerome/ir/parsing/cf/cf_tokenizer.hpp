@@ -102,6 +102,47 @@ namespace jerome { namespace cf {
     Token const& dereference() const { return mLastToken; }
   };
 
+  using namespace stream;
+
+  struct tokenized_stream : public stream<tokenized_stream, Token> {
+    typedef stream<tokenized_stream, Token> parent_type;
+    tokenized_stream(const jerome::String& inString, const Locale& inLocale)
+    : mTokenizer(inString, inLocale)
+    {}
+  private:
+    friend parent_type;
+    Tokenizer mTokenizer;
+    optional<value_type> get_next() {
+      return mTokenizer.nextToken<Token>();
+    }
+  };
+
+  namespace stream_detail {
+    struct tokenized_locale_holder {
+      const Locale locale;
+      tokenized_locale_holder(const Locale& inLocale = Locale())
+      : locale(inLocale)
+      {}
+      tokenized_locale_holder operator() (const Locale& inLocale) const {
+        return tokenized_locale_holder(inLocale);
+      }
+    };
+  }
+
+  inline tokenized_stream
+  operator|(const jerome::String& string,
+            const stream_detail::tokenized_locale_holder& h)
+  {
+    return tokenized_stream(string, h.locale);
+  }
+
+  inline tokenized_stream
+  operator|(jerome::String& string,
+            const stream_detail::tokenized_locale_holder& h)
+  {
+    return tokenized_stream(string, h.locale);
+  }
+
   struct NonTokenizerIterator : public boost::iterator_facade<
     NonTokenizerIterator, Token const,
     boost::single_pass_traversal_tag
@@ -136,6 +177,21 @@ namespace jerome { namespace cf {
   };
 }}
 
+namespace jerome {
+  inline cf::tokenized_stream
+  operator|(const jerome::String& string,
+            const cf::stream_detail::tokenized_locale_holder& h)
+  {
+    return cf::tokenized_stream(string, h.locale);
+  }
+
+  inline cf::tokenized_stream
+  operator|(jerome::String& string,
+            const cf::stream_detail::tokenized_locale_holder& h)
+  {
+    return cf::tokenized_stream(string, h.locale);
+  }
+}
 namespace jerome {
   namespace range_detail {
 
@@ -213,6 +269,11 @@ namespace jerome {
 }
 
 namespace jerome {
+  namespace stream {
+    const cf::stream_detail::tokenized_locale_holder tokenized =
+    cf::stream_detail::tokenized_locale_holder();
+  }
+
   namespace range_detail {
 
     template <class R>
