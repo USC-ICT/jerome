@@ -27,19 +27,15 @@
 namespace jerome { namespace cf {
   String::String(const jerome::String& inString)
   : parent_type(CFStringCreateWithCString(kCFAllocatorDefault,
-                                          inString.c_str(),
-                                          kCFStringEncodingUTF8))
-  {
-    release();
-  }
+                                                       inString.c_str(),
+                                                       kCFStringEncodingUTF8))
+  {}
 
   String::String(const char* inBytes, size_type inCount)
   : parent_type(CFStringCreateWithBytes(kCFAllocatorDefault,
-                                        (const uint8_t*)inBytes, inCount,
-                                        kCFStringEncodingUTF8, false))
-  {
-    release();
-  }
+                                                     (const uint8_t*)inBytes, inCount,
+                                                     kCFStringEncodingUTF8, false))
+  {}
 
   String::operator jerome::String () const {
     const char*  constBuffer  = CFStringGetCStringPtr(value(),
@@ -47,7 +43,7 @@ namespace jerome { namespace cf {
     if (constBuffer != NULL) return jerome::String(constBuffer);
 
     CFIndex length = 4*CFStringGetLength(value());
-    auto buffer = std::make_unique<char>(length);
+    auto buffer = std::make_unique<char[]>(length);
     if (buffer && CFStringGetCString(value(), buffer.get(),
                                      length, kCFStringEncodingUTF8))
     {
@@ -59,16 +55,15 @@ namespace jerome { namespace cf {
 
   String
   String::substr(size_type pos, size_type count) {
-    auto tmp = CFStringCreateWithSubstring(kCFAllocatorDefault,
-                                           value(), CFRange {pos, count});
-    return String(String::move(tmp));
+    return String(CFStringCreateWithSubstring(kCFAllocatorDefault,
+                                           value(), CFRange {pos, count}));
   }
 
   String lowercased(const String& string, const Locale& inLocale) {
     CFMutableStringRef  lowerCaseString =
-    CFStringCreateMutableCopy(kCFAllocatorDefault, 0, string);
+      CFStringCreateMutableCopy(kCFAllocatorDefault, 0, string);
     CFStringLowercase(lowerCaseString, inLocale);
-    return String(String::move(lowerCaseString));
+    return String(lowerCaseString);
   }
 
   static bool isStringMemberOfCharSet(CFStringRef inString,

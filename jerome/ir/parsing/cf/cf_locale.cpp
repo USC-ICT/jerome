@@ -26,11 +26,10 @@
 #include "cf_string.hpp"
 
 namespace jerome { namespace cf {
-  static Locale  kDefaultLocale(Locale::move(CFLocaleCopyCurrent()));
+  static Locale  kDefaultLocale(CFLocaleCopyCurrent());
 
   Locale::Locale(const jerome::String& inLocale)
-  : parent_type(Locale::move(CFLocaleCreate(kCFAllocatorDefault,
-                                            cf::String(inLocale))))
+  : parent_type(CFLocaleCreate(kCFAllocatorDefault, cf::String(inLocale)))
   {
   }
 

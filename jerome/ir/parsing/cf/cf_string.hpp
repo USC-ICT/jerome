@@ -67,16 +67,6 @@ namespace jerome {
   };
 
   template <>
-  struct Lowercased<String> {
-    using result_type = String;
-    result_type operator () (const String& inString,
-                             const Locale& inLocale = Locale()) const
-    {
-      return (String)cf::lowercased(cf::String(inString), inLocale);
-    }
-  };
-
-  template <>
   struct IsAlpha<cf::String> {
     using result_type = bool;
     result_type operator () (const cf::String& inString,
@@ -87,22 +77,32 @@ namespace jerome {
   };
 
   template <>
-  struct IsAlpha<String> {
-    using result_type = bool;
-    result_type operator () (const String& inString,
-                             const Locale& inLocale = Locale()) const
-    {
-      return cf::isAlpha(cf::String(inString), inLocale);
-    }
-  };
-
-  template <>
   struct IsAlphanumeric<cf::String> {
     using result_type = bool;
     result_type operator () (const cf::String& inString,
                              const Locale& inLocale = Locale()) const
     {
       return cf::isAlphanumeric(inString, inLocale);
+    }
+  };
+
+  template <>
+  struct Lowercased<String> {
+    using result_type = String;
+    result_type operator () (const String& inString,
+                             const Locale& inLocale = Locale()) const
+    {
+      return (String)cf::lowercased(cf::String(inString), inLocale);
+    }
+  };
+
+  template <>
+  struct IsAlpha<String> {
+    using result_type = bool;
+    result_type operator () (const String& inString,
+                             const Locale& inLocale = Locale()) const
+    {
+      return cf::isAlpha(cf::String(inString), inLocale);
     }
   };
 

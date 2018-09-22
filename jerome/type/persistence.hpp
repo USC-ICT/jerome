@@ -41,9 +41,9 @@ namespace jerome {
     typedef boost::interprocess::managed_mapped_file::segment_manager  segment_manager_t;
     typedef boost::interprocess::allocator<void, segment_manager_t> void_allocator;
     typedef void_allocator::rebind<char>::other char_allocator;
-    typedef boost::interprocess::basic_string<char, std::char_traits<char>, char_allocator>   string;
+    typedef boost::interprocess::basic_string<char, ::std::char_traits<char>, char_allocator>   string;
 
-    inline string to_string(const std::string& inString, const string::allocator_type inAllocator) {
+    inline string to_string(const ::std::string& inString, const string::allocator_type inAllocator) {
       return string(inString.begin(), inString.end(), inAllocator);
     }
 
@@ -52,12 +52,12 @@ namespace jerome {
     }
 
     struct string_hash_type {
-      std::size_t operator()(const char* val) const
+      ::std::size_t operator()(const char* val) const
       {
         return boost::hash_range(val, val + strlen(val));
       }
       template <typename T>
-      std::size_t operator()(T const& val) const
+      ::std::size_t operator()(T const& val) const
       {
         return boost::hash_range(val.begin(), val.end());
       }
@@ -70,7 +70,7 @@ namespace jerome {
       {
         return 0 == strcmp(inX, inY.c_str());
       }
-      bool operator()(const std::string& inX,
+      bool operator()(const ::std::string& inX,
                       const S& inY) const
       {
         return 0 == strcmp(inX.c_str(), inY.c_str());
@@ -88,7 +88,7 @@ namespace jerome {
     };
 
     struct MappedFile {
-      MappedFile(Access inAccess, const fs::path& inPath, std::size_t inInitialSize = 1024*4)
+      MappedFile(Access inAccess, const fs::path& inPath, ::std::size_t inInitialSize = 1024*4)
       : mFile(inAccess == write_shared
               ? boost::interprocess::managed_mapped_file(boost::interprocess::open_or_create, inPath.c_str(), inInitialSize)
               : inAccess == read_only
@@ -112,7 +112,7 @@ namespace jerome {
     };
 
     struct MappedPointerBase {
-      std::size_t storageSize() const {
+      ::std::size_t storageSize() const {
         return mFile ? mFile->file().get_size() : 0;
       }
 
@@ -131,7 +131,7 @@ namespace jerome {
     protected:
       MappedPointerBase(Access inAccess,
                         const fs::path& inPath,
-                        std::size_t inInitialSize)
+                        ::std::size_t inInitialSize)
       : mAccess(inAccess)
       , mPath(inPath)
       , mInitialSize(inInitialSize)
@@ -142,8 +142,8 @@ namespace jerome {
 
       const Access mAccess;
       const fs::path mPath;
-      const std::size_t mInitialSize;
-      std::unique_ptr<MappedFile> mFile;
+      const ::std::size_t mInitialSize;
+      ::std::unique_ptr<MappedFile> mFile;
 
       MappedPointerBase(const MappedPointerBase&) = delete;
 
@@ -152,7 +152,7 @@ namespace jerome {
       }
 
       void initializeFile() {
-        mFile = std::unique_ptr<MappedFile>(new MappedFile(mAccess,
+        mFile = ::std::unique_ptr<MappedFile>(new MappedFile(mAccess,
                                                            mPath,
                                                            mInitialSize));
       }
@@ -182,7 +182,7 @@ namespace jerome {
 
       MappedPointer(Access inAccess,
                     const fs::path& inPath,
-                    std::size_t inInitialSize = 1024*4)
+                    ::std::size_t inInitialSize = 1024*4)
       : parent_type(inAccess, inPath, inInitialSize)
       {loadObject();}
 
@@ -204,7 +204,7 @@ namespace jerome {
         }
       }
 
-      void grow(std::size_t inAdditionalBytes) {
+      void grow(::std::size_t inAdditionalBytes) {
         if (!mFile) return;
         mFile = nullptr;
         boost::interprocess::managed_mapped_file::grow(mPath.c_str(),

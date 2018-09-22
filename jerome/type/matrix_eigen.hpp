@@ -51,10 +51,10 @@ namespace jerome {
   
   template<class T> using Vector = Eigen::Matrix<T, Eigen::Dynamic, 1>;
   // sparse array
-  template<class T> using SparseVector = Eigen::SparseVector<T, 0, std::ptrdiff_t>;
+  template<class T> using SparseVector = Eigen::SparseVector<T, 0, ::std::ptrdiff_t>;
 
   // Note this a column major matrix
-  template<class T> using TermFrequencies = Eigen::Map<const Eigen::SparseMatrix<T, 0, std::ptrdiff_t>>;
+  template<class T> using TermFrequencies = Eigen::Map<const Eigen::SparseMatrix<T, 0, ::std::ptrdiff_t>>;
 
   template<class T> using DocumentLengths = Eigen::Map<const Eigen::Matrix<T, Eigen::Dynamic, 1>>;
 

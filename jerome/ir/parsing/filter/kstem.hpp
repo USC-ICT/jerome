@@ -34,7 +34,7 @@ namespace jerome { namespace stream {
       result_type operator() (const result_type& inToken) const {
         if (inToken.isEOS() || inToken.isBOS()) return inToken;
         auto length = inToken.text().length();
-        std::unique_ptr<char>  thestem(new char[2*length]);
+        ::std::unique_ptr<char[]>  thestem(new char[2*length]);
         stem(inToken.text().c_str(), thestem.get());
         if (!strcmp(inToken.text().c_str(), thestem.get())) return inToken;
         return result_type(String(thestem.get()), inToken);

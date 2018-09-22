@@ -29,7 +29,7 @@
 namespace jerome { namespace stream {
   namespace stream_detail {
     struct dictionary_holder {
-      typedef shared_ptr<std::unordered_map<String, String>> dictionary_type;
+      typedef shared_ptr<::std::unordered_map<String, String>> dictionary_type;
       const dictionary_type dictionary;
       dictionary_holder(const dictionary_type& inDictionary)
       : dictionary(inDictionary)

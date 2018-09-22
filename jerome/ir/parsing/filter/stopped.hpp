@@ -32,7 +32,7 @@ namespace jerome { namespace stream {
     template <typename S>
     struct not_in_set_holder {
       typedef S element_type;
-      typedef shared_ptr<std::unordered_set<element_type>> set_type;
+      typedef shared_ptr<::std::unordered_set<element_type>> set_type;
       const set_type set;
       not_in_set_holder(const set_type& inSet)
       : set(inSet)
@@ -47,7 +47,7 @@ namespace jerome { namespace stream {
       }
     };
 
-    shared_ptr<std::unordered_set<String>> defaultStopwords();
+    shared_ptr<::std::unordered_set<String>> defaultStopwords();
   }
   const auto not_stopword =
   stream_detail::not_in_set_holder<String>(stream_detail::defaultStopwords());

@@ -23,5 +23,57 @@
 #ifndef __jerome_ir_parsing_filter_as_token_hpp
 #define __jerome_ir_parsing_filter_as_token_hpp
 
+namespace jerome {
+  namespace stream {
+    namespace stream_detail {
+      struct one_token_locale_holder {
+        const Locale locale;
+        one_token_locale_holder(const Locale& inLocale = Locale())
+        : locale(inLocale)
+        {}
+        one_token_locale_holder operator() (const Locale& inLocale) const {
+          return one_token_locale_holder(inLocale);
+        }
+      };
+    }
 
+    const auto as_token = stream_detail::one_token_locale_holder();
+
+    using Token = ir::BasicToken<String>;
+
+    struct one_token_stream : public stream<one_token_stream, Token> {
+      typedef stream<one_token_stream, Token> parent_type;
+      one_token_stream(const jerome::String& inString, const Locale& inLocale)
+      : mToken(inString, 0, (Token::size_type)inString.length())
+      , mHasToken(true)
+      {}
+    private:
+      friend parent_type;
+      Token mToken;
+      bool mHasToken;
+      optional<value_type> get_next() {
+        if (mHasToken) {
+          mHasToken = false;
+          return mToken;
+        } else {
+          return optional<value_type>();
+        }
+      }
+    };
+  }
+
+  inline stream::one_token_stream
+  operator|(const jerome::String& string,
+            const stream::stream_detail::one_token_locale_holder& h)
+  {
+    return stream::one_token_stream(string, h.locale);
+  }
+
+  inline stream::one_token_stream
+  operator|(jerome::String& string,
+            const stream::stream_detail::one_token_locale_holder& h)
+  {
+    return stream::one_token_stream(string, h.locale);
+  }
+}
 #endif // defined __jerome_ir_parsing_filter_as_token_hpp

@@ -28,9 +28,9 @@
 namespace jerome { namespace ir { namespace filter {
 
   extern const char * const irregular_verbs[];
-  extern const std::size_t irregular_verbs_size;
+  extern const ::std::size_t irregular_verbs_size;
 
-  shared_ptr<std::unordered_map<String, String>> shared_irregular_verbs();
+  shared_ptr<::std::unordered_map<String, String>> shared_irregular_verbs();
 }}}
 
 #endif // defined __jerome_ir_parsing_irregular_verbs_hpp__

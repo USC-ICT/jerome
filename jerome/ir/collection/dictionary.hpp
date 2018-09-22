@@ -44,11 +44,11 @@ namespace jerome { namespace ir {
     > persistent_bidirectional_map;
 
     typedef jerome::persistence::bidirectional_map<
-    std::string,
+    ::std::string,
     index_type,
-    std::allocator<void>,
+    ::std::allocator<void>,
     jerome::persistence::string_hash_type,
-    jerome::persistence::string_compare_type<std::string>
+    jerome::persistence::string_compare_type<::std::string>
     > transient_bidirectional_map;
 
     struct AlphabetImpl : public jerome::persistence::basic_storage<
@@ -97,7 +97,7 @@ namespace jerome { namespace ir {
             assert(transient().get());
             index = (persistent() ? persistent().get()->size() : 0)
             + transient().get()->size();
-            transient().get()->emplace(std::string(inString), index);
+            transient().get()->emplace(::std::string(inString), index);
             return index;
           }
         }
@@ -121,12 +121,12 @@ namespace jerome { namespace ir {
         return unknownIndex;
       }
 
-      jerome::optional<std::string>
+      jerome::optional<::std::string>
       index2string(index_type inIndex) const {
         if (persistent()) {
           auto iter = persistent().get()->get<persistent_bidirectional_map::second>().find(inIndex);
           if (iter != persistent().get()->get<persistent_bidirectional_map::second>().end()) {
-            return std::to_string(iter->first);
+            return ::std::to_string(iter->first);
           }
         }
         if (transient()) {
@@ -135,7 +135,7 @@ namespace jerome { namespace ir {
             return iter->first;
           }
         }
-        return jerome::optional<std::string>();
+        return jerome::optional<::std::string>();
       }
 
       void
@@ -144,13 +144,13 @@ namespace jerome { namespace ir {
       }
 
       static const index_type unknownIndex =
-      std::numeric_limits<index_type>::max();
+      ::std::numeric_limits<index_type>::max();
 
     };
   }
 
   typedef detail::AlphabetImpl Alphabet;
-  typedef std::shared_ptr<Alphabet> AlphabetPtr;
+  typedef ::std::shared_ptr<Alphabet> AlphabetPtr;
 
 //  struct Dictionary : public ReferenceClassInterface<detail::Dictionary> {
 //    typedef ReferenceClassInterface<detail::Dictionary> parent_type;

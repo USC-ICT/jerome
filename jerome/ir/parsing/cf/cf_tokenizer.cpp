@@ -32,7 +32,7 @@ namespace jerome { namespace cf {
                                             CFRangeMake(0, CFStringGetLength(inString)),
                                             kCFStringTokenizerUnitWordBoundary,
                                             inLocale);
-    return cf::basic_object<CFStringTokenizerRef>::move(tokenzer);
+    return basic_object<CFStringTokenizerRef>(tokenzer);
   }
 
   Tokenizer::Tokenizer()
@@ -69,16 +69,16 @@ namespace jerome { namespace cf {
                        bool inDoCopy,
                        Locale const & inLocale)
   : mLocale(inLocale)
-  , mString(String::move(inDoCopy
-                         ? CFStringCreateWithBytes(kCFAllocatorDefault,
-                                                   inBytes, inLength,
-                                                   kCFStringEncodingUTF8,
-                                                   false)
-                         : CFStringCreateWithBytesNoCopy(kCFAllocatorDefault,
-                                                         inBytes, inLength,
-                                                         kCFStringEncodingUTF8,
-                                                         false,
-                                                         kCFAllocatorNull)))
+  , mString(inDoCopy
+            ? CFStringCreateWithBytes(kCFAllocatorDefault,
+                                      inBytes, inLength,
+                                      kCFStringEncodingUTF8,
+                                      false)
+            : CFStringCreateWithBytesNoCopy(kCFAllocatorDefault,
+                                            inBytes, inLength,
+                                            kCFStringEncodingUTF8,
+                                            false,
+                                            kCFAllocatorNull))
   , mTokenizer(init(mString, mLocale))
   {
   }

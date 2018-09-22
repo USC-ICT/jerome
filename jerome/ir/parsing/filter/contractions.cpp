@@ -24,7 +24,7 @@
 
 namespace jerome { namespace stream { namespace stream_detail {
 
-  typedef std::vector<std::pair<String, String> >  suffix_list_type;
+  typedef ::std::vector<::std::pair<String, String> >  suffix_list_type;
   static suffix_list_type  sSuffixes;
   static void init_suffixes() {
     const char*  data[] = {

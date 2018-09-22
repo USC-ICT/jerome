@@ -80,7 +80,7 @@ namespace jerome {
             stream::stream_detail::contractions_holder)
   {
     return stream::stream_detail::expand_contractions_stream<
-      Stream>(std::forward<Stream>(r));
+      Stream>(::std::forward<Stream>(r));
   }
 }
 

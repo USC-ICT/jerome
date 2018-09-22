@@ -11,7 +11,7 @@
 #if JEROME_PARSING == JEROME_PARSING_STD
 
 #include <jerome/ir/parsing.hpp>
-#include <unicode/uchar.h>
+//#include <unicode/uchar.h>
 //#include <boost/locale.hpp>
 
 
@@ -21,7 +21,7 @@ namespace jerome {
 		//boost::locale::generator gen;
 		//std::locale::global(gen(inLocaleString)); 
 		// Using only std::locale instead of boost::locale.
-		std::locale::global(std::locale(inLocaleString.c_str()));
+    ::std::locale::global(::std::locale(inLocaleString.c_str()));
 	}
 
 	namespace ir {
@@ -38,10 +38,10 @@ namespace jerome {
 		String	newTokenText	= ioToken.text();
 		for (unsigned int i=0;i<newTokenText.size();i++)
 		{
-			newTokenText[i] = std::tolower(newTokenText[i]);
+      newTokenText[i] = ::std::tolower(newTokenText[i]);
 		}
 		if (newTokenText != ioToken.text()) {
-			ioToken.text() = std::move(newTokenText);
+      ioToken.text() = ::std::move(newTokenText);
 		}
 		
 		return true;

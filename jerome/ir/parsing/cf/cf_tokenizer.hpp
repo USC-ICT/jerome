@@ -79,38 +79,9 @@ namespace jerome { namespace cf {
     }
   };
 
-  namespace stream_detail {
-    struct tokenized_locale_holder {
-      const Locale locale;
-      tokenized_locale_holder(const Locale& inLocale = Locale())
-      : locale(inLocale)
-      {}
-      tokenized_locale_holder operator() (const Locale& inLocale) const {
-        return tokenized_locale_holder(inLocale);
-      }
-    };
-  }
-}}
+}
 
-namespace jerome {
-  namespace stream {
-    const cf::stream_detail::tokenized_locale_holder tokenized =
-    cf::stream_detail::tokenized_locale_holder();
-  }
-
-  inline cf::tokenized_stream
-  operator|(const jerome::String& string,
-            const cf::stream_detail::tokenized_locale_holder& h)
-  {
-    return cf::tokenized_stream(string, h.locale);
-  }
-
-  inline cf::tokenized_stream
-  operator|(jerome::String& string,
-            const cf::stream_detail::tokenized_locale_holder& h)
-  {
-    return cf::tokenized_stream(string, h.locale);
-  }
+  using tokenized_stream = cf::tokenized_stream;
 }
 
 #endif

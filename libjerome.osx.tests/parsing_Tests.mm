@@ -74,18 +74,15 @@ void run(Stream s) {
 //                  [&] (const auto& x) { std::cout << x << std::endl; });
 //}
 //
-//- (void)test02Tokenized
-//{
-//  boost::for_each(test | adaptors::tokenized(), [&]
-//                  (const auto& x) { std::cout << x << std::endl; });
-//}
 //
-////- (void)test03Untokenized
-////{
-////  boost::for_each(test | adaptors::untokenized, [&]
-////                  (const auto& x) { std::cout << x << std::endl; });
-////}
-//
+- (void)test03Untokenized
+{
+  run(test
+      | stream::as_token
+      | stream::lowercased
+      );
+}
+
 - (void)test04Lowercased
 {
   run(test

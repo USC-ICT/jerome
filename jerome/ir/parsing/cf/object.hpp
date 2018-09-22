@@ -30,53 +30,85 @@
 #include <CoreFoundation/CoreFoundation.h>
 
 namespace jerome { namespace cf {
+
+  inline void echo(const char* m, CFTypeRef x) {
+    std::cout << m << (x ? CFGetRetainCount(x) : -1) << std::endl;
+  }
+
   template <typename T>
   struct basic_object {
+    typedef T cf_type;
     basic_object()
     : mValue(NULL)
     {}
-    explicit basic_object(T inValue)
+
+    // we assume ownership
+    explicit basic_object(cf_type inValue)
     : mValue(inValue)
-    { retain(); }
+    {
+    }
+
     basic_object(const basic_object& inOther)
     : mValue(inOther.mValue)
-    { retain(); }
+    {
+      retain();
+    }
+
     basic_object(basic_object&& inOther)
-    : mValue(inOther.mValue)
-    { inOther.mValue = NULL; }
+    : mValue(NULL)
+    {
+      std::swap(mValue, inOther.mValue);
+    }
+
     basic_object& operator = (const basic_object& inOther)
     {
-      if (mValue != inOther.mValue) {
-        release();
-        mValue = inOther.mValue;
-        retain();
+      if (this != &inOther) {
+        if (mValue != inOther.mValue) {
+          release();
+          mValue = inOther.mValue;
+          retain();
+        }
       }
       return *this;
     }
+
     basic_object& operator = (basic_object&& inOther)
     {
-      release();
-      if (mValue != inOther.mValue) {
-        mValue = inOther.mValue;
+      if (this != &inOther) {
+        release();
+        if (mValue != inOther.mValue) {
+          mValue = inOther.mValue;
+        }
+        inOther.mValue = NULL;
       }
-      inOther.mValue = NULL;
       return *this;
     }
-    ~basic_object() { release(); }
-    operator T() const { return mValue; }
-    static basic_object move(T inRef) {
-      // we accept ref with +1
-      basic_object result(inRef); // increment it
-      result.release(); // decrement it, to release the inRef.
-      return result;
+
+    ~basic_object() {
+      release();
+      mValue = NULL;
     }
+
+    operator cf_type() const {
+      return mValue;
+    }
+
   protected:
-    T value() const { return mValue; }
-    auto retain() { if (mValue) CFRetain(mValue); }
-    auto release() { if (mValue) CFRelease(mValue); }
+    cf_type value() const { return mValue; }
+    auto retain() {
+      if (mValue) {
+        CFRetain(mValue);
+      }
+    }
+    auto release() {
+      if (mValue) {
+        CFRelease(mValue);
+      }
+    }
   private:
-    T mValue;
+    cf_type mValue;
   };
+
 }}
 #endif
 

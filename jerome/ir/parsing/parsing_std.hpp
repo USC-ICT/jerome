@@ -19,7 +19,10 @@
 #include <iostream>
 #include <boost/tokenizer.hpp>
 
-#if 1
+#include <jerome/ir/parsing/naive/naive_string.hpp>
+#include <jerome/ir/parsing/naive/naive_tokenizer.hpp>
+
+#if defined(JEROME_ANDROID)
 #include <android/log.h>
 #define  LOG_TAG    "sbm"
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
@@ -28,12 +31,6 @@
 #endif
 
 namespace jerome { 
-
-	class Locale : public std::locale {
-	public:
-		static void global(const String&  inLocaleString);
-	};
-
 
 	namespace ir {
 
@@ -68,7 +65,7 @@ namespace jerome {
 			index_type::iterator	start	= mIterator;
 			++mIterator;
 			String tok = *start;
-			ioToken = Token( tok , 0, tok.size());
+      ioToken = Token( tok , 0, (Token::size_type)tok.size());
 			return true;
 		}
 
@@ -95,7 +92,7 @@ namespace jerome {
 		}
 		
 		NonTokenizer(const String* inString, jerome::Locale const & inLocale = jerome::Locale()) 
-		: mToken(*inString, 0, inString->length())
+		: mToken(*inString, 0, (Token::size_type)inString->length())
 		, mLocale(inLocale)
 		, mHasToken(true)
 		{
@@ -105,7 +102,7 @@ namespace jerome {
 		bool getNextToken(Token& ioToken) {
 			if (!mHasToken) return false;
 			mHasToken	= false;
-			ioToken = std::move(mToken);
+      ioToken = ::std::move(mToken);
 			return true;
 		}
 

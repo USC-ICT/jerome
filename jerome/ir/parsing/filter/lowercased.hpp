@@ -68,12 +68,12 @@ namespace jerome {
             const filter_detail::lowercased_holder& f)
   {
     typedef typename SinglePassRange::value_type value_t;
-    auto binded = std::bind(Lowercased<value_t>(),
-                            std::placeholders::_1, f.locale);
+    auto binded = ::std::bind(Lowercased<value_t>(),
+                              ::std::placeholders::_1, f.locale);
     return stream::transformed_stream<
       decltype(binded),
       SinglePassRange
-    >(binded, std::forward<SinglePassRange>(r));
+    >(binded, ::std::forward<SinglePassRange>(r));
   }
 }
 

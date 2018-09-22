@@ -62,7 +62,7 @@ namespace jerome {
         }
       private:
         friend parent_type;
-        typedef std::list<value_type>  Tokens;
+        typedef ::std::list<value_type>  Tokens;
         unsigned mCount;
         Tokens mTokens;
         int32_t mIndex;
@@ -109,7 +109,7 @@ namespace jerome {
             const stream::stream_detail::ngram_holder& f)
   {
     return stream::stream_detail::ngram_stream<
-    Stream>(std::forward<Stream>(r), f.count);
+    Stream>(::std::forward<Stream>(r), f.count);
   }
 }
 #endif // defined __jerome_ir_parsing_filter_ngram_hpp

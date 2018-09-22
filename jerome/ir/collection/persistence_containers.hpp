@@ -46,9 +46,9 @@ namespace jerome { namespace persistence {
   typename Second,
   typename Allocator,
   typename FirstHash = boost::hash<First>,
-  typename FirstEqualTo = std::equal_to<First>,
+  typename FirstEqualTo = ::std::equal_to<First>,
   typename SecondHash = boost::hash<Second>,
-  typename SecondEqualTo = std::equal_to<Second>
+  typename SecondEqualTo = ::std::equal_to<Second>
   >
   struct bidirectional_map {
     struct first {};
@@ -97,12 +97,12 @@ namespace jerome { namespace persistence {
   typename Second,
   typename Allocator,
   typename FirstHash = boost::hash<First>,
-  typename FirstEqualTo = std::equal_to<First>
+  typename FirstEqualTo = ::std::equal_to<First>
   >
   struct map {
     typedef First key_type;
     typedef Second mapped_type;
-    typedef std::pair<const key_type, mapped_type> value_type;
+    typedef ::std::pair<const key_type, mapped_type> value_type;
     typedef boost::unordered_map<
     key_type,
     mapped_type,
@@ -128,7 +128,7 @@ namespace jerome { namespace persistence {
   struct basic_storage {
     typedef Persistent persistent_storage_type;
     typedef Transient transient_storage_type;
-    typedef std::unique_ptr<transient_storage_type> transient_type;
+    typedef ::std::unique_ptr<transient_storage_type> transient_type;
     typedef MappedPointer<persistent_storage_type> persistent_type;
     typedef Access access_type;
 
@@ -152,8 +152,8 @@ namespace jerome { namespace persistence {
 
     basic_storage(basic_storage&& inOther)
     : mAccess(inOther.mAccess)
-    , mPersistent(std::move(inOther.mPersistent))
-    , mTransient(std::move(inOther.mTransient))
+    , mPersistent(::std::move(inOther.mPersistent))
+    , mTransient(::std::move(inOther.mTransient))
     {}
 
     access_type access() const { return mAccess; }
