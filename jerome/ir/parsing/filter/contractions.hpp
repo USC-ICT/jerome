@@ -29,7 +29,7 @@
 namespace jerome {
   namespace stream {
     namespace stream_detail {
-      struct contractions_holder {
+      struct contractions_holder : public stream_filter {
       };
 
       bool expand_contractions(String& root, String& suffix);
@@ -70,18 +70,18 @@ namespace jerome {
           return token;
         }
       };
+
+      template <class Stream, ASSERT_STREAM(Stream)>
+      inline auto
+      operator|(Stream&& r,
+                contractions_holder)
+      {
+        return expand_contractions_stream<Stream>(::std::forward<Stream>(r));
+      }
     }
     const auto expanded_contractions = stream_detail::contractions_holder();
   }
 
-  template <class Stream>
-  inline auto
-  operator|(Stream&& r,
-            stream::stream_detail::contractions_holder)
-  {
-    return stream::stream_detail::expand_contractions_stream<
-      Stream>(::std::forward<Stream>(r));
-  }
 }
 
 #endif // defined __jerome_ir_parsing_filter_contractions_hpp

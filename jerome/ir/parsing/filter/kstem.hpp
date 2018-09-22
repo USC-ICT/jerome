@@ -26,10 +26,11 @@
 #include <jerome/types.hpp>
 #include <jerome/ir/parsing/parsing_fwd.hpp>
 #include <jerome/ir/parsing/token.hpp>
+#include <jerome/ir/parsing/stream.hpp>
 
 namespace jerome { namespace stream {
   namespace stream_detail {
-    struct kstem_holder {
+    struct kstem_holder : public stream_filter {
       typedef ir::BasicToken<String> result_type;
       result_type operator() (const result_type& inToken) const {
         if (inToken.isEOS() || inToken.isBOS()) return inToken;

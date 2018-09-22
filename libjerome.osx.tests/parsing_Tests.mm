@@ -30,6 +30,7 @@
 //#pragma clang diagnostic pop
 
 #include <jerome/ir/parsing.hpp>
+#include <jerome/ir/parsing/filter/tokenized.hpp>
 
 @interface ParsingTests : XCTestCase
 @end
@@ -158,6 +159,31 @@ void run(Stream s) {
       | stream::transformed(stream::kstem)
       | stream::filtered(stream::not_stopword)
       | stream::ngram
+      );
+}
+
+- (void)test11Expression1
+{
+  run(test
+      | (stream::tokenized
+         | stream::lowercased
+         | stream::filtered(stream::is_alphanumeric)
+         )
+      );
+}
+
+- (void)test11Expression2
+{
+  run(test
+      | (stream::tokenized
+         | stream::lowercased
+         | stream::filtered(stream::is_alphanumeric)
+         | stream::expanded_contractions
+         | stream::transformed(stream::stem_irregular_verbs)
+         | stream::transformed(stream::kstem)
+         | stream::filtered(stream::not_stopword)
+         | stream::ngram
+         )
       );
 }
 

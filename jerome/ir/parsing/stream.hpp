@@ -23,9 +23,29 @@
 #ifndef stream_hpp
 #define stream_hpp
 
+#include <jerome/type/FunctionSignature.hpp>
+
 namespace jerome { namespace stream {
+
+  struct stream_filter {};
+  struct stream_base {};
+
+  template<typename T>
+  using AssertStream =
+  typename std::enable_if<
+    std::is_base_of<stream::stream_base, T>::value, int
+    >::type;
+
+#define ASSERT_STREAM(T) ::jerome::stream::AssertStream<T> = 0
+
+  template<typename T>
+  using AssertFilter = typename std::enable_if<
+    std::is_base_of<stream::stream_filter, T>::value, int>::type;
+
+#define ASSERT_FILTER(T) ::jerome::stream::AssertFilter<T> = 0
+
   template <class Derived, typename Value>
-  struct stream {
+  struct stream : public stream_base {
     typedef Value value_type;
     optional<value_type> next() {
       return static_cast<Derived*>(this)->get_next();
@@ -180,13 +200,13 @@ namespace jerome { namespace stream {
 
   namespace stream_detail {
     template< class T >
-    struct filter_holder : holder<T>
+    struct filter_holder : holder<T>, public stream_filter
     {
       filter_holder( T r ) : holder<T>(r)
       { }
     };
     template< class T >
-    struct transform_holder : holder<T>
+    struct transform_holder : holder<T>, public stream_filter
     {
       transform_holder( T r ) : holder<T>(r)
       { }
@@ -198,7 +218,7 @@ namespace jerome { namespace stream {
 }}
 
 namespace jerome {
-  template <class Stream, class Predicate>
+  template <class Stream, class Predicate, ASSERT_STREAM(Stream)>
   inline stream::filtered_stream<Predicate, Stream>
   operator|(Stream&& r,
             const stream::stream_detail::filter_holder<Predicate>& f)
@@ -206,12 +226,42 @@ namespace jerome {
     return stream::filtered_stream<Predicate, Stream>(std::forward<Stream>(r), f.val);
   }
 
-  template <class Stream, class Predicate>
+  template <class Stream, class Predicate, ASSERT_STREAM(Stream)>
   inline stream::transformed_stream<Predicate, Stream>
   operator|(Stream&& r,
             const stream::stream_detail::transform_holder<Predicate>& f)
   {
     return stream::transformed_stream<Predicate, Stream>(f.val, std::forward<Stream>(r));
+  }
+
+  template <class Stream>
+  inline auto operator|(Stream&& r, std::tuple<>&& tuple) {
+    return std::forward<Stream>(r);
+  }
+
+  template <class Stream, ASSERT_STREAM(Stream), class ...Args>
+  inline auto operator|(Stream&& r, std::tuple<Args...> tuple) {
+    return (std::forward<Stream>(r) | head(tuple)) | tail(tuple);
+  }
+
+  template <class ...Args>
+  inline auto operator|(const String& s, std::tuple<Args...> tuple) {
+    return (s | head(tuple)) | tail(tuple);
+  }
+
+  template <class A, ASSERT_FILTER(A), class ...Args>
+  inline auto operator|(A r, std::tuple<Args...> tuple) {
+    return std::tuple_cat(std::tie(r), tuple);
+  }
+
+  template <class A, ASSERT_FILTER(A), class ...Args>
+  inline auto operator|(std::tuple<Args...> tuple, A r) {
+    return std::tuple_cat(tuple, std::tie(r));
+  }
+
+  template <class A, class B, ASSERT_FILTER(A), ASSERT_FILTER(B)>
+  inline auto operator|(A a, B b) {
+    return std::tuple<A, B>(a, b);
   }
 }
 

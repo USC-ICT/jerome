@@ -26,11 +26,12 @@
 #include <jerome/types.hpp>
 #include <jerome/ir/parsing/parsing_fwd.hpp>
 #include <jerome/ir/parsing/token.hpp>
+#include <jerome/ir/parsing/stream.hpp>
 
 namespace jerome { namespace stream {
   namespace stream_detail {
     template <typename S>
-    struct not_in_set_holder {
+    struct not_in_set_holder : public stream_filter {
       typedef S element_type;
       typedef shared_ptr<::std::unordered_set<element_type>> set_type;
       const set_type set;

@@ -26,7 +26,7 @@
 namespace jerome {
   namespace stream {
     namespace stream_detail {
-      struct tokenized_locale_holder {
+      struct tokenized_locale_holder : public stream_filter  {
         const Locale locale;
         tokenized_locale_holder(const Locale& inLocale = Locale())
         : locale(inLocale)
@@ -35,23 +35,23 @@ namespace jerome {
           return tokenized_locale_holder(inLocale);
         }
       };
+
+      inline jerome::tokenized_stream
+      operator|(const jerome::String& string,
+                const tokenized_locale_holder& h)
+      {
+        return tokenized_stream(string, h.locale);
+      }
+
+      inline jerome::tokenized_stream
+      operator|(jerome::String& string,
+                const tokenized_locale_holder& h)
+      {
+        return tokenized_stream(string, h.locale);
+      }
     }
 
     const auto tokenized = stream_detail::tokenized_locale_holder();
-  }
-
-  inline tokenized_stream
-  operator|(const jerome::String& string,
-            const stream::stream_detail::tokenized_locale_holder& h)
-  {
-    return tokenized_stream(string, h.locale);
-  }
-
-  inline tokenized_stream
-  operator|(jerome::String& string,
-            const stream::stream_detail::tokenized_locale_holder& h)
-  {
-    return tokenized_stream(string, h.locale);
   }
 }
 

@@ -147,6 +147,24 @@ namespace jerome {
 		template<class... T>
 		using index_sequence_for = typename make_index_sequence<sizeof...(T)>::type;
 
+    template <typename T, typename... Ts>
+    auto head(std::tuple<T,Ts...> t)
+    {
+      return std::get<0>(t);
+    }
+
+    template <typename... Ts, std::size_t... Ns>
+    auto tail_impl(std::tuple<Ts...> t, index_sequence<Ns...>)
+    {
+      return std::make_tuple(std::get<Ns+1u>(t)...);
+    }
+
+    template <typename... Ts>
+    auto tail(std::tuple<Ts...> t)
+    {
+      return tail_impl(t, typename make_index_sequence<sizeof...(Ts) - 1u>::type());
+    }
+
 }
 
 #endif // defined __jerome_type_FunctionSignature_hpp__

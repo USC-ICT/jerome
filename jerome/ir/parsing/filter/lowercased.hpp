@@ -46,7 +46,7 @@ namespace jerome {
   };
 
   namespace filter_detail {
-    struct lowercased_holder {
+    struct lowercased_holder : public stream::stream_filter {
       const Locale locale;
       lowercased_holder(const Locale& inLocale = Locale())
       : locale(inLocale)
@@ -55,6 +55,20 @@ namespace jerome {
         return lowercased_holder(inLocale);
       }
     };
+
+    template <class SinglePassRange, ASSERT_STREAM(SinglePassRange)>
+    inline auto
+    operator|(SinglePassRange&& r,
+              const lowercased_holder& f)
+    {
+      typedef typename SinglePassRange::value_type value_t;
+      auto binded = ::std::bind(Lowercased<value_t>(),
+                                ::std::placeholders::_1, f.locale);
+      return jerome::stream::transformed_stream<
+        decltype(binded),
+        SinglePassRange
+      >(binded, ::std::forward<SinglePassRange>(r));
+    }
   }
 
   namespace stream {
@@ -62,19 +76,6 @@ namespace jerome {
     filter_detail::lowercased_holder();
   }
 
-  template <class SinglePassRange>
-  inline auto
-  operator|(SinglePassRange&& r,
-            const filter_detail::lowercased_holder& f)
-  {
-    typedef typename SinglePassRange::value_type value_t;
-    auto binded = ::std::bind(Lowercased<value_t>(),
-                              ::std::placeholders::_1, f.locale);
-    return stream::transformed_stream<
-      decltype(binded),
-      SinglePassRange
-    >(binded, ::std::forward<SinglePassRange>(r));
-  }
 }
 
 

@@ -29,7 +29,7 @@
 namespace jerome {
   namespace stream {
     namespace stream_detail {
-      struct ngram_holder {
+      struct ngram_holder : public stream_filter {
         const unsigned count;
         explicit ngram_holder(unsigned inCount = 2)
         : count(inCount)
@@ -99,17 +99,16 @@ namespace jerome {
           return ioToken;
         }
       };
+
+      template <class Stream, ASSERT_STREAM(Stream)>
+      inline auto
+      operator|(Stream&& r,
+                const ngram_holder& f)
+      {
+        return ngram_stream<Stream>(::std::forward<Stream>(r), f.count);
+      }
     }
     const auto ngram = stream_detail::ngram_holder();
-  }
-
-  template <class Stream>
-  inline auto
-  operator|(Stream&& r,
-            const stream::stream_detail::ngram_holder& f)
-  {
-    return stream::stream_detail::ngram_stream<
-    Stream>(::std::forward<Stream>(r), f.count);
   }
 }
 #endif // defined __jerome_ir_parsing_filter_ngram_hpp

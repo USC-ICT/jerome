@@ -27,7 +27,7 @@
 
 namespace jerome { namespace ir { namespace filter {
   namespace filter_detail {
-    struct is_alpha_holder {
+    struct is_alpha_holder : public stream::stream_filter {
       const Locale locale;
       is_alpha_holder(const Locale& inLocale = Locale())
       : locale(inLocale)
@@ -60,7 +60,7 @@ namespace jerome { namespace stream {
 
 namespace jerome { namespace ir { namespace filter {
   namespace filter_detail {
-    struct is_alphanumeric_holder {
+    struct is_alphanumeric_holder : public stream::stream_filter {
       const Locale locale;
       is_alphanumeric_holder(const Locale& inLocale = Locale())
       : locale(inLocale)
