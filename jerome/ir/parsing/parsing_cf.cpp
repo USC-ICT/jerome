@@ -20,7 +20,9 @@
 //  along with Jerome.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifdef JEROME_IOS
+#include <jerome/ir/parsing/parsing_fwd.hpp>
+
+#if JEROME_PARSING == JEROME_PARSING_CF
 
 #include <jerome/ir/parsing.hpp>
 

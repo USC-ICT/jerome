@@ -68,12 +68,12 @@ namespace jerome { namespace stream {
   >
   {
     typedef stream<
-    transformed_stream<Function, Stream>,
-    typename Function::result_type
+      transformed_stream<Function, Stream>,
+      typename Function::result_type
     > parent_type;
     typedef typename parent_type::value_type value_type;
 
-    transformed_stream(Stream s, Function p)
+    transformed_stream(Function p, Stream s)
     : mStream(s)
     , mFunction(p)
     {}
@@ -129,6 +129,90 @@ namespace jerome { namespace stream {
     friend parent_type;
     input_type mInput;
   };
+
+  namespace stream_detail {
+    template< class T >
+    struct holder
+    {
+      T val;
+      holder( T t ) : val(t)
+      { }
+    };
+
+    template< class T >
+    struct holder2
+    {
+      T val1, val2;
+      holder2( T t, T u ) : val1(t), val2(u)
+      { }
+    };
+
+    template< template<class> class Holder >
+    struct forwarder
+    {
+      template< class T >
+      Holder<T> operator()( T t ) const
+      {
+        return Holder<T>(t);
+      }
+    };
+
+    template< template<class> class Holder >
+    struct forwarder2
+    {
+      template< class T >
+      Holder<T> operator()( T t, T u ) const
+      {
+        return Holder<T>(t,u);
+      }
+    };
+
+    template< template<class,class> class Holder >
+    struct forwarder2TU
+    {
+      template< class T, class U >
+      Holder<T, U> operator()( T t, U u ) const
+      {
+        return Holder<T, U>(t, u);
+      }
+    };
+  }
+
+  namespace stream_detail {
+    template< class T >
+    struct filter_holder : holder<T>
+    {
+      filter_holder( T r ) : holder<T>(r)
+      { }
+    };
+    template< class T >
+    struct transform_holder : holder<T>
+    {
+      transform_holder( T r ) : holder<T>(r)
+      { }
+    };
+  }
+
+  const auto filtered = stream_detail::forwarder<stream_detail::filter_holder>();
+  const auto transformed = stream_detail::forwarder<stream_detail::transform_holder>();
 }}
+
+namespace jerome {
+  template <class Stream, class Predicate>
+  inline stream::filtered_stream<Predicate, Stream>
+  operator|(Stream&& r,
+            const stream::stream_detail::filter_holder<Predicate>& f)
+  {
+    return stream::filtered_stream<Predicate, Stream>(std::forward<Stream>(r), f.val);
+  }
+
+  template <class Stream, class Predicate>
+  inline stream::transformed_stream<Predicate, Stream>
+  operator|(Stream&& r,
+            const stream::stream_detail::transform_holder<Predicate>& f)
+  {
+    return stream::transformed_stream<Predicate, Stream>(f.val, std::forward<Stream>(r));
+  }
+}
 
 #endif // defined stream_hpp

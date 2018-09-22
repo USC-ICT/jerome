@@ -8,7 +8,10 @@
 
 #ifndef __jerome_ir_parsing_parsing_cpp_hpp__
 #define __jerome_ir_parsing_parsing_cpp_hpp__
-#ifndef JEROME_IOS
+
+#include <jerome/ir/parsing/parsing_fwd.hpp>
+
+#if JEROME_PARSING == JEROME_PARSING_STD
 
 #warning "Please implement locale and unicode support"
 

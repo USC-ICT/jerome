@@ -20,9 +20,10 @@
 //  along with Jerome.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "cf_string.hpp"
 #include "cf_locale.hpp"
-#ifdef JEROME_IOS
+
+#if JEROME_PARSING == JEROME_PARSING_CF
+#include "cf_string.hpp"
 
 namespace jerome { namespace cf {
   static Locale  kDefaultLocale(Locale::move(CFLocaleCopyCurrent()));

@@ -27,8 +27,8 @@
 #include <jerome/ir/parsing/parsing_fwd.hpp>
 #include <jerome/ir/parsing/token.hpp>
 
-namespace jerome { namespace ir { namespace filter {
-  namespace filter_detail {
+namespace jerome { namespace stream {
+  namespace stream_detail {
     struct kstem_holder {
       typedef ir::BasicToken<String> result_type;
       result_type operator() (const result_type& inToken) const {
@@ -43,8 +43,7 @@ namespace jerome { namespace ir { namespace filter {
       static void stem(const char* inString, char* outStem);
     };
   }
-  const filter_detail::kstem_holder kstem =
-  filter_detail::kstem_holder();
-}}}
+  const auto kstem = stream_detail::kstem_holder();
+}}
 
 #endif // defined __jerome_ir_parsing_filter_kstem_hpp

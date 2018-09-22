@@ -45,50 +45,35 @@ namespace jerome {
     }
   };
 
-  namespace ir {
-    namespace filter {
-      namespace filter_detail {
-        struct lowercased_holder {
-          const Locale locale;
-          lowercased_holder(const Locale& inLocale = Locale())
-          : locale(inLocale)
-          {}
-          lowercased_holder operator() (const Locale& inLocale) const {
-            return lowercased_holder(inLocale);
-          }
-        };
+  namespace filter_detail {
+    struct lowercased_holder {
+      const Locale locale;
+      lowercased_holder(const Locale& inLocale = Locale())
+      : locale(inLocale)
+      {}
+      lowercased_holder operator() (const Locale& inLocale) const {
+        return lowercased_holder(inLocale);
       }
-      const filter_detail::lowercased_holder lowercased =
-      filter_detail::lowercased_holder();
-    }
+    };
+  }
+
+  namespace stream {
+    const filter_detail::lowercased_holder lowercased =
+    filter_detail::lowercased_holder();
   }
 
   template <class SinglePassRange>
   inline auto
-  operator|(SinglePassRange& r,
-            const ir::filter::filter_detail::lowercased_holder& f)
+  operator|(SinglePassRange&& r,
+            const filter_detail::lowercased_holder& f)
   {
     typedef typename SinglePassRange::value_type value_t;
     auto binded = std::bind(Lowercased<value_t>(),
                             std::placeholders::_1, f.locale);
-    return boost::transformed_range<
+    return stream::transformed_stream<
       decltype(binded),
       SinglePassRange
-    >(binded, r);
-  }
-
-  template <class SinglePassRange>
-  inline auto
-  operator|(const SinglePassRange& r,
-            const ir::filter::filter_detail::lowercased_holder& f)
-  {
-    typedef typename SinglePassRange::value_type value_t;
-    auto binded = std::bind(Lowercased<value_t>(),
-                            std::placeholders::_1, f.locale);
-    return boost::transformed_range<
-    decltype(binded),
-    const SinglePassRange
-    >(binded, r);
+    >(binded, std::forward<SinglePassRange>(r));
   }
 }
 

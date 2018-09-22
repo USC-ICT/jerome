@@ -27,8 +27,8 @@
 #include <jerome/ir/parsing/parsing_fwd.hpp>
 #include <jerome/ir/parsing/token.hpp>
 
-namespace jerome { namespace ir { namespace filter {
-  namespace filter_detail {
+namespace jerome { namespace stream {
+  namespace stream_detail {
     template <typename S>
     struct not_in_set_holder {
       typedef S element_type;
@@ -50,7 +50,7 @@ namespace jerome { namespace ir { namespace filter {
     shared_ptr<std::unordered_set<String>> defaultStopwords();
   }
   const auto not_stopword =
-  filter_detail::not_in_set_holder<String>(filter_detail::defaultStopwords());
-}}}
+  stream_detail::not_in_set_holder<String>(stream_detail::defaultStopwords());
+}}
 
 #endif // defined __jerome_ir_parsing_filter_stopped_hpp

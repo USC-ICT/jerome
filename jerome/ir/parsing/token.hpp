@@ -25,6 +25,7 @@
 
 #include <jerome/types.hpp>
 #include <jerome/ir/parsing/parsing_fwd.hpp>
+#include <jerome/ir/parsing/locale.hpp>
 
 namespace jerome {
 	namespace ir {

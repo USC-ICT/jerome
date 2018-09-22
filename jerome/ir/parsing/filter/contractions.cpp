@@ -22,7 +22,7 @@
 
 #include "contractions.hpp"
 
-namespace jerome { namespace ir { namespace filter { namespace filter_detail {
+namespace jerome { namespace stream { namespace stream_detail {
 
   typedef std::vector<std::pair<String, String> >  suffix_list_type;
   static suffix_list_type  sSuffixes;
@@ -65,4 +65,4 @@ namespace jerome { namespace ir { namespace filter { namespace filter_detail {
     return false;
   }
 
-}}}}
+}}}

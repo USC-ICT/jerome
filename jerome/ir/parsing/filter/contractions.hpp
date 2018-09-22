@@ -24,66 +24,63 @@
 #define __jerome_ir_parsing_filter_contractions_hpp
 
 #include <jerome/types.hpp>
-#include <jerome/ir/parsing/token.hpp>
-#include <jerome/ir/parsing/filter/filter_range.hpp>
+#include <jerome/ir/parsing.hpp>
 
 namespace jerome {
-  namespace ir {
-    namespace filter {
-      namespace filter_detail {
-        struct contractions_holder {
-        };
+  namespace stream {
+    namespace stream_detail {
+      struct contractions_holder {
+      };
 
-        bool expand_contractions(String& root, String& suffix);
+      bool expand_contractions(String& root, String& suffix);
 
-        template <class T>
-        struct contractions_expander {
-          typedef BasicToken<String> result_type;
+      template <class Stream>
+      struct expand_contractions_stream : public stream<
+        expand_contractions_stream<Stream>,
+        ir::BasicToken<String>
+      >
+      {
+        typedef stream<
+        expand_contractions_stream<Stream>,
+        ir::BasicToken<String>
+        > parent_type;
+        typedef typename parent_type::value_type value_type;
 
-          bool operator() (result_type& ioToken, T& iterator) {
-            if (mSavedToken) {
-              ioToken = *mSavedToken;
-              mSavedToken = boost::none;
-              return true;
-            }
-
-            ioToken = *iterator++;
-            if (ioToken.isEOS()) return false;
-
-            jerome::String suffix;
-            if (expand_contractions(ioToken.text(), suffix)) {
-              mSavedToken = result_type(suffix, ioToken);
-            }
-
-            return true;
+        expand_contractions_stream(Stream s)
+        : mStream(s)
+        {}
+      private:
+        friend parent_type;
+        value_type mSavedToken;
+        bool mHasSavedToken;
+        Stream mStream;
+        optional<value_type> get_next() {
+          if (mHasSavedToken) {
+            mHasSavedToken = false;
+            return mSavedToken;
           }
-        private:
-          optional<result_type> mSavedToken;
-        };
-      }
-      const filter_detail::contractions_holder expanded_contractions =
-        filter_detail::contractions_holder();
+          auto x = mStream.next();
+          if (!x) return optional<value_type>();
+          value_type token(*x);
+          jerome::String suffix;
+          if (expand_contractions(token.text(), suffix)) {
+            mHasSavedToken = true;
+            mSavedToken = value_type(suffix, token);
+          }
+          return token;
+        }
+      };
     }
+    const auto expanded_contractions = stream_detail::contractions_holder();
   }
 
-  template <class SinglePassRange>
+  template <class Stream>
   inline auto
-  operator|(SinglePassRange& r,
-            ir::filter::filter_detail::contractions_holder)
+  operator|(Stream&& r,
+            stream::stream_detail::contractions_holder)
   {
-    typedef typename boost::range_iterator<SinglePassRange>::type iter_t;
-    typedef ir::filter::filter_detail::contractions_expander<iter_t> f_t;
-    return filter_range<f_t, SinglePassRange>(f_t(), r);
-  }
-
-  template <class SinglePassRange>
-  inline auto
-  operator|(const SinglePassRange& r,
-            ir::filter::filter_detail::contractions_holder)
-  {
-    typedef typename boost::range_iterator<const SinglePassRange>::type iter_t;
-    typedef ir::filter::filter_detail::contractions_expander<iter_t> f_t;
-    return filter_range<f_t, const SinglePassRange>(f_t(), r);
+    return stream::stream_detail::expand_contractions_stream<
+      Stream>(std::forward<Stream>(r));
   }
 }
 

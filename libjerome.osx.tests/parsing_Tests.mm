@@ -35,7 +35,6 @@
 @end
 
 using namespace jerome;
-using namespace jerome::ir;
 
 @implementation ParsingTests
 
@@ -87,88 +86,82 @@ void run(Stream s) {
 ////                  (const auto& x) { std::cout << x << std::endl; });
 ////}
 //
-//- (void)test04Lowercased
-//{
-//  boost::for_each(test
-//                  | adaptors::tokenized()
-//                  | filter::lowercased
-//                  , [&]
-//                  (const auto& x) { std::cout << x << std::endl; });
-//}
-//
-//- (void)test05Alpha
-//{
-//  boost::for_each(test
-//                  | adaptors::tokenized()
-//                  | filter::lowercased
-//                  | filter::filtered(is_alpha)
-//                  , [&]
-//                  (const auto& x) { std::cout << x << std::endl; });
-//}
-//
-//- (void)test06Contractions
-//{
-//  boost::for_each(test
-//                  | adaptors::tokenized()
-//                  | filter::lowercased
-//                  | filter::filtered(is_alphanumeric)
-//                  | filter::expanded_contractions
-//                  , [&]
-//                  (const auto& x) { std::cout << x << std::endl; });
-//}
-//
-//- (void)test07IrregularVerbs
-//{
-//  boost::for_each(test
-//                  | adaptors::tokenized()
-//                  | filter::lowercased
-//                  | filter::filtered(is_alphanumeric)
-//                  | filter::expanded_contractions
-//                  | filter::transformed(stem_irregular_verbs)
-//                  , [&]
-//                  (const auto& x) { std::cout << x << std::endl; });
-//}
-//
-//- (void)test08Kstem
-//{
-//  boost::for_each(test
-//                  | adaptors::tokenized()
-//                  | filter::lowercased
-//                  | filter::filtered(is_alphanumeric)
-//                  | filter::expanded_contractions
-//                  | filter::transformed(stem_irregular_verbs)
-//                  | filter::transformed(kstem)
-//                  , [&]
-//                  (const auto& x) { std::cout << x << std::endl; });
-//}
-//
-//- (void)test09Stopwords
-//{
-//  boost::for_each(test
-//                  | adaptors::tokenized()
-//                  | filter::lowercased
-//                  | filter::filtered(is_alphanumeric)
-//                  | filter::expanded_contractions
-//                  | filter::transformed(stem_irregular_verbs)
-//                  | filter::transformed(kstem)
-//                  | filter::filtered(not_stopword)
-//                  , [&]
-//                  (const auto& x) { std::cout << x << std::endl; });
-//}
+- (void)test04Lowercased
+{
+  run(test
+      | stream::tokenized
+      | stream::lowercased
+      );
+}
 
-//- (void)test10NGram
-//{
-//  boost::for_each(test
-//                  | adaptors::tokenized()
-//                  | filter::lowercased
-//                  | filter::filtered(is_alphanumeric)
-//                  | filter::expanded_contractions
-//                  | filter::transformed(stem_irregular_verbs)
-//                  | filter::transformed(kstem)
-//                  | filter::transformed(bigram)
-//                  | filter::filtered(not_stopword)
-//                  , [&]
-//                  (const auto& x) { std::cout << x << std::endl; });
-//}
+- (void)test05Alpha
+{
+  run(test
+      | stream::tokenized
+      | stream::lowercased
+      | stream::filtered(stream::is_alpha)
+      );
+}
+
+- (void)test06Contractions
+{
+  run(test
+      | stream::tokenized
+      | stream::lowercased
+      | stream::filtered(stream::is_alphanumeric)
+      | stream::expanded_contractions
+      );
+}
+
+
+- (void)test07IrregularVerbs
+{
+  run(test
+      | stream::tokenized
+      | stream::lowercased
+      | stream::filtered(stream::is_alphanumeric)
+      | stream::expanded_contractions
+      | stream::transformed(stream::stem_irregular_verbs)
+      );
+}
+
+- (void)test08Kstem
+{
+  run(test
+      | stream::tokenized
+      | stream::lowercased
+      | stream::filtered(stream::is_alphanumeric)
+      | stream::expanded_contractions
+      | stream::transformed(stream::stem_irregular_verbs)
+      | stream::transformed(stream::kstem)
+      );
+}
+
+- (void)test09Stopwords
+{
+  run(test
+      | stream::tokenized
+      | stream::lowercased
+      | stream::filtered(stream::is_alphanumeric)
+      | stream::expanded_contractions
+      | stream::transformed(stream::stem_irregular_verbs)
+      | stream::transformed(stream::kstem)
+      | stream::filtered(stream::not_stopword)
+      );
+}
+
+- (void)test10NGram
+{
+  run(test
+      | stream::tokenized
+      | stream::lowercased
+      | stream::filtered(stream::is_alphanumeric)
+      | stream::expanded_contractions
+      | stream::transformed(stream::stem_irregular_verbs)
+      | stream::transformed(stream::kstem)
+      | stream::filtered(stream::not_stopword)
+      | stream::ngram
+      );
+}
 
 @end

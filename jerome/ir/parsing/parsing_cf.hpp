@@ -22,7 +22,10 @@
 
 #ifndef __jerome_ir_parsing_parsing_cf_hpp__
 #define __jerome_ir_parsing_parsing_cf_hpp__
-#ifdef JEROME_IOS
+
+#include <jerome/ir/parsing/parsing_fwd.hpp>
+
+#if JEROME_PARSING == JEROME_PARSING_CF
 
 #include <jerome/ir/parsing/cf/object.hpp>
 #include <jerome/ir/parsing/cf/cf_string.hpp>

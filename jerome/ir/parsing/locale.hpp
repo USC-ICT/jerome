@@ -1,7 +1,7 @@
 //
-//  cf_locale.hpp
+//  locale.hpp
 //
-//  Created by Anton Leuski on 9/19/18.
+//  Created by Anton Leuski on 9/21/18.
 //  Copyright © 2018 Anton Leuski & ICT/USC. All rights reserved.
 //
 //  This file is part of Jerome.
@@ -20,26 +20,21 @@
 //  along with Jerome.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef __jerome_ir_parsing_cf_locale_hpp
-#define __jerome_ir_parsing_cf_locale_hpp
+#ifndef __jerome_ir_parsing_locale_hpp
+#define __jerome_ir_parsing_locale_hpp
 
-#include <jerome/ir/parsing/cf/object.hpp>
+#include <jerome/ir/parsing/parsing_fwd.hpp>
 
 #if JEROME_PARSING == JEROME_PARSING_CF
-
+# include <jerome/ir/parsing/cf/cf_locale.hpp>
+#else
+# include <locale>
 namespace jerome {
-  namespace cf {
-    struct Locale : public basic_object<CFLocaleRef> {
-      typedef basic_object<CFLocaleRef> parent_type;
-      using parent_type::parent_type;
-      static void global(const jerome::String& inLocaleString);
-      Locale();
-      Locale(const jerome::String& inString);
-    };
-  }
-  using Locale = cf::Locale;
+  class Locale : public std::locale {
+  public:
+    static void global(const String& inLocaleString);
+  };
 }
-
 #endif
 
-#endif /* __jerome_ir_parsing_cf_locale_hpp */
+#endif // defined __jerome_ir_parsing_locale_hpp

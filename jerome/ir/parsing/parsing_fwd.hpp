@@ -23,6 +23,8 @@
 #ifndef parsing_fwd_hpp
 #define parsing_fwd_hpp
 
+#include <jerome/types.hpp>
+
 #ifndef JEROME_PARSING_CF
 #define JEROME_PARSING_CF  1
 #endif
@@ -37,7 +39,7 @@
 
 #if !defined(JEROME_PARSING)
 # if defined(JEROME_IOS)
-#   define JEROME_PARSING JEROME_PARSING_CF
+#   define JEROME_PARSING JEROME_PARSING_ICU
 # elif defined(JEROME_ANDROID)
 #   define JEROME_PARSING JEROME_PARSING_STD
 # else
@@ -55,30 +57,5 @@ namespace jerome {
   template <typename T>
   struct IsAlphanumeric {};
 }
-
-#if JEROME_PARSING == JEROME_PARSING_CF
-# include <jerome/ir/parsing/cf/cf_locale.hpp>
-#else
-# include <locale>
-namespace jerome {
-  using Locale = std::locale;
-}
-#endif
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wshorten-64-to-32"
-#pragma clang diagnostic ignored "-Wcomma"
-#pragma clang diagnostic ignored "-Wdocumentation"
-#include <boost/range.hpp>
-#include <boost/range/adaptor/filtered.hpp>
-#include <boost/range/adaptor/transformed.hpp>
-#pragma clang diagnostic pop
-
-namespace jerome { namespace ir { namespace filter {
-  const auto filtered = boost::adaptors::filtered;
-  const auto transformed = boost::adaptors::transformed;
-}}}
-
-# include <jerome/ir/parsing/stream.hpp>
 
 #endif // defined parsing_fwd_hpp

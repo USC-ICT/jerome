@@ -23,8 +23,11 @@
 #ifndef __jerome_ir_parsing_cf_object_hpp
 #define __jerome_ir_parsing_cf_object_hpp
 
-#include <CoreFoundation/CoreFoundation.h>
 #include <jerome/types.hpp>
+#include <jerome/ir/parsing/parsing_fwd.hpp>
+
+#if JEROME_PARSING == JEROME_PARSING_CF
+#include <CoreFoundation/CoreFoundation.h>
 
 namespace jerome { namespace cf {
   template <typename T>
@@ -75,5 +78,6 @@ namespace jerome { namespace cf {
     T mValue;
   };
 }}
+#endif
 
 #endif // defined __jerome_ir_parsing_cf_object_hpp

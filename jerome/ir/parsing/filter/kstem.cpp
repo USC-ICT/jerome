@@ -27,9 +27,8 @@ extern "C" {
   void stem(char *term, char *stem);
 }
 
-namespace jerome { namespace ir { namespace filter {
-  namespace filter_detail {
-
+namespace jerome { namespace stream {
+  namespace stream_detail {
     struct Kstemmer {
       Kstemmer() {
         read_dict_info();
@@ -44,4 +43,4 @@ namespace jerome { namespace ir { namespace filter {
       kstemmer.stem(inString, outStem);
     }
   }
-}}}
+}}

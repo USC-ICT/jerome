@@ -23,8 +23,10 @@
 #ifndef __jerome_ir_parsing_hpp__
 #define __jerome_ir_parsing_hpp__
 
-#include <jerome/types.hpp>
 #include <jerome/ir/parsing/parsing_fwd.hpp>
+#include <jerome/ir/parsing/locale.hpp>
+
+#include <jerome/ir/parsing/stream.hpp>
 
 #include <jerome/ir/parsing/token.hpp>
 #include <jerome/ir/parsing/filters.hpp>

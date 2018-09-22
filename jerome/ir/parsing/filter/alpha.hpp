@@ -54,6 +54,10 @@ namespace jerome { namespace ir { namespace filter {
   filter_detail::is_alpha_holder();
 }}}
 
+namespace jerome { namespace stream {
+  const auto is_alpha = jerome::ir::filter::is_alpha;
+}}
+
 namespace jerome { namespace ir { namespace filter {
   namespace filter_detail {
     struct is_alphanumeric_holder {
@@ -82,5 +86,9 @@ namespace jerome { namespace ir { namespace filter {
   const filter_detail::is_alphanumeric_holder is_alphanumeric =
   filter_detail::is_alphanumeric_holder();
 }}}
+
+namespace jerome { namespace stream {
+  const auto is_alphanumeric = jerome::ir::filter::is_alphanumeric;
+}}
 
 #endif // defined __jerome_ir_parsing_filter_alpha_hpp

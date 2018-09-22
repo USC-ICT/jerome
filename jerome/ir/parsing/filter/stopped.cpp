@@ -22,8 +22,8 @@
 
 #include "stopped.hpp"
 
-namespace jerome { namespace ir { namespace filter {
-  namespace filter_detail {
+namespace jerome { namespace stream {
+  namespace stream_detail {
     shared_ptr<std::unordered_set<String>> defaultStopwords() {
       static auto shared =
       std::make_shared<
@@ -32,4 +32,4 @@ namespace jerome { namespace ir { namespace filter {
       return shared;
     }
   }
-}}}
+}}

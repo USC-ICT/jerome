@@ -26,8 +26,8 @@
 #include <jerome/ir/parsing/parsing_fwd.hpp>
 #include <jerome/ir/parsing/irregular_verbs.hpp>
 
-namespace jerome { namespace ir { namespace filter {
-  namespace filter_detail {
+namespace jerome { namespace stream {
+  namespace stream_detail {
     struct dictionary_holder {
       typedef shared_ptr<std::unordered_map<String, String>> dictionary_type;
       const dictionary_type dictionary;
@@ -44,8 +44,8 @@ namespace jerome { namespace ir { namespace filter {
       }
     };
   }
-  const filter_detail::dictionary_holder stem_irregular_verbs =
-  filter_detail::dictionary_holder(shared_irregular_verbs());
-}}}
+  const auto stem_irregular_verbs =
+  stream_detail::dictionary_holder(ir::shared_irregular_verbs());
+}}
 
 #endif // defined __jerome_ir_parsing_filter_dictionary_hpp

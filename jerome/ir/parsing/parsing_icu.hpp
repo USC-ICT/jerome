@@ -22,17 +22,19 @@
 
 #ifndef __jerome_ir_parsing_parsing_icu_hpp__
 #define __jerome_ir_parsing_parsing_icu_hpp__
-#ifndef JEROME_IOS
 
-//#include "parsing.h"
+#include <jerome/ir/parsing/parsing_fwd.hpp>
+
+#if JEROME_PARSING == JEROME_PARSING_ICU
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshorten-64-to-32"
+#pragma clang diagnostic ignored "-Wcomma"
+#pragma clang diagnostic ignored "-Wdocumentation"
 #include <boost/locale.hpp>
+#pragma clang diagnostic pop
 
 namespace jerome { 
-
-	class Locale : public std::locale {
-	public:
-		static void global(const String& inLocaleString);
-	};
 
 	namespace ir {
 

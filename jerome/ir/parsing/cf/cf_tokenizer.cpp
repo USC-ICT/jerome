@@ -22,6 +22,8 @@
 
 #include "cf_tokenizer.hpp"
 
+#if JEROME_PARSING == JEROME_PARSING_CF
+
 namespace jerome { namespace cf {
   static cf::basic_object<CFStringTokenizerRef>
   init(CFStringRef inString, CFLocaleRef inLocale) {
@@ -81,3 +83,5 @@ namespace jerome { namespace cf {
   {
   }
 }}
+
+#endif

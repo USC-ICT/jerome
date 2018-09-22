@@ -23,9 +23,11 @@
 #ifndef __jerome_ir_parsing_cf_string_hpp
 #define __jerome_ir_parsing_cf_string_hpp
 
+#include <jerome/ir/parsing/locale.hpp>
+
+#if JEROME_PARSING == JEROME_PARSING_CF
+
 #include <jerome/ir/parsing/cf/object.hpp>
-#include <jerome/ir/parsing/cf/cf_locale.hpp>
-#include <jerome/ir/parsing/parsing_fwd.hpp>
 
 namespace jerome {
   namespace cf {
@@ -114,5 +116,7 @@ namespace jerome {
     }
   };
 }
+
+#endif
 
 #endif // defined __jerome_ir_parsing_cf_string_hpp

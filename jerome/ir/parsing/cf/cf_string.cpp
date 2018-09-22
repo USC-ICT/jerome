@@ -21,7 +21,8 @@
 //
 
 #include "cf_string.hpp"
-#ifdef JEROME_IOS
+
+#if JEROME_PARSING == JEROME_PARSING_CF
 
 namespace jerome { namespace cf {
   String::String(const jerome::String& inString)
