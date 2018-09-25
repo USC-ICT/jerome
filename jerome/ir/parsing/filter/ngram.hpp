@@ -105,7 +105,8 @@ namespace jerome {
       operator|(Stream&& r,
                 const ngram_holder& f)
       {
-        return ngram_stream<Stream>(::std::forward<Stream>(r), f.count);
+        typedef typename std::remove_reference<Stream>::type Stream_t;
+        return ngram_stream<Stream_t>(::std::forward<Stream_t>(r), f.count);
       }
     }
     const auto ngram = stream_detail::ngram_holder();

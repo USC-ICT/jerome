@@ -56,18 +56,19 @@ namespace jerome {
       }
     };
 
-    template <class SinglePassRange, ASSERT_STREAM(SinglePassRange)>
+    template <class Stream, ASSERT_STREAM(Stream)>
     inline auto
-    operator|(SinglePassRange&& r,
+    operator|(Stream&& r,
               const lowercased_holder& f)
     {
-      typedef typename SinglePassRange::value_type value_t;
+      typedef typename std::remove_reference<Stream>::type Stream_t;
+      typedef typename Stream_t::value_type value_t;
       auto binded = ::std::bind(Lowercased<value_t>(),
                                 ::std::placeholders::_1, f.locale);
       return jerome::stream::transformed_stream<
         decltype(binded),
-        SinglePassRange
-      >(binded, ::std::forward<SinglePassRange>(r));
+        Stream_t
+      >(binded, ::std::forward<Stream_t>(r));
     }
   }
 

@@ -26,13 +26,17 @@
 
 namespace jerome { namespace cf {
   static cf::basic_object<CFStringTokenizerRef>
-  init(CFStringRef inString, CFLocaleRef inLocale) {
+  _init(CFStringRef inString, CFLocaleRef inLocale) {
     auto tokenzer = CFStringTokenizerCreate(kCFAllocatorDefault,
                                             inString,
                                             CFRangeMake(0, CFStringGetLength(inString)),
                                             kCFStringTokenizerUnitWordBoundary,
                                             inLocale);
     return basic_object<CFStringTokenizerRef>(tokenzer);
+  }
+
+  void Tokenizer::init() {
+    mTokenizer = _init(mString, mLocale);
   }
 
   Tokenizer::Tokenizer()
@@ -46,21 +50,21 @@ namespace jerome { namespace cf {
                        Locale const & inLocale)
   : mLocale(inLocale)
   , mString(inString)
-  , mTokenizer(init(mString, mLocale))
+  , mTokenizer()
   {
   }
 
   Tokenizer::Tokenizer(const jerome::String* inString, Locale const & inLocale)
   : mLocale(inLocale)
   , mString(*inString)
-  , mTokenizer(init(mString, mLocale))
+  , mTokenizer()
   {
   }
 
   Tokenizer::Tokenizer(const jerome::String& inString, Locale const & inLocale)
   : mLocale(inLocale)
   , mString(inString)
-  , mTokenizer(init(mString, mLocale))
+  , mTokenizer()
   {
   }
 
@@ -79,7 +83,7 @@ namespace jerome { namespace cf {
                                             kCFStringEncodingUTF8,
                                             false,
                                             kCFAllocatorNull))
-  , mTokenizer(init(mString, mLocale))
+  , mTokenizer()
   {
   }
 }}

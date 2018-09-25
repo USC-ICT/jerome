@@ -33,14 +33,17 @@ namespace jerome { namespace stream {
   template<typename T>
   using AssertStream =
   typename std::enable_if<
-    std::is_base_of<stream::stream_base, T>::value, int
-    >::type;
+    std::is_base_of<
+      stream::stream_base,
+      typename std::remove_reference<T>::type
+    >::value, int
+  >::type;
 
 #define ASSERT_STREAM(T) ::jerome::stream::AssertStream<T> = 0
 
   template<typename T>
   using AssertFilter = typename std::enable_if<
-    std::is_base_of<stream::stream_filter, T>::value, int>::type;
+  std::is_base_of<stream::stream_filter, typename std::remove_reference<T>::type>::value, int>::type;
 
 #define ASSERT_FILTER(T) ::jerome::stream::AssertFilter<T> = 0
 
@@ -211,6 +214,25 @@ namespace jerome { namespace stream {
       transform_holder( T r ) : holder<T>(r)
       { }
     };
+
+    template <class Stream, class Predicate, ASSERT_STREAM(Stream)>
+    inline auto
+    operator|(Stream&& r, const filter_holder<Predicate>& f)
+    {
+      typedef typename std::remove_reference<Stream>::type Stream_t;
+      return jerome::stream::filtered_stream<
+        Predicate, Stream_t>(std::forward<Stream_t>(r), f.val);
+    }
+
+    template <class Stream, class Predicate, ASSERT_STREAM(Stream)>
+    inline auto
+    operator|(Stream&& r,
+              const transform_holder<Predicate>& f)
+    {
+      typedef typename std::remove_reference<Stream>::type Stream_t;
+      return jerome::stream::transformed_stream<
+        Predicate,Stream_t>(f.val, std::forward<Stream_t>(r));
+    }
   }
 
   const auto filtered = stream_detail::forwarder<stream_detail::filter_holder>();
@@ -218,30 +240,16 @@ namespace jerome { namespace stream {
 }}
 
 namespace jerome {
-  template <class Stream, class Predicate, ASSERT_STREAM(Stream)>
-  inline stream::filtered_stream<Predicate, Stream>
-  operator|(Stream&& r,
-            const stream::stream_detail::filter_holder<Predicate>& f)
-  {
-    return stream::filtered_stream<Predicate, Stream>(std::forward<Stream>(r), f.val);
-  }
-
-  template <class Stream, class Predicate, ASSERT_STREAM(Stream)>
-  inline stream::transformed_stream<Predicate, Stream>
-  operator|(Stream&& r,
-            const stream::stream_detail::transform_holder<Predicate>& f)
-  {
-    return stream::transformed_stream<Predicate, Stream>(f.val, std::forward<Stream>(r));
-  }
-
-  template <class Stream>
+  template <class Stream, ASSERT_STREAM(Stream)>
   inline auto operator|(Stream&& r, std::tuple<>&& tuple) {
-    return std::forward<Stream>(r);
+    typedef typename std::remove_reference<Stream>::type Stream_t;
+    return std::forward<Stream_t>(r);
   }
 
-  template <class Stream, ASSERT_STREAM(Stream), class ...Args>
+  template <class Stream, class ...Args, ASSERT_STREAM(Stream)>
   inline auto operator|(Stream&& r, std::tuple<Args...> tuple) {
-    return (std::forward<Stream>(r) | head(tuple)) | tail(tuple);
+    typedef typename std::remove_reference<Stream>::type Stream_t;
+    return (std::forward<Stream_t>(r) | head(tuple)) | tail(tuple);
   }
 
   template <class ...Args>
@@ -249,14 +257,15 @@ namespace jerome {
     return (s | head(tuple)) | tail(tuple);
   }
 
-  template <class A, ASSERT_FILTER(A), class ...Args>
+  template <class A, class ...Args, ASSERT_FILTER(A)>
   inline auto operator|(A r, std::tuple<Args...> tuple) {
-    return std::tuple_cat(std::tie(r), tuple);
+    typedef typename std::remove_reference<A>::type A_t;
+    return std::tuple_cat(std::make_tuple(r), tuple);
   }
 
-  template <class A, ASSERT_FILTER(A), class ...Args>
+  template <class A, class ...Args, ASSERT_FILTER(A)>
   inline auto operator|(std::tuple<Args...> tuple, A r) {
-    return std::tuple_cat(tuple, std::tie(r));
+    return std::tuple_cat(tuple, std::make_tuple(r));
   }
 
   template <class A, class B, ASSERT_FILTER(A), ASSERT_FILTER(B)>

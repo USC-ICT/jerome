@@ -76,7 +76,7 @@ namespace jerome {
       operator|(Stream&& r,
                 contractions_holder)
       {
-        return expand_contractions_stream<Stream>(::std::forward<Stream>(r));
+        return expand_contractions_stream<typename std::remove_const<Stream>::type>(r);
       }
     }
     const auto expanded_contractions = stream_detail::contractions_holder();

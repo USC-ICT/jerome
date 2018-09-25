@@ -45,7 +45,10 @@ namespace jerome { namespace cf {
 
     template <class token_type>
     token_type nextToken() {
-      if (!mTokenizer) return token_type::eos();
+      if (!mTokenizer) {
+        init();
+        return token_type::bos();
+      }
       auto  tokenType  = CFStringTokenizerAdvanceToNextToken(mTokenizer);
       if (tokenType == kCFStringTokenizerTokenNone) return token_type::eos();
 
@@ -60,6 +63,8 @@ namespace jerome { namespace cf {
     Locale mLocale;
     String mString;
     basic_object<CFStringTokenizerRef>  mTokenizer;
+
+    void init();
   };
 
   typedef ir::BasicToken<String> Token;
@@ -78,9 +83,9 @@ namespace jerome { namespace cf {
       return mTokenizer.nextToken<Token>();
     }
   };
+}}
 
-}
-
+namespace jerome {
   using tokenized_stream = cf::tokenized_stream;
 }
 
