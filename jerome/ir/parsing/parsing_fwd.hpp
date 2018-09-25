@@ -49,9 +49,6 @@
 
 namespace jerome {
   template <typename T>
-  struct Lowercased {};
-
-  template <typename T>
   struct IsAlpha {};
 
   template <typename T>

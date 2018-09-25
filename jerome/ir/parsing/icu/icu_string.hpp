@@ -38,15 +38,10 @@
 #pragma clang diagnostic pop
 
 namespace jerome {
-  template <>
-  struct Lowercased<String> {
-    using result_type = String;
-    result_type operator () (const String& inString,
-                             const Locale& inLocale = Locale()) const
-    {
-      return boost::locale::to_lower(inString, inLocale);
-    }
-  };
+  inline jerome::String
+  lowercased(const jerome::String& inString, const Locale& inLocale = Locale()) {
+    return boost::locale::to_lower(inString, inLocale);
+  }
 
   template <>
   struct IsAlpha<String> {

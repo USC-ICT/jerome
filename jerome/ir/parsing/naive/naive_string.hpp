@@ -28,20 +28,14 @@
 #if JEROME_PARSING == JEROME_PARSING_STD
 
 namespace jerome {
-  template <>
-  struct Lowercased<String> {
-    using result_type = String;
-    result_type operator () (const String& inString,
-                             const Locale& inLocale = Locale()) const
-    {
-      String newTokenText  = inString;
-      for (unsigned int i=0;i<newTokenText.size();i++)
-      {
-        newTokenText[i] = ::std::tolower(newTokenText[i]);
-      }
-      return newTokenText;
+  // passing by value to make an efficient copy.
+  inline jerome::String
+  lowercased(jerome::String newTokenText, const Locale& inLocale = Locale()) {
+    for (unsigned int i=0;i<newTokenText.size();i++) {
+      newTokenText[i] = ::std::tolower(newTokenText[i]);
     }
-  };
+    return newTokenText;
+  }
 
   template <>
   struct IsAlpha<String> {

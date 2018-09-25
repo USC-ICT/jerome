@@ -59,6 +59,10 @@ namespace jerome { namespace cf {
                                            value(), CFRange {pos, count}));
   }
 
+  bool operator == (const String& lhs, const String& rhs) {
+    return kCFCompareEqualTo == CFStringCompare(lhs, rhs, 0);
+  }
+
   String lowercased(const String& string, const Locale& inLocale) {
     CFMutableStringRef  lowerCaseString =
       CFStringCreateMutableCopy(kCFAllocatorDefault, 0, string);

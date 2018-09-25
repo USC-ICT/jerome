@@ -82,7 +82,7 @@ void run(Stream s) {
 {
   run(test
       | stream::as_token
-      | stream::transformed(stream::lowercased)
+      | stream::lowercased
       );
 }
 

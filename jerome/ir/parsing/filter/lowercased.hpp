@@ -26,39 +26,35 @@
 #include <jerome/ir/parsing/parsing_fwd.hpp>
 
 namespace jerome {
-
-  template <class T>
-  struct Lowercased<ir::BasicToken<T>>
-  {
-    typedef ir::BasicToken<T> result_type;
-    ir::BasicToken<T> operator() (const ir::BasicToken<T>& inToken,
-                                  const Locale& inLocale) const {
-      if (inToken.isEOS() || inToken.isBOS()) return inToken;
-      auto text = functor()(inToken.text(), inLocale);
-      if (text == inToken.text()) return inToken;
-      return ir::BasicToken<T>(text, inToken);
-    }
-    static auto functor() -> Lowercased<typename ir::BasicToken<T>::value_type>
-    {
-      static Lowercased<typename ir::BasicToken<T>::value_type> funct;
-      return funct;
-    }
-  };
-
   namespace filter_detail {
     struct lowercased_holder : public stream::stream_filter {
       const Locale locale;
+
       lowercased_holder(const Locale& inLocale = Locale())
       : locale(inLocale)
       {}
+
       lowercased_holder operator() (const Locale& inLocale) const {
         return lowercased_holder(inLocale);
       }
 
       template <class T>
-      auto transformer() const
+      auto operator() (const ir::BasicToken<T>& inToken) const {
+        if (inToken.isEOS() || inToken.isBOS()) return inToken;
+        auto text = lowercased(inToken.text(), locale);
+        if (text == inToken.text()) return inToken;
+        return ir::BasicToken<T>(text, inToken);
+      }
+
+      template <class Stream>
+      auto stream(Stream&& inStream) const
       {
-        return ::std::bind(Lowercased<T>(), ::std::placeholders::_1, locale);
+        typedef typename std::remove_reference<Stream>::type Stream_t;
+        return jerome::stream::transformed_stream<
+        Stream_t,
+        lowercased_holder,
+        typename Stream_t::value_type
+        >(::std::forward<Stream_t>(inStream), *this);
       }
     };
 
@@ -68,13 +64,7 @@ namespace jerome {
               const lowercased_holder& f)
     {
       typedef typename std::remove_reference<Stream>::type Stream_t;
-      typedef typename Stream_t::value_type value_t;
-      auto binded = ::std::bind(Lowercased<value_t>(),
-                                ::std::placeholders::_1, f.locale);
-      return jerome::stream::transformed_stream<
-        Stream_t,
-        decltype(binded)
-      >(::std::forward<Stream_t>(r), binded);
+      return f.stream(::std::forward<Stream_t>(r));
     }
   }
 

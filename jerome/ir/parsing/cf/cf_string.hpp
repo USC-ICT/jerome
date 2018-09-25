@@ -46,6 +46,8 @@ namespace jerome {
       return outs << (jerome::String)o;
     }
 
+    bool operator == (const String& lhs, const String& rhs);
+
     String lowercased(const String& string,
                       const Locale& inLocale = Locale());
 
@@ -56,15 +58,10 @@ namespace jerome {
                         const Locale& inLocale = Locale());
   }
 
-  template <>
-  struct Lowercased<cf::String> {
-    using result_type = cf::String;
-    result_type operator () (const cf::String& inString,
-                             const Locale& inLocale = Locale()) const
-    {
-      return cf::lowercased(inString, inLocale);
-    }
-  };
+  inline jerome::String
+  lowercased(const jerome::String& inString, const Locale& inLocale = Locale()) {
+    return (String)cf::lowercased(cf::String(inString), inLocale);
+  }
 
   template <>
   struct IsAlpha<cf::String> {
@@ -83,16 +80,6 @@ namespace jerome {
                              const Locale& inLocale = Locale()) const
     {
       return cf::isAlphanumeric(inString, inLocale);
-    }
-  };
-
-  template <>
-  struct Lowercased<String> {
-    using result_type = String;
-    result_type operator () (const String& inString,
-                             const Locale& inLocale = Locale()) const
-    {
-      return (String)cf::lowercased(cf::String(inString), inLocale);
     }
   };
 
