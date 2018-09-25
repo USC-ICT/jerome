@@ -25,9 +25,9 @@
 
 #include <jerome/ir/parsing/parsing_fwd.hpp>
 
-namespace jerome { namespace ir { namespace filter {
-  namespace filter_detail {
-    struct is_alpha_holder : public stream::stream_filter {
+namespace jerome { namespace stream {
+  namespace stream_detail {
+    struct is_alpha_holder : public stream_filter {
       const Locale locale;
       is_alpha_holder(const Locale& inLocale = Locale())
       : locale(inLocale)
@@ -39,28 +39,16 @@ namespace jerome { namespace ir { namespace filter {
       template <typename T>
       bool operator() (const ir::BasicToken<T>& inToken) const {
         if (inToken.isEOS() || inToken.isBOS()) return true;
-        return functor<T>()(inToken.text(), locale);
-      }
-
-      template <typename T>
-      static auto functor()
-      {
-        static IsAlpha<typename ir::BasicToken<T>::value_type> funct;
-        return funct;
+        return is_alpha(inToken.text(), locale);
       }
     };
   }
-  const filter_detail::is_alpha_holder is_alpha =
-  filter_detail::is_alpha_holder();
-}}}
-
-namespace jerome { namespace stream {
-  const auto is_alpha = jerome::ir::filter::is_alpha;
+  const auto is_alpha = stream_detail::is_alpha_holder();
 }}
 
-namespace jerome { namespace ir { namespace filter {
-  namespace filter_detail {
-    struct is_alphanumeric_holder : public stream::stream_filter {
+namespace jerome { namespace stream {
+  namespace stream_detail {
+    struct is_alphanumeric_holder : public stream_filter {
       const Locale locale;
       is_alphanumeric_holder(const Locale& inLocale = Locale())
       : locale(inLocale)
@@ -72,23 +60,11 @@ namespace jerome { namespace ir { namespace filter {
       template <typename T>
       bool operator() (const ir::BasicToken<T>& inToken) const {
         if (inToken.isEOS() || inToken.isBOS()) return true;
-        return functor<T>()(inToken.text(), locale);
-      }
-
-      template <typename T>
-      static auto functor()
-      {
-        static IsAlphanumeric<typename ir::BasicToken<T>::value_type> funct;
-        return funct;
+        return is_alphanumeric(inToken.text(), locale);
       }
     };
   }
-  const filter_detail::is_alphanumeric_holder is_alphanumeric =
-  filter_detail::is_alphanumeric_holder();
-}}}
-
-namespace jerome { namespace stream {
-  const auto is_alphanumeric = jerome::ir::filter::is_alphanumeric;
+  const auto is_alphanumeric = stream_detail::is_alphanumeric_holder();
 }}
 
 #endif // defined __jerome_ir_parsing_filter_alpha_hpp

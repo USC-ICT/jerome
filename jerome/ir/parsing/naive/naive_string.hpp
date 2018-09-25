@@ -37,36 +37,23 @@ namespace jerome {
     return newTokenText;
   }
 
-  template <>
-  struct IsAlpha<String> {
-    using result_type = bool;
-    result_type operator () (const String& inString,
-                             const Locale& inLocale = Locale()) const
-    {
-      for (unsigned int i=0;i<inString.size();i++)
-      {
-        if (isalpha(inString[i]))
-          return true;
-      }
-      return false;
+  inline bool
+  is_alpha(const jerome::String& inString, const Locale& inLocale = Locale()) {
+    for (auto ch : inString) {
+      if (isalpha(ch))
+        return true;
     }
-  };
+    return false;
+  }
 
-  template <>
-  struct IsAlphanumeric<String> {
-    using result_type = bool;
-    result_type operator () (const String& inString,
-                             const Locale& inLocale = Locale()) const
-    {
-      for (unsigned int i=0;i<inString.size();i++)
-      {
-        if (isalnum(inString[i]))
-          return true;
-      }
-      return false;
+  inline bool
+  is_alphanumeric(const jerome::String& inString, const Locale& inLocale = Locale()) {
+    for (auto ch : inString) {
+      if (isalnum(ch))
+        return true;
     }
-  };
-
+    return false;
+  }
 }
 
 #endif

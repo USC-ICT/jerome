@@ -47,12 +47,4 @@
 # endif
 #endif
 
-namespace jerome {
-  template <typename T>
-  struct IsAlpha {};
-
-  template <typename T>
-  struct IsAlphanumeric {};
-}
-
 #endif // defined parsing_fwd_hpp

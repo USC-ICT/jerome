@@ -86,15 +86,15 @@ namespace jerome { namespace cf {
     return false;
   }
 
-  bool isAlpha(const String& string,
-               const Locale& inLocale)
+  bool is_alpha(const String& string,
+                const Locale& inLocale)
   {
     auto set = CFCharacterSetGetPredefined(kCFCharacterSetLetter);
     return isStringMemberOfCharSet(string, set);
   }
 
-  bool isAlphanumeric(const String& string,
-                      const Locale& inLocale)
+  bool is_alphanumeric(const String& string,
+                       const Locale& inLocale)
   {
     auto set = CFCharacterSetGetPredefined(kCFCharacterSetAlphaNumeric);
     return isStringMemberOfCharSet(string, set);

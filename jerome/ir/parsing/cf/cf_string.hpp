@@ -51,11 +51,11 @@ namespace jerome {
     String lowercased(const String& string,
                       const Locale& inLocale = Locale());
 
-    bool isAlpha(const String& string,
-                 const Locale& inLocale = Locale());
+    bool is_alpha(const String& string,
+                  const Locale& inLocale = Locale());
 
-    bool isAlphanumeric(const String& string,
-                        const Locale& inLocale = Locale());
+    bool is_alphanumeric(const String& string,
+                         const Locale& inLocale = Locale());
   }
 
   inline jerome::String
@@ -63,45 +63,15 @@ namespace jerome {
     return (String)cf::lowercased(cf::String(inString), inLocale);
   }
 
-  template <>
-  struct IsAlpha<cf::String> {
-    using result_type = bool;
-    result_type operator () (const cf::String& inString,
-                             const Locale& inLocale = Locale()) const
-    {
-      return cf::isAlpha(inString, inLocale);
-    }
-  };
+  inline bool
+  is_alpha(const jerome::String& inString, const Locale& inLocale = Locale()) {
+    return is_alpha(cf::String(inString), inLocale);
+  }
 
-  template <>
-  struct IsAlphanumeric<cf::String> {
-    using result_type = bool;
-    result_type operator () (const cf::String& inString,
-                             const Locale& inLocale = Locale()) const
-    {
-      return cf::isAlphanumeric(inString, inLocale);
-    }
-  };
-
-  template <>
-  struct IsAlpha<String> {
-    using result_type = bool;
-    result_type operator () (const String& inString,
-                             const Locale& inLocale = Locale()) const
-    {
-      return cf::isAlpha(cf::String(inString), inLocale);
-    }
-  };
-
-  template <>
-  struct IsAlphanumeric<String> {
-    using result_type = bool;
-    result_type operator () (const String& inString,
-                             const Locale& inLocale = Locale()) const
-    {
-      return cf::isAlphanumeric(cf::String(inString), inLocale);
-    }
-  };
+  inline bool
+  is_alphanumeric(const jerome::String& inString, const Locale& inLocale = Locale()) {
+    return is_alphanumeric(cf::String(inString), inLocale);
+  }
 }
 
 #endif

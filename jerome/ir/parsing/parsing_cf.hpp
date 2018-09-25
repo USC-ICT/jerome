@@ -97,7 +97,7 @@ namespace jerome {
         {}
         bool getNextToken(Token& ioToken) {
           while(TokenFilter::getNextToken(ioToken)) {
-            if (isAlphanumeric(cf::String(ioToken.text()), locale())) return true;
+            if (is_alphanumeric(ioToken.text(), locale())) return true;
           }
           return false;
         }
@@ -114,7 +114,7 @@ namespace jerome {
         {}
         bool getNextToken(Token& ioToken) {
           while(TokenFilter::getNextToken(ioToken)) {
-            if (isAlpha(cf::String(ioToken.text()), locale())) return true;
+            if (is_alpha(ioToken.text(), locale())) return true;
           }
           return false;
         }

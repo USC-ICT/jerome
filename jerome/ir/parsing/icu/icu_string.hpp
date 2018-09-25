@@ -43,28 +43,17 @@ namespace jerome {
     return boost::locale::to_lower(inString, inLocale);
   }
 
-  template <>
-  struct IsAlpha<String> {
-    using result_type = bool;
-    result_type operator () (const String& inString,
-                             const Locale& inLocale = Locale()) const
-    {
-      auto inp = boost::locale::conv::utf_to_utf<wchar_t>(inString);
-      return boost::algorithm::one_of(inp, boost::algorithm::is_alpha(inLocale));
-    }
-  };
+  inline bool
+  is_alpha(const jerome::String& inString, const Locale& inLocale = Locale()) {
+    auto inp = boost::locale::conv::utf_to_utf<wchar_t>(inString);
+    return boost::algorithm::one_of(inp, boost::algorithm::is_alpha(inLocale));
+  }
 
-  template <>
-  struct IsAlphanumeric<String> {
-    using result_type = bool;
-    result_type operator () (const String& inString,
-                             const Locale& inLocale = Locale()) const
-    {
-      auto inp = boost::locale::conv::utf_to_utf<wchar_t>(inString);
-      return boost::algorithm::one_of(inp, boost::algorithm::is_alnum(inLocale));
-    }
-  };
-
+  inline bool
+  is_alphanumeric(const jerome::String& inString, const Locale& inLocale = Locale()) {
+    auto inp = boost::locale::conv::utf_to_utf<wchar_t>(inString);
+    return boost::algorithm::one_of(inp, boost::algorithm::is_alnum(inLocale));
+  }
 }
 
 #endif
