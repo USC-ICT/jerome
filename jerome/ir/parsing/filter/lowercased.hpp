@@ -54,6 +54,12 @@ namespace jerome {
       lowercased_holder operator() (const Locale& inLocale) const {
         return lowercased_holder(inLocale);
       }
+
+      template <class T>
+      auto transformer() const
+      {
+        return ::std::bind(Lowercased<T>(), ::std::placeholders::_1, locale);
+      }
     };
 
     template <class Stream, ASSERT_STREAM(Stream)>
@@ -66,9 +72,9 @@ namespace jerome {
       auto binded = ::std::bind(Lowercased<value_t>(),
                                 ::std::placeholders::_1, f.locale);
       return jerome::stream::transformed_stream<
-        decltype(binded),
-        Stream_t
-      >(binded, ::std::forward<Stream_t>(r));
+        Stream_t,
+        decltype(binded)
+      >(::std::forward<Stream_t>(r), binded);
     }
   }
 

@@ -66,7 +66,9 @@ void run(Stream s) {
 
 - (void)test02Tokenized
 {
-  run(test | stream::tokenized);
+  run(test
+      | stream::tokenized
+      );
 }
 
 //- (void)test01
@@ -80,7 +82,7 @@ void run(Stream s) {
 {
   run(test
       | stream::as_token
-      | stream::lowercased
+      | stream::transformed(stream::lowercased)
       );
 }
 

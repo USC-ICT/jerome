@@ -55,14 +55,14 @@ namespace jerome { namespace stream {
     }
   };
 
-  template <class Predicate, class Stream>
+  template <class Stream, class Predicate>
   struct filtered_stream : public stream<
-    filtered_stream<Predicate, Stream>,
+    filtered_stream<Stream, Predicate>,
     typename Stream::value_type
   >
   {
     typedef stream<
-      filtered_stream<Predicate, Stream>,
+      filtered_stream<Stream, Predicate>,
       typename Stream::value_type
     > parent_type;
     typedef typename parent_type::value_type value_type;
@@ -84,19 +84,19 @@ namespace jerome { namespace stream {
     }
   };
 
-  template <class Function, class Stream>
+  template <class Stream, class Function>
   struct transformed_stream : public stream<
-    transformed_stream<Function, Stream>,
+    transformed_stream<Stream, Function>,
     typename Function::result_type
   >
   {
     typedef stream<
-      transformed_stream<Function, Stream>,
+      transformed_stream<Stream, Function>,
       typename Function::result_type
     > parent_type;
     typedef typename parent_type::value_type value_type;
 
-    transformed_stream(Function p, Stream s)
+    transformed_stream(Stream s, Function p)
     : mStream(s)
     , mFunction(p)
     {}
@@ -111,47 +111,72 @@ namespace jerome { namespace stream {
     }
   };
 
-  template <typename Value>
-  struct pipe_stream : public stream<
-    pipe_stream<Value>,
-    Value
+  template <class Stream, class Function>
+  struct morphing_stream : public stream<
+    morphing_stream<Stream, Function>,
+    typename Function::result_type
   >
   {
     typedef stream<
-      pipe_stream<Value>,
-      Value
+      morphing_stream<Stream, Function>,
+      typename Function::result_type
     > parent_type;
     typedef typename parent_type::value_type value_type;
 
-  private:
-    struct InputBase {
-      virtual ~InputBase() {}
-      virtual optional<value_type> get_next() = 0;
-    };
-
-    template <class Stream>
-    struct Input : public InputBase {
-      Stream mStream;
-      Input(Stream inStream)
-      : mStream(inStream)
-      {}
-
-      optional<value_type> get_next() override {
-        return mStream.next();
-      }
-    };
-
-    typedef std::unique_ptr<InputBase> input_type;
-
-  public:
-    template <class Stream>
-    void setInput(Stream&& inStream) {
-      mInput = input_type(new Stream(std::forward<Stream>(inStream)));
-    }
+    morphing_stream(Stream s, Function p)
+    : mStream(s)
+    , mFunction(p)
+    {}
   private:
     friend parent_type;
-    input_type mInput;
+    Function mFunction;
+    Stream mStream;
+    optional<value_type> get_next() {
+      return mFunction(mStream);
+    }
   };
+
+//  template <typename Value>
+//  struct pipe_stream : public stream<
+//    pipe_stream<Value>,
+//    Value
+//  >
+//  {
+//    typedef stream<
+//      pipe_stream<Value>,
+//      Value
+//    > parent_type;
+//    typedef typename parent_type::value_type value_type;
+//
+//  private:
+//    struct InputBase {
+//      virtual ~InputBase() {}
+//      virtual optional<value_type> get_next() = 0;
+//    };
+//
+//    template <class Stream>
+//    struct Input : public InputBase {
+//      Stream mStream;
+//      Input(Stream inStream)
+//      : mStream(inStream)
+//      {}
+//
+//      optional<value_type> get_next() override {
+//        return mStream.next();
+//      }
+//    };
+//
+//    typedef std::unique_ptr<InputBase> input_type;
+//
+//  public:
+//    template <class Stream>
+//    void setInput(Stream&& inStream) {
+//      mInput = input_type(new Stream(std::forward<Stream>(inStream)));
+//    }
+//  private:
+//    friend parent_type;
+//    input_type mInput;
+//  };
 
   namespace stream_detail {
     template< class T >
@@ -221,7 +246,7 @@ namespace jerome { namespace stream {
     {
       typedef typename std::remove_reference<Stream>::type Stream_t;
       return jerome::stream::filtered_stream<
-        Predicate, Stream_t>(std::forward<Stream_t>(r), f.val);
+        Stream_t, Predicate>(std::forward<Stream_t>(r), f.val);
     }
 
     template <class Stream, class Predicate, ASSERT_STREAM(Stream)>
@@ -231,7 +256,7 @@ namespace jerome { namespace stream {
     {
       typedef typename std::remove_reference<Stream>::type Stream_t;
       return jerome::stream::transformed_stream<
-        Predicate,Stream_t>(f.val, std::forward<Stream_t>(r));
+        Stream_t, decltype(functor)>(std::forward<Stream_t>(r), f.val);
     }
   }
 
