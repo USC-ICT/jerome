@@ -29,6 +29,7 @@
 //#include <boost/range/algorithm.hpp>
 //#pragma clang diagnostic pop
 
+#include <sstream>
 #include <jerome/ir/parsing.hpp>
 #include <jerome/ir/parsing/filter/tokenized.hpp>
 
@@ -55,21 +56,37 @@ static jerome::String test =
   u8"Hello the World! We went, we saw, we conquered. We'll overcome, willn't we? We're a groot. Привет 57!";
 
 template <typename Stream>
-void run(Stream s) {
+std::string run(Stream s) {
+  std::stringstream output;
   while (true) {
     auto x = s.next();
-    if (!x) break;
-    if (x->isEOS()) break;
-    if (x->isBOS()) continue;
-    std::cout << *x << std::endl;
+    if (!x) {
+      return "No EOS";
+    }
+    if (x->isEOS()) {
+      output << "END" << std::endl;
+      break;
+    }
+    if (x->isBOS()) {
+      output << "BEGIN" << std::endl;
+      continue;
+    }
+    output << *x << std::endl;
   }
+  return output.str();
+}
+
+- (void)doRun:(const std::string&)inString {
+  NSLog(@"%s", inString.c_str());
 }
 
 - (void)test02Tokenized
 {
-  run(test
+  [self doRun:
+   run(test
       | stream::tokenized
-      );
+      )
+   ];
 }
 
 //- (void)test01
@@ -81,66 +98,79 @@ void run(Stream s) {
 //
 - (void)test03Untokenized
 {
-  run(test
+  [self doRun:
+   run(test
       | stream::as_token
       | stream::lowercase
-      );
+       )
+   ];
 }
 
 - (void)test04Lowercased
 {
-  run(test
+  [self doRun:
+   run(test
       | stream::tokenized
       | stream::lowercase
-      );
+       )
+   ];
 }
 
 - (void)test05Alpha
 {
-  run(test
+  [self doRun:
+   run(test
       | stream::tokenized
       | stream::lowercase
       | stream::filter_alpha
-      );
+       )
+   ];
 }
 
 - (void)test06Contractions
 {
-  run(test
+  [self doRun:
+   run(test
       | stream::tokenized
       | stream::lowercase
       | stream::filter_alphanumeric
       | stream::expand_contractions
-      );
+       )
+   ];
 }
 
 
 - (void)test07IrregularVerbs
 {
-  run(test
+  [self doRun:
+   run(test
       | stream::tokenized
       | stream::lowercase
       | stream::filter_alphanumeric
       | stream::expand_contractions
       | stream::stem_irregular_verbs
-      );
+       )
+   ];
 }
 
 - (void)test08Kstem
 {
-  run(test
+  [self doRun:
+   run(test
       | stream::tokenized
       | stream::lowercase
       | stream::filter_alphanumeric
       | stream::expand_contractions
       | stream::stem_irregular_verbs
       | stream::kstem
-      );
+       )
+   ];
 }
 
 - (void)test09Stopwords
 {
-  run(test
+  [self doRun:
+   run(test
       | stream::tokenized
       | stream::lowercase
       | stream::filter_alphanumeric
@@ -148,12 +178,14 @@ void run(Stream s) {
       | stream::stem_irregular_verbs
       | stream::kstem
       | stream::remove_stopwords
-      );
+       )
+   ];
 }
 
 - (void)test10NGram
 {
-  run(test
+  [self doRun:
+   run(test
       | stream::tokenized
       | stream::lowercase
       | stream::filter_alphanumeric
@@ -162,22 +194,26 @@ void run(Stream s) {
       | stream::kstem
       | stream::remove_stopwords
       | stream::ngram
-      );
+       )
+   ];
 }
 
 - (void)test11Expression1
 {
-  run(test
+  [self doRun:
+   run(test
       | (stream::tokenized
          | stream::lowercase
          | stream::filter_alphanumeric
          )
-      );
+       )
+   ];
 }
 
 - (void)test11Expression2
 {
-  run(test
+  [self doRun:
+   run(test
       | (stream::tokenized
          | stream::lowercase
          | stream::filter_alphanumeric
@@ -187,7 +223,8 @@ void run(Stream s) {
          | stream::remove_stopwords
          | stream::ngram
          )
-      );
+       )
+   ];
 }
 
 @end
