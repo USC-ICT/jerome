@@ -34,15 +34,11 @@ namespace jerome { namespace stream {
       {
         typedef typename std::decay<Stream>::type Stream_t;
         typedef typename Stream_t::value_type value_type;
-        typedef typename Stream_t::result_type result_type;
         auto token = inStream.next();
-        if (!token) return token;
-        if (token->isEOS() || token->isBOS()) return token;
-        auto text = lowercased(token->text(), locale);
-        if (text == token->text()) return token;
-        auto result = optional<value_type>();
-        result.emplace(text, *token);
-        return result;
+        if (token.isEOS() || token.isBOS()) return token;
+        auto text = lowercased(token.text(), locale);
+        if (text == token.text()) return token;
+        return value_type(text, token);
       }
     };
 

@@ -39,10 +39,9 @@ namespace jerome { namespace stream {
       }
 
       typedef ir::BasicToken<String> value_type;
-      typedef optional<value_type> result_type;
 
       template <class Stream, ASSERT_STREAM(Stream)>
-      auto operator() (Stream& inStream) -> result_type
+      auto operator() (Stream& inStream) -> value_type
       {
         while (true) {
           if (mShouldSendEOS) {
@@ -52,18 +51,15 @@ namespace jerome { namespace stream {
           }
 
           auto token = inStream.next();
-          if (!token) {
-            return result_type();
-          }
 
-          if (token->isBOS()) {
+          if (token.isBOS()) {
             mTokens.clear();
             mShouldSendEOS = false;
             mTokens.push_back(value_type(value_type::ngramSeparator(), 0, 0));
             return value_type::bos();
           }
 
-          if (token->isEOS()) {
+          if (token.isEOS()) {
             if (mTokens.back().text() == value_type::ngramSeparator()) {
               mTokens.clear();
               return value_type::eos();
@@ -71,7 +67,7 @@ namespace jerome { namespace stream {
             mTokens.push_back(value_type(value_type::ngramSeparator(),
                                          mTokens.back().end(), 0));
           } else {
-            mTokens.push_back(*token);
+            mTokens.push_back(token);
           }
 
           if (mTokens.size() >= count) {

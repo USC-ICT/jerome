@@ -60,18 +60,15 @@ std::string run(Stream s) {
   std::stringstream output;
   while (true) {
     auto x = s.next();
-    if (!x) {
-      return "No EOS";
-    }
-    if (x->isEOS()) {
+    if (x.isEOS()) {
       output << "END" << std::endl;
       break;
     }
-    if (x->isBOS()) {
+    if (x.isBOS()) {
       output << "BEGIN" << std::endl;
       continue;
     }
-    output << *x << std::endl;
+    output << x << std::endl;
   }
   return output.str();
 }

@@ -32,19 +32,17 @@ namespace jerome {
       typedef stream<one_token_stream, Token> parent_type;
       one_token_stream(const jerome::String& inString, const Locale& inLocale)
       : mToken(inString, 0, (Token::size_type)inString.length())
-      , mHasToken(true)
+      , mCount(0)
       {}
     private:
       friend parent_type;
       Token mToken;
-      bool mHasToken;
-      optional<value_type> get_next() {
-        if (mHasToken) {
-          mHasToken = false;
-          return mToken;
-        } else {
-          return optional<value_type>();
-        }
+      int mCount;
+      value_type get_next() {
+        ++mCount;
+        if (mCount == 1) return value_type::bos();
+        if (mCount == 2) return mToken;
+        return value_type::eos();
       }
     };
 

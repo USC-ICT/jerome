@@ -36,16 +36,14 @@ namespace jerome { namespace stream {
       {}
 
       typedef ir::BasicToken<String> value_type;
-      typedef optional<value_type> result_type;
 
       template <class Stream, ASSERT_STREAM(Stream)>
-      auto operator() (Stream& inStream) -> result_type
+      auto operator() (Stream& inStream) -> value_type
       {
         auto token = inStream.next();
-        if (!token) return result_type();
-        if (token->isBOS()) return value_type::bos();
-        if (token->isEOS()) return value_type::eos();
-        value_type stringToken(*token);
+        if (token.isBOS()) return value_type::bos();
+        if (token.isEOS()) return value_type::eos();
+        value_type stringToken(token);
         auto iter = dictionary->find(stringToken.text());
         if (iter == dictionary->end()) return stringToken;
         return value_type(iter->second, stringToken);

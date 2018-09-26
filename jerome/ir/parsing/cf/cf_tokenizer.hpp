@@ -79,7 +79,7 @@ namespace jerome { namespace cf {
   private:
     friend parent_type;
     Tokenizer mTokenizer;
-    optional<value_type> get_next() {
+    value_type get_next() {
       return mTokenizer.nextToken<Token>();
     }
   };

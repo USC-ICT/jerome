@@ -44,8 +44,7 @@ namespace jerome { namespace stream {
   template <class Derived, typename Value>
   struct stream : public stream_base {
     typedef Value value_type;
-    typedef optional<value_type> result_type;
-    result_type next() {
+    value_type next() {
       return static_cast<Derived*>(this)->get_next();
     }
   };
@@ -57,7 +56,7 @@ namespace jerome { namespace stream {
     {
       while (true) {
         auto token = inStream.next();
-        if (!token || static_cast<const Derived*>(this)->operator()(*token))
+        if (static_cast<const Derived*>(this)->operator()(token))
           return token;
       }
     }
@@ -69,13 +68,12 @@ namespace jerome { namespace stream {
     Filter mFilter;
     Stream mStream;
   public:
-    typedef decltype(mFilter(mStream)) result_type;
-    typedef typename result_type::value_type value_type;
+    typedef decltype(mFilter(mStream)) value_type;
     filtered_stream(Stream s, Filter p)
     : mStream(s)
     , mFilter(p)
     {}
-    result_type next() {
+    value_type next() {
       return mFilter(mStream);
     }
   };

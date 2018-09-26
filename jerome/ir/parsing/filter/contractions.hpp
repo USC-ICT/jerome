@@ -32,27 +32,25 @@ namespace jerome { namespace stream {
 
     struct contractions_holder : public stream_filter {
       typedef ir::BasicToken<String> value_type;
-      typedef optional<value_type> result_type;
 
-      result_type mSavedToken;
+      value_type mSavedToken;
       bool mHasSavedToken;
 
       template <class Stream>
-      auto operator() (Stream& inStream) -> result_type
+      auto operator() (Stream& inStream) -> value_type
       {
         if (mHasSavedToken) {
           mHasSavedToken = false;
           return mSavedToken;
         }
         auto token = inStream.next();
-        if (!token) return result_type();
-        if (token->isBOS()) return value_type::bos();
-        if (token->isEOS()) return value_type::eos();
-        value_type stringToken(*token);
+        if (token.isBOS()) return value_type::bos();
+        if (token.isEOS()) return value_type::eos();
+        value_type stringToken(token);
         jerome::String suffix;
         if (expand_contractions(stringToken.text(), suffix)) {
           mHasSavedToken = true;
-          mSavedToken.emplace(suffix, stringToken);
+          mSavedToken = value_type(suffix, stringToken);
         }
         return stringToken;
       }
