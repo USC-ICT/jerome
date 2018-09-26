@@ -31,7 +31,7 @@
 namespace jerome { namespace stream {
   namespace stream_detail {
     template <typename S>
-    struct not_in_set_holder : public stream_filter {
+    struct not_in_set_holder : public conditional_filter<not_in_set_holder<S>> {
       typedef S element_type;
       typedef shared_ptr<::std::unordered_set<element_type>> set_type;
       const set_type set;
@@ -42,15 +42,16 @@ namespace jerome { namespace stream {
         return not_in_set_holder(inSet);
       }
 
+      using conditional_filter<not_in_set_holder<S>>::operator ();
       bool operator() (const ir::BasicToken<element_type>& inToken) const {
         if (inToken.isEOS() || inToken.isBOS()) return true;
-        return set->find(inToken.text()) == set->end();
+        return set->find(S(inToken.text())) == set->end();
       }
     };
 
     shared_ptr<::std::unordered_set<String>> defaultStopwords();
   }
-  const auto not_stopword =
+  const auto remove_stopwords =
   stream_detail::not_in_set_holder<String>(stream_detail::defaultStopwords());
 }}
 

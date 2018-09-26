@@ -23,36 +23,27 @@
 #ifndef __jerome_ir_parsing_filter_tokenized_hpp
 #define __jerome_ir_parsing_filter_tokenized_hpp
 
-namespace jerome {
-  namespace stream {
-    namespace stream_detail {
-      struct tokenized_locale_holder : public stream_filter  {
-        const Locale locale;
-        tokenized_locale_holder(const Locale& inLocale = Locale())
-        : locale(inLocale)
-        {}
-        tokenized_locale_holder operator() (const Locale& inLocale) const {
-          return tokenized_locale_holder(inLocale);
-        }
-      };
+namespace jerome { namespace stream {
+  namespace stream_detail {
+    struct tokenized_locale_holder : public locale_based_filter<tokenized_locale_holder>  {
+    };
 
-      inline jerome::tokenized_stream
-      operator|(const jerome::String& string,
-                const tokenized_locale_holder& h)
-      {
-        return tokenized_stream(string, h.locale);
-      }
-
-      inline jerome::tokenized_stream
-      operator|(jerome::String& string,
-                const tokenized_locale_holder& h)
-      {
-        return tokenized_stream(string, h.locale);
-      }
+    inline jerome::tokenized_stream
+    operator|(const jerome::String& string,
+              const tokenized_locale_holder& h)
+    {
+      return tokenized_stream(string, h.locale);
     }
 
-    const auto tokenized = stream_detail::tokenized_locale_holder();
+    inline jerome::tokenized_stream
+    operator|(jerome::String& string,
+              const tokenized_locale_holder& h)
+    {
+      return tokenized_stream(string, h.locale);
+    }
   }
-}
+
+  const auto tokenized = stream_detail::tokenized_locale_holder();
+}}
 
 #endif // defined __jerome_ir_parsing_filter_tokenized_hpp

@@ -31,14 +31,22 @@
 namespace jerome { namespace stream {
   namespace stream_detail {
     struct kstem_holder : public stream_filter {
-      typedef ir::BasicToken<String> result_type;
-      result_type operator() (const result_type& inToken) const {
-        if (inToken.isEOS() || inToken.isBOS()) return inToken;
-        auto length = inToken.text().length();
+      typedef ir::BasicToken<String> value_type;
+      typedef optional<value_type> result_type;
+
+      template <class Stream, ASSERT_STREAM(Stream)>
+      auto operator() (Stream& inStream) -> result_type
+      {
+        auto token = inStream.next();
+        if (!token) return result_type();
+        if (token->isBOS()) return value_type::bos();
+        if (token->isEOS()) return value_type::eos();
+        value_type stringToken(*token);
+        auto length = stringToken.text().length();
         ::std::unique_ptr<char[]>  thestem(new char[2*length]);
-        stem(inToken.text().c_str(), thestem.get());
-        if (!strcmp(inToken.text().c_str(), thestem.get())) return inToken;
-        return result_type(String(thestem.get()), inToken);
+        stem(stringToken.text().c_str(), thestem.get());
+        if (!strcmp(stringToken.text().c_str(), thestem.get())) return stringToken;
+        return value_type(String(thestem.get()), stringToken);
       }
     private:
       static void stem(const char* inString, char* outStem);

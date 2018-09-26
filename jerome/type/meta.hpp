@@ -1,7 +1,7 @@
 //
-//  parsing_fwd.hpp
+//  meta.hpp
 //
-//  Created by Anton Leuski on 9/20/18.
+//  Created by Anton Leuski on 9/25/18.
 //  Copyright © 2018 Anton Leuski & ICT/USC. All rights reserved.
 //
 //  This file is part of Jerome.
@@ -20,32 +20,22 @@
 //  along with Jerome.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef parsing_fwd_hpp
-#define parsing_fwd_hpp
+#ifndef meta_hpp
+#define meta_hpp
 
-#include <jerome/types.hpp>
-#include <jerome/type/meta.hpp>
+#include <type_traits>
 
-#ifndef JEROME_PARSING_CF
-#define JEROME_PARSING_CF  1
-#endif
+// stuff that does not exist in C++11
 
-#ifndef JEROME_PARSING_ICU
-#define JEROME_PARSING_ICU 2
-#endif
+namespace jerome {
+  template <bool B, class T = void>
+  using enable_if_t = typename ::std::enable_if<B,T>::type;
 
-#ifndef JEROME_PARSING_STD
-#define JEROME_PARSING_STD 3
-#endif
+  template< class T >
+  using decay_t = typename ::std::decay<T>::type;
 
-#if !defined(JEROME_PARSING)
-# if defined(JEROME_IOS)
-#   define JEROME_PARSING JEROME_PARSING_CF
-# elif defined(JEROME_ANDROID)
-#   define JEROME_PARSING JEROME_PARSING_STD
-# else
-#   define JEROME_PARSING JEROME_PARSING_ICU
-# endif
-#endif
+  template< class Base, class Derived >
+  constexpr bool is_base_of_v = ::std::is_base_of<Base, Derived>::value;
+}
 
-#endif // defined parsing_fwd_hpp
+#endif // defined meta_hpp

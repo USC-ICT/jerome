@@ -60,6 +60,7 @@ void run(Stream s) {
     auto x = s.next();
     if (!x) break;
     if (x->isEOS()) break;
+    if (x->isBOS()) continue;
     std::cout << *x << std::endl;
   }
 }
@@ -82,7 +83,7 @@ void run(Stream s) {
 {
   run(test
       | stream::as_token
-      | stream::lowercased
+      | stream::lowercase
       );
 }
 
@@ -90,7 +91,7 @@ void run(Stream s) {
 {
   run(test
       | stream::tokenized
-      | stream::lowercased
+      | stream::lowercase
       );
 }
 
@@ -98,8 +99,8 @@ void run(Stream s) {
 {
   run(test
       | stream::tokenized
-      | stream::lowercased
-      | stream::filtered(stream::is_alpha)
+      | stream::lowercase
+      | stream::filter_alpha
       );
 }
 
@@ -107,9 +108,9 @@ void run(Stream s) {
 {
   run(test
       | stream::tokenized
-      | stream::lowercased
-      | stream::filtered(stream::is_alphanumeric)
-      | stream::expanded_contractions
+      | stream::lowercase
+      | stream::filter_alphanumeric
+      | stream::expand_contractions
       );
 }
 
@@ -118,10 +119,10 @@ void run(Stream s) {
 {
   run(test
       | stream::tokenized
-      | stream::lowercased
-      | stream::filtered(stream::is_alphanumeric)
-      | stream::expanded_contractions
-      | stream::transformed(stream::stem_irregular_verbs)
+      | stream::lowercase
+      | stream::filter_alphanumeric
+      | stream::expand_contractions
+      | stream::stem_irregular_verbs
       );
 }
 
@@ -129,11 +130,11 @@ void run(Stream s) {
 {
   run(test
       | stream::tokenized
-      | stream::lowercased
-      | stream::filtered(stream::is_alphanumeric)
-      | stream::expanded_contractions
-      | stream::transformed(stream::stem_irregular_verbs)
-      | stream::transformed(stream::kstem)
+      | stream::lowercase
+      | stream::filter_alphanumeric
+      | stream::expand_contractions
+      | stream::stem_irregular_verbs
+      | stream::kstem
       );
 }
 
@@ -141,12 +142,12 @@ void run(Stream s) {
 {
   run(test
       | stream::tokenized
-      | stream::lowercased
-      | stream::filtered(stream::is_alphanumeric)
-      | stream::expanded_contractions
-      | stream::transformed(stream::stem_irregular_verbs)
-      | stream::transformed(stream::kstem)
-      | stream::filtered(stream::not_stopword)
+      | stream::lowercase
+      | stream::filter_alphanumeric
+      | stream::expand_contractions
+      | stream::stem_irregular_verbs
+      | stream::kstem
+      | stream::remove_stopwords
       );
 }
 
@@ -154,12 +155,12 @@ void run(Stream s) {
 {
   run(test
       | stream::tokenized
-      | stream::lowercased
-      | stream::filtered(stream::is_alphanumeric)
-      | stream::expanded_contractions
-      | stream::transformed(stream::stem_irregular_verbs)
-      | stream::transformed(stream::kstem)
-      | stream::filtered(stream::not_stopword)
+      | stream::lowercase
+      | stream::filter_alphanumeric
+      | stream::expand_contractions
+      | stream::stem_irregular_verbs
+      | stream::kstem
+      | stream::remove_stopwords
       | stream::ngram
       );
 }
@@ -168,8 +169,8 @@ void run(Stream s) {
 {
   run(test
       | (stream::tokenized
-         | stream::lowercased
-         | stream::filtered(stream::is_alphanumeric)
+         | stream::lowercase
+         | stream::filter_alphanumeric
          )
       );
 }
@@ -178,12 +179,12 @@ void run(Stream s) {
 {
   run(test
       | (stream::tokenized
-         | stream::lowercased
-         | stream::filtered(stream::is_alphanumeric)
-         | stream::expanded_contractions
-         | stream::transformed(stream::stem_irregular_verbs)
-         | stream::transformed(stream::kstem)
-         | stream::filtered(stream::not_stopword)
+         | stream::lowercase
+         | stream::filter_alphanumeric
+         | stream::expand_contractions
+         | stream::stem_irregular_verbs
+         | stream::kstem
+         | stream::remove_stopwords
          | stream::ngram
          )
       );

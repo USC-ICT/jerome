@@ -25,55 +25,31 @@
 
 #include <jerome/ir/parsing/parsing_fwd.hpp>
 
-namespace jerome {
-  namespace filter_detail {
-    struct lowercased_holder : public stream::stream_filter {
-      const Locale locale;
+namespace jerome { namespace stream {
+  namespace stream_detail {
+    struct lowercased_holder : public locale_based_filter<lowercased_holder> {
 
-      lowercased_holder(const Locale& inLocale = Locale())
-      : locale(inLocale)
-      {}
-
-      lowercased_holder operator() (const Locale& inLocale) const {
-        return lowercased_holder(inLocale);
-      }
-
-      template <class T>
-      auto operator() (const ir::BasicToken<T>& inToken) const {
-        if (inToken.isEOS() || inToken.isBOS()) return inToken;
-        auto text = lowercased(inToken.text(), locale);
-        if (text == inToken.text()) return inToken;
-        return ir::BasicToken<T>(text, inToken);
-      }
-
-      template <class Stream>
-      auto stream(Stream&& inStream) const
+      template <class Stream, ASSERT_STREAM(Stream)>
+      auto operator() (Stream& inStream)
       {
-        typedef typename std::remove_reference<Stream>::type Stream_t;
-        return jerome::stream::transformed_stream<
-        Stream_t,
-        lowercased_holder,
-        typename Stream_t::value_type
-        >(::std::forward<Stream_t>(inStream), *this);
+        typedef typename std::decay<Stream>::type Stream_t;
+        typedef typename Stream_t::value_type value_type;
+        typedef typename Stream_t::result_type result_type;
+        auto token = inStream.next();
+        if (!token) return token;
+        if (token->isEOS() || token->isBOS()) return token;
+        auto text = lowercased(token->text(), locale);
+        if (text == token->text()) return token;
+        auto result = optional<value_type>();
+        result.emplace(text, *token);
+        return result;
       }
     };
 
-    template <class Stream, ASSERT_STREAM(Stream)>
-    inline auto
-    operator|(Stream&& r,
-              const lowercased_holder& f)
-    {
-      typedef typename std::remove_reference<Stream>::type Stream_t;
-      return f.stream(::std::forward<Stream_t>(r));
-    }
   }
 
-  namespace stream {
-    const filter_detail::lowercased_holder lowercased =
-    filter_detail::lowercased_holder();
-  }
-
-}
+  const auto lowercase = stream_detail::lowercased_holder();
+}}
 
 
 #endif // defined __jerome_ir_parsing_filter_lowercased_hpp

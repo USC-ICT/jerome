@@ -26,62 +26,39 @@
 #include <jerome/types.hpp>
 #include <jerome/ir/parsing.hpp>
 
-namespace jerome {
-  namespace stream {
-    namespace stream_detail {
-      struct contractions_holder : public stream_filter {
-      };
+namespace jerome { namespace stream {
+  namespace stream_detail {
+    bool expand_contractions(String& root, String& suffix);
 
-      bool expand_contractions(String& root, String& suffix);
+    struct contractions_holder : public stream_filter {
+      typedef ir::BasicToken<String> value_type;
+      typedef optional<value_type> result_type;
+
+      result_type mSavedToken;
+      bool mHasSavedToken;
 
       template <class Stream>
-      struct expand_contractions_stream : public stream<
-        expand_contractions_stream<Stream>,
-        ir::BasicToken<String>
-      >
+      auto operator() (Stream& inStream) -> result_type
       {
-        typedef stream<
-        expand_contractions_stream<Stream>,
-        ir::BasicToken<String>
-        > parent_type;
-        typedef typename parent_type::value_type value_type;
-
-        expand_contractions_stream(Stream s)
-        : mStream(s)
-        {}
-      private:
-        friend parent_type;
-        value_type mSavedToken;
-        bool mHasSavedToken;
-        Stream mStream;
-        optional<value_type> get_next() {
-          if (mHasSavedToken) {
-            mHasSavedToken = false;
-            return mSavedToken;
-          }
-          auto x = mStream.next();
-          if (!x) return optional<value_type>();
-          value_type token(*x);
-          jerome::String suffix;
-          if (expand_contractions(token.text(), suffix)) {
-            mHasSavedToken = true;
-            mSavedToken = value_type(suffix, token);
-          }
-          return token;
+        if (mHasSavedToken) {
+          mHasSavedToken = false;
+          return mSavedToken;
         }
-      };
-
-      template <class Stream, ASSERT_STREAM(Stream)>
-      inline auto
-      operator|(Stream&& r,
-                contractions_holder)
-      {
-        return expand_contractions_stream<typename std::remove_const<Stream>::type>(r);
+        auto token = inStream.next();
+        if (!token) return result_type();
+        if (token->isBOS()) return value_type::bos();
+        if (token->isEOS()) return value_type::eos();
+        value_type stringToken(*token);
+        jerome::String suffix;
+        if (expand_contractions(stringToken.text(), suffix)) {
+          mHasSavedToken = true;
+          mSavedToken.emplace(suffix, stringToken);
+        }
+        return stringToken;
       }
-    }
-    const auto expanded_contractions = stream_detail::contractions_holder();
+    };
   }
-
-}
+  const auto expand_contractions = stream_detail::contractions_holder();
+}}
 
 #endif // defined __jerome_ir_parsing_filter_contractions_hpp

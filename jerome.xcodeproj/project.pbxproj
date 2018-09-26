@@ -416,6 +416,7 @@
 		622F89CF1512900600726296 /* model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = model.cpp; sourceTree = "<group>"; };
 		622F89D01512900600726296 /* model.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = model.hpp; sourceTree = "<group>"; };
 		622F89D61512921500726296 /* analysis.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = analysis.hpp; sourceTree = "<group>"; };
+		624436C5215B2BE600BD8856 /* meta.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = meta.hpp; sourceTree = "<group>"; };
 		62457D8814410A150084507E /* types.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = types.cpp; sourceTree = "<group>"; };
 		62461EDE1D7DF83C00F8E4F4 /* Command.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Command.cpp; sourceTree = "<group>"; };
 		62461EDF1D7DF83C00F8E4F4 /* Command.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Command.hpp; sourceTree = "<group>"; };
@@ -806,6 +807,7 @@
 				62D19FCB214CCB0000E8C954 /* sparse_vector.hpp */,
 				62AC3BBC1BBC94C80067C540 /* string.cpp */,
 				620A3F06197E4DF9000400E3 /* string.hpp */,
+				624436C5215B2BE600BD8856 /* meta.hpp */,
 			);
 			path = type;
 			sourceTree = "<group>";

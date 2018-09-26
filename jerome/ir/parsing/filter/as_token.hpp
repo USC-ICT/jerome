@@ -49,14 +49,7 @@ namespace jerome {
     };
 
     namespace stream_detail {
-      struct one_token_locale_holder : public stream_filter {
-        const Locale locale;
-        one_token_locale_holder(const Locale& inLocale = Locale())
-        : locale(inLocale)
-        {}
-        one_token_locale_holder operator() (const Locale& inLocale) const {
-          return one_token_locale_holder(inLocale);
-        }
+      struct one_token_locale_holder : public locale_based_filter<one_token_locale_holder> {
       };
 
       inline auto

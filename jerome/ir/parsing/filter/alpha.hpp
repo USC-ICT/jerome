@@ -27,15 +27,11 @@
 
 namespace jerome { namespace stream {
   namespace stream_detail {
-    struct is_alpha_holder : public stream_filter {
-      const Locale locale;
-      is_alpha_holder(const Locale& inLocale = Locale())
-      : locale(inLocale)
-      {}
-      is_alpha_holder operator() (const Locale& inLocale) const {
-        return is_alpha_holder(inLocale);
-      }
-
+    struct is_alpha_holder :
+      public locale_based_filter<is_alpha_holder>,
+      public conditional_filter<is_alpha_holder>
+    {
+      using conditional_filter<is_alpha_holder>::operator ();
       template <typename T>
       bool operator() (const ir::BasicToken<T>& inToken) const {
         if (inToken.isEOS() || inToken.isBOS()) return true;
@@ -43,20 +39,16 @@ namespace jerome { namespace stream {
       }
     };
   }
-  const auto is_alpha = stream_detail::is_alpha_holder();
+  const auto filter_alpha = stream_detail::is_alpha_holder();
 }}
 
 namespace jerome { namespace stream {
   namespace stream_detail {
-    struct is_alphanumeric_holder : public stream_filter {
-      const Locale locale;
-      is_alphanumeric_holder(const Locale& inLocale = Locale())
-      : locale(inLocale)
-      {}
-      is_alphanumeric_holder operator() (const Locale& inLocale) const {
-        return is_alphanumeric_holder(inLocale);
-      }
-
+    struct is_alphanumeric_holder :
+      public locale_based_filter<is_alphanumeric_holder>,
+      public conditional_filter<is_alphanumeric_holder>
+    {
+      using conditional_filter<is_alphanumeric_holder>::operator ();
       template <typename T>
       bool operator() (const ir::BasicToken<T>& inToken) const {
         if (inToken.isEOS() || inToken.isBOS()) return true;
@@ -64,7 +56,7 @@ namespace jerome { namespace stream {
       }
     };
   }
-  const auto is_alphanumeric = stream_detail::is_alphanumeric_holder();
+  const auto filter_alphanumeric = stream_detail::is_alphanumeric_holder();
 }}
 
 #endif // defined __jerome_ir_parsing_filter_alpha_hpp

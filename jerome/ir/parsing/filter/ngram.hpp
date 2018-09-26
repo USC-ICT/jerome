@@ -26,90 +26,73 @@
 #include <jerome/types.hpp>
 #include <jerome/ir/parsing/token.hpp>
 
-namespace jerome {
-  namespace stream {
-    namespace stream_detail {
-      struct ngram_holder : public stream_filter {
-        const unsigned count;
-        explicit ngram_holder(unsigned inCount = 2)
-        : count(inCount)
-        {}
-        ngram_holder operator() (unsigned inCount) const {
-          return ngram_holder(inCount);
-        }
-      };
+namespace jerome { namespace stream {
+  namespace stream_detail {
+    struct ngram_holder : public stream_filter {
+      const unsigned count;
+      explicit ngram_holder(unsigned inCount = 2)
+      : count(inCount)
+      , mShouldSendEOS(false)
+      {}
+      ngram_holder operator() (unsigned inCount) const {
+        return ngram_holder(inCount);
+      }
 
-      //bool expand_contractions(String& root, String& suffix);
-
-      template <class Stream>
-      struct ngram_stream : public stream<
-        ngram_stream<Stream>,
-        ir::BasicToken<String>
-      >
-      {
-        typedef stream<
-          ngram_stream<Stream>,
-          ir::BasicToken<String>
-        > parent_type;
-        typedef typename parent_type::value_type value_type;
-
-        ngram_stream(Stream s, unsigned inCount)
-        : mStream(s)
-        , mCount(inCount)
-        , mIndex(0)
-        {
-          mTokens.push_back(value_type(value_type::ngramSeparator(), 0, 0));
-        }
-      private:
-        friend parent_type;
-        typedef ::std::list<value_type>  Tokens;
-        unsigned mCount;
-        Tokens mTokens;
-        int32_t mIndex;
-        Stream mStream;
-        optional<value_type> get_next() {
-          static unsigned kSize      = 2;
-
-          while (mIndex <= 0) {
-            auto result = mStream.next();
-            if (!result) {
-              if (mTokens.back().text() == value_type::ngramSeparator())
-                return optional<value_type>();
-              mTokens.push_back(value_type(value_type::ngramSeparator(),
-                                           mTokens.back().end(), 0));
-            } else {
-              mTokens.push_back(*result);
-            }
-            if (mTokens.size() > mCount) {
-              mTokens.pop_front();
-            }
-            if (mTokens.size() < kSize) {
-              auto ioToken = value_type("", INT_MAX);
-              for(const auto& t : mTokens) ioToken += t;
-              return ioToken;
-            }
-            mIndex  = (int32_t)mTokens.size() - kSize + 1;
-          }
-          --mIndex;
-          Tokens  tmp;
-          auto  j = mTokens.begin();
-          for(int32_t i = 0; i < mIndex; ++i, ++j);
-          auto ioToken = *j;
-          ioToken += mTokens.back();
-          return ioToken;
-        }
-      };
+      typedef ir::BasicToken<String> value_type;
+      typedef optional<value_type> result_type;
 
       template <class Stream, ASSERT_STREAM(Stream)>
-      inline auto
-      operator|(Stream&& r,
-                const ngram_holder& f)
+      auto operator() (Stream& inStream) -> result_type
       {
-        typedef typename std::remove_reference<Stream>::type Stream_t;
-        return ngram_stream<Stream_t>(::std::forward<Stream_t>(r), f.count);
+        while (true) {
+          if (mShouldSendEOS) {
+            mShouldSendEOS = false;
+            mTokens.clear();
+            return value_type::eos();
+          }
+
+          auto token = inStream.next();
+          if (!token) {
+            return result_type();
+          }
+
+          if (token->isBOS()) {
+            mTokens.clear();
+            mShouldSendEOS = false;
+            mTokens.push_back(value_type(value_type::ngramSeparator(), 0, 0));
+            return value_type::bos();
+          }
+
+          if (token->isEOS()) {
+            if (mTokens.back().text() == value_type::ngramSeparator()) {
+              mTokens.clear();
+              return value_type::eos();
+            }
+            mTokens.push_back(value_type(value_type::ngramSeparator(),
+                                         mTokens.back().end(), 0));
+          } else {
+            mTokens.push_back(*token);
+          }
+
+          if (mTokens.size() >= count) {
+            break;
+          }
+        }
+
+        auto newToken = mTokens.front();
+        mTokens.pop_front();
+        for(const auto& t : mTokens) {
+          newToken += t;
+        }
+        return newToken;
       }
-    }
-    const auto ngram = stream_detail::ngram_holder();
+    private:
+      typedef ::std::list<value_type>  token_queue_type;
+      token_queue_type mTokens;
+      bool mShouldSendEOS;
+    };
+
   }
-}
+  const auto ngram = stream_detail::ngram_holder();
+}}
 #endif // defined __jerome_ir_parsing_filter_ngram_hpp
