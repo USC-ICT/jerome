@@ -77,13 +77,17 @@ std::string run(Stream s) {
   NSLog(@"%s", inString.c_str());
 }
 
+#define MY_TEST(x) \
+std::stringstream output; \
+stream::echo(output) \
+x << test; \
+NSLog(@"%s", output.str().c_str())
+
 - (void)test02Tokenized
 {
-  [self doRun:
-   run(test
-      | stream::tokenized
-      )
-   ];
+  MY_TEST(
+          << stream::tokenized
+          );
 }
 
 //- (void)test01
@@ -95,133 +99,117 @@ std::string run(Stream s) {
 //
 - (void)test03Untokenized
 {
-  [self doRun:
-   run(test
-      | stream::as_token
-      | stream::lowercase
-       )
-   ];
+  MY_TEST(
+          << stream::lowercase
+          << stream::as_token
+          );
 }
 
 - (void)test04Lowercased
 {
-  [self doRun:
-   run(test
-      | stream::tokenized
-      | stream::lowercase
-       )
-   ];
+  MY_TEST(
+          << stream::lowercase
+          << stream::tokenized
+          );
 }
 
 - (void)test05Alpha
 {
-  [self doRun:
-   run(test
-      | stream::tokenized
-      | stream::lowercase
-      | stream::filter_alpha
-       )
-   ];
+  MY_TEST(
+          << stream::filter_alpha
+          << stream::lowercase
+          << stream::tokenized
+          );
 }
 
 - (void)test06Contractions
 {
-  [self doRun:
-   run(test
-      | stream::tokenized
-      | stream::lowercase
-      | stream::filter_alphanumeric
-      | stream::expand_contractions
-       )
-   ];
+  MY_TEST(
+          << stream::expand_contractions
+          << stream::filter_alphanumeric
+          << stream::lowercase
+          << stream::tokenized
+          );
 }
 
 
 - (void)test07IrregularVerbs
 {
-  [self doRun:
-   run(test
-      | stream::tokenized
-      | stream::lowercase
-      | stream::filter_alphanumeric
-      | stream::expand_contractions
-      | stream::stem_irregular_verbs
-       )
-   ];
+  MY_TEST(
+          << stream::stem_irregular_verbs
+          << stream::expand_contractions
+          << stream::filter_alphanumeric
+          << stream::lowercase
+          << stream::tokenized
+          );
 }
 
 - (void)test08Kstem
 {
-  [self doRun:
-   run(test
-      | stream::tokenized
-      | stream::lowercase
-      | stream::filter_alphanumeric
-      | stream::expand_contractions
-      | stream::stem_irregular_verbs
-      | stream::kstem
-       )
-   ];
+  MY_TEST(
+          << stream::kstem
+          << stream::stem_irregular_verbs
+          << stream::expand_contractions
+          << stream::filter_alphanumeric
+          << stream::lowercase
+          << stream::tokenized
+          );
 }
 
 - (void)test09Stopwords
 {
-  [self doRun:
-   run(test
-      | stream::tokenized
-      | stream::lowercase
-      | stream::filter_alphanumeric
-      | stream::expand_contractions
-      | stream::stem_irregular_verbs
-      | stream::kstem
-      | stream::remove_stopwords
-       )
-   ];
+  MY_TEST(
+          << stream::remove_stopwords
+          << stream::kstem
+          << stream::stem_irregular_verbs
+          << stream::expand_contractions
+          << stream::filter_alphanumeric
+          << stream::lowercase
+          << stream::tokenized
+          );
 }
 
 - (void)test10NGram
 {
-  [self doRun:
-   run(test
-      | stream::tokenized
-      | stream::lowercase
-      | stream::filter_alphanumeric
-      | stream::expand_contractions
-      | stream::stem_irregular_verbs
-      | stream::kstem
-      | stream::remove_stopwords
-      | stream::ngram
-       )
-   ];
+  MY_TEST(
+          << stream::ngram
+          << stream::remove_stopwords
+          << stream::kstem
+          << stream::stem_irregular_verbs
+          << stream::expand_contractions
+          << stream::filter_alphanumeric
+          << stream::lowercase
+          << stream::tokenized
+          );
 }
 
 - (void)test11Expression1
 {
-  [self doRun:
-   run(test
-      | (stream::tokenized
-         | stream::lowercase
-         | stream::filter_alphanumeric
-         )
-       )
-   ];
+  auto var = stream::filter_alphanumeric
+  << stream::lowercase
+  << stream::tokenized
+  ;
+
+  MY_TEST(
+          << var
+          );
 }
 
 - (void)test11Expression2
 {
-  [self doRun:
-   run(test
-      | (stream::tokenized
-         | stream::lowercase
-         | stream::filter_alphanumeric
-         | stream::expand_contractions
-         | stream::stem_irregular_verbs
-         | stream::kstem
-         | stream::remove_stopwords
-         | stream::ngram
-         )
-       )
-   ];
+  auto var = stream::ngram
+  << stream::remove_stopwords
+  << stream::kstem
+  << stream::stem_irregular_verbs
+  << stream::expand_contractions
+  << stream::filter_alphanumeric
+  << stream::lowercase
+  << stream::tokenized
+  ;
+
+  MY_TEST(
+          << var
+          );
 }
 
 @end

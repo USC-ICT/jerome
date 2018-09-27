@@ -25,16 +25,25 @@
 #if JEROME_PARSING == JEROME_PARSING_CF
 
 namespace jerome { namespace cf {
-  String::String(const jerome::String& inString)
-  : parent_type(CFStringCreateWithCString(kCFAllocatorDefault,
-                                                       inString.c_str(),
-                                                       kCFStringEncodingUTF8))
+  String::String(const char* inCString, bool inDoCopy)
+  : String((const uint8_t*)inCString, strlen(inCString), inDoCopy)
   {}
 
-  String::String(const char* inBytes, size_type inCount)
-  : parent_type(CFStringCreateWithBytes(kCFAllocatorDefault,
-                                                     (const uint8_t*)inBytes, inCount,
-                                                     kCFStringEncodingUTF8, false))
+  String::String(const jerome::String& inString)
+  : String(inString.c_str(), true)
+  {}
+
+  String::String(const uint8_t* inBytes, size_type inCount, bool inDoCopy)
+  : parent_type(inDoCopy
+                ? CFStringCreateWithBytes(kCFAllocatorDefault,
+                                          inBytes, inCount,
+                                          kCFStringEncodingUTF8, false)
+                : CFStringCreateWithBytesNoCopy(kCFAllocatorDefault,
+                                                inBytes, inCount,
+                                                kCFStringEncodingUTF8,
+                                                false,
+                                                kCFAllocatorNull)
+                )
   {}
 
   String::operator jerome::String () const {

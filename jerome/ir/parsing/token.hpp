@@ -101,23 +101,6 @@ namespace jerome {
       : parent_type(inOffset, inLength, inType)
       , mText(inText)
       {}
-			
-			BasicToken(const String::value_type* inText,
-                 size_type inOffset,
-                 size_type inLength,
-                 uint32_t inType)
-      : parent_type(inOffset, inLength, inType)
-			, mText(inText+inOffset, inLength)
-      {}
-			
-			BasicToken(const String::value_type* inText,
-                 size_type inTextLength,
-                 size_type inOffset,
-                 size_type inLength,
-                 uint32_t inType)
-      : parent_type(inOffset, inLength, inType)
-      ,  mText(inText, inTextLength)
-      {}
 
 			const value_type&	text() 		const { return mText; }
 			value_type&			text()		{ return mText; }
@@ -155,6 +138,12 @@ namespace jerome {
 
     template <typename T>
     inline std::ostream& operator << (std::ostream& outs, const BasicToken<T>& o) {
+      if (o.isBOS()) {
+        return outs << "{BEGIN}";
+      }
+      if (o.isEOS()) {
+        return outs << "{END}";
+      }
       return outs << "{"
         << "\"" << o.text() << "\", "
         << "(" << o.type() << ")"

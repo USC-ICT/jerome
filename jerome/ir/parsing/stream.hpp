@@ -47,6 +47,12 @@ namespace jerome { namespace stream {
     value_type next() {
       return static_cast<Derived*>(this)->get_next();
     }
+    void drain() {
+      while (true) {
+        auto token = next();
+        if (token.isEOS()) break;
+      }
+    }
   };
 
   template <typename Derived>
@@ -76,6 +82,12 @@ namespace jerome { namespace stream {
     value_type next() {
       return mFilter(mStream);
     }
+    void drain() {
+      while (true) {
+        auto token = next();
+        if (token.isEOS()) break;
+      }
+    }
   };
 
   namespace stream_detail {
@@ -88,14 +100,38 @@ namespace jerome { namespace stream {
         return Derived(inLocale);
       }
     };
+
+    template <typename OutpuStream>
+    struct echo_holder : public stream_filter {
+      OutpuStream& ios;
+      echo_holder(OutpuStream& inStream)
+      : ios(inStream)
+      {}
+
+      template <typename OtherOutpuStream>
+      inline auto
+      operator () (OtherOutpuStream& os) const {
+        return echo_holder<OtherOutpuStream>(os);
+      }
+
+      template <class Stream, ASSERT_STREAM(Stream)>
+      auto operator() (Stream& inStream)
+      {
+        auto token = inStream.next();
+        ios << token << std::endl;
+        return token;
+      }
+    };
   }
+
+  const auto echo = stream_detail::echo_holder<decltype(std::cout)>(std::cout);
 }}
 
 namespace jerome {
 
   template <class Stream, typename Filter, ASSERT_STREAM(Stream), ASSERT_FILTER(Filter)>
   inline auto
-  operator|(Stream&& s, const Filter& f)
+  operator << (const Filter& f, Stream&& s)
   {
     typedef decay_t<Stream> Stream_t;
     return stream::filtered_stream<Stream_t, Filter
@@ -103,36 +139,36 @@ namespace jerome {
   }
 
   template <class Stream, ASSERT_STREAM(Stream)>
-  inline auto operator|(Stream&& r, std::tuple<>&& tuple) {
-    typedef typename std::remove_reference<Stream>::type Stream_t;
-    return std::forward<Stream_t>(r);
+  inline auto operator << (std::tuple<>&& tuple, Stream&& r) {
+//    typedef decay_t<Stream> Stream_t;
+//    return std::forward<Stream_t>(r);
+    r.drain();
   }
 
-  template <class Stream, class ...Args, ASSERT_STREAM(Stream)>
-  inline auto operator|(Stream&& r, std::tuple<Args...> tuple) {
-    typedef typename std::remove_reference<Stream>::type Stream_t;
-    return (std::forward<Stream_t>(r) | head(tuple)) | tail(tuple);
+  template <class Stream, class Arg, class ...Args, ASSERT_STREAM(Stream), ASSERT_FILTER(Arg)>
+  inline auto operator << (std::tuple<Arg, Args...> tuple, Stream&& r) {
+    typedef decay_t<Stream> Stream_t;
+    return tail(tuple) << (head(tuple) << std::forward<Stream_t>(r));
   }
 
   template <class ...Args>
-  inline auto operator|(const String& s, std::tuple<Args...> tuple) {
-    return (s | head(tuple)) | tail(tuple);
+  inline auto operator << (std::tuple<Args...> tuple, const String& s) {
+    return tail(tuple) << (head(tuple) << s);
   }
 
   template <class A, class ...Args, ASSERT_FILTER(A)>
-  inline auto operator|(A r, std::tuple<Args...> tuple) {
-    typedef typename std::remove_reference<A>::type A_t;
-    return std::tuple_cat(std::make_tuple(r), tuple);
-  }
-
-  template <class A, class ...Args, ASSERT_FILTER(A)>
-  inline auto operator|(std::tuple<Args...> tuple, A r) {
+  inline auto operator << (A r, std::tuple<Args...> tuple) {
     return std::tuple_cat(tuple, std::make_tuple(r));
   }
 
+  template <class A, class ...Args, ASSERT_FILTER(A)>
+  inline auto operator << (std::tuple<Args...> tuple, A r) {
+    return std::tuple_cat(std::make_tuple(r), tuple);
+  }
+
   template <class A, class B, ASSERT_FILTER(A), ASSERT_FILTER(B)>
-  inline auto operator|(A a, B b) {
-    return std::tuple<A, B>(a, b);
+  inline auto operator << (A a, B b) {
+    return std::make_tuple(b, a);
   }
 }
 

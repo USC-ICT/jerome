@@ -30,10 +30,21 @@ namespace jerome {
 
     struct one_token_stream : public stream<one_token_stream, Token> {
       typedef stream<one_token_stream, Token> parent_type;
+      one_token_stream(const Locale& inLocale)
+      : mToken()
+      , mCount(2)
+      {}
+
       one_token_stream(const jerome::String& inString, const Locale& inLocale)
       : mToken(inString, 0, (Token::size_type)inString.length())
       , mCount(0)
       {}
+
+      void setInput(const jerome::String& inString) {
+        mToken = Token(inString, 0, (Token::size_type)inString.length());
+        mCount = 0;
+      }
+
     private:
       friend parent_type;
       Token mToken;
@@ -51,15 +62,15 @@ namespace jerome {
       };
 
       inline auto
-      operator|(const jerome::String& string,
-                const one_token_locale_holder& h)
+      operator << (const one_token_locale_holder& h,
+                   const jerome::String& string)
       {
         return jerome::stream::one_token_stream(string, h.locale);
       }
 
       inline auto
-      operator|(jerome::String& string,
-                const one_token_locale_holder& h)
+      operator << (const one_token_locale_holder& h,
+                jerome::String& string)
       {
         return jerome::stream::one_token_stream(string, h.locale);
       }

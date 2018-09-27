@@ -40,12 +40,12 @@ namespace jerome {
     public:
       Tokenizer(const String* inString,
                 jerome::Locale const & inLocale = jerome::Locale())
-      : mTokenizer(inString, inLocale)
+      : mTokenizer(cf::String(*inString), inLocale)
       {}
-      Tokenizer(CFStringRef inString,
-                jerome::Locale const & inLocale = jerome::Locale())
-      : mTokenizer(inString, inLocale)
-      {}
+//      Tokenizer(CFStringRef inString,
+//                jerome::Locale const & inLocale = jerome::Locale())
+//      : mTokenizer(inString, inLocale)
+//      {}
       bool getNextToken(Token& ioToken);
       const jerome::Locale& locale() const { return mTokenizer.locale(); }
     };

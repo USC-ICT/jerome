@@ -37,7 +37,9 @@ namespace jerome {
       typedef CFIndex size_type;
 
       String(const jerome::String& inString);
-      String(const char* inBytes, size_type inCount);
+      String(const char* inCString, bool inDoCopy = true);
+      String(const uint8_t* inBytes, size_type inCount, bool inDoCopy = true);
+      
       String substr(size_type pos, size_type count);
       explicit operator jerome::String () const;
     };

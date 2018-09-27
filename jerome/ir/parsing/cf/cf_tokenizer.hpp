@@ -35,19 +35,22 @@
 
 namespace jerome { namespace cf {
   struct Tokenizer {
-    Tokenizer();
-    Tokenizer(const jerome::String& inString, Locale const & inLocale = Locale());
-    Tokenizer(const jerome::String* inString, Locale const & inLocale = Locale());
-    Tokenizer(CFStringRef inString, Locale const & inLocale = Locale());
-    Tokenizer(const uint8_t* inBytes, std::size_t inLength, bool inDoCopy,
-              Locale const & inLocale);
+    explicit Tokenizer(Locale const & inLocale = Locale());
+
+    template <typename S>
+    Tokenizer(S&& inString, Locale const & inLocale = Locale())
+    : mLocale(inLocale)
+    , mString(::std::forward<S>(inString))
+    , mTokenizer()
+    {}
+
     const Locale& locale() const { return mLocale; }
 
     template <class token_type>
     token_type nextToken() {
       if (!mTokenizer) {
         init();
-        return token_type::bos();
+        return mTokenizer ? token_type::bos() : token_type::eos();
       }
       auto  tokenType  = CFStringTokenizerAdvanceToNextToken(mTokenizer);
       if (tokenType == kCFStringTokenizerTokenNone) return token_type::eos();
@@ -59,10 +62,13 @@ namespace jerome { namespace cf {
                         (typename token_type::size_type)range.length);
     }
 
+    void setString(const String& inString);
+
   private:
+    typedef basic_object<CFStringTokenizerRef> tokenizer_type;
     Locale mLocale;
     String mString;
-    basic_object<CFStringTokenizerRef>  mTokenizer;
+    tokenizer_type  mTokenizer;
 
     void init();
   };
@@ -73,9 +79,21 @@ namespace jerome { namespace cf {
 
   struct tokenized_stream : public stream<tokenized_stream, Token> {
     typedef stream<tokenized_stream, Token> parent_type;
-    tokenized_stream(const jerome::String& inString, const Locale& inLocale)
-    : mTokenizer(inString, inLocale)
+
+    tokenized_stream(const Locale& inLocale)
+    : mTokenizer(inLocale)
     {}
+
+    template <typename S>
+    tokenized_stream(S&& inString, const Locale& inLocale)
+    : mTokenizer(::std::forward<S>(inString), inLocale)
+    {}
+
+    template <typename S>
+    void setInput(S&& inString) {
+      mTokenizer.setString(::std::forward<S>(inString));
+    }
+
   private:
     friend parent_type;
     Tokenizer mTokenizer;

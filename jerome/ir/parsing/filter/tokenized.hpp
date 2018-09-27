@@ -29,15 +29,14 @@ namespace jerome { namespace stream {
     };
 
     inline jerome::tokenized_stream
-    operator|(const jerome::String& string,
-              const tokenized_locale_holder& h)
+    operator << (const tokenized_locale_holder& h,
+                 const jerome::String& string)
     {
       return tokenized_stream(string, h.locale);
     }
 
     inline jerome::tokenized_stream
-    operator|(jerome::String& string,
-              const tokenized_locale_holder& h)
+    operator << (const tokenized_locale_holder& h, jerome::String& string)
     {
       return tokenized_stream(string, h.locale);
     }

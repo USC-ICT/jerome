@@ -93,6 +93,10 @@ namespace jerome { namespace cf {
       return mValue;
     }
 
+    operator bool () const {
+      return mValue != NULL;
+    }
+    
   protected:
     cf_type value() const { return mValue; }
     auto retain() {

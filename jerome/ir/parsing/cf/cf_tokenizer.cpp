@@ -25,67 +25,29 @@
 #if JEROME_PARSING == JEROME_PARSING_CF
 
 namespace jerome { namespace cf {
-  static cf::basic_object<CFStringTokenizerRef>
-  _init(CFStringRef inString, CFLocaleRef inLocale) {
-    auto tokenzer = CFStringTokenizerCreate(kCFAllocatorDefault,
-                                            inString,
-                                            CFRangeMake(0, CFStringGetLength(inString)),
-                                            kCFStringTokenizerUnitWordBoundary,
-                                            inLocale);
-    return basic_object<CFStringTokenizerRef>(tokenzer);
-  }
-
   void Tokenizer::init() {
-    mTokenizer = _init(mString, mLocale);
+    if (!mString) return; // locale can be NULL
+    auto tokenzer = CFStringTokenizerCreate(kCFAllocatorDefault,
+                                            mString,
+                                            CFRangeMake(0, CFStringGetLength(mString)),
+                                            kCFStringTokenizerUnitWordBoundary,
+                                            mLocale);
+    mTokenizer = tokenizer_type(tokenzer);
   }
 
-  Tokenizer::Tokenizer()
-  : mLocale()
+  Tokenizer::Tokenizer(Locale const & inLocale)
+  : mLocale(inLocale)
   , mString()
   , mTokenizer()
   {
   }
 
-  Tokenizer::Tokenizer(CFStringRef inString,
-                       Locale const & inLocale)
-  : mLocale(inLocale)
-  , mString(inString)
-  , mTokenizer()
+  void Tokenizer::setString(const String& inString)
   {
+    mString = inString;
+    mTokenizer = basic_object<CFStringTokenizerRef>();
   }
 
-  Tokenizer::Tokenizer(const jerome::String* inString, Locale const & inLocale)
-  : mLocale(inLocale)
-  , mString(*inString)
-  , mTokenizer()
-  {
-  }
-
-  Tokenizer::Tokenizer(const jerome::String& inString, Locale const & inLocale)
-  : mLocale(inLocale)
-  , mString(inString)
-  , mTokenizer()
-  {
-  }
-
-  Tokenizer::Tokenizer(const uint8_t* inBytes,
-                       std::size_t inLength,
-                       bool inDoCopy,
-                       Locale const & inLocale)
-  : mLocale(inLocale)
-  , mString(inDoCopy
-            ? CFStringCreateWithBytes(kCFAllocatorDefault,
-                                      inBytes, inLength,
-                                      kCFStringEncodingUTF8,
-                                      false)
-            : CFStringCreateWithBytesNoCopy(kCFAllocatorDefault,
-                                            inBytes, inLength,
-                                            kCFStringEncodingUTF8,
-                                            false,
-                                            kCFAllocatorNull))
-  , mTokenizer()
-  {
-  }
 }}
 
 #endif
