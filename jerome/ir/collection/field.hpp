@@ -155,6 +155,7 @@ namespace jerome { namespace ir { namespace index {
 
     template <class> friend class jerome::ir::filter::IndexWriter;
     template <class> friend struct Index;
+    template <class> friend class jerome::stream::stream_detail::index_writer_filter;
 
     template <typename T>
     void  add(typename term_type::size_type inDocumentID,

@@ -55,6 +55,8 @@
 #include <jerome/ir/parsing/filter/as_token.hpp>
 #include <jerome/ir/parsing/filter/contractions.hpp>
 #include <jerome/ir/parsing/filter/dictionary.hpp>
+#include <jerome/ir/parsing/filter/echo.hpp>
+#include <jerome/ir/parsing/filter/index_writer.hpp>
 #include <jerome/ir/parsing/filter/kstem.hpp>
 #include <jerome/ir/parsing/filter/lowercased.hpp>
 #include <jerome/ir/parsing/filter/ngram.hpp>

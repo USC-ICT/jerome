@@ -417,6 +417,8 @@
 		622F89D01512900600726296 /* model.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = model.hpp; sourceTree = "<group>"; };
 		622F89D61512921500726296 /* analysis.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = analysis.hpp; sourceTree = "<group>"; };
 		624436C5215B2BE600BD8856 /* meta.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = meta.hpp; sourceTree = "<group>"; };
+		624436C6215C922900BD8856 /* index_writer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = index_writer.hpp; sourceTree = "<group>"; };
+		624436C7215C925300BD8856 /* echo.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = echo.hpp; sourceTree = "<group>"; };
 		62457D8814410A150084507E /* types.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = types.cpp; sourceTree = "<group>"; };
 		62461EDE1D7DF83C00F8E4F4 /* Command.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Command.cpp; sourceTree = "<group>"; };
 		62461EDF1D7DF83C00F8E4F4 /* Command.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Command.hpp; sourceTree = "<group>"; };
@@ -486,7 +488,7 @@
 		627818CA1CC8341600C344E4 /* copy_headers.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = copy_headers.sh; sourceTree = "<group>"; };
 		6280598F1F05A35D00D6B08D /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = 3rdParty/build/osx/Frameworks/boost.framework; sourceTree = SOURCE_ROOT; };
 		6283F7CB2151B126004C8265 /* filesystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filesystem.hpp; sourceTree = "<group>"; };
-		6283F7CC2152D27B004C8265 /* parsing_Tests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = parsing_Tests.mm; sourceTree = "<group>"; };
+		6283F7CC2152D27B004C8265 /* parsing_Tests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = parsing_Tests.mm; sourceTree = "<group>"; wrapsLines = 1; };
 		6283F7CF2152D670004C8265 /* object.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = object.hpp; sourceTree = "<group>"; };
 		6283F7D02152D8E5004C8265 /* cf_string.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = cf_string.hpp; sourceTree = "<group>"; };
 		6283F7D12152D91D004C8265 /* cf_string.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cf_string.cpp; sourceTree = "<group>"; };
@@ -1122,6 +1124,8 @@
 				6283F7ED2154BD59004C8265 /* contractions.cpp */,
 				6283F7EA2154802E004C8265 /* contractions.hpp */,
 				6283F7EB21548809004C8265 /* dictionary.hpp */,
+				624436C7215C925300BD8856 /* echo.hpp */,
+				624436C6215C922900BD8856 /* index_writer.hpp */,
 				6283F7F2215564A7004C8265 /* kstem.cpp */,
 				6283F7E621547F33004C8265 /* kstem.hpp */,
 				6283F7E0215400D3004C8265 /* lowercased.hpp */,

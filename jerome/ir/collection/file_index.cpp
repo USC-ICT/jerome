@@ -66,7 +66,7 @@ namespace jerome { namespace ir {
   auto FileIndex::makeField(const String& inName) -> Field {
     auto targetPath = mPath / fieldsDirectoryName / inName;
     if (access() == persistence::Access::write_shared) {
-      fs::create_directory(targetPath);
+      fs::create_directories(targetPath);
     }
     return index::FileField(access(), targetPath);
   }

@@ -78,6 +78,7 @@ namespace jerome { namespace ir { namespace index {
   private:
     friend parent_type;
     friend struct jerome::ir::FileIndex;
+    template <class> friend class jerome::ir::index::Index;
 
     persistence::MappedPointer<Terms>  mTerms;
     persistence::MappedPointer<document_length_vector_type>  mDocumentLengths;

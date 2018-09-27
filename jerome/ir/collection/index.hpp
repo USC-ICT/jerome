@@ -118,7 +118,8 @@ namespace jerome { namespace ir { namespace index {
 
     optional<TermID> stringID(const String& inString) const {
       auto termID = mAlphabet->string2index(inString);
-      return termID == Alphabet::unknownIndex ? optional<TermID>() : optional<TermID>(termID);
+      return termID == Alphabet::unknownIndex
+        ? optional<TermID>() : optional<TermID>(termID);
     }
 
     const term_type& findTerm(const field_type& inField, const String& text) const {

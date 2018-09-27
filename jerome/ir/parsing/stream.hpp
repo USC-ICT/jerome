@@ -29,6 +29,17 @@
 namespace jerome { namespace stream {
 
   struct stream_filter {};
+  // a filter
+  // 1. should inherit from stream_filter
+  // 2. define a templated operator ():
+  //  template <class Stream, ASSERT_STREAM(Stream)>
+  //  auto operator() (Stream& inStream)
+  //  {
+  //    auto token = inStream.next();
+  //    process token...
+  //    return someToken;
+  //  }
+
   struct stream_base {};
 
   template<typename T>
@@ -100,31 +111,7 @@ namespace jerome { namespace stream {
         return Derived(inLocale);
       }
     };
-
-    template <typename OutpuStream>
-    struct echo_holder : public stream_filter {
-      OutpuStream& ios;
-      echo_holder(OutpuStream& inStream)
-      : ios(inStream)
-      {}
-
-      template <typename OtherOutpuStream>
-      inline auto
-      operator () (OtherOutpuStream& os) const {
-        return echo_holder<OtherOutpuStream>(os);
-      }
-
-      template <class Stream, ASSERT_STREAM(Stream)>
-      auto operator() (Stream& inStream)
-      {
-        auto token = inStream.next();
-        ios << token << std::endl;
-        return token;
-      }
-    };
   }
-
-  const auto echo = stream_detail::echo_holder<decltype(std::cout)>(std::cout);
 }}
 
 namespace jerome {
