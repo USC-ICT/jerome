@@ -31,17 +31,19 @@ namespace jerome {
     struct one_token_stream : public stream<one_token_stream, Token> {
       typedef stream<one_token_stream, Token> parent_type;
       one_token_stream(const Locale& inLocale)
-      : mToken()
+      : mToken(Token::unknown())
       , mCount(2)
       {}
 
       one_token_stream(const jerome::String& inString, const Locale& inLocale)
-      : mToken(inString, 0, (Token::size_type)inString.length())
+      : mToken(inString, 0, (Token::size_type)inString.length(),
+               Token::Type::word)
       , mCount(0)
       {}
 
       void setInput(const jerome::String& inString) {
-        mToken = Token(inString, 0, (Token::size_type)inString.length());
+        mToken = Token(inString, 0, (Token::size_type)inString.length(),
+                       Token::Type::word);
         mCount = 0;
       }
 

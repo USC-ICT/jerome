@@ -307,7 +307,7 @@ namespace filter {
 			mCount(inCount), 
 			mIndex(0) 
 	{
-    mTokens.push_back(Token(Token::ngramSeparator(), 0, 0));
+    mTokens.push_back(Token::ngramSeparator());
 	}
 
 	
@@ -317,16 +317,16 @@ namespace filter {
 		while (mIndex <= 0) {
 			bool result = TokenFilter::getNextToken(ioToken);
 			if (!result) {
-				if (mTokens.back().text() == Token::ngramSeparator())
+				if (mTokens.back() == Token::ngramSeparator())
 					return false;
-				ioToken = Token(Token::ngramSeparator(), mTokens.back().end(), 0);
+				ioToken = Token::ngramSeparator();
 			}
 			mTokens.push_back(ioToken);
 			if (mTokens.size() > mCount) {
 				mTokens.pop_front();
 			}
 			if (mTokens.size() < kSize) {
-				ioToken = Token("", INT_MAX);
+        ioToken = Token("", INT_MAX, 0, Token::Type::word);
 				for(const Token& t : mTokens) ioToken += t;
 				return true;
 			}

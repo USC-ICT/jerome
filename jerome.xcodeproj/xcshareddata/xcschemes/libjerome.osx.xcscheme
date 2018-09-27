@@ -52,6 +52,9 @@
                   Identifier = "CollectionDictionary">
                </Test>
                <Test
+                  Identifier = "ParsingTests/test12Index">
+               </Test>
+               <Test
                   Identifier = "libjerome_osx_tests">
                </Test>
             </SkippedTests>

@@ -55,17 +55,18 @@ namespace jerome { namespace stream {
           if (token.isBOS()) {
             mTokens.clear();
             mShouldSendEOS = false;
-            mTokens.push_back(value_type(value_type::ngramSeparator(), 0, 0));
+            mTokens.push_back(value_type::ngramSeparator());
             return value_type::bos();
           }
 
           if (token.isEOS()) {
-            if (mTokens.back().text() == value_type::ngramSeparator()) {
+            if (mTokens.back().text() == value_type::ngramSeparator().text()) {
               mTokens.clear();
               return value_type::eos();
             }
-            mTokens.push_back(value_type(value_type::ngramSeparator(),
-                                         mTokens.back().end(), 0));
+            mTokens.push_back(value_type(value_type::ngramSeparator().text(),
+                                         mTokens.back().end(), 0,
+                                         value_type::Type::separator));
           } else {
             mTokens.push_back(token);
           }
@@ -80,6 +81,7 @@ namespace jerome { namespace stream {
         for(const auto& t : mTokens) {
           newToken += t;
         }
+        newToken.type() = value_type::Type::word;
         return newToken;
       }
     private:

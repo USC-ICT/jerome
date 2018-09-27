@@ -39,7 +39,9 @@ namespace jerome {
 
     NonTokenizer::NonTokenizer(CFStringRef inString,
                                jerome::Locale const & inLocale)
-    : mToken((String)cf::String(inString), 0, (Token::size_type)CFStringGetLength(inString))
+    : mToken((String)cf::String(inString), 0,
+             (Token::size_type)CFStringGetLength(inString),
+             Token::Type::word)
     , mLocale(inLocale)
     , mHasToken(true)
     {
@@ -48,7 +50,8 @@ namespace jerome {
 
     NonTokenizer::NonTokenizer(const String* inString,
                                jerome::Locale const & inLocale)
-    : mToken(*inString, 0, (Token::size_type)inString->length())
+    : mToken(*inString, 0, (Token::size_type)inString->length(),
+             Token::Type::word)
     , mLocale(inLocale)
     , mHasToken(true)
     {

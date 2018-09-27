@@ -33,6 +33,11 @@ namespace jerome { namespace stream {
     struct contractions_holder : public stream_filter {
       typedef ir::BasicToken<String> value_type;
 
+      contractions_holder()
+      : mSavedToken(value_type::unknown())
+      , mHasSavedToken(false)
+      {}
+
       value_type mSavedToken;
       bool mHasSavedToken;
 

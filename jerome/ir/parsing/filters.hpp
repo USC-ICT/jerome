@@ -57,7 +57,11 @@ namespace jerome {
 				Token	mLastToken;
 				bool	mHasToken;
 			public:
-				Apostrophe(TokenStream inSource) : TokenFilter(inSource), mHasToken(false) {}
+				Apostrophe(TokenStream inSource)
+        : TokenFilter(inSource)
+        , mLastToken(Token::unknown())
+        , mHasToken(false)
+        {}
 				bool getNextToken(Token& ioToken);
 			};
 			

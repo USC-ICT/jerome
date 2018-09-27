@@ -33,9 +33,15 @@ namespace jerome {
       struct TokenBase {
         typedef uint32_t  size_type;
 
-        TokenBase(size_type inOffset = 0,
-                  size_type inLength = 0,
-                  uint32_t inType = 0)
+        enum struct Type : int {
+          eos = -1, bos = -2, unknown = 0, word, separator
+        };
+
+        typedef Type type_type;
+
+        TokenBase(size_type inOffset,
+                  size_type inLength,
+                  type_type inType)
         : mOffset(inOffset)
         , mLength(inLength)
         , mType(inType)
@@ -49,22 +55,31 @@ namespace jerome {
         size_type    offset()   const { return mOffset; }
         size_type    length()   const { return mLength; }
         size_type    end()    const { return offset() + length(); }
-        uint32_t    type()     const { return mType; }
+        type_type    type()     const { return mType; }
 
         size_type&    offset()   { return mOffset; }
         size_type&    length()   { return mLength; }
-        uint32_t&    type()     { return mType; }
+        type_type&    type()     { return mType; }
 
-        static constexpr const uint32_t kEOSType = -1;
-        static constexpr const uint32_t kBOSType = -2;
+        bool isEOS() const;
+        bool isBOS() const;
 
-        bool isEOS() const { return type() == kEOSType; }
-        bool isBOS() const { return type() == kBOSType; }
       private:
         size_type    mOffset;
         size_type    mLength;
-        uint32_t    mType;
+        type_type    mType;
       };
+
+      inline bool TokenBase::isEOS() const { return type() == Type::eos; }
+      inline bool TokenBase::isBOS() const { return type() == Type::bos; }
+
+      inline bool operator == (const TokenBase& lhs,
+                               const TokenBase& rhs)
+      {
+        return lhs.offset() == rhs.offset()
+        && lhs.length() == rhs.length()
+        && lhs.type() == rhs.type();
+      }
     }
 
     template <class S = String>
@@ -94,10 +109,10 @@ namespace jerome {
       , mText(inText)
       {}
 
-      BasicToken(const value_type& inText = value_type(),
-                 size_type inOffset = 0,
-                 size_type inLength = 0,
-                 uint32_t inType = 0)
+      BasicToken(const value_type& inText,
+                 size_type inOffset,
+                 size_type inLength,
+                 type_type inType)
       : parent_type(inOffset, inLength, inType)
       , mText(inText)
       {}
@@ -107,7 +122,7 @@ namespace jerome {
 
       BasicToken& operator += (const BasicToken& inToken) {
         if (text().size() > 0) {
-          text() += ngramSeparator();
+          text() += ngramSeparatorText();
         } else {
           type() = inToken.type();
         }
@@ -118,23 +133,54 @@ namespace jerome {
         return *this;
       }
 
-      static value_type ngramSeparator() {
+      static value_type ngramSeparatorText() {
         static const value_type separator = "_";
         return separator;
       }
 
+      static const BasicToken& ngramSeparator() {
+        static const BasicToken token(ngramSeparatorText(), 0, 0, BasicToken::Type::separator);
+        return token;
+      }
+
+      static const BasicToken& unknown() {
+        static const BasicToken token("", 0, 0, BasicToken::Type::unknown);
+        return token;
+      }
+
       static const BasicToken& eos() {
-        static const BasicToken token("", 0, 0, kEOSType);
+        static const BasicToken token("", 0, 0, BasicToken::Type::eos);
         return token;
       }
 
       static const BasicToken& bos() {
-        static const BasicToken token("", 0, 0, kBOSType);
+        static const BasicToken token("", 0, 0, BasicToken::Type::bos);
         return token;
+      }
+
+      inline bool operator == (const BasicToken& rhs)
+      {
+        return static_cast<const TokenBase&>(*this)
+          == static_cast<const TokenBase&>(rhs)
+        && text() == rhs.text();
       }
     private:
       value_type      mText;
     };
+
+    inline std::ostream& operator << (std::ostream& outs,
+                                      const detail::TokenBase::type_type& o)
+    {
+      typedef detail::TokenBase::type_type Type;
+      switch (o) {
+        case Type::bos: return outs << "bos";
+        case Type::eos: return outs << "eos";
+        case Type::unknown: return outs << "??";
+        case Type::word: return outs << "word";
+        case Type::separator: return outs << "-";
+        default: return outs << static_cast<int>(o);
+      }
+    }
 
     template <typename T>
     inline std::ostream& operator << (std::ostream& outs, const BasicToken<T>& o) {
@@ -164,7 +210,7 @@ namespace jerome {
 				virtual bool getNextToken(Token& ioToken) = 0;
 				virtual const jerome::Locale& locale() const { return kDefaultLocale; }
 				void run() {
-					Token tok;
+          Token tok(Token::unknown());
 					while (getNextToken(tok));
 				}
 			private:

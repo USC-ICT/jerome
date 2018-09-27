@@ -59,7 +59,8 @@ namespace jerome { namespace cf {
       cf::String  substring(mString.substr(range.location, range.length));
       return token_type((typename token_type::value_type)substring,
                         (typename token_type::size_type)range.location,
-                        (typename token_type::size_type)range.length);
+                        (typename token_type::size_type)range.length,
+                        token_type::Type::word);
     }
 
     void setString(const String& inString);
