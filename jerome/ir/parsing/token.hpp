@@ -23,6 +23,7 @@
 #ifndef __jerome_ir_parsing_token_hpp__
 #define __jerome_ir_parsing_token_hpp__
 
+#include <cassert>
 #include <jerome/types.hpp>
 #include <jerome/ir/parsing/parsing_fwd.hpp>
 #include <jerome/ir/parsing/locale.hpp>
@@ -31,7 +32,7 @@ namespace jerome {
 	namespace ir {
     namespace detail {
       struct TokenBase {
-        typedef uint32_t  size_type;
+        typedef uint64_t  size_type;
 
         enum struct Type : int {
           eos = -1, bos = -2, unknown = 0, word, separator
@@ -53,25 +54,28 @@ namespace jerome {
         TokenBase& operator = (const TokenBase& inSource) = default;
 
         size_type    offset()   const { return mOffset; }
-        size_type    length()   const { return mLength; }
-        size_type    end()    const { return offset() + length(); }
+        size_type    length()   const { return isBOS() ? 0 : mLength; }
+        size_type    end()      const { return offset() + length(); }
         type_type    type()     const { return mType; }
 
-        size_type&    offset()   { return mOffset; }
-        size_type&    length()   { return mLength; }
-        type_type&    type()     { return mType; }
+        bool isEOS() const { return type() == Type::eos; }
+        bool isBOS() const { return type() == Type::bos; }
 
-        bool isEOS() const;
-        bool isBOS() const;
+        optional<size_type> documentID() const {
+          return isBOS() && mLength != std::numeric_limits<size_type>::max()
+          ? mLength : optional<size_type>();
+        }
 
-      private:
+        void setDocumentID(size_type inID) {
+          assert(isBOS());
+          mLength = inID;
+        }
+
+      protected:
         size_type    mOffset;
         size_type    mLength;
         type_type    mType;
       };
-
-      inline bool TokenBase::isEOS() const { return type() == Type::eos; }
-      inline bool TokenBase::isBOS() const { return type() == Type::bos; }
 
       inline bool operator == (const TokenBase& lhs,
                                const TokenBase& rhs)
@@ -122,14 +126,12 @@ namespace jerome {
 
       BasicToken& operator += (const BasicToken& inToken) {
         if (text().size() > 0) {
-          text() += ngramSeparatorText();
-        } else {
-          type() = inToken.type();
+          text()  += ngramSeparatorText();
         }
         text()    += inToken.text();
         size_type  finish  = std::max(end(), inToken.end());
-        offset()  = std::min(offset(), inToken.offset());
-        length()  = finish - offset();
+        mOffset  = std::min(offset(), inToken.offset());
+        mLength  = finish - offset();
         return *this;
       }
 
@@ -139,7 +141,8 @@ namespace jerome {
       }
 
       static const BasicToken& ngramSeparator() {
-        static const BasicToken token(ngramSeparatorText(), 0, 0, BasicToken::Type::separator);
+        static const BasicToken token(ngramSeparatorText(), 0, 0,
+                                      BasicToken::Type::separator);
         return token;
       }
 
@@ -154,7 +157,9 @@ namespace jerome {
       }
 
       static const BasicToken& bos() {
-        static const BasicToken token("", 0, 0, BasicToken::Type::bos);
+        static const BasicToken token("", 0,
+                                      std::numeric_limits<size_type>::max(),
+                                      BasicToken::Type::bos);
         return token;
       }
 

@@ -76,12 +76,14 @@ namespace jerome { namespace stream {
           }
         }
 
-        auto newToken = mTokens.front();
+        auto newToken = value_type(mTokens.front().text(),
+                                   mTokens.front().offset(),
+                                   mTokens.front().length(),
+                                   value_type::Type::word);
         mTokens.pop_front();
         for(const auto& t : mTokens) {
           newToken += t;
         }
-        newToken.type() = value_type::Type::word;
         return newToken;
       }
     private:

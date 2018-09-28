@@ -45,7 +45,12 @@ namespace jerome { namespace stream {
       {
         auto token = inStream.next();
         if (token.isBOS()) {
-          mDocumentID = mField.addDocument();
+          if (token.documentID()) {
+            mDocumentID = *token.documentID();
+          } else {
+            mDocumentID = mField.addDocument();
+            token.setDocumentID(mDocumentID);
+          }
           mHasDocumentID = true;
         } else if (token.isEOS()) {
           mHasDocumentID = false;
