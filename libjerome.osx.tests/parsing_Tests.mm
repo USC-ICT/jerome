@@ -138,7 +138,7 @@ u8R"V0G0N({BEGIN}
 - (void)test02Tokenized
 { // XCTAssert(<#expression, ...#>)
   MY_TEST(
-          << stream::tokenized,
+          << stream::tokenize,
           desired_result_test02Tokenized
        );
 }
@@ -211,7 +211,7 @@ u8R"V0G0N({BEGIN}
 {
   MY_TEST(
           << stream::lowercase
-          << stream::tokenized,
+          << stream::tokenize,
           desired_result_test04Lowercased
           );
 }
@@ -243,7 +243,7 @@ u8R"V0G0N({BEGIN}
   MY_TEST(
           << stream::filter_alpha
           << stream::lowercase
-          << stream::tokenized,
+          << stream::tokenize,
           desired_result_test05Alpha
           );
 }
@@ -280,7 +280,7 @@ u8R"V0G0N({BEGIN}
           << stream::expand_contractions
           << stream::filter_alphanumeric
           << stream::lowercase
-          << stream::tokenized,
+          << stream::tokenize,
           desired_result_test06Contractions
           );
 }
@@ -319,7 +319,7 @@ u8R"V0G0N({BEGIN}
           << stream::expand_contractions
           << stream::filter_alphanumeric
           << stream::lowercase
-          << stream::tokenized,
+          << stream::tokenize,
           desired_result_test07IrregularVerbs
           );
 }
@@ -358,7 +358,7 @@ u8R"V0G0N({BEGIN}
           << stream::expand_contractions
           << stream::filter_alphanumeric
           << stream::lowercase
-          << stream::tokenized,
+          << stream::tokenize,
           desired_result_test08Kstem
           );
 }
@@ -396,7 +396,7 @@ u8R"V0G0N({BEGIN}
           << stream::expand_contractions
           << stream::filter_alphanumeric
           << stream::lowercase
-          << stream::tokenized,
+          << stream::tokenize,
           desired_result_test09Stopwords
           );
 }
@@ -436,7 +436,7 @@ u8R"V0G0N({BEGIN}
           << stream::expand_contractions
           << stream::filter_alphanumeric
           << stream::lowercase
-          << stream::tokenized,
+          << stream::tokenize,
           desired_result_test10NGram
           );
 }
@@ -468,7 +468,7 @@ u8R"V0G0N({BEGIN}
 {
   auto var = stream::filter_alphanumeric
   << stream::lowercase
-  << stream::tokenized
+  << stream::tokenize
   ;
 
   MY_TEST(
@@ -488,7 +488,7 @@ static const char* desired_result_test11Expression2 = desired_result_test10NGram
   << stream::expand_contractions
   << stream::filter_alphanumeric
   << stream::lowercase
-  << stream::tokenized
+  << stream::tokenize
   ;
 
   MY_TEST(
@@ -516,7 +516,7 @@ static NSURL* indexURL = [[NSURL fileURLWithPath:NSTemporaryDirectory()]
     << stream::expand_contractions
     << stream::filter_alphanumeric
     << stream::lowercase
-    << stream::tokenized
+    << stream::tokenize
     ;
 
     var << test;

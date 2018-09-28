@@ -37,6 +37,7 @@ namespace jerome { namespace ir {
 
   static const char* termFileName = "term.bin";
   static const char* dlFileName = "dl.bin";
+  static const char* documentsFileName = "documents.bin";
   static const char* fieldsDirectoryName = "fields";
 
   namespace index {
@@ -45,6 +46,7 @@ namespace jerome { namespace ir {
     : parent_type()
     , mTerms(inAccess, inPath / termFileName)
     , mDocumentLengths(inAccess, inPath / dlFileName)
+    , mDocuments(inAccess, inPath / documentsFileName)
     {}
   }
 

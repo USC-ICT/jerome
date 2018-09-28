@@ -53,6 +53,7 @@ namespace jerome { namespace ir { namespace index {
     typedef std::unordered_map<term_id_type, term_type
     > term_map_type;
     typedef std::vector<document_length_type>  document_length_vector_type;
+    typedef std::unordered_map<term_id_type, std::string> document_store_type;
   };
 
   struct HeapField : public BasicField<HeapField> {
@@ -63,8 +64,18 @@ namespace jerome { namespace ir { namespace index {
     typedef typename parent_type::document_length_vector_type
       document_length_vector_type;
     typedef typename parent_type::size_type size_type;
+    typedef typename parent_type::document_store_type document_store_type;
+    typedef typename parent_type::document_id_type document_id_type;
 
     const Terms& terms() const { return mTerms; }
+
+    optional<std::string> documentWithID(document_id_type inID) const {
+      auto iter = mDocuments.find(inID);
+      if (iter != mDocuments.end()) {
+        return iter->second;
+      }
+      return optional<std::string>();
+    }
 
   private:
     friend parent_type;
@@ -72,11 +83,13 @@ namespace jerome { namespace ir { namespace index {
 
     Terms mTerms;
     document_length_vector_type mDocumentLengths;
+    document_store_type mDocuments;
 
     HeapField()
     : parent_type()
     , mTerms()
     , mDocumentLengths()
+    , mDocuments()
     {}
 
     const document_length_vector_type&  _documentLengths()  const {
@@ -94,6 +107,10 @@ namespace jerome { namespace ir { namespace index {
         p = _terms().emplace(inTermID, term_type()).first;
       }
       return p;
+    }
+
+    void _setDocumentContent(document_id_type inID, const String& inText) {
+      mDocuments.emplace(inID, inText);
     }
   };
 

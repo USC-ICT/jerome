@@ -25,16 +25,20 @@
 
 namespace jerome { namespace stream {
   namespace stream_detail{
-    template <typename Index>
-    class index_writer_filter : public stream_filter {
+
+    template <typename Derived, typename Index>
+    class index_writer_base : public stream_filter {
+    protected:
       typedef typename Index::field_type field_type;
+      typedef typename Index::term_type::size_type document_id_type;
+
       Index& mIndex;
       field_type& mField;
-      typename Index::term_type::size_type mDocumentID;
+      document_id_type mDocumentID;
       bool mHasDocumentID;
 
     public:
-      index_writer_filter(Index& inIndex, const String& inFieldName)
+      index_writer_base(Index& inIndex, const String& inFieldName)
       : mIndex(inIndex)
       , mField(mIndex.findField(inFieldName, true))
       , mHasDocumentID(false)
@@ -46,19 +50,65 @@ namespace jerome { namespace stream {
         auto token = inStream.next();
         if (token.isBOS()) {
           if (token.documentID()) {
-            mDocumentID = *token.documentID();
+            this->mDocumentID = *token.documentID();
           } else {
-            mDocumentID = mField.addDocument();
-            token.setDocumentID(mDocumentID);
+            this->mDocumentID = this->mField.addDocument();
+            token.setDocumentID(this->mDocumentID);
           }
-          mHasDocumentID = true;
+          this->mHasDocumentID = true;
         } else if (token.isEOS()) {
-          mHasDocumentID = false;
-        } else if (mHasDocumentID) {
-          mIndex.addTerm(token, mDocumentID, mField);
+          this->mHasDocumentID = false;
+        } else if (this->mHasDocumentID) {
+          static_cast<Derived*>(this)->processToken(token,
+                                                    this->mDocumentID,
+                                                    mField, mIndex);
         }
         return token;
       }
+    };
+
+    template <typename Index>
+    class index_writer_filter : public index_writer_base<
+      index_writer_filter<Index>, Index>
+    {
+      typedef index_writer_base<index_writer_filter<Index>, Index> parent_type;
+      typedef typename parent_type::field_type field_type;
+      typedef typename parent_type::document_id_type document_id_type;
+
+      using parent_type::parent_type;
+
+      template <class Token>
+      void processToken(const Token& inToken,
+                        document_id_type inDocumentID,
+                        field_type& inField,
+                        Index& inIndex)
+      {
+        inIndex.addTerm(inToken, inDocumentID, inField);
+      }
+
+      friend parent_type;
+    };
+
+    template <typename Index>
+    class store_writer_filter : public index_writer_base<
+    store_writer_filter<Index>, Index>
+    {
+      typedef index_writer_base<store_writer_filter<Index>, Index> parent_type;
+      typedef typename parent_type::field_type field_type;
+      typedef typename parent_type::document_id_type document_id_type;
+
+      using parent_type::parent_type;
+
+      template <class Token>
+      void processToken(const Token& inToken,
+                        document_id_type inDocumentID,
+                        field_type& inField,
+                        Index& inIndex)
+      {
+        inField.setDocumentContent(inDocumentID, inToken.text());
+      }
+
+      friend parent_type;
     };
 
     struct index_writer_holder {
@@ -68,9 +118,18 @@ namespace jerome { namespace stream {
         return index_writer_filter<Index>(inIndex, inFieldName);
       }
     };
+
+    struct store_writer_holder {
+      template <typename Index>
+      inline auto
+      operator () (Index& inIndex, const String& inFieldName) const {
+        return store_writer_filter<Index>(inIndex, inFieldName);
+      }
+    };
   }
 
   const auto write_to_index = stream_detail::index_writer_holder();
+  const auto store_to_index = stream_detail::store_writer_holder();
 }}
 
 #endif // defined __jerome_ir_parsing_filter_index_writer_hpp

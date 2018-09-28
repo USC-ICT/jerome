@@ -42,7 +42,7 @@ namespace jerome { namespace stream {
     }
   }
 
-  const auto tokenized = stream_detail::tokenized_locale_holder();
+  const auto tokenize = stream_detail::tokenized_locale_holder();
 }}
 
 #endif // defined __jerome_ir_parsing_filter_tokenized_hpp

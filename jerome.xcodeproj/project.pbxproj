@@ -988,12 +988,12 @@
 				62D19FC52148976300E8C954 /* dictionary.cpp */,
 				625D39F321484E380038D20D /* dictionary.hpp */,
 				62D19FCD214CCF2E00E8C954 /* field.hpp */,
+				6223D52D215174F9002DA069 /* file_index.cpp */,
 				62B8180A2150253300851FE6 /* file_index.hpp */,
 				62B818092150252700851FE6 /* heap_index.hpp */,
 				62B818082150245B00851FE6 /* index.hpp */,
 				62D19FC8214AE92300E8C954 /* persistence_containers.hpp */,
 				62D19FCC214CCF2000E8C954 /* term.hpp */,
-				6223D52D215174F9002DA069 /* file_index.cpp */,
 			);
 			path = collection;
 			sourceTree = "<group>";

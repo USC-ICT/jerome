@@ -62,6 +62,10 @@ namespace jerome { namespace ir { namespace index {
       document_length_type,
       jerome::persistence::void_allocator
     >::storage_type document_length_vector_type;
+    typedef jerome::persistence::map<
+      term_id_type, persistence::string,
+      jerome::persistence::void_allocator
+    >::storage_type document_store_type;
   };
 
   struct FileField : public BasicField<FileField> {
@@ -72,8 +76,20 @@ namespace jerome { namespace ir { namespace index {
     typedef typename parent_type::document_length_vector_type
       document_length_vector_type;
     typedef typename parent_type::size_type size_type;
+    typedef typename parent_type::document_store_type document_store_type;
 
     const Terms& terms() const { return *mTerms.get(); }
+
+    optional<std::string> documentWithID(document_id_type inID) const {
+      if (!mDocuments) {
+        return optional<std::string>();
+      }
+      auto iter = _documents().find(inID);
+      if (iter != _documents().end()) {
+        return std::to_string(iter->second);
+      }
+      return optional<std::string>();
+    }
 
   private:
     friend parent_type;
@@ -82,6 +98,7 @@ namespace jerome { namespace ir { namespace index {
 
     persistence::MappedPointer<Terms>  mTerms;
     persistence::MappedPointer<document_length_vector_type>  mDocumentLengths;
+    persistence::MappedPointer<document_store_type>  mDocuments;
 
     FileField(persistence::Access inAccess,
               const fs::path& inPath);
@@ -92,6 +109,12 @@ namespace jerome { namespace ir { namespace index {
     }
     document_length_vector_type&  _documentLengths() {
       return *mDocumentLengths.get();
+    }
+    document_store_type&  _documents() {
+      return *mDocuments.get();
+    }
+    const document_store_type&  _documents() const {
+      return *mDocuments.get();
     }
 
     void  optimize(size_type inDocumentCount) {
@@ -149,6 +172,12 @@ namespace jerome { namespace ir { namespace index {
         p = _terms().emplace(inTermID, term_type(mTerms.allocator())).first;
       }
       return p;
+    }
+
+    void _setDocumentContent(document_id_type inID, const String& inText) {
+      mDocuments.perform([&] () mutable {
+        _documents().emplace(inID, jerome::persistence::to_string(inText, _documents().get_allocator()));
+      });
     }
   };
 

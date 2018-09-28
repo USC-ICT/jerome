@@ -45,6 +45,8 @@ namespace jerome { namespace ir { namespace index {
     typedef jerome::DocumentLengths<
       typename document_length_vector_type::value_type
     > DocumentLengths;
+    typedef typename indexTraits<Derived>::document_store_type document_store_type;
+    typedef typename term_type::size_type document_id_type;
 
     // all terms
     const Terms& terms() const {
@@ -112,7 +114,7 @@ namespace jerome { namespace ir { namespace index {
     }
 
     void _appendTerm(TermID inTermID,
-                     typename term_type::size_type inDocumentID)
+                     document_id_type inDocumentID)
     {
       auto p = static_cast<Derived*>(this)->__findOrAddTermWithID(inTermID);
       p->second.addOccurenceInDocument(inDocumentID);
@@ -127,7 +129,7 @@ namespace jerome { namespace ir { namespace index {
       }
     }
 
-    void _appendDocumentLengths(typename term_type::size_type inDocumentID)
+    void _appendDocumentLengths(document_id_type inDocumentID)
     {
       if (inDocumentID >= documentLengths().size()) {
         documentLengths().resize(inDocumentID+1, 0);
@@ -135,10 +137,13 @@ namespace jerome { namespace ir { namespace index {
       documentLengths()[inDocumentID] += 1;
     }
 
-    typename term_type::size_type  _addDocument() {
+    document_id_type _addDocument() {
       auto newDocumentIndex  = documentLengths().size();
       documentLengths().resize(newDocumentIndex+1, 0);
-      return (typename term_type::size_type)newDocumentIndex;
+      return (document_id_type)newDocumentIndex;
+    }
+
+    void _setDocumentContent(document_id_type inID, const String& inText) {
     }
 
     void  addField(const BasicField& inField,
@@ -155,10 +160,12 @@ namespace jerome { namespace ir { namespace index {
 
     template <class> friend class jerome::ir::filter::IndexWriter;
     template <class> friend struct Index;
+    template <class, class> friend class jerome::stream::stream_detail::index_writer_base;
     template <class> friend class jerome::stream::stream_detail::index_writer_filter;
+    template <class> friend class jerome::stream::stream_detail::store_writer_filter;
 
     template <typename T>
-    void  add(typename term_type::size_type inDocumentID,
+    void  add(document_id_type inDocumentID,
               const Token& inToken,
               Index<T>& ioIndex)
     {
@@ -173,8 +180,12 @@ namespace jerome { namespace ir { namespace index {
       mTotalTermCount += 1;
     }
 
-    typename term_type::size_type  addDocument() {
+    document_id_type addDocument() {
       return static_cast<Derived*>(this)->_addDocument();
+    }
+
+    void setDocumentContent(document_id_type inID, const String& inText) {
+      static_cast<Derived*>(this)->_setDocumentContent(inID, inText);
     }
 
   private:
