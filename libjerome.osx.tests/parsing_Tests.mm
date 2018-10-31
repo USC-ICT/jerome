@@ -31,7 +31,6 @@
 
 #include <sstream>
 #include <jerome/ir/parsing.hpp>
-#include <jerome/ir/parsing/filter/tokenized.hpp>
 #include <jerome/ir/collection.hpp>
 
 @interface ParsingTests : XCTestCase
