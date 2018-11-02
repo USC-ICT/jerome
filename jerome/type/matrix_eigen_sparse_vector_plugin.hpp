@@ -21,14 +21,19 @@
 //  along with Jerome.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-//void conservativeResize(Index newSize)
-//{
-//  if (newSize < m_size)
-//  {
-//    Index i = 0;
-//    while (i<m_data.size() && m_data.index(i)<newSize) ++i;
-//    m_data.resize(i);
-//  }
-//  m_size = newSize;
-//}
-//
+#if EIGEN_WORLD_VERSION <= 3 && EIGEN_MAJOR_VERSION < 3
+
+// add this for the "older" version
+
+void conservativeResize(Index newSize)
+{
+  if (newSize < m_size)
+  {
+    Index i = 0;
+    while (i<m_data.size() && m_data.index(i)<newSize) ++i;
+    m_data.resize(i);
+  }
+  m_size = newSize;
+}
+
+#endif
