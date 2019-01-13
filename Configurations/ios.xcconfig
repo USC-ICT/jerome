@@ -13,7 +13,8 @@ LD_RUNPATH_SEARCH_PATHS = $(inherited) @loader_path/Frameworks
 ENABLE_BITCODE = NO
 SUPPORTED_PLATFORMS = iphonesimulator iphoneos
 
-VALID_ARCHS = arm64
+VALID_ARCHS[sdk=iphoneos*] = arm64
+VALID_ARCHS[sdk=iphonesimulator*] = x86_64
 
 // disabling a feature that is not available < ios 10.0
 GCC_PREPROCESSOR_DEFINITIONS = _DARWIN_FEATURE_CLOCK_GETTIME=0 $(inherited)
