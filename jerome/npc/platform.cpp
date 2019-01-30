@@ -115,5 +115,14 @@ namespace jerome {
 			implementation().collectionWasUpdated(inStateName);
 		}
 
+    bool Platform::usingLookupTable() const
+    {
+      return implementation().usingLookupTable();
+    }
+
+    void Platform::setUsingLookupTable(bool flag)
+    {
+      implementation().setUsingLookupTable(flag);
+    }
   }
 }

@@ -162,6 +162,17 @@ namespace jerome {
       */
       void collectionWasUpdated(
           const OptionalString& inStateName = OptionalString());
+
+
+      /**
+       Determines whether Jerome uses lookup table to speed up the search.
+       If the query exists in the training data, the lookup table returns
+       all and only responses linked to that entry.
+
+       @return true if lookup table is enabled.
+       */
+      bool usingLookupTable() const;
+      void setUsingLookupTable(bool flag);
     };
   }
 }
