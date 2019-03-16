@@ -35,7 +35,7 @@ namespace jerome {
 
     namespace detail {
 
-      class ModelReader;
+      class ModelReaderXML;
 
       template <typename Obj>
       struct objectReader
@@ -83,10 +83,10 @@ namespace jerome {
         static constexpr const std::size_t  index = 4;
       };
 
-      class ModelReader
+      class ModelReaderXML
       {
       public:
-        ModelReader(const ObjectFactory& inObjectFactory, std::istream& stream)
+        ModelReaderXML(const ObjectFactory& inObjectFactory, std::istream& stream)
           : mReader(stream)
           , mObjectFactory(inObjectFactory)
         {
@@ -237,7 +237,7 @@ namespace jerome {
       };
 
       template <>
-      Utterance ModelReader::read<Utterance>()
+      Utterance ModelReaderXML::read<Utterance>()
       {
         reader().assertNode(xml::reader::ELEMENT, tag::utterance);
         String identifier = requiredAttribute(tag::id);
@@ -262,7 +262,7 @@ namespace jerome {
       }
 
       template <>
-      Link ModelReader::read<Link>()
+      Link ModelReaderXML::read<Link>()
       {
         reader().assertNode(xml::reader::ELEMENT, tag::link);
         String identifier = requiredAttribute(tag::id);
@@ -281,7 +281,7 @@ namespace jerome {
       }
 
       template <>
-      Domain ModelReader::read<Domain>()
+      Domain ModelReaderXML::read<Domain>()
       {
         reader().assertNode(xml::reader::ELEMENT, tag::domain);
         String identifier = requiredAttribute(tag::id);
@@ -300,7 +300,7 @@ namespace jerome {
       }
 
       template <>
-      Lattice ModelReader::read<Lattice>()
+      Lattice ModelReaderXML::read<Lattice>()
       {
         reader().assertNode(xml::reader::ELEMENT, tag::lattice);
         String identifier = requiredAttribute(tag::id);
@@ -318,7 +318,7 @@ namespace jerome {
       }
 
       template <>
-      State ModelReader::read<State>()
+      State ModelReaderXML::read<State>()
       {
         reader().assertNode(xml::reader::ELEMENT, tag::state);
         String identifier = requiredAttribute(tag::id);
@@ -351,7 +351,7 @@ namespace jerome {
     Result<Collection>  readCollection(const ObjectFactory& inObjectFactory,
                                        std::istream& stream)
     {
-      detail::ModelReader  rdr(inObjectFactory, stream);
+      detail::ModelReaderXML  rdr(inObjectFactory, stream);
       return rdr.readCollection();
     }
 
