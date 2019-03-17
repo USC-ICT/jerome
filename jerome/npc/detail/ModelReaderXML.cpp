@@ -28,14 +28,14 @@
 #include <jerome/xml/record_writer.hpp>
 #include <jerome/npc/detail/ModelIO.hpp>
 
-#include "ModelReader.hpp"
+#include "ModelReaderXML.hpp"
 
 namespace jerome {
   namespace npc {
 
     namespace detail {
 
-      class ModelReaderXML;
+      class ModelReaderXMLImpl;
 
       template <typename Obj>
       struct objectReader
@@ -83,10 +83,11 @@ namespace jerome {
         static constexpr const std::size_t  index = 4;
       };
 
-      class ModelReaderXML
+      class ModelReaderXMLImpl
       {
       public:
-        ModelReaderXML(const ObjectFactory& inObjectFactory, std::istream& stream)
+        ModelReaderXMLImpl(const ObjectFactory& inObjectFactory, 
+                           std::istream& stream)
           : mReader(stream)
           , mObjectFactory(inObjectFactory)
         {
@@ -237,7 +238,7 @@ namespace jerome {
       };
 
       template <>
-      Utterance ModelReaderXML::read<Utterance>()
+      Utterance ModelReaderXMLImpl::read<Utterance>()
       {
         reader().assertNode(xml::reader::ELEMENT, tag::utterance);
         String identifier = requiredAttribute(tag::id);
@@ -262,7 +263,7 @@ namespace jerome {
       }
 
       template <>
-      Link ModelReaderXML::read<Link>()
+      Link ModelReaderXMLImpl::read<Link>()
       {
         reader().assertNode(xml::reader::ELEMENT, tag::link);
         String identifier = requiredAttribute(tag::id);
@@ -281,7 +282,7 @@ namespace jerome {
       }
 
       template <>
-      Domain ModelReaderXML::read<Domain>()
+      Domain ModelReaderXMLImpl::read<Domain>()
       {
         reader().assertNode(xml::reader::ELEMENT, tag::domain);
         String identifier = requiredAttribute(tag::id);
@@ -300,7 +301,7 @@ namespace jerome {
       }
 
       template <>
-      Lattice ModelReaderXML::read<Lattice>()
+      Lattice ModelReaderXMLImpl::read<Lattice>()
       {
         reader().assertNode(xml::reader::ELEMENT, tag::lattice);
         String identifier = requiredAttribute(tag::id);
@@ -318,7 +319,7 @@ namespace jerome {
       }
 
       template <>
-      State ModelReaderXML::read<State>()
+      State ModelReaderXMLImpl::read<State>()
       {
         reader().assertNode(xml::reader::ELEMENT, tag::state);
         String identifier = requiredAttribute(tag::id);
@@ -346,13 +347,19 @@ namespace jerome {
         return state;
       }
 
-    }
-
-    Result<Collection>  readCollection(const ObjectFactory& inObjectFactory,
-                                       std::istream& stream)
-    {
-      detail::ModelReaderXML  rdr(inObjectFactory, stream);
-      return rdr.readCollection();
+      Result<Collection>  
+      ModelReaderXML::provide(const ObjectFactory& inObjectFactory,
+                              std::istream& stream)
+      {
+        ModelReaderXMLImpl  rdr(inObjectFactory, stream);
+        return rdr.readCollection();
+      }
+      
+      std::vector<String> 
+      ModelReaderXML::acceptableFileNameExtensions() const
+      {
+        return {"xml", "jerome", "csxml"};
+      }
     }
 
   }

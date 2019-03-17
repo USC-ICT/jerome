@@ -15,6 +15,7 @@
 
 #include <jerome/type/algorithm.hpp>
 #include <jerome/npc/npc.hpp>
+#include <jerome/npc/detail/ModelReader.hpp>
 #include <jerome/npc/detail/ModelWriterText.hpp>
 #include <jerome/npc/factories/AnalyzerFactory.hpp>
 #include <jerome/npc/factories/TrainerFactory.hpp>
@@ -25,7 +26,6 @@
 #include <jerome/ir/report/HTMLReporter.hpp>
 #include <jerome/ir/report/XMLReporter.hpp>
 
-static const char* oInputFile           = "input";
 static const char* oOutputFile          = "output";
 static const char* oReportFile          = "report";
 static const char* oReportFormat        = "report-format";
@@ -66,11 +66,11 @@ po::options_description Train::options(po::options_description inOptions) const
   auto awModels = modelNames<AnswerWeightingFactory>();
   auto trainerModels = modelNames<TrainerFactory>();
 
+  appendInputOptions(options);
+  
   options.add_options()
   (oVerbosity, 	po::value<int>()->default_value(int(0)),
    "verbosity level")
-  (oInputFile, 	po::value<std::string>()->default_value("-"),
-   "input file (default: standard input)")
   (oOutputFile, po::value<std::string>(),
    "output file (default: none)")
   (oReportFile, po::value<std::string>(),
@@ -377,7 +377,8 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
   eparams.stateName = classifierName;
   eparams.testQuestions = testTrainSplit.first;
   eparams.trainingQuestions = testTrainSplit.second;
-  eparams.report = parseReportStream(classifierName, variables(), "before");
+  eparams.report = parseReportStream(classifierName, variables(), 
+                                     inputFileName(variables()), "before");
   eparams.reporterModel = eargs;
   
   if (verbosity.isPrintingInitialScore()) {
@@ -389,7 +390,8 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
   auto error = platform().train(params);
   if (error) return error;
 
-  eparams.report = parseReportStream(classifierName, variables(), "after");
+  eparams.report = parseReportStream(classifierName, variables(), 
+                                     inputFileName(variables()), "after");
   auto acc_or_error_after = platform().evaluate(eparams);
   if (!acc_or_error_after) return acc_or_error_after.error();
 
@@ -408,7 +410,7 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
 
 OptionalError Train::setup()
 {
-  return platform().loadCollection(*istreamWithName(variables()[oInputFile]));
+  return loadCollection();
 }
 
 OptionalError Train::teardown()

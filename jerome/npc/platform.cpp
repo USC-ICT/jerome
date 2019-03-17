@@ -44,9 +44,11 @@ namespace jerome {
 		{
 		}
 		
-    OptionalError Platform::loadCollection(std::istream& is)
+    OptionalError Platform::loadCollection(std::istream& is, 
+                                           const OptionalString& inFormat)
     {
-      return implementation().loadCollection(is);
+      return implementation().loadCollection(is, cpp::ObjectFactory(), 
+                                             inFormat);
     }
 	
     void Platform::loadDialogueManager(std::istream& is,

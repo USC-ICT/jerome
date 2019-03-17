@@ -21,6 +21,11 @@ public:
 protected:
   Platform& platform() { return mPlatform; }
   const Platform& platform() const { return mPlatform; }
+  OptionalError loadCollection(const po::variable_value& inName, 
+                               const po::variable_value& inFormat);
+  OptionalError loadCollection();
+  void appendInputOptions(po::options_description& ioOptions) const;
+  std::string inputFileName(const po::variables_map& inVM) const;
   
 private:
   Platform mPlatform;

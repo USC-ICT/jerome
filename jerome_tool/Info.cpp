@@ -10,24 +10,24 @@
 #include <iostream>
 
 #include <jerome/npc/npc.hpp>
+#include <jerome/npc/detail/ModelReader.hpp>
 #include <jerome/npc/detail/ModelWriterText.hpp>
 #include <jerome/type/algorithm.hpp>
 
 #include "Info.hpp"
 
-static const char* oInputFile     = "input";
-static const char* oOutputFile    = "output";
-static const char* oVerbosity     = "verbosity";
+static const char* oOutputFile      = "output";
+static const char* oVerbosity       = "verbosity";
 
 po::options_description Info::options(po::options_description inOptions) const
 {
   po::options_description options(parent_type::options(inOptions));
   
+  appendInputOptions(options);
+  
   options.add_options()
   (oVerbosity, 	po::value<int>()->default_value(0),
    "verbosity level")
-  (oInputFile, 	po::value<std::string>()->default_value("-"),
-   "input file. '-' = stdin.")
   (oOutputFile, 	po::value<std::string>()->default_value("-"),
    "output file. '-' = stdout")
   ;
@@ -41,7 +41,7 @@ using namespace jerome::npc;
 OptionalError Info::setup()
 {
   mOutput = ostreamWithName(variables()[oOutputFile]);
-  return platform().loadCollection(*istreamWithName(variables()[oInputFile]));
+  return loadCollection();
 }
 
 //OptionalError Info::teardown()

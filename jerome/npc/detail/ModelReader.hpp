@@ -24,13 +24,34 @@
 #define __jerome_npc_detail_ModelReader_hpp__
 
 #include <jerome/types.hpp>
+#include <jerome/type/Factory.hpp>
 
 namespace jerome {
   namespace npc {
 		struct Collection;
 		struct ObjectFactory;
-		Result<Collection>	readCollection(const ObjectFactory& inObjectFactory,
-			std::istream& stream);
+    
+    class ModelReaderFactory: public Factory<
+      ModelReaderFactory, Collection, const ObjectFactory&, std::istream&> 
+    {
+      typedef Factory<
+        ModelReaderFactory, Collection, 
+        const ObjectFactory&, std::istream&> parent_type;
+    public:
+      ModelReaderFactory();
+      OptionalString providerIDForFileName(const String& inFileName) const;
+      
+      struct Provider: public parent_type::Provider {
+        virtual std::vector<String> acceptableFileNameExtensions() const;
+        virtual bool acceptsFileName(const String& inFileName) const; 
+      };
+    };
+    
+		Result<Collection>	
+    readCollection(const ObjectFactory& inObjectFactory,
+                   std::istream& stream, 
+                   const OptionalString& providerID = 
+                    ModelReaderFactory::sharedInstance().defaultProviderID());
 	}
 }
 

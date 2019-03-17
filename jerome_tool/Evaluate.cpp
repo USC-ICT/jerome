@@ -13,14 +13,14 @@
 #include <jerome/type/algorithm.hpp>
 #include <jerome/type/Factory.hpp>
 #include <jerome/npc/npc.hpp>
+#include <jerome/npc/detail/ModelReader.hpp>
 #include <jerome/npc/detail/ModelWriterText.hpp>
 #include <jerome/ir/report/HTMLReporter.hpp>
 #include <jerome/ir/report/XMLReporter.hpp>
 
-static const char* oInputFile   = "input";
-static const char* oReportFile	= "report";
-static const char* oReportFormat= "report-format";
-static const char* oTestSplit   = "test-split";
+static const char* oReportFile	    = "report";
+static const char* oReportFormat    = "report-format";
+static const char* oTestSplit       = "test-split";
 
 #include "split.private.hpp"
 
@@ -31,9 +31,9 @@ po::options_description Evaluate::options(po::options_description inOptions) con
 {
   po::options_description options(parent_type::options(inOptions));
   
+  appendInputOptions(options);
+  
   options.add_options()
-  (oInputFile, 	po::value<std::string>()->default_value("-"),
-   "input file (default standard input)")
   (oReportFile, po::value<std::string>(),
    "report file name format string (default: none), e.g., "\
    "\"report-%s-%s.xml\". The file will be named by replacing the first " \
@@ -56,7 +56,7 @@ po::options_description Evaluate::options(po::options_description inOptions) con
 
 OptionalError Evaluate::setup()
 {
-  return platform().loadCollection(*istreamWithName(variables()[oInputFile]));
+  return loadCollection();
 }
 
 OptionalError Evaluate::teardown()
@@ -89,7 +89,8 @@ OptionalError Evaluate::run1Classifier(const std::string& classifierName)
   params.stateName = classifierName;
   params.testQuestions = testTrainSplit.first;
   params.trainingQuestions = testTrainSplit.second;
-  params.report = parseReportStream(classifierName, variables());
+  params.report = parseReportStream(classifierName, variables(), 
+                                    inputFileName(variables()));
   params.reporterModel = args;
   
   auto acc_or_error = platform().evaluate(params);

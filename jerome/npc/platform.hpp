@@ -65,7 +65,9 @@ namespace jerome {
 
        @return error if any
        */
-      OptionalError loadCollection(std::istream& is);
+      OptionalError loadCollection(std::istream& is,
+                                   const OptionalString& inFormat = 
+                                     OptionalString());
 
       /**
        Trains the classifier.

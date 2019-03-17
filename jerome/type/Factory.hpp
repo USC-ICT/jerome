@@ -98,7 +98,7 @@ namespace jerome {
       : provider.error();
     }
 
-    Result<provider_type&> providerWithID(const String& identifier)
+    Result<provider_type&> providerWithID(const String& identifier) const
     {
       auto p = mProviders.find(identifier);
       if (p == mProviders.end())

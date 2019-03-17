@@ -75,7 +75,9 @@ namespace jerome {
 
         OptionalError loadCollection(std::istream& is,
                                      const ObjectFactory& inObjectFactory =
-                                       jerome::npc::cpp::ObjectFactory());
+                                       jerome::npc::cpp::ObjectFactory(),
+                                     const OptionalString& inFormat = 
+                                       OptionalString());
 
         OptionalError saveCollection(std::ostream& os);
 

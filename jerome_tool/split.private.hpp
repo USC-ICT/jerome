@@ -53,13 +53,14 @@ parseFormat(const po::variables_map& inVM)
 static ostream_ptr
 parseReportStream(const std::string& classifierName,
                   const po::variables_map& inVM,
+                  const std::string& inInputFileName, 
                   const std::string& suffix = "")
 {
   if (inVM[oReportFile].empty()) {
     return Command::nullOStream();
   } else {
     auto name = string_format(inVM[oReportFile].as<std::string>(),
-                              inVM[oInputFile].as<std::string>().c_str(),
+                              inInputFileName.c_str(),
                               classifierName.c_str(),
                               suffix.c_str());
     return Command::ostreamWithName(name);

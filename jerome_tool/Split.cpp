@@ -10,22 +10,22 @@
 #include <iostream>
 
 #include <jerome/npc/npc.hpp>
+#include <jerome/npc/detail/ModelReader.hpp>
 #include <jerome/npc/detail/ModelWriterText.hpp>
 
 #include "Split.hpp"
 
-static const char* oInputFile   = "input";
-static const char* oOutputFile  = "output";
-static const char* oSplit	= "split";
-static const char* oSplit_default	= "auto";
+static const char* oOutputFile      = "output";
+static const char* oSplit	          = "split";
+static const char* oSplit_default	  = "auto";
 
 po::options_description Split::options(po::options_description inOptions) const
 {
   po::options_description options(parent_type::options(inOptions));
   
+  appendInputOptions(options);
+  
   options.add_options()
-  (oInputFile, 	po::value<std::string>()->default_value("-"),
-   "input file. If none specified, we will use stdin.")
   (oOutputFile,  po::value<std::string>()->default_value("-"),
    "output file. If none specified, we will use stdout.")
   (oSplit, 	po::value<std::string>()->default_value(oSplit_default),
@@ -43,7 +43,7 @@ using namespace jerome::npc;
 
 OptionalError Split::setup()
 {
-  return platform().loadCollection(*istreamWithName(variables()[oInputFile]));
+  return loadCollection();
 }
 
 OptionalError Split::teardown()

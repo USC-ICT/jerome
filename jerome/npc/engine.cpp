@@ -167,9 +167,11 @@ namespace jerome {
 
 
       OptionalError  Engine::loadCollection(std::istream& is,
-                                            const ObjectFactory& inObjectFactory)
+                                            const ObjectFactory& inObjectFactory,
+                                            const OptionalString& inFormat)
       {
-        auto loadResult = jerome::npc::readCollection(inObjectFactory, is);
+        auto loadResult = jerome::npc::readCollection(inObjectFactory, 
+                                                      is, inFormat);
         if (!loadResult) return loadResult.error();
         mCollection = loadResult.value();
         return Error::NO_ERROR;
