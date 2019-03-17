@@ -2,7 +2,7 @@
 //  analysis.hpp
 //
 //  Created by Anton Leuski on 3/13/12.
-//  Copyright (c) 2015 ICT/USC. All rights reserved.
+//  Copyright (c) 2015 Anton Leuski & ICT/USC. All rights reserved.
 //
 //  This file is part of Jerome.
 //
