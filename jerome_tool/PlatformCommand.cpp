@@ -53,7 +53,8 @@ PlatformCommand::loadCollection()
   return loadCollection(variables()[oInputFile], variables()[oInputFileFormat]);
 }
 
-void PlatformCommand::appendInputOptions(po::options_description& ioOptions) const
+void 
+PlatformCommand::appendInputOptions(po::options_description& ioOptions) const
 {
   ioOptions.add_options()
   (oInputFile,   po::value<std::string>()->default_value("-"),
@@ -62,12 +63,14 @@ void PlatformCommand::appendInputOptions(po::options_description& ioOptions) con
    (std::string("input file format ")
     + "(default: guess from the file extension, otherwise use xml). "
     + "You may provide one of\n  "
-    + boost::algorithm::join(ModelReaderFactory::sharedInstance().providerIDs(), "\n  ")
+    + boost::algorithm::join(ModelReaderFactory::sharedInstance()
+                             .providerIDs(), "\n  ")
     ).c_str())
   ;
 }
 
-std::string PlatformCommand::inputFileName(const po::variables_map& inVM) const 
+std::string 
+PlatformCommand::inputFileName(const po::variables_map& inVM) const 
 {
   return inVM[oInputFile].as<std::string>();
 }
