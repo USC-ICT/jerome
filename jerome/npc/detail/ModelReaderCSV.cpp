@@ -93,7 +93,7 @@ namespace jerome {
                               std::istream& stream)
       {
         boost::spirit::istream_iterator first(stream), last;
-        ModelReaderTableImpl tableReader(inObjectFactory);
+        ModelReaderTable tableReader(inObjectFactory);
         CsvGrammar<boost::spirit::istream_iterator> 
         grammar([&](const Record& r){ tableReader.processLine(r); });
         

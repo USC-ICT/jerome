@@ -22,27 +22,23 @@
 #ifndef __jerome_npc_detail_ModelReaderTable_hpp__
 #define __jerome_npc_detail_ModelReaderTable_hpp__
 
-#include <ios>
-#include <jerome/npc/model.hpp>
+#include <jerome/types.hpp>
 
 namespace jerome {
   namespace npc {
+    class Collection;
+    class ObjectFactory;
+    
     namespace detail {
-      class ModelReaderTableImpl {
+      class ModelReaderTableImpl;
+      class ModelReaderTable
+        : public ReferenceClassInterface<ModelReaderTableImpl> 
+      {
+        typedef ReferenceClassInterface<ModelReaderTableImpl> parent_type;
       public:
-        ModelReaderTableImpl(const ObjectFactory& inObjectFactory);
-
-        const ObjectFactory& of()
-        {
-          return mObjectFactory;
-        }
-
+        ModelReaderTable(const ObjectFactory& inObjectFactory);
         void processLine(const std::vector<std::string>& inLine);
-        Result<Collection>  collection() const;
-
-      private:
-        const ObjectFactory& mObjectFactory;
-        Collection mCollection;
+        Result<Collection> collection() const;
       };
     }
   }
