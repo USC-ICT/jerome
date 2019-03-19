@@ -38,7 +38,7 @@ namespace jerome {
       public:
         ModelReaderTable(const ObjectFactory& inObjectFactory);
         void processLine(const std::vector<std::string>& inLine);
-        Result<Collection> collection() const;
+        Result<Collection> collection();
       };
     }
   }
