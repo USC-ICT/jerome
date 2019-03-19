@@ -326,6 +326,15 @@ map.emplace(#X, Algorithm(nlopt::X, true, true))
           result.params = x;
           result.best_point = obj.scoreValuePair(x);
 
+          if (this->model().at(Trainer::HACK_THRESHOLD, Bool()).value()) {
+//            std::cout << "hacking score to " 
+//              << result.best_point.score() - 1 << std::endl;
+           
+            result.best_point = 
+              ScoredObject<double>(result.best_point.score() - 1, 
+                                   result.best_point.object());
+          }
+          
 //          std::cout << x << std::endl;
 //          std::cout << result.best_point << std::endl;
 

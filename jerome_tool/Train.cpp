@@ -52,7 +52,6 @@ static const char* oQuestionWeighting   = "question-weighting";
 static const char* oAnswerWeighting     = "answer-weighting";
 static const char* oTrainer             = "trainer";
 static const char* oVerbosity           = "verbosity";
-static const char* oHackThreshold       = "hack-threshold";
 
 #include "split.private.hpp"
 
@@ -117,7 +116,7 @@ po::options_description Train::options(po::options_description inOptions) const
     + devTrainSplitActions.description() + "\n"
     )
    .c_str())
-  (oHackThreshold, po::value<bool>()->default_value(false),
+  (TR::HACK_THRESHOLD, po::value<bool>()->default_value(false),
    "If you do not have enough training data to extract and use a "\
    "meaningful dev and test sets, you can train and test on the "\
    "whole dataset by specifying 'all' as the question selection "\
@@ -220,12 +219,21 @@ static void recordEmplace(Record& ioRecord,
     ioRecord.emplace(key, vm[key].as<T>());
 }
 
+template <>
+void recordEmplace<bool>(Record& ioRecord,
+                         const String& key, 
+                         const po::variables_map& vm)
+{
+  if (!vm[key].empty())
+    ioRecord.emplace(key, Bool(vm[key].as<bool>()));
+}
+
 static Result<TrainerFactory::object_type>
 makeTrainer(const po::variables_map& inVM)
 {
   auto trainerMeasure = inVM[oTrainer].as<std::string>();
   auto trainerModel = TrainerFactory::sharedInstance()
-  .modelAt(trainerMeasure);
+    .modelAt(trainerMeasure);
   if (!trainerModel) {
     return Error("No trainer measure with id " + trainerMeasure);
   }
@@ -242,6 +250,8 @@ makeTrainer(const po::variables_map& inVM)
   recordEmplace<double>(model, TR::L_FTOL_ABS, inVM);
   recordEmplace<double>(model, TR::L_XTOL_REL, inVM);
   recordEmplace<double>(model, TR::L_XTOL_ABS, inVM);
+
+  recordEmplace<bool>(model, TR::HACK_THRESHOLD, inVM);
 
   return TrainerFactory::sharedInstance().make(model);
 }

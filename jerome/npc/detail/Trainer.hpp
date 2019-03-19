@@ -91,6 +91,8 @@ namespace jerome {
         static constexpr const char* L_XTOL_REL = "local-parameter-relative-tolerance";
         static constexpr const char* L_XTOL_ABS = "local-parameter-absolute-tolerance";
         static constexpr const char* L_ALGORITHM = "local-algorithm";
+
+        static constexpr const char* HACK_THRESHOLD = "hack-threshold";
         
         enum AlgorithmKind {
           LOCAL,
