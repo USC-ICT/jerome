@@ -133,8 +133,8 @@ namespace jerome {
         ModelReaderTableImpl(const ObjectFactory& inObjectFactory)
         : mObjectFactory(inObjectFactory)
         , mCollection(of().makeNew<Collection>())
-        , mQuestionInfo(true, "Anybody")
-        , mAnswerInfo(false, "Anyone")
+        , mQuestionInfo(true, "Anyone")
+        , mAnswerInfo(false, "Somebody")
         {
         }
         
@@ -272,12 +272,13 @@ namespace jerome {
             auto questionPair = findUtterance(RecordMultiline(lines, j), 
                                               mQuestionInfo);
             if (!answerPair || !questionPair) { continue; }
-            auto lattice = findLattice(answerPair.value().first, 
-                                       questionPair.value().first);
+            auto lattice = findLattice(questionPair.value().first, 
+                                       answerPair.value().first);
             auto link = of().makeNew<Link>();
             link.setValue(6);
             link.utterances().insert(questionPair.value().second);
             link.utterances().insert(answerPair.value().second);
+            mCollection.links().insert(link);
             lattice.links().insert(link);
           }          
         }

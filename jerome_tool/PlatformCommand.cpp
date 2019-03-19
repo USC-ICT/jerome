@@ -44,7 +44,7 @@ PlatformCommand::loadCollection(const po::variable_value& inName,
       format = ModelReaderFactory::sharedInstance().providerIDForFileName(name);
     }
   }
-  return platform().loadCollection(*istreamWithName(inName));
+  return platform().loadCollection(*istreamWithName(inName), format);
 }
 
 OptionalError 

@@ -255,6 +255,7 @@ namespace jerome {
         UtteranceImpl()
         : mFields()
         , mFieldNames(mFields)
+        , mCount(1)
         {
         }
         

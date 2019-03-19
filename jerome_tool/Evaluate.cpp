@@ -41,12 +41,16 @@ static const char* oTestSplit       = "test-split";
 using namespace jerome;
 using namespace jerome::npc;
 
+static SplitMenu<const Domain::utterances_type&> testTrainSplitActions("test", 0.1);
+
 po::options_description Evaluate::options(po::options_description inOptions) const
 {
   po::options_description options(parent_type::options(inOptions));
   
   appendInputOptions(options);
   
+  const char* CHOICE = "\nProvide one of";
+
   options.add_options()
   (oReportFile, po::value<std::string>(),
    "report file name format string (default: none), e.g., "\
@@ -54,13 +58,10 @@ po::options_description Evaluate::options(po::options_description inOptions) con
    "argument in the format with input file name and the second with " \
    "the classifier name." )
   (oReportFormat, po::value<std::string>()->default_value("html"),
-   "report file format. One of xml or html.")
+   "report file format. One of 'xml' or 'html'.")
   (oTestSplit,  po::value<std::string>()->default_value("label"),
-   (std::string("How to select test questions. Provide one of \n")
-    + "auto      \t\n"
-    + "label     \t\n"
-    + "<number>  \t\n"
-    + "<number>% \t\n"
+   (std::string("How to select test questions.")
+    + CHOICE + testTrainSplitActions.description() + "\n"
     )
    .c_str())
   ;
@@ -90,10 +91,12 @@ OptionalError Evaluate::run1Classifier(const std::string& classifierName)
   auto format_or_error = parseFormat(variables());
   if (!format_or_error) return format_or_error.error();
   
-  std::pair<UL, UL>   testTrainSplit =
-  splitData<const Domain::utterances_type&>(variables(), oTestSplit,
-                                            optState->questions().utterances(),
-                                            0.1, "test");
+  auto   testTrainSplit = testTrainSplitActions
+    .split(optState->questions().utterances(),
+           variables()[oTestSplit].as<String>());
+  if (!testTrainSplit) {
+    return testTrainSplit.error();
+  }
   
   Record args(jerome::detail::FactoryConst::PROVIDER_KEY,
               format_or_error.value());
@@ -101,8 +104,8 @@ OptionalError Evaluate::run1Classifier(const std::string& classifierName)
   EvaluationParameters<Utterance> params;
   
   params.stateName = classifierName;
-  params.testQuestions = testTrainSplit.first;
-  params.trainingQuestions = testTrainSplit.second;
+  params.testQuestions = testTrainSplit.value().first;
+  params.trainingQuestions = testTrainSplit.value().second;
   params.report = parseReportStream(classifierName, variables(), 
                                     inputFileName(variables()));
   params.reporterModel = args;

@@ -92,6 +92,9 @@ namespace jerome {
       ModelReaderCSV::provide(const ObjectFactory& inObjectFactory,
                               std::istream& stream)
       {
+        // it does not work without it. 
+        stream >> std::noskipws;
+
         boost::spirit::istream_iterator first(stream), last;
         ModelReaderTable tableReader(inObjectFactory);
         CsvGrammar<boost::spirit::istream_iterator> 
