@@ -26,8 +26,8 @@
 		6200F72F1B83C87000CA121E /* ModelWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6200F72C1B83C87000CA121E /* ModelWriter.cpp */; };
 		6200F7371B84735F00CA121E /* reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6200F7351B84735F00CA121E /* reader.cpp */; };
 		6200F7381B84735F00CA121E /* reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6200F7351B84735F00CA121E /* reader.cpp */; };
-		6200F73D1B84772E00CA121E /* ModelReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6200F73B1B84772E00CA121E /* ModelReader.cpp */; };
-		6200F73E1B84772E00CA121E /* ModelReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6200F73B1B84772E00CA121E /* ModelReader.cpp */; };
+		6200F73D1B84772E00CA121E /* ModelReaderXML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6200F73B1B84772E00CA121E /* ModelReaderXML.cpp */; };
+		6200F73E1B84772E00CA121E /* ModelReaderXML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6200F73B1B84772E00CA121E /* ModelReaderXML.cpp */; };
 		620176281606850600FC583D /* model_cpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620176271606850500FC583D /* model_cpp.cpp */; };
 		620346741D8C9996008C7608 /* parsing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620346731D8C9996008C7608 /* parsing.cpp */; };
 		620346751D8C9996008C7608 /* parsing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620346731D8C9996008C7608 /* parsing.cpp */; };
@@ -92,6 +92,13 @@
 		627818C51CC8322700C344E4 /* ObjectiveC++.mm in Sources */ = {isa = PBXBuildFile; fileRef = 627818C11CC8322700C344E4 /* ObjectiveC++.mm */; };
 		628059901F05A35D00D6B08D /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6280598F1F05A35D00D6B08D /* boost.framework */; };
 		628059911F05BC2600D6B08D /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6280598F1F05A35D00D6B08D /* boost.framework */; };
+		6284C2F3223D8E41006BB913 /* ModelReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6284C2F2223D8E41006BB913 /* ModelReader.cpp */; };
+		6284C2F4223D8E41006BB913 /* ModelReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6284C2F2223D8E41006BB913 /* ModelReader.cpp */; };
+		6284C2F8223DA3A6006BB913 /* ModelReaderTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6284C2F6223DA3A6006BB913 /* ModelReaderTable.cpp */; };
+		6284C2F9223DA3A6006BB913 /* ModelReaderTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6284C2F6223DA3A6006BB913 /* ModelReaderTable.cpp */; };
+		6284C2FC223DA3B7006BB913 /* ModelReaderCSV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6284C2FA223DA3B7006BB913 /* ModelReaderCSV.cpp */; };
+		6284C2FD223DA3B7006BB913 /* ModelReaderCSV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6284C2FA223DA3B7006BB913 /* ModelReaderCSV.cpp */; };
+		6284C30422418E4F006BB913 /* csv_tests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6284C30322418E4F006BB913 /* csv_tests.mm */; };
 		6288C8AE163B5C6200191972 /* js_engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8AC163B5C6200191972 /* js_engine.cpp */; };
 		6288C8AF163B5C6200191972 /* js_engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8AC163B5C6200191972 /* js_engine.cpp */; };
 		6288C8BB1651DD0F00191972 /* async.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8B91651DD0E00191972 /* async.cpp */; };
@@ -342,7 +349,7 @@
 		6200F7351B84735F00CA121E /* reader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = reader.cpp; sourceTree = "<group>"; };
 		6200F7361B84735F00CA121E /* reader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = reader.hpp; sourceTree = "<group>"; };
 		6200F73A1B84740400CA121E /* reader_impl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = reader_impl.hpp; sourceTree = "<group>"; };
-		6200F73B1B84772E00CA121E /* ModelReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModelReader.cpp; sourceTree = "<group>"; };
+		6200F73B1B84772E00CA121E /* ModelReaderXML.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ModelReaderXML.cpp; sourceTree = "<group>"; };
 		6200F73C1B84772E00CA121E /* ModelReader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ModelReader.hpp; sourceTree = "<group>"; };
 		6200F7411B883A5100CA121E /* model_impl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = model_impl.hpp; sourceTree = "<group>"; };
 		6200F7451B897D3100CA121E /* ModelIO.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ModelIO.hpp; sourceTree = "<group>"; };
@@ -469,6 +476,13 @@
 		627818C11CC8322700C344E4 /* ObjectiveC++.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "ObjectiveC++.mm"; sourceTree = "<group>"; };
 		627818CA1CC8341600C344E4 /* copy_headers.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = copy_headers.sh; sourceTree = "<group>"; };
 		6280598F1F05A35D00D6B08D /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = 3rdParty/build/osx/Frameworks/boost.framework; sourceTree = SOURCE_ROOT; };
+		6284C2F2223D8E41006BB913 /* ModelReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ModelReader.cpp; sourceTree = "<group>"; };
+		6284C2F5223D8F51006BB913 /* ModelReaderXML.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ModelReaderXML.hpp; sourceTree = "<group>"; };
+		6284C2F6223DA3A6006BB913 /* ModelReaderTable.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ModelReaderTable.cpp; sourceTree = "<group>"; };
+		6284C2F7223DA3A6006BB913 /* ModelReaderTable.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ModelReaderTable.hpp; sourceTree = "<group>"; };
+		6284C2FA223DA3B7006BB913 /* ModelReaderCSV.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ModelReaderCSV.cpp; sourceTree = "<group>"; };
+		6284C2FB223DA3B7006BB913 /* ModelReaderCSV.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ModelReaderCSV.hpp; sourceTree = "<group>"; };
+		6284C30322418E4F006BB913 /* csv_tests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = csv_tests.mm; sourceTree = "<group>"; };
 		6288C8AC163B5C6200191972 /* js_engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = js_engine.cpp; sourceTree = "<group>"; };
 		6288C8AD163B5C6200191972 /* js_engine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = js_engine.hpp; sourceTree = "<group>"; };
 		6288C8B91651DD0E00191972 /* async.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = async.cpp; sourceTree = "<group>"; };
@@ -1050,11 +1064,19 @@
 		62990CC91B6B371F00DEB2E8 /* detail */ = {
 			isa = PBXGroup;
 			children = (
+				6200F5571BAA04AD009828A4 /* evaluation.cpp */,
+				6200F5581BAA04AD009828A4 /* evaluation.hpp */,
 				62C3277F1B9AC258001EB593 /* model_impl.cpp */,
 				6200F7411B883A5100CA121E /* model_impl.hpp */,
 				6200F7451B897D3100CA121E /* ModelIO.hpp */,
-				6200F73B1B84772E00CA121E /* ModelReader.cpp */,
+				6284C2F2223D8E41006BB913 /* ModelReader.cpp */,
 				6200F73C1B84772E00CA121E /* ModelReader.hpp */,
+				6284C2FA223DA3B7006BB913 /* ModelReaderCSV.cpp */,
+				6284C2FB223DA3B7006BB913 /* ModelReaderCSV.hpp */,
+				6284C2F6223DA3A6006BB913 /* ModelReaderTable.cpp */,
+				6284C2F7223DA3A6006BB913 /* ModelReaderTable.hpp */,
+				6200F73B1B84772E00CA121E /* ModelReaderXML.cpp */,
+				6284C2F5223D8F51006BB913 /* ModelReaderXML.hpp */,
 				6200F72C1B83C87000CA121E /* ModelWriter.cpp */,
 				6200F72D1B83C87000CA121E /* ModelWriter.hpp */,
 				62C3277A1B998A71001EB593 /* ModelWriterText.cpp */,
@@ -1067,8 +1089,6 @@
 				62990CD01B6CCD5400DEB2E8 /* Trainer.cpp */,
 				6255E9171B6C4B0100EA9402 /* Trainer.hpp */,
 				62990CD51B6D708D00DEB2E8 /* types_fwd.hpp */,
-				6200F5571BAA04AD009828A4 /* evaluation.cpp */,
-				6200F5581BAA04AD009828A4 /* evaluation.hpp */,
 			);
 			path = detail;
 			sourceTree = "<group>";
@@ -1321,6 +1341,7 @@
 				625D39F421484F7A0038D20D /* dictionary_Tests.mm */,
 				62D19FBA2148692100E8C954 /* libjerome_osx_tests.m */,
 				62D19FBC2148692100E8C954 /* Info.plist */,
+				6284C30322418E4F006BB913 /* csv_tests.mm */,
 			);
 			path = libjerome.osx.tests;
 			sourceTree = "<group>";
@@ -1790,8 +1811,10 @@
 				62C3276D1B963286001EB593 /* ReporterFactory.cpp in Sources */,
 				6200F7371B84735F00CA121E /* reader.cpp in Sources */,
 				62AC3BBD1BBC94C80067C540 /* string.cpp in Sources */,
+				6284C2F8223DA3A6006BB913 /* ModelReaderTable.cpp in Sources */,
 				620C62831B75764A00FA2953 /* irregular_verbs.cpp in Sources */,
 				62C327771B998A38001EB593 /* ModelWriterXML.cpp in Sources */,
+				6284C2F3223D8E41006BB913 /* ModelReader.cpp in Sources */,
 				622BF9941B82D472001588C7 /* PlatformJSInterface.cpp in Sources */,
 				62C327651B9631D4001EB593 /* RankerFactory.cpp in Sources */,
 				62AC3BC01BBC967F0067C540 /* error.cpp in Sources */,
@@ -1808,10 +1831,11 @@
 				62C327801B9AC258001EB593 /* model_impl.cpp in Sources */,
 				622EA2E81604F30400764667 /* collection.cpp in Sources */,
 				6211C3301B8016BF00F293DC /* document.cpp in Sources */,
-				6200F73D1B84772E00CA121E /* ModelReader.cpp in Sources */,
+				6200F73D1B84772E00CA121E /* ModelReaderXML.cpp in Sources */,
 				6288C8AE163B5C6200191972 /* js_engine.cpp in Sources */,
 				62C3277C1B998A71001EB593 /* ModelWriterText.cpp in Sources */,
 				62E830E71B64752500847135 /* engine.cpp in Sources */,
+				6284C2FC223DA3B7006BB913 /* ModelReaderCSV.cpp in Sources */,
 				62D19FC62148976300E8C954 /* dictionary.cpp in Sources */,
 				62F5F8E11CE2C0CE00EECA12 /* npc_model.cpp in Sources */,
 				6255E92A1B729A5200EA9402 /* parameters.cpp in Sources */,
@@ -1888,6 +1912,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6284C30422418E4F006BB913 /* csv_tests.mm in Sources */,
 				62D19FBB2148692100E8C954 /* libjerome_osx_tests.m in Sources */,
 				62D19FC32148692A00E8C954 /* dictionary_Tests.mm in Sources */,
 			);
@@ -1910,6 +1935,7 @@
 				6211C33D1B80717300F293DC /* stylesheet.cpp in Sources */,
 				6200F7381B84735F00CA121E /* reader.cpp in Sources */,
 				62B316F31D0F8B5B00D2E4E4 /* string.cpp in Sources */,
+				6284C2FD223DA3B7006BB913 /* ModelReaderCSV.cpp in Sources */,
 				62D19FC72148976300E8C954 /* dictionary.cpp in Sources */,
 				62C327781B998A38001EB593 /* ModelWriterXML.cpp in Sources */,
 				620C62841B75764A00FA2953 /* irregular_verbs.cpp in Sources */,
@@ -1917,6 +1943,7 @@
 				62C327661B9631D4001EB593 /* RankerFactory.cpp in Sources */,
 				62F5F8E21CE2C0CE00EECA12 /* npc_model.cpp in Sources */,
 				622BF9951B82D472001588C7 /* PlatformJSInterface.cpp in Sources */,
+				6284C2F4223D8E41006BB913 /* ModelReader.cpp in Sources */,
 				6268B0361A057A1800287DF4 /* parsing.cpp in Sources */,
 				62C327721B96329E001EB593 /* WeightingFactory.cpp in Sources */,
 				62C4AA741B7D5B7C00B8A47A /* XMLReporter.cpp in Sources */,
@@ -1929,9 +1956,10 @@
 				62D56AF81987069400F09A32 /* cross_entropy_jelinek_mercer.cpp in Sources */,
 				62C327811B9AC258001EB593 /* model_impl.cpp in Sources */,
 				62FAE740161155500065D358 /* types.cpp in Sources */,
+				6284C2F9223DA3A6006BB913 /* ModelReaderTable.cpp in Sources */,
 				6211C3311B8016BF00F293DC /* document.cpp in Sources */,
 				62F5F8EA1CE2C8D500EECA12 /* scripts.cpp in Sources */,
-				6200F73E1B84772E00CA121E /* ModelReader.cpp in Sources */,
+				6200F73E1B84772E00CA121E /* ModelReaderXML.cpp in Sources */,
 				62B316F51D0F8BBC00D2E4E4 /* error.cpp in Sources */,
 				6288C8AF163B5C6200191972 /* js_engine.cpp in Sources */,
 				62C3277D1B998A71001EB593 /* ModelWriterText.cpp in Sources */,
@@ -2162,6 +2190,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 625D39FC21485C730038D20D /* App.mac.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_MODULES = NO;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -2189,6 +2218,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 625D39FC21485C730038D20D /* App.mac.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_MODULES = NO;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_ENABLE_OBJC_WEAK = YES;
