@@ -25,10 +25,13 @@
 
 typedef List<Utterance> UL;
 
-template <typename T>
-struct SplitAction {
-  virtual ~SplitAction() {}
+struct SplitActionBase {
+  virtual ~SplitActionBase() {}
   virtual String description() const = 0;
+};
+
+template <typename T>
+struct SplitAction: public SplitActionBase {
   virtual optional<std::pair<UL, UL>> 
   split(const T& inRange, const String& value) const = 0;
 };
@@ -151,7 +154,8 @@ struct SplitMenu {
     const char* SEP = "\n  ";
     std::vector<String> descriptions(items.size());
     std::transform(items.begin(), items.end(), descriptions.begin(), 
-                   [](const auto& item) { return item->description(); });
+                   [](const std::shared_ptr<SplitActionBase>& item) 
+                   { return item->description(); });
     return SEP + boost::algorithm::join(descriptions, SEP);
   }
   

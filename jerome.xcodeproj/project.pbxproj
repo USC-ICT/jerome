@@ -99,6 +99,7 @@
 		6284C2FC223DA3B7006BB913 /* ModelReaderCSV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6284C2FA223DA3B7006BB913 /* ModelReaderCSV.cpp */; };
 		6284C2FD223DA3B7006BB913 /* ModelReaderCSV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6284C2FA223DA3B7006BB913 /* ModelReaderCSV.cpp */; };
 		6284C30422418E4F006BB913 /* csv_tests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6284C30322418E4F006BB913 /* csv_tests.mm */; };
+		6284C3092242E73A006BB913 /* CMakeLists.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6284C3082242E73A006BB913 /* CMakeLists.txt */; };
 		6288C8AE163B5C6200191972 /* js_engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8AC163B5C6200191972 /* js_engine.cpp */; };
 		6288C8AF163B5C6200191972 /* js_engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8AC163B5C6200191972 /* js_engine.cpp */; };
 		6288C8BB1651DD0F00191972 /* async.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8B91651DD0E00191972 /* async.cpp */; };
@@ -483,6 +484,7 @@
 		6284C2FA223DA3B7006BB913 /* ModelReaderCSV.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ModelReaderCSV.cpp; sourceTree = "<group>"; };
 		6284C2FB223DA3B7006BB913 /* ModelReaderCSV.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ModelReaderCSV.hpp; sourceTree = "<group>"; };
 		6284C30322418E4F006BB913 /* csv_tests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = csv_tests.mm; sourceTree = "<group>"; };
+		6284C3082242E73A006BB913 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		6288C8AC163B5C6200191972 /* js_engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = js_engine.cpp; sourceTree = "<group>"; };
 		6288C8AD163B5C6200191972 /* js_engine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = js_engine.hpp; sourceTree = "<group>"; };
 		6288C8B91651DD0E00191972 /* async.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = async.cpp; sourceTree = "<group>"; };
@@ -897,6 +899,7 @@
 		625D39F621485BDE0038D20D /* Configurations */ = {
 			isa = PBXGroup;
 			children = (
+				6284C3082242E73A006BB913 /* CMakeLists.txt */,
 				625D39FC21485C730038D20D /* App.mac.xcconfig */,
 				625D39FA21485C730038D20D /* App.xcconfig */,
 				625D39FE21485C740038D20D /* Debug.xcconfig */,
@@ -1699,6 +1702,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6284C3092242E73A006BB913 /* CMakeLists.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
