@@ -5,6 +5,20 @@
 //  Created by Anton Leuski on 9/9/16.
 //  Copyright © 2016 Anton Leuski & ICT/USC. All rights reserved.
 //
+//  This file is part of Jerome.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
 
 #include <fstream>
 
@@ -13,40 +27,41 @@
 #include <jerome/type/algorithm.hpp>
 #include <jerome/type/Factory.hpp>
 #include <jerome/npc/npc.hpp>
+#include <jerome/npc/detail/ModelReader.hpp>
 #include <jerome/npc/detail/ModelWriterText.hpp>
 #include <jerome/ir/report/HTMLReporter.hpp>
 #include <jerome/ir/report/XMLReporter.hpp>
 
-static const char* oInputFile   = "input";
-static const char* oReportFile	= "report";
-static const char* oReportFormat= "report-format";
-static const char* oTestSplit   = "test-split";
+static const char* oReportFile	    = "report";
+static const char* oReportFormat    = "report-format";
+static const char* oTestSplit       = "test-split";
 
 #include "split.private.hpp"
 
 using namespace jerome;
 using namespace jerome::npc;
 
+static SplitMenu<const Domain::utterances_type&> testTrainSplitActions("test", 0.1);
+
 po::options_description Evaluate::options(po::options_description inOptions) const
 {
   po::options_description options(parent_type::options(inOptions));
   
+  appendInputOptions(options);
+  
+  const char* CHOICE = "\nProvide one of";
+
   options.add_options()
-  (oInputFile, 	po::value<std::string>()->default_value("-"),
-   "input file (default standard input)")
   (oReportFile, po::value<std::string>(),
    "report file name format string (default: none), e.g., "\
    "\"report-%s-%s.xml\". The file will be named by replacing the first " \
    "argument in the format with input file name and the second with " \
    "the classifier name." )
   (oReportFormat, po::value<std::string>()->default_value("html"),
-   "report file format. One of xml or html.")
+   "report file format. One of 'xml' or 'html'.")
   (oTestSplit,  po::value<std::string>()->default_value("label"),
-   (std::string("How to select test questions. Provide one of \n")
-    + "auto      \t\n"
-    + "label     \t\n"
-    + "<number>  \t\n"
-    + "<number>% \t\n"
+   (std::string("How to select test questions.")
+    + CHOICE + testTrainSplitActions.description() + "\n"
     )
    .c_str())
   ;
@@ -56,7 +71,7 @@ po::options_description Evaluate::options(po::options_description inOptions) con
 
 OptionalError Evaluate::setup()
 {
-  return platform().loadCollection(*istreamWithName(variables()[oInputFile]));
+  return loadCollection();
 }
 
 OptionalError Evaluate::teardown()
@@ -76,10 +91,12 @@ OptionalError Evaluate::run1Classifier(const std::string& classifierName)
   auto format_or_error = parseFormat(variables());
   if (!format_or_error) return format_or_error.error();
   
-  std::pair<UL, UL>   testTrainSplit =
-  splitData<const Domain::utterances_type&>(variables(), oTestSplit,
-                                            optState->questions().utterances(),
-                                            0.1, "test");
+  auto   testTrainSplit = testTrainSplitActions
+    .split(optState->questions().utterances(),
+           variables()[oTestSplit].as<String>());
+  if (!testTrainSplit) {
+    return testTrainSplit.error();
+  }
   
   Record args(jerome::detail::FactoryConst::PROVIDER_KEY,
               format_or_error.value());
@@ -87,9 +104,10 @@ OptionalError Evaluate::run1Classifier(const std::string& classifierName)
   EvaluationParameters<Utterance> params;
   
   params.stateName = classifierName;
-  params.testQuestions = testTrainSplit.first;
-  params.trainingQuestions = testTrainSplit.second;
-  params.report = parseReportStream(classifierName, variables());
+  params.testQuestions = testTrainSplit.value().first;
+  params.trainingQuestions = testTrainSplit.value().second;
+  params.report = parseReportStream(classifierName, variables(), 
+                                    inputFileName(variables()));
   params.reporterModel = args;
   
   auto acc_or_error = platform().evaluate(params);

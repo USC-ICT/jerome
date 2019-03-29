@@ -5,29 +5,43 @@
 //  Created by Anton Leuski on 9/20/16.
 //  Copyright © 2016 Anton Leuski & ICT/USC. All rights reserved.
 //
+//  This file is part of Jerome.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
 
 #include <fstream>
 #include <iostream>
 
 #include <jerome/npc/npc.hpp>
+#include <jerome/npc/detail/ModelReader.hpp>
 #include <jerome/npc/detail/ModelWriterText.hpp>
 #include <jerome/type/algorithm.hpp>
 
 #include "Info.hpp"
 
-static const char* oInputFile     = "input";
-static const char* oOutputFile    = "output";
-static const char* oVerbosity     = "verbosity";
+static const char* oOutputFile      = "output";
+static const char* oVerbosity       = "verbosity";
 
 po::options_description Info::options(po::options_description inOptions) const
 {
   po::options_description options(parent_type::options(inOptions));
   
+  appendInputOptions(options);
+  
   options.add_options()
   (oVerbosity, 	po::value<int>()->default_value(0),
    "verbosity level")
-  (oInputFile, 	po::value<std::string>()->default_value("-"),
-   "input file. '-' = stdin.")
   (oOutputFile, 	po::value<std::string>()->default_value("-"),
    "output file. '-' = stdout")
   ;
@@ -41,7 +55,7 @@ using namespace jerome::npc;
 OptionalError Info::setup()
 {
   mOutput = ostreamWithName(variables()[oOutputFile]);
-  return platform().loadCollection(*istreamWithName(variables()[oInputFile]));
+  return loadCollection();
 }
 
 //OptionalError Info::teardown()

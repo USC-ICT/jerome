@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0930"
+   LastUpgradeVersion = "1010"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -119,15 +119,19 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--test-split label"
+            argument = "--hack-threshold false"
             isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--test-split label"
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--dev-split auto"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--max-time 30m"
+            argument = "--max-time 10s"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -135,7 +139,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--verbosity 0"
+            argument = "--verbosity 4"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -147,19 +151,39 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--global-function-relative-tolerance 0.0001"
+            argument = "--global-function-relative-tolerance 0.001"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--input &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Attic/plists/fritzie.plist.csxml&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--output &quot;/Users/leuski/BitTorrentSync/General/Celebrity/Attic/plists/fritzie.plist.csxml.new&quot;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--input &quot;${PROJECT_DIR}/test.csv&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--output &quot;${PROJECT_DIR}/test.csxml&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--classifier-name &quot;Anyone - Fritzie Fritzshall&quot;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--classifier-name &quot;Anyone - Somebody&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--test-split auto"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--dev-split auto"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

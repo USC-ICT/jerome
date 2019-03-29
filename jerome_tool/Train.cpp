@@ -5,6 +5,20 @@
 //  Created by Anton Leuski on 9/5/16.
 //  Copyright © 2016 Anton Leuski & ICT/USC. All rights reserved.
 //
+//  This file is part of Jerome.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
 
 #include <signal.h>
 
@@ -15,6 +29,7 @@
 
 #include <jerome/type/algorithm.hpp>
 #include <jerome/npc/npc.hpp>
+#include <jerome/npc/detail/ModelReader.hpp>
 #include <jerome/npc/detail/ModelWriterText.hpp>
 #include <jerome/npc/factories/AnalyzerFactory.hpp>
 #include <jerome/npc/factories/TrainerFactory.hpp>
@@ -25,7 +40,6 @@
 #include <jerome/ir/report/HTMLReporter.hpp>
 #include <jerome/ir/report/XMLReporter.hpp>
 
-static const char* oInputFile           = "input";
 static const char* oOutputFile          = "output";
 static const char* oReportFile          = "report";
 static const char* oReportFormat        = "report-format";
@@ -57,6 +71,9 @@ modelNames()
   return std::make_pair(modelNamesString, defaultModelName);
 }
 
+static SplitMenu<const Domain::utterances_type&> testTrainSplitActions("test", 0.1);
+static SplitMenu<const UL&> devTrainSplitActions("dev", 0.15);
+
 po::options_description Train::options(po::options_description inOptions) const
 {
   po::options_description options(parent_type::options(inOptions));
@@ -66,11 +83,14 @@ po::options_description Train::options(po::options_description inOptions) const
   auto awModels = modelNames<AnswerWeightingFactory>();
   auto trainerModels = modelNames<TrainerFactory>();
 
+  appendInputOptions(options);
+  
+  const char* IDENT = "\n  ";
+  const char* CHOICE = "\nProvide one of";
+  
   options.add_options()
   (oVerbosity, 	po::value<int>()->default_value(int(0)),
    "verbosity level")
-  (oInputFile, 	po::value<std::string>()->default_value("-"),
-   "input file (default: standard input)")
   (oOutputFile, po::value<std::string>(),
    "output file (default: none)")
   (oReportFile, po::value<std::string>(),
@@ -85,50 +105,62 @@ po::options_description Train::options(po::options_description inOptions) const
    "one of 's' (seconds), 'm' (minutes), or 'h' (hours). If the unit is "\
    "omitted, we assume seconds.")
   (oTestSplit,  po::value<std::string>()->default_value("label"),
-   (std::string("How to select test questions. Provide one of \n")
-    + "  auto      \t\n"
-    + "  label     \t\n"
-    + "  <number>  \t\n"
-    + "  <number>% \t\n"
+   (std::string("How to select test questions.")
+    + CHOICE
+    + testTrainSplitActions.description() + "\n"
     )
    .c_str())
   (oDevSplit,   po::value<std::string>()->default_value("label"),
-   (std::string("How to select development questions. Provide one of \n")
-    + "  auto      \t\n"
-    + "  label     \t\n"
-    + "  <number>  \t\n"
-    + "  <number>% \t\n"
+   (std::string("How to select development questions.")
+    + CHOICE
+    + devTrainSplitActions.description() + "\n"
     )
    .c_str())
+  (TR::HACK_THRESHOLD, po::value<bool>()->default_value(false),
+   "If you do not have enough training data to extract and use a "\
+   "meaningful dev and test sets, you can train and test on the "\
+   "whole dataset by specifying 'all' as the question selection "\
+   "options. However, in that case the final classifier will be "\
+   "overtrained. It will generalize poorly -- it will be very "\
+   "sensitive to the question text. To combat this, we can make "\
+   "the classifier less sensitive by decreasing the threshold "\
+   "by hand. It's very hack-ish, but necessary during initial "\
+   "data collection. Set this flag to true if you want to "\
+   "make the classifier less sensitive."
+   )
   (oQuestionAnalyzer, po::value<std::string>()
     ->default_value(analyzerModels.second),
-   (std::string("question analyzer. One of\n  ")
-    + analyzerModels.first).c_str())
+   (std::string("question analyzer.")
+    + CHOICE + IDENT + analyzerModels.first).c_str())
   (oAnswerAnalyzer, po::value<std::string>()
     ->default_value(analyzerModels.second),
-   (std::string("answer analyzer. One of\n  ")
-    + analyzerModels.first).c_str())
+   (std::string("answer analyzer.")
+    + CHOICE + IDENT + analyzerModels.first).c_str())
   (oQuestionWeighting, po::value<std::string>()
    ->default_value(qwModels.second),
-   (std::string("question weighting. One of\n  ")
-    + qwModels.first).c_str())
+   (std::string("question weighting.")
+    + CHOICE + IDENT + qwModels.first).c_str())
   (oAnswerWeighting, po::value<std::string>()
    ->default_value(awModels.second),
-   (std::string("answer weighting. One of\n  ")
-    + awModels.first).c_str())
+   (std::string("answer weighting.")
+    + CHOICE + IDENT + awModels.first).c_str())
   (oTrainer, po::value<std::string>()
    ->default_value(trainerModels.second),
-   (std::string("training measure. One of\n  ")
-    + trainerModels.first).c_str())
+   (std::string("training measure.")
+    + CHOICE + IDENT + trainerModels.first).c_str())
   (TR::G_ALGORITHM, po::value<std::string>()
    ->default_value("GN_DIRECT_L_RAND"),
-   (std::string("global optimization algorithm. One of\n  ")
-    + boost::algorithm::join(TR::algorithms(TR::AlgorithmKind::ALL), "\n  ")).c_str())
+   (std::string("global optimization algorithm.")
+    + CHOICE + IDENT 
+    + boost::algorithm::join(TR::algorithms(TR::AlgorithmKind::ALL), IDENT)
+    ).c_str())
   (TR::L_ALGORITHM, po::value<std::string>(),
    (std::string("some global optimization algorithms, i.e., ")
     + boost::algorithm::join(TR::algorithms(TR::AlgorithmKind::GLOBAL_REQUIRING_LOCAL), ", ")
-    + " require a local optimizer. Try LN_BOBYQA first. One of\n  "
-    + boost::algorithm::join(TR::algorithms(TR::AlgorithmKind::LOCAL), "\n  ")).c_str())
+    + " require a local optimizer. Try LN_BOBYQA first."
+    + CHOICE + IDENT 
+    + boost::algorithm::join(TR::algorithms(TR::AlgorithmKind::LOCAL), IDENT)
+    ).c_str())
   ;
   
   po::options_description stopping("Stopping criteria");
@@ -187,12 +219,21 @@ static void recordEmplace(Record& ioRecord,
     ioRecord.emplace(key, vm[key].as<T>());
 }
 
+template <>
+void recordEmplace<bool>(Record& ioRecord,
+                         const String& key, 
+                         const po::variables_map& vm)
+{
+  if (!vm[key].empty())
+    ioRecord.emplace(key, Bool(vm[key].as<bool>()));
+}
+
 static Result<TrainerFactory::object_type>
 makeTrainer(const po::variables_map& inVM)
 {
   auto trainerMeasure = inVM[oTrainer].as<std::string>();
   auto trainerModel = TrainerFactory::sharedInstance()
-  .modelAt(trainerMeasure);
+    .modelAt(trainerMeasure);
   if (!trainerModel) {
     return Error("No trainer measure with id " + trainerMeasure);
   }
@@ -209,6 +250,8 @@ makeTrainer(const po::variables_map& inVM)
   recordEmplace<double>(model, TR::L_FTOL_ABS, inVM);
   recordEmplace<double>(model, TR::L_XTOL_REL, inVM);
   recordEmplace<double>(model, TR::L_XTOL_ABS, inVM);
+
+  recordEmplace<bool>(model, TR::HACK_THRESHOLD, inVM);
 
   return TrainerFactory::sharedInstance().make(model);
 }
@@ -273,6 +316,7 @@ struct Verbosity {
   : value(inValue)
   {}
   
+  bool isPrintingTestTrainSizes() const { return value > 0; }
   bool isPrintingFinalScore() const { return value > 0; }
   bool isPrintingInitialScore() const { return value > 1; }
   bool isPrintingProgress() const { return value > 2; }
@@ -289,12 +333,19 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
     return Error(std::string("Invalid classifier name: ") + classifierName);
   }
   
-  std::pair<UL, UL>   testTrainSplit =
-  splitData<const Domain::utterances_type&>(variables(), oTestSplit,
-                                            optState->questions().utterances(),
-                                            0.1, "test");
-  std::pair<UL, UL>   devTrainSplit =
-  splitData(variables(), oDevSplit, testTrainSplit.second, 0.15, "dev");
+  auto   testTrainSplit = testTrainSplitActions
+    .split(optState->questions().utterances(),
+           variables()[oTestSplit].as<String>());
+  if (!testTrainSplit) {
+    return testTrainSplit.error();
+  }
+  
+  auto   devTrainSplit = devTrainSplitActions
+    .split(testTrainSplit.value().second,
+           variables()[oDevSplit].as<String>());
+  if (!devTrainSplit) {
+    return devTrainSplit.error();
+  }
   
   auto trainer_or_error = makeTrainer(variables());
   if (!trainer_or_error) {
@@ -320,6 +371,17 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
   TrainingParameters<Utterance> params;
 
   setup_SIGINT_handler();
+  
+  if (verbosity.isPrintingTestTrainSizes()) {
+    std::cout 
+      << "question count: " << optState->questions().utterances().size() << std::endl 
+      << "  answer count: " << optState->answers().utterances().size() << std::endl 
+      << "    link count: " << optState->links().links().size() << std::endl 
+      << "train set size: " << devTrainSplit.value().second.size() << std::endl 
+      << "  dev set size: " << devTrainSplit.value().first.size() << std::endl 
+      << " test set size: " << testTrainSplit.value().first.size() << std::endl 
+      << std::flush;
+  }
   
   params.stateName = classifierName;
   params.callback = [&](TrainingState& state) {
@@ -364,8 +426,8 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
       std::cout << "." << std::flush;
     }
   };
-  params.developmentQuestions = devTrainSplit.first;
-  params.trainingQuestions = devTrainSplit.second;
+  params.developmentQuestions = devTrainSplit.value().first;
+  params.trainingQuestions = devTrainSplit.value().second;
   params.trainer = trainer_or_error.value();
   params.rankerModel = ranker_or_error.value();
   
@@ -375,9 +437,10 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
               format_or_error.value());
   
   eparams.stateName = classifierName;
-  eparams.testQuestions = testTrainSplit.first;
-  eparams.trainingQuestions = testTrainSplit.second;
-  eparams.report = parseReportStream(classifierName, variables(), "before");
+  eparams.testQuestions = testTrainSplit.value().first;
+  eparams.trainingQuestions = testTrainSplit.value().second;
+  eparams.report = parseReportStream(classifierName, variables(), 
+                                     inputFileName(variables()), "before");
   eparams.reporterModel = eargs;
   
   if (verbosity.isPrintingInitialScore()) {
@@ -389,7 +452,8 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
   auto error = platform().train(params);
   if (error) return error;
 
-  eparams.report = parseReportStream(classifierName, variables(), "after");
+  eparams.report = parseReportStream(classifierName, variables(), 
+                                     inputFileName(variables()), "after");
   auto acc_or_error_after = platform().evaluate(eparams);
   if (!acc_or_error_after) return acc_or_error_after.error();
 
@@ -408,7 +472,7 @@ OptionalError Train::run1Classifier(const std::string& classifierName)
 
 OptionalError Train::setup()
 {
-  return platform().loadCollection(*istreamWithName(variables()[oInputFile]));
+  return loadCollection();
 }
 
 OptionalError Train::teardown()
