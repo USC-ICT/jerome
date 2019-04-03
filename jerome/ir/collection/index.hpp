@@ -141,7 +141,8 @@ namespace jerome { namespace ir { namespace index {
 
     field_not_found_exception _field_not_found_exception(TermID inID) const {
       auto name = mAlphabet->index2string(inID);
-      return field_not_found_exception(name ? *name : std::string("unknown field"));
+      return field_not_found_exception(name 
+        ? *name : std::string("unknown field"));
     }
   };
 

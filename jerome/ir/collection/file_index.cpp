@@ -79,13 +79,14 @@ namespace jerome { namespace ir {
     return mPath / "info.json";
   }
 
-  auto FileIndex::read() {
-    if (!fs::exists(infoPath())) return;
+  auto FileIndex::read() -> OptionalError {
+    if (!fs::exists(infoPath())) return OptionalError();
     pt::ptree root;
     pt::read_json(infoPath().string(), root);
     if (root.get<int>("version") != version) {
-      throw unsupported_index_version();
+      return unsupported_index_version();
     }
+    return OptionalError();
   }
 
   auto FileIndex::write() {
@@ -103,7 +104,9 @@ namespace jerome { namespace ir {
   , mPath(inPath)
   , mAccess(inAccess)
   {
-    read();
+    auto optional_error = read();
+    if (optional_error) throw *optional_error;
+    
     auto fieldsPath = mPath / fieldsDirectoryName;
     if (fs::exists(fieldsPath) && fs::is_directory(fieldsPath)) {
       for(auto entry : fs::directory_iterator(mPath / fieldsDirectoryName)) {

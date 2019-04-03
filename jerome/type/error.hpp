@@ -31,22 +31,6 @@
 
 namespace jerome {
 
-  struct Exception : public std::logic_error {
-    typedef std::logic_error parent_type;
-    using parent_type::parent_type;
-    const char* what() const AL_NOEXCEPT override {
-      const char* s = parent_type::what();
-      if (!strlen(s)) s = typeid(*this).name();
-        return s;
-    }
-    Exception() : parent_type("") {}
-  };
-
-  #define JEROME_EXCEPTION(name) \
-    struct name : public jerome::Exception { \
-    using jerome::Exception::Exception; \
-    name() : jerome::Exception(#name) {} };
-
   struct OptionalError;
   
   struct JEROME_SYMBOL_EXPORT Error : std::exception {
@@ -85,10 +69,13 @@ namespace jerome {
     String mRecoverySuggestion;
     std::shared_ptr<Error> mReason;
     mutable String mBuffer;
-    
-    
   };
   
+  #define JEROME_EXCEPTION(name) \
+    struct name : public jerome::Error { \
+    using jerome::Error::Error; \
+    name() : jerome::Error(#name) {} };
+
   class OptionalError : public optional<Error>
   {
     typedef optional<Error> parent_type;

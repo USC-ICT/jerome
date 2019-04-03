@@ -213,7 +213,7 @@ namespace jerome { namespace ir {
     persistence::Access mAccess;
 
     auto makeField(const String& inName) -> Field;
-    auto read();
+    auto read() -> OptionalError;
     auto write();
     auto infoPath() const -> fs::path;
   };

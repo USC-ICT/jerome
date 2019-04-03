@@ -152,7 +152,7 @@ namespace jerome {
         void train(Trainer& inTrainer,
                    const Trainer::progress_callback_type& callback) override
         {
-          throw Exception("why are you calling this function?");
+          throw Error("why are you calling this function?");
         }
 
         test_set_type testSetWithData(const Data& data) const override
