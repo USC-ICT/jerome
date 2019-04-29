@@ -1609,7 +1609,7 @@
 			attributes = {
 				CLASSPREFIX = AL;
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Anton Leuski & ICT/USC";
 				TargetAttributes = {
 					622EA2D11604D43600764667 = {
@@ -1654,6 +1654,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 62A2526C14365A860008E65F;

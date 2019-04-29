@@ -258,7 +258,7 @@ namespace jerome {  namespace ir {
 		protected:
 
 			result_type filterResult(result_type&& base) {
-				if (mThreshold.value() >= 0) return base;
+        if (mThreshold.value() >= 0) return std::move(base);
 				
 				result_type	result(base.size());
 				for(std::size_t i = 0, n = base.size(); i < n; ++i) {
