@@ -31,6 +31,9 @@ JEROME_FRAMEWORK_SYMBOL_EXPORT
 - (BOOL)readCollectionFromURL:(NSURL* _Nonnull)url
                         error:(NSError * _Nullable * _Nullable)outError;
 
+- (BOOL)readCollectionFromData:(NSData* _Nonnull)data
+                         error:(NSError * _Nullable * _Nullable)outError;
+
 - (BOOL)writeCollectionToURL:(NSURL* _Nonnull)url
                        error:(NSError * _Nullable * _Nullable)outError;
 
@@ -48,6 +51,9 @@ JEROME_FRAMEWORK_SYMBOL_EXPORT
 
 - (NSString* _Nullable)readDialogueManagerFromURL:(NSURL* _Nonnull)url
                                             error:(NSError*  _Nullable * _Nullable)outError;
+
+- (NSString* _Nullable)readDialogueManagerFromData:(NSData* _Nonnull)data
+                                             error:(NSError* _Nullable * _Nullable)outError;
 
 - (void)postEventWithName:(NSString* _Nonnull)name
                      data:(NSDictionary<NSString*, NSString*>* _Nonnull)data

@@ -107,7 +107,19 @@ struct membuf : std::streambuf
 {
   // we should be able load from remote URLs
   //  std::ifstream  stream(url.absoluteURL.fileSystemRepresentation);
-  NSData* data = [NSData dataWithContentsOfURL:url];
+  NSData* data = [NSData dataWithContentsOfURL:url 
+                                       options:0 
+                                         error:outError];
+  if (!data) { 
+    return NO;     
+  }
+  
+  return [self readCollectionFromData:data error:outError];
+}
+
+- (BOOL)readCollectionFromData:(NSData*)data
+                         error:(NSError**)outError
+{
   membuf sbuf((char*)data.bytes, (char*)data.bytes + data.length);
   std::istream stream(&sbuf);
   auto result = self.platform.loadCollection(stream);
@@ -187,6 +199,36 @@ struct membuf : std::streambuf
       name = inName;
       error = inError;
     }];
+  });
+  
+  if (outError) *outError = error;
+  return name;
+}
+
+- (NSString*)readDialogueManagerFromData:(NSData*)data
+                                   error:(NSError**)outError
+{
+  NSString* source = [[NSString alloc] initWithData:data 
+                                           encoding:NSUTF8StringEncoding];
+  if (!source) {
+    if (outError) {
+      *outError = [NSError errorWithDomain:@"jerome" 
+                                      code:-1 
+                                  userInfo:@{NSLocalizedDescriptionKey: @"Cannot interpret data as UTF8"}];
+    }
+    return nil;
+  }
+  
+  __block NSError*  error = nil;
+  __block NSString* name = nil;
+  
+  dispatch_sync(self.queue, ^{
+    [self doReadDialogueManagerFromSource:source
+                         completionHandle:^(NSString* inName, NSError* inError)
+     {
+       name = inName;
+       error = inError;
+     }];
   });
   
   if (outError) *outError = error;
