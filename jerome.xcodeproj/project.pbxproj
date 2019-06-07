@@ -91,7 +91,6 @@
 		627818C41CC8322700C344E4 /* ObjectiveC++.h in Headers */ = {isa = PBXBuildFile; fileRef = 627818C01CC8322700C344E4 /* ObjectiveC++.h */; };
 		627818C51CC8322700C344E4 /* ObjectiveC++.mm in Sources */ = {isa = PBXBuildFile; fileRef = 627818C11CC8322700C344E4 /* ObjectiveC++.mm */; };
 		628059901F05A35D00D6B08D /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6280598F1F05A35D00D6B08D /* boost.framework */; };
-		628059911F05BC2600D6B08D /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6280598F1F05A35D00D6B08D /* boost.framework */; };
 		6284C2F3223D8E41006BB913 /* ModelReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6284C2F2223D8E41006BB913 /* ModelReader.cpp */; };
 		6284C2F4223D8E41006BB913 /* ModelReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6284C2F2223D8E41006BB913 /* ModelReader.cpp */; };
 		6284C2F8223DA3A6006BB913 /* ModelReaderTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6284C2F6223DA3A6006BB913 /* ModelReaderTable.cpp */; };
@@ -130,7 +129,6 @@
 		62B316E71D0F7B4A00D2E4E4 /* Scion.m in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8EF1CE304BE00EECA12 /* Scion.m */; };
 		62B316E91D0F7CD200D2E4E4 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62B316E81D0F7CD100D2E4E4 /* libxml2.2.tbd */; };
 		62B316ED1D0F7D0400D2E4E4 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62B316EC1D0F7D0400D2E4E4 /* JavaScriptCore.framework */; };
-		62B316EF1D0F7D2000D2E4E4 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62B316EE1D0F7D2000D2E4E4 /* boost.framework */; };
 		62B316F31D0F8B5B00D2E4E4 /* string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62AC3BBC1BBC94C80067C540 /* string.cpp */; };
 		62B316F41D0F8B8800D2E4E4 /* evaluation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6200F5571BAA04AD009828A4 /* evaluation.cpp */; };
 		62B316F51D0F8BBC00D2E4E4 /* error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62AC3BBE1BBC967F0067C540 /* error.cpp */; };
@@ -205,6 +203,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3A24142D22A8BC4500F12052 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62FA58CA1CCB344700641E2C /* kstem.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 62D900B7228BF1ED0083A9F5;
+			remoteInfo = KStemFramework.osx;
+		};
+		3A24142F22A8BC4500F12052 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62FA58CA1CCB344700641E2C /* kstem.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 62D900C4228BF26A0083A9F5;
+			remoteInfo = KStemFramework.ios;
+		};
 		62527B6C1BBB4A2F00767BA7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 62A2526E14365A860008E65F /* Project object */;
@@ -340,6 +352,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3A46DCB222A9FBD90017F7EE /* copy_3rdParty_libs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = copy_3rdParty_libs.sh; sourceTree = "<group>"; };
 		6200F5561BA76288009828A4 /* Record.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Record.hpp; sourceTree = "<group>"; };
 		6200F5571BAA04AD009828A4 /* evaluation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = evaluation.cpp; sourceTree = "<group>"; };
 		6200F5581BAA04AD009828A4 /* evaluation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = evaluation.hpp; sourceTree = "<group>"; };
@@ -680,7 +693,6 @@
 				62FA58C41CC99E1600641E2C /* libxml2.2.tbd in Frameworks */,
 				62FA58C01CC99DED00641E2C /* libjerome.a in Frameworks */,
 				62FA58C11CC99DFB00641E2C /* JavaScriptCore.framework in Frameworks */,
-				628059911F05BC2600D6B08D /* boost.framework in Frameworks */,
 				62FA58C21CC99E0800641E2C /* libxslt.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -705,7 +717,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				62EBE0581D30119800CC87F8 /* libkstem.a in Frameworks */,
-				62B316EF1D0F7D2000D2E4E4 /* boost.framework in Frameworks */,
 				62B316ED1D0F7D0400D2E4E4 /* JavaScriptCore.framework in Frameworks */,
 				62B316E91D0F7CD200D2E4E4 /* libxml2.2.tbd in Frameworks */,
 			);
@@ -1205,11 +1216,12 @@
 		62AC3BC31BBC9C830067C540 /* scripts */ = {
 			isa = PBXGroup;
 			children = (
-				62AC3BC41BBC9C840067C540 /* make_includes.sh */,
-				62AC3BC51BBC9CB90067C540 /* update_header_define.sh */,
-				62AC3BC61BBCBA730067C540 /* update_copyright.sh */,
-				62AC3BC71BBCBB2D0067C540 /* copyright.txt */,
+				3A46DCB222A9FBD90017F7EE /* copy_3rdParty_libs.sh */,
 				627818CA1CC8341600C344E4 /* copy_headers.sh */,
+				62AC3BC71BBCBB2D0067C540 /* copyright.txt */,
+				62AC3BC41BBC9C840067C540 /* make_includes.sh */,
+				62AC3BC61BBCBA730067C540 /* update_copyright.sh */,
+				62AC3BC51BBC9CB90067C540 /* update_header_define.sh */,
 			);
 			path = scripts;
 			sourceTree = "<group>";
@@ -1401,6 +1413,8 @@
 			children = (
 				62FA58D01CCB344800641E2C /* libkstem.a */,
 				62FA58D21CCB344800641E2C /* libkstem.a */,
+				3A24142E22A8BC4500F12052 /* KStem.framework */,
+				3A24143022A8BC4500F12052 /* KStem.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1493,6 +1507,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 627818BB1CC831C300C344E4 /* Build configuration list for PBXNativeTarget "Jerome.osx" */;
 			buildPhases = (
+				3A46DCB422A9FCB70017F7EE /* ShellScript */,
 				627818B11CC831C300C344E4 /* Sources */,
 				627818B21CC831C300C344E4 /* Frameworks */,
 				627818B31CC831C300C344E4 /* Headers */,
@@ -1530,6 +1545,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 62B316D31D0F7B1100D2E4E4 /* Build configuration list for PBXNativeTarget "Jerome.ios" */;
 			buildPhases = (
+				3A46DCB322A9FCA50017F7EE /* ShellScript */,
 				62B316BD1D0F7B1100D2E4E4 /* Sources */,
 				62B316BE1D0F7B1100D2E4E4 /* Frameworks */,
 				62B316BF1D0F7B1100D2E4E4 /* Headers */,
@@ -1609,7 +1625,7 @@
 			attributes = {
 				CLASSPREFIX = AL;
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1100;
 				ORGANIZATIONNAME = "Anton Leuski & ICT/USC";
 				TargetAttributes = {
 					622EA2D11604D43600764667 = {
@@ -1621,7 +1637,6 @@
 					};
 					627818B51CC831C300C344E4 = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = 4RX84Q9D57;
 					};
 					6280599B1F05D05900D6B08D = {
 						CreatedOnToolsVersion = 9.0;
@@ -1633,7 +1648,6 @@
 					};
 					62B316C11D0F7B1100D2E4E4 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = 4RX84Q9D57;
 					};
 					62CA480C1BB0859E00A2AA7B = {
 						CreatedOnToolsVersion = 7.0;
@@ -1651,11 +1665,11 @@
 			};
 			buildConfigurationList = 62A2527114365A860008E65F /* Build configuration list for PBXProject "jerome" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
+				Base,
 			);
 			mainGroup = 62A2526C14365A860008E65F;
 			productRefGroup = 62A2527814365A870008E65F /* Products */;
@@ -1682,6 +1696,20 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		3A24142E22A8BC4500F12052 /* KStem.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = KStem.framework;
+			remoteRef = 3A24142D22A8BC4500F12052 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3A24143022A8BC4500F12052 /* KStem.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = KStem.framework;
+			remoteRef = 3A24142F22A8BC4500F12052 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		62FA58D01CCB344800641E2C /* libkstem.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1724,6 +1752,40 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		3A46DCB322A9FCA50017F7EE /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${SRCROOT}/scripts/copy_3rdParty_libs.sh\"\n";
+		};
+		3A46DCB422A9FCB70017F7EE /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${SRCROOT}/scripts/copy_3rdParty_libs.sh\"\n";
+		};
 		627818B01CC82FD700C344E4 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2000,6 +2062,7 @@
 		};
 		628059A51F05D9EA00D6B08D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilter = ios;
 			target = 6280599B1F05D05900D6B08D /* 3rdParty */;
 			targetProxy = 628059A41F05D9EA00D6B08D /* PBXContainerItemProxy */;
 		};
@@ -2129,6 +2192,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 625D3A0021485C740038D20D /* Framework.mac.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = "";
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
@@ -2147,6 +2211,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 625D3A0021485C740038D20D /* Framework.mac.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = "";
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					/usr/include/libxml2,
@@ -2252,12 +2317,15 @@
 			baseConfigurationReference = 625D39FF21485C740038D20D /* Framework.ios.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Jerome.ios/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
-					"$(SRCROOT)/3rdParty/build/$(PLATFORM_NAME)/lib/libnlopt_cxx.a",
+					"${TARGET_BUILD_DIR}/libboost_system.a",
+					"${TARGET_BUILD_DIR}/libnlopt_cxx.a",
+					"${TARGET_BUILD_DIR}/libboost_thread.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
 				PRODUCT_NAME = Jerome;
@@ -2269,12 +2337,15 @@
 			baseConfigurationReference = 625D39FF21485C740038D20D /* Framework.ios.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Jerome.ios/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
-					"$(SRCROOT)/3rdParty/build/$(PLATFORM_NAME)/lib/libnlopt_cxx.a",
+					"${TARGET_BUILD_DIR}/libboost_system.a",
+					"${TARGET_BUILD_DIR}/libnlopt_cxx.a",
+					"${TARGET_BUILD_DIR}/libboost_thread.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
 				PRODUCT_NAME = Jerome;

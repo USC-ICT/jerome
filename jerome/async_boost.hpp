@@ -32,6 +32,7 @@
 #pragma clang diagnostic ignored "-Wshorten-64-to-32"
 #pragma clang diagnostic ignored "-Wconstexpr-not-const"
 #pragma clang diagnostic ignored "-Wcomma"
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/asio.hpp>
 #pragma clang diagnostic pop
 
@@ -46,7 +47,7 @@ namespace jerome {
         try {
           f();
         } catch (const std::exception& ex) {
-        std::cerr << "uncaught exception: " << ex.what() << std::endl;
+          std::cerr << "uncaught exception: " << ex.what() << std::endl;
         } catch (...) {
           std::cerr << "unknown uncaught exception" << std::endl;
         }

@@ -15,6 +15,7 @@ SUPPORTED_PLATFORMS = iphonesimulator iphoneos
 
 VALID_ARCHS[sdk=iphoneos*] = arm64
 VALID_ARCHS[sdk=iphonesimulator*] = x86_64
+SUPPORTS_UIKITFORMAC = YES
 
 // disabling a feature that is not available < ios 10.0
 GCC_PREPROCESSOR_DEFINITIONS = _DARWIN_FEATURE_CLOCK_GETTIME=0 $(inherited)

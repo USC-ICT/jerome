@@ -4,7 +4,7 @@ src_dir=$1
 dst_dir=$2
 
 found_eigen="YES"
-for platform_name in iphoneos iphonesimulator macosx
+for platform_name in iphoneos iphonesimulator macosx uikitformac
 do
 	if [ ! -e "${dst_dir}/${platform_name}/include/eigen3" ]
 	then
@@ -30,7 +30,7 @@ pushd "${src_dir}"
 			make install
 		popd
 
-		for platform_name in iphoneos iphonesimulator
+		for platform_name in iphoneos iphonesimulator uikitformac
 		do
 			if [ ! -d "${dst_dir}/${platform_name}/include/" ]
 			then
