@@ -219,7 +219,7 @@ namespace jerome {
             return W::computeQueryModelForQuery(inContext, inQuery);
           }          
         };
-
+        
         template <typename Index>
         struct AnyDocumentWeightingImplementation
           : public AnyWeightingImplementation
@@ -287,7 +287,7 @@ namespace jerome {
           }
           
         };
-
+        
       }
 
     }

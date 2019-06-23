@@ -1,0 +1,49 @@
+diff -Naur old/boost_1_59_0/boost/numeric/ublas/matrix.hpp new/boost_1_59_0/boost/numeric/ublas/matrix.hpp
+--- old/boost_1_59_0/boost/numeric/ublas/matrix.hpp	2015-08-06 02:47:02.000000000 -0700
++++ new/boost_1_59_0/boost/numeric/ublas/matrix.hpp	2019-06-06 16:03:27.000000000 -0700
+@@ -1384,7 +1384,7 @@
+ 
+         /*! @note "pass by value" the key idea to enable move semantics */
+         BOOST_UBLAS_INLINE
+-        fixed_matrix &operator = (matrix m) {
++        fixed_matrix &operator = (fixed_matrix m) {
+             assign_temporary(m);
+             return *this;
+         }
+diff -Naur old/boost_1_59_0/tools/build/src/tools/builtin.jam new/boost_1_59_0/tools/build/src/tools/builtin.jam
+--- old/boost_1_59_0/tools/build/src/tools/builtin.jam	2015-08-11 06:53:51.000000000 -0700
++++ new/boost_1_59_0/tools/build/src/tools/builtin.jam	2019-06-06 16:04:10.000000000 -0700
+@@ -304,7 +304,7 @@
+ 
+     # Advanced RISC Machines
+     armv2 armv2a armv3 armv3m armv4 armv4t armv5 armv5t armv5te armv6 armv6j iwmmxt ep9312
+-	armv7 armv7s
++	armv7 armv7s arm64
+ 
+     : propagated optional ;
+ 
+diff -Naur old/boost_1_59_0/tools/build/src/tools/darwin.jam new/boost_1_59_0/tools/build/src/tools/darwin.jam
+--- old/boost_1_59_0/tools/build/src/tools/darwin.jam	2015-08-11 06:53:51.000000000 -0700
++++ new/boost_1_59_0/tools/build/src/tools/darwin.jam	2019-06-06 16:31:36.000000000 -0700
+@@ -433,10 +433,10 @@
+         {
+             if $(address-model) = 32_64 {
+                 options = -arch i386 -arch x86_64 ;
+-            } else if $(address-model) = 64 {
++            } else if $(address-model) = 32 {
+                 options = -arch x86_64 ;
+             } else {
+-                options = -arch i386 ;
++                options = -arch x86_64 ;
+             }
+         }        
+         
+@@ -462,7 +462,7 @@
+             if $(instruction-set) {
+                 options = -arch$(_)$(instruction-set) ;
+             } else {
+-                options = -arch arm ;
++                options = -arch arm64 ;
+             }
+         }
+     }

@@ -3,8 +3,29 @@
 src_dir=$1
 dst_dir=$2
 
+: ${IPHONEOS_DEPLOYMENT_TARGET:=12.0}
+: ${MACOSX_DEPLOYMENT_TARGET:=10.13}
+: ${CLANG_CXX_LANGUAGE_STANDARD:=gnu++14}
+: ${CLANG_CXX_LIBRARY:=libc++}
+: ${IPHONE_SDKVERSION:=`xcodebuild -showsdks | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
+: ${OSX_SDKVERSION:=`xcodebuild -showsdks | grep macosx | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
+
+echo "IPHONE_SDKVERSION = ${IPHONE_SDKVERSION}"
+echo "MACOSX_DEPLOYMENT_TARGET = ${MACOSX_DEPLOYMENT_TARGET}"
+
+: ${BUILD_UIKIT_FOR_MAC:=`echo "${IPHONE_SDKVERSION} >= 13.0 && ${MACOSX_DEPLOYMENT_TARGET} >= 10.15" | bc`}
+
+if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
+then
+  echo "build uikitformac on"
+  platform_names="iphoneos iphonesimulator macosx uikitformac"
+else
+  echo "build uikitformac off"
+  platform_names="iphoneos iphonesimulator macosx"
+fi
+
 found_nlopt="YES"
-for platform_name in iphoneos iphonesimulator macosx
+for platform_name in ${platform_names}
 do
 	if [ ! -f "${dst_dir}/${platform_name}/lib/libnlopt_cxx.a" ]
 	then
@@ -22,19 +43,9 @@ pushd "${src_dir}"
 
 tar -xzf nlopt-2.3.tar.gz
 
-# Current iPhone SDK
-: ${IPHONE_SDKVERSION:=`xcodebuild -showsdks | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
-# Specific iPhone SDK
-: ${MIN_IOS_VERSION:=8.1}
-
-# Current OSX SDK
-: ${OSX_SDKVERSION:=`xcodebuild -showsdks | grep macosx | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
-: ${MIN_OSX_VERSION:=10.10}
-
 : ${XCODE_ROOT:=`xcode-select -print-path`}
 : ${EXTRA_CFLAGS:="-fvisibility=hidden -fvisibility-inlines-hidden  -g -DNDEBUG -Os"}
-: ${EXTRA_CPPFLAGS:="${EXTRA_CFLAGS} -std=c++11 -stdlib=libc++"}
-
+: ${EXTRA_CPPFLAGS:="${EXTRA_CFLAGS} -std=${CLANG_CXX_LANGUAGE_STANDARD} -stdlib=${CLANG_CXX_LIBRARY}"}
 
 BASE_PREFIX="${dst_dir}"
 TOOLCHAIN="$XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain"
@@ -53,8 +64,8 @@ configure_and_make () {
 	export CC="$TOOLCHAIN/usr/bin/clang"
 	export CXX="$TOOLCHAIN/usr/bin/clang++"
 	export CPP="$CC -E"
-	export CFLAGS=" -Os $ARCHS_LIST -isysroot $SYSRT ${EXTRA_FLAGS} $EXTRA_CFLAGS"
-	export CXXFLAGS="$CFLAGS -std=c++11 -stdlib=libc++"
+	export CFLAGS=" -Os ${ARCHS_LIST} -isysroot $SYSRT ${EXTRA_FLAGS} $EXTRA_CFLAGS"
+	export CXXFLAGS="$CFLAGS -std=${CLANG_CXX_LANGUAGE_STANDARD} -stdlib=${CLANG_CXX_LIBRARY}"
 
 	./configure --prefix="$PREFIX" ${EXTRA_CONFIG} \
 		--disable-shared --enable-static --with-cxx --without-guile --without-python \
@@ -68,16 +79,23 @@ configure_and_make () {
 
 pushd nlopt-2.3
 
-configure_and_make "${BASE_PREFIX}/iphoneos" "-arch armv7 -arch armv7s -arch arm64" \
-	"iPhoneOS" ${IPHONE_SDKVERSION} "-mios-version-min=${MIN_IOS_VERSION}" \
+if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
+then
+configure_and_make "${BASE_PREFIX}/uikitformac" "-target x86_64-apple-ios${IPHONEOS_DEPLOYMENT_TARGET}-macabi" \
+	"MacOSX" ${OSX_SDKVERSION} "-mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}" \
+	""
+fi
+
+configure_and_make "${BASE_PREFIX}/iphoneos" "-arch arm64" \
+	"iPhoneOS" ${IPHONE_SDKVERSION} "-mios-version-min=${IPHONEOS_DEPLOYMENT_TARGET}" \
 	"--host=arm-apple-darwin --target=arm-apple-darwin"
 
 configure_and_make "${BASE_PREFIX}/iphonesimulator" "-arch x86_64" \
-	"iPhoneSimulator" ${IPHONE_SDKVERSION} "-mios-version-min=${MIN_IOS_VERSION}" \
+	"iPhoneSimulator" ${IPHONE_SDKVERSION} "-mios-version-min=${IPHONEOS_DEPLOYMENT_TARGET}" \
 	"--host=x86-apple-darwin"
 
 configure_and_make "${BASE_PREFIX}/macosx" "-arch x86_64" \
-	"MacOSX" ${OSX_SDKVERSION} "-mmacosx-version-min=${MIN_OSX_VERSION}" \
+	"MacOSX" ${OSX_SDKVERSION} "-mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}" \
 	""
 
 popd

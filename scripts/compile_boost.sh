@@ -3,10 +3,31 @@
 src_dir=$1
 dst_dir=$2
 
+: ${IPHONEOS_DEPLOYMENT_TARGET:=12.0}
+: ${MACOSX_DEPLOYMENT_TARGET:=10.13}
+: ${CLANG_CXX_LANGUAGE_STANDARD:=gnu++14}
+: ${CLANG_CXX_LIBRARY:=libc++}
+: ${IPHONE_SDKVERSION:=`xcodebuild -showsdks | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
+: ${OSX_SDKVERSION:=`xcodebuild -showsdks | grep macosx | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
+
+echo "IPHONE_SDKVERSION = ${IPHONE_SDKVERSION}"
+echo "MACOSX_DEPLOYMENT_TARGET = ${MACOSX_DEPLOYMENT_TARGET}"
+
+: ${BUILD_UIKIT_FOR_MAC:=`echo "${IPHONE_SDKVERSION} >= 13.0 && ${MACOSX_DEPLOYMENT_TARGET} >= 10.15" | bc`}
+
+if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
+then
+  echo "build uikitformac on"
+  platform_names="iphoneos iphonesimulator macosx uikitformac"
+else
+  echo "build uikitformac off"
+  platform_names="iphoneos iphonesimulator macosx"
+fi
+
 found_boost="YES"
-for platform_name in iphoneos iphonesimulator macosx
+for platform_name in ${platform_names}
 do
-	if [ ! -e "${dst_dir}/${platform_name}/Frameworks/boost.framework" ]
+	if [ ! -e "${dst_dir}/${platform_name}/lib/libboost_system.a" ]
 	then
 		found_boost="NO"
 	fi
@@ -18,44 +39,12 @@ then
 	exit
 fi
 
-make_directory () {
-	local dst_platform_name="$1"
-
-	if [ -e "${dst_dir}/${dst_platform_name}/Frameworks/boost.framework" ]
-	then
-		rm -rf "${dst_dir}/${dst_platform_name}/Frameworks/boost.framework"
-	fi
-
-	if [ ! -d "${dst_dir}/${dst_platform_name}/Frameworks/" ]
-	then
-		mkdir -p "${dst_dir}/${dst_platform_name}/Frameworks/"
-	fi
-}
+export IPHONEOS_DEPLOYMENT_TARGET
+export MACOSX_DEPLOYMENT_TARGET
+export CLANG_CXX_LANGUAGE_STANDARD
+export CLANG_CXX_LIBRARY
+export BUILD_UIKIT_FOR_MAC
 
 pushd "${src_dir}"
-	./boost.sh
-	rm -rf build
-	rm -rf src
-
-	src_platform_name="osx"
-	dst_platform_name="macosx"
-	make_directory "${dst_platform_name}"
-
-	mv -f "${src_platform_name}/framework/boost.framework" "${dst_dir}/${dst_platform_name}/Frameworks/"
-	rm -rf "${src_platform_name}"
-
-	src_platform_name="ios"
-	dst_platform_name="iphoneos"
-	make_directory "${dst_platform_name}"
-
-	mv -f "${src_platform_name}/framework/boost.framework" "${dst_dir}/${dst_platform_name}/Frameworks/"
-	rm -rf "${src_platform_name}"
-
-	dst_platform_name="iphonesimulator"
-	make_directory "${dst_platform_name}"
-
-	pushd "${dst_dir}/${dst_platform_name}/Frameworks/"
-	ln -sf ../../iphoneos/Frameworks/boost.framework
-	popd
-
+	./boost.sh "${dst_dir}"
 popd

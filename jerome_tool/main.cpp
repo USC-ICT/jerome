@@ -45,7 +45,7 @@ int main(int argc, const char * argv[])
     if (!error) return 0;
     std::cerr << *error << std::endl;
   } catch (const std::exception& error) {
-    std::cerr << error << std::endl;
+    std::cerr << error.what() << std::endl;
   }
   Commander::shared().usage(std::cerr);
   return 1;
