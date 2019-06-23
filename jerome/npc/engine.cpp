@@ -50,6 +50,7 @@ namespace jerome {
 
       Engine::Engine()
         : mCollection(cpp::ObjectFactory().makeNew<Collection>())
+        , mUseLookupTable(false)
       {
 
       }

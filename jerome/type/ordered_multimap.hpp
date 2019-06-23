@@ -22,6 +22,7 @@
 #ifndef __jerome_type_ordered_multimap_hpp__
 #define __jerome_type_ordered_multimap_hpp__
 
+#include <boost/range/algorithm/count_if.hpp>
 #include <boost/range/algorithm/find_if.hpp>
 #include <boost/range/algorithm/remove_if.hpp>
 #include <jerome/types.hpp>
@@ -114,6 +115,14 @@ namespace jerome {
         return x.first == inKey;
       });
       return i == end() ? inDefault : i->second;
+    }
+    
+    size_t count(const key_type& inKey) const 
+    {
+      return boost::count_if(mContainer,
+      [&] (const value_type& x) {
+        return x.first == inKey;
+      });
     }
     
     void replace(const key_type& inKey, const mapped_type& inValue)

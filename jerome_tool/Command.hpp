@@ -25,7 +25,10 @@
 
 #include <string>
 #include <jerome/types.hpp>
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcomma"
 #include <boost/program_options.hpp>
+#pragma clang diagnostic pop
 
 namespace po = boost::program_options;
 
