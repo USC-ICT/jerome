@@ -1,0 +1,38 @@
+diff -Naur src/boost_1_70_0/tools/build/src/tools/darwin.jam new/boost_1_70_0/tools/build/src/tools/darwin.jam
+--- src/boost_1_70_0/tools/build/src/tools/darwin.jam	2019-04-09 12:36:57.000000000 -0700
++++ new/boost_1_70_0/tools/build/src/tools/darwin.jam	2019-06-22 20:51:01.000000000 -0700
+@@ -473,10 +473,10 @@
+         {
+             if $(address-model) = 32_64 {
+                 options = -arch i386 -arch x86_64 ;
+-            } else if $(address-model) = 64 {
+-                options = -arch x86_64 ;
+-            } else {
++            } else if $(address-model) = 32 {
+                 options = -arch i386 ;
++            } else {
++                options = -arch x86_64 ;
+             }
+         }        
+         
+@@ -502,7 +502,7 @@
+             if $(instruction-set) {
+                 options = -arch$(_)$(instruction-set) ;
+             } else {
+-                options = -arch arm ;
++                options = -arch arm64 ;
+             }
+         }
+     }
+diff -Naur src/boost_1_70_0/tools/build/src/tools/features/instruction-set-feature.jam new/boost_1_70_0/tools/build/src/tools/features/instruction-set-feature.jam
+--- src/boost_1_70_0/tools/build/src/tools/features/instruction-set-feature.jam	2019-04-09 12:36:57.000000000 -0700
++++ new/boost_1_70_0/tools/build/src/tools/features/instruction-set-feature.jam	2019-06-22 20:49:55.000000000 -0700
+@@ -41,7 +41,7 @@
+ 
+         # Advanced RISC Machines
+         armv2 armv2a armv3 armv3m armv4 armv4t armv5 armv5t armv5te armv6 armv6j iwmmxt ep9312
+-        armv7 armv7s
++        armv7 armv7s arm64
+ 
+     :
+         propagated optional
