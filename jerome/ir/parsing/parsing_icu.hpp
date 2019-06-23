@@ -73,10 +73,15 @@ namespace jerome {
 		}
 		
 		bool getNextToken(Token& ioToken) {
-			if (mIterator == mEndIterator) return false;
+// 		  std::cout << "asking for token ";
+			if (mIterator == mEndIterator) {
+//   		  std::cout << "none available" << std::endl;
+			  return false;
+			}
 			index_type::iterator	start	= mIterator;
 			++mIterator;
-			ioToken = Token(String(start->iterator(), mIterator->iterator())
+			auto text = String(start->iterator(), mIterator->iterator());
+			ioToken = Token(text
 					, (Token::size_type)(start->iterator() - mBegin->iterator())
 					, (Token::size_type)(mIterator->iterator() - start->iterator()));
 			return true;

@@ -5,7 +5,7 @@ project(jerome)
 set(jerome_3rdPartyRoot "${PROJECT_SOURCE_DIR}/3rdParty/build/macosx")
 
 # includes for 3rd party dependecies (boost, eigen, nlopt)
-set(jerome_includes "${jerome_3rdPartyRoot}/include")
+set(jerome_includes "${PROJECT_SOURCE_DIR}/../build/osx/include")
 
 # custom tweaks for eigen library
 set(EIGEN_SPARSEVECTOR_PLUGIN "${PROJECT_SOURCE_DIR}/jerome/type/matrix_eigen_sparse_vector_plugin.hpp")
@@ -107,13 +107,16 @@ endif (NOT boost_lib)
 
 if (boost_lib)
   message("Found boost: ${boost_lib}")
-	set(jerome_libraries ${jerome_libraries} ${boost_lib})
+  set(jerome_libraries ${jerome_libraries} ${boost_lib} boost_system boost_date_time boost_signals boost_filesystem boost_program_options boost_locale javascriptcoregtk-4.0)
 else (boost_lib)
 	message("Cannot find boost")
 endif (boost_lib)
 
 # find JavaScriptCore
-find_library(JavaScriptCore_lib JavaScriptCore)
+#find_library(JavaScriptCore_lib JavaScriptCoregtk-4.0 HINTS 
+find_library(JavaScriptCore_lib javascriptrcoregtk-4.0 HINTS 
+  "/usr/lib/x86_64-linux-gnu" 
+  )
 if (JavaScriptCore_lib)
   message("Found JavaScriptCore: ${JavaScriptCore_lib}")
   set(jerome_libraries ${jerome_libraries} ${JavaScriptCore_lib})
@@ -162,9 +165,11 @@ target_include_directories(jerome
   ${LIBXML2_INCLUDE_DIR}
   ${LIBXSLT_INCLUDE_DIR}
   "/usr/include/eigen3"
+  "/usr/include/webkitgtk-4.0"
+
 )
 
-target_link_libraries(jerome ${jerome_libraries})
+target_link_libraries(jerome ${jerome_libraries} )
 
 # -------------------------------------------------
 # jerome_tool

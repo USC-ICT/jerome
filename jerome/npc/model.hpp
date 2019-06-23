@@ -32,10 +32,14 @@
 // using any_iterator implementation from
 // http://thbecker.net/free_software_utilities/type_erasure_for_cpp_iterators/any_iterator.html
 // for now we remove one library dependecy. Huray!
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcomma"
 #include <boost/range/detail/any_iterator.hpp>
 // #include <any_iterator.hpp>
 
 #include <boost/range/algorithm/find_if.hpp>
+#pragma clang diagnostic pop
+
 #include <jerome/types.hpp>
 #include <jerome/type/Record.hpp>
 

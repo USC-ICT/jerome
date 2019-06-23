@@ -104,6 +104,10 @@ namespace jerome {
 			construct(a, rest...);
 		}
 		
+    size_t count(const String& inKey) const {
+      return parent_type::count(inKey);
+    }
+    
 		template <class T>
 		void emplace(const String& inKey, T t)
 		{
