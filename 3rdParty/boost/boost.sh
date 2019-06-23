@@ -22,24 +22,26 @@
 
 TARGET_DIR="$1"
 
-: ${THE_BOOST_VERSION:=59}
+: ${THE_BOOST_VERSION:=65}
 : ${BOOST_VERSION:=1.${THE_BOOST_VERSION}.0}
 : ${BOOST_VERSION2:=1_${THE_BOOST_VERSION}_0}
 
-: ${BOOST_LIBS:="thread signals filesystem program_options system date_time"}
+: ${BOOST_LIBS:="thread filesystem program_options system date_time locale"}
 
-# Current iPhone SDK
+: ${IPHONEOS_DEPLOYMENT_TARGET:=12.0}
+: ${MACOSX_DEPLOYMENT_TARGET:=10.13}
+: ${CLANG_CXX_LANGUAGE_STANDARD:=gnu++14}
+: ${CLANG_CXX_LIBRARY:=libc++}
 : ${IPHONE_SDKVERSION:=`xcodebuild -showsdks | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
-# Specific iPhone SDK
-: ${MIN_IOS_VERSION:=13.0}
-
-# Current OSX SDK
 : ${OSX_SDKVERSION:=`xcodebuild -showsdks | grep macosx | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
-# Specific OSX SDK
-: ${MIN_OSX_VERSION:=10.15}
+
+echo "IPHONE_SDKVERSION = ${IPHONE_SDKVERSION}"
+echo "MACOSX_DEPLOYMENT_TARGET = ${MACOSX_DEPLOYMENT_TARGET}"
+
+: ${BUILD_UIKIT_FOR_MAC:=`echo "${IPHONE_SDKVERSION} >= 13.0 && ${MACOSX_DEPLOYMENT_TARGET} >= 10.15" | bc`}
 
 : ${XCODE_ROOT:=`xcode-select -print-path`}
-: ${EXTRA_CPPFLAGS:="-fvisibility=hidden -fvisibility-inlines-hidden -DBOOST_AC_USE_PTHREADS -DBOOST_SP_USE_PTHREADS -g -DNDEBUG -std=c++11 -stdlib=libc++ -Os"}
+: ${EXTRA_CPPFLAGS:="-fvisibility=hidden -fvisibility-inlines-hidden -DBOOST_AC_USE_PTHREADS -DBOOST_SP_USE_PTHREADS -g -DNDEBUG -std=${CLANG_CXX_LANGUAGE_STANDARD} -stdlib=${CLANG_CXX_LIBRARY} -Os"}
 
 # The EXTRA_CPPFLAGS definition works around a thread race issue in
 # shared_ptr. I encountered this historically and have not verified that
@@ -130,7 +132,7 @@ unpackBoost()
 
     echo "patching matrix.hpp"
     pushd $SRCDIR
-    patch -p1 < ../matrix.patch
+    patch -p1 < ../matrix-${THE_BOOST_VERSION}.patch
     popd
 
     doneSection
@@ -161,17 +163,17 @@ updateBoost()
 
     cat >> "${JAM_FILE}" <<EOF
 using darwin : ${IPHONE_SDKVERSION}~iphone
-: $XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -mios-version-min=$MIN_IOS_VERSION $EXTRA_CPPFLAGS
+: $XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -mios-version-min=$IPHONEOS_DEPLOYMENT_TARGET $EXTRA_CPPFLAGS
 : <striper> <root>$XCODE_ROOT/Platforms/iPhoneOS.platform/Developer
 : <architecture>arm/<target-os>iphone
 ;
 using darwin : ${IPHONE_SDKVERSION}~iphonesim
-: $XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -mios-version-min=$MIN_IOS_VERSION $EXTRA_CPPFLAGS
+: $XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -mios-version-min=$IPHONEOS_DEPLOYMENT_TARGET $EXTRA_CPPFLAGS
 : <striper> <root>$XCODE_ROOT/Platforms/iPhoneSimulator.platform/Developer
 : <architecture>x86/<target-os>iphone
 ;
 using darwin : ${OSX_SDKVERSION}
-: $XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -mmacosx-version-min=$MIN_OSX_VERSION $EXTRA_CPPFLAGS
+: $XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -mmacosx-version-min=$MACOSX_DEPLOYMENT_TARGET $EXTRA_CPPFLAGS 
 : <striper> <root>$XCODE_ROOT/Platforms/MacOSX.platform/Developer
 : <architecture>x86/<target-os>darwin
 ;
@@ -214,13 +216,17 @@ buildBoost()
     pushd $BOOST_SRC
 
     echo Building Boost for iPhone
+    
+    ICONV_PATH=$(dirname $(find $(xcrun --sdk iphoneos --show-sdk-platform-path) -name "libiconv*" | tail -1 ) | rev | cut -d/ -f2- | rev)  
+    
     ./b2 -j${CPU_COUNT} \
     	--build-dir="${ARM_B2_DIR}" \
     	--stagedir="${ARM_B2_DIR}/stage" \
     	--prefix="${PREFIXDIR}/iphoneos" \
     	toolset=darwin-${IPHONE_SDKVERSION}~iphone \
-    	cxxflags="-target arm64-apple-ios${MIN_IOS_VERSION} ${EXTRA_CPPFLAGS}" \
-    	macosx-version=iphone-${IPHONE_SDKVERSION} \
+    	cxxflags="-target arm64-apple-ios${IPHONEOS_DEPLOYMENT_TARGET} ${EXTRA_CPPFLAGS}" \
+    	-sICONV_PATH="${ICONV_PATH}" \
+    	macosx-version=iphone-${IPHONEOS_DEPLOYMENT_TARGET} \
     	architecture=arm \
     	target-os=iphone \
     	define=_LITTLE_ENDIAN \
@@ -236,7 +242,8 @@ buildBoost()
     	--prefix="${PREFIXDIR}/iphoneos" \
     	toolset=darwin-${IPHONE_SDKVERSION}~iphone \
     	cxxflags="${EXTRA_CPPFLAGS}" \
-    	macosx-version=iphone-${IPHONE_SDKVERSION} \
+    	-sICONV_PATH="${ICONV_PATH}" \
+    	macosx-version=iphone-${IPHONEOS_DEPLOYMENT_TARGET} \
     	architecture=arm \
     	target-os=iphone \
     	define=_LITTLE_ENDIAN \
@@ -245,12 +252,16 @@ buildBoost()
     doneSection
     
     echo Building Boost for iPhoneSimulator
+
+    ICONV_PATH=$(dirname $(find $(xcrun --sdk iphonesimulator --show-sdk-platform-path) -name "libiconv*" | tail -1 ) | rev | cut -d/ -f2- | rev)  
+
     ./b2 -j${CPU_COUNT} \
     	--build-dir="${SIM_B2_DIR}" \
     	--stagedir="${SIM_B2_DIR}/stage" \
     	toolset=darwin-${IPHONE_SDKVERSION}~iphonesim \
-    	cxxflags="-target x86_64-apple-ios${MIN_IOS_VERSION} ${EXTRA_CPPFLAGS}" \
-    	macosx-version=iphonesim-${IPHONE_SDKVERSION} \
+    	cxxflags="-target x86_64-apple-ios${IPHONEOS_DEPLOYMENT_TARGET} ${EXTRA_CPPFLAGS}" \
+    	-sICONV_PATH="${ICONV_PATH}" \
+    	macosx-version=iphonesim-${IPHONEOS_DEPLOYMENT_TARGET} \
     	architecture=x86 \
     	target-os=iphone \
     	link=static \
@@ -259,12 +270,16 @@ buildBoost()
     doneSection
 
     echo building Boost for OSX
+    
+    ICONV_PATH=$(dirname $(dirname $(find $(xcrun --sdk macosx --show-sdk-platform-path) -name "libicucore*" | tail -1 )))  
+
     ./b2 -j${CPU_COUNT} \
     	--build-dir="${OSX_B2_DIR}" \
     	--stagedir="${OSX_B2_DIR}/stage" \
     	toolset=darwin-${OSX_SDKVERSION} \
-    	cxxflags="-target x86_64-apple-macos${MIN_OSX_VERSION}  ${EXTRA_CPPFLAGS}" \
-    	macosx-version=${OSX_SDKVERSION} \
+    	cxxflags="-target x86_64-apple-macos${MACOSX_DEPLOYMENT_TARGET}  ${EXTRA_CPPFLAGS}" \
+    	-sICU_PATH="${ICONV_PATH}" \
+    	macosx-version=${MACOSX_DEPLOYMENT_TARGET} \
     	architecture=x86 \
     	target-os=darwin \
     	threading=multi \
@@ -274,20 +289,24 @@ buildBoost()
     copyLibs "${OSX_B2_DIR}/stage" macosx    	
     doneSection
 
-    echo Building Boost for UIKitForMac
-    ./b2 -j${CPU_COUNT} \
-    	--build-dir="${U4M_B2_DIR}" \
-    	--stagedir="${U4M_B2_DIR}/stage" \
-    	toolset=darwin-${OSX_SDKVERSION} \
-    	cxxflags="-target x86_64-apple-ios${MIN_IOS_VERSION}-macabi ${EXTRA_CPPFLAGS}" \
-    	macosx-version=${OSX_SDKVERSION} \
-    	architecture=x86 \
-    	target-os=darwin \
-    	link=static \
-    	stage
-    copyLibs "${U4M_B2_DIR}/stage" uikitformac    	
-    doneSection
-
+    if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
+    then
+      echo Building Boost for UIKitForMac
+      ./b2 -j${CPU_COUNT} \
+        --build-dir="${U4M_B2_DIR}" \
+        --stagedir="${U4M_B2_DIR}/stage" \
+        toolset=darwin-${OSX_SDKVERSION} \
+        cxxflags="-target x86_64-apple-ios${IPHONEOS_DEPLOYMENT_TARGET}-macabi ${EXTRA_CPPFLAGS}" \
+    	  -sICONV_PATH="${ICONV_PATH}" \
+        macosx-version=${MACOSX_DEPLOYMENT_TARGET} \
+        architecture=x86 \
+        target-os=darwin \
+        link=static \
+        stage
+      copyLibs "${U4M_B2_DIR}/stage" uikitformac    	
+      doneSection
+    fi
+    
 # 	exit 0
 
     popd
@@ -307,7 +326,7 @@ copyLibs()
     popd
 	mkdir -p "${PREFIXDIR}/${DST_DIR}/include/"
 	pushd "${PREFIXDIR}/${DST_DIR}/include/"
-	ln -fs "${PREFIXDIR}/iphoneos/include/boost"
+	ln -fs "../../iphoneos/include/boost"
 	popd
 }
 
@@ -330,13 +349,16 @@ cleanAfterBuild()
 cleanEverythingReadyToStart #may want to comment if repeatedly running during dev
 restoreBoost
 
-echo "BOOST_VERSION:     $BOOST_VERSION"
-echo "BOOST_LIBS:        $BOOST_LIBS"
-echo "BOOST_SRC:         $BOOST_SRC"
-echo "PREFIXDIR:         $PREFIXDIR"
-echo "IPHONE_SDKVERSION: $IPHONE_SDKVERSION"
-echo "OSX_SDKVERSION:    $OSX_SDKVERSION"
-echo "XCODE_ROOT:        $XCODE_ROOT"
+echo "BOOST_VERSION:              $BOOST_VERSION"
+echo "BOOST_LIBS:                 $BOOST_LIBS"
+echo "BOOST_SRC:                  $BOOST_SRC"
+echo "PREFIXDIR:                  $PREFIXDIR"
+echo "IPHONE_SDKVERSION:          $IPHONE_SDKVERSION"
+echo "OSX_SDKVERSION:             $OSX_SDKVERSION"
+echo "IPHONEOS_DEPLOYMENT_TARGET: $IPHONEOS_DEPLOYMENT_TARGET"
+echo "MACOSX_DEPLOYMENT_TARGET:   $MACOSX_DEPLOYMENT_TARGET"
+echo "BUILD_UIKIT_FOR_MAC:        $BUILD_UIKIT_FOR_MAC"
+echo "XCODE_ROOT:                 $XCODE_ROOT"
 echo
 
 cleanAfterBuild

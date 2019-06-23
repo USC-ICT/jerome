@@ -3,8 +3,29 @@
 src_dir=$1
 dst_dir=$2
 
+: ${IPHONEOS_DEPLOYMENT_TARGET:=12.0}
+: ${MACOSX_DEPLOYMENT_TARGET:=10.13}
+: ${CLANG_CXX_LANGUAGE_STANDARD:=gnu++14}
+: ${CLANG_CXX_LIBRARY:=libc++}
+: ${IPHONE_SDKVERSION:=`xcodebuild -showsdks | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
+: ${OSX_SDKVERSION:=`xcodebuild -showsdks | grep macosx | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
+
+echo "IPHONE_SDKVERSION = ${IPHONE_SDKVERSION}"
+echo "MACOSX_DEPLOYMENT_TARGET = ${MACOSX_DEPLOYMENT_TARGET}"
+
+: ${BUILD_UIKIT_FOR_MAC:=`echo "${IPHONE_SDKVERSION} >= 13.0 && ${MACOSX_DEPLOYMENT_TARGET} >= 10.15" | bc`}
+
+if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
+then
+  echo "build uikitformac on"
+  platform_names="iphoneos iphonesimulator macosx uikitformac"
+else
+  echo "build uikitformac off"
+  platform_names="iphoneos iphonesimulator macosx"
+fi
+
 found_eigen="YES"
-for platform_name in iphoneos iphonesimulator macosx uikitformac
+for platform_name in ${platform_names}
 do
 	if [ ! -e "${dst_dir}/${platform_name}/include/eigen3" ]
 	then
@@ -30,7 +51,14 @@ pushd "${src_dir}"
 			make install
 		popd
 
-		for platform_name in iphoneos iphonesimulator uikitformac
+    if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
+    then
+      link_platform_names="iphoneos iphonesimulator uikitformac"
+    else
+      link_platform_names="iphoneos iphonesimulator"
+    fi
+
+		for platform_name in ${link_platform_names}
 		do
 			if [ ! -d "${dst_dir}/${platform_name}/include/" ]
 			then

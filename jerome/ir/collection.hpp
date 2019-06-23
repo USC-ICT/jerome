@@ -307,7 +307,7 @@ namespace jerome { namespace ir {
 			
 			for(const auto& t : tmp) {
         const auto& tfs(t.second.tfs());
-				outs << f.first << "\t" << t.first << "\t" << t.second.cf() << "\t" << t.second.df() << "\t" << tfs.size() ;
+        outs << f.first << "\t" << t.first << "\t" << t.second.cf() << "\t" << t.second.df() << "\t" << tfs.nonZeros() ;
 				// I need the iterator here to print indexes and values
 				for(long i = 0, e = tfs.nonZeros(); i != e; ++i) {
 					outs << " (" << tfs.innerIndexPtr()[i] << "," << (int)tfs.valuePtr()[i] << ")";
