@@ -172,52 +172,54 @@ namespace jerome {
             const Index& inQuery) const = 0;
 
           template <typename W>
-          struct Template
-            : public AnyQueryWeightingImplementation
-            , W
-          {
-            template <typename ... Args>
-            Template(Args&& ... args)
-              : W(std::forward<Args>(args) ...)
-            {
-            }
-
-            void accept(GetValue& visitor)  const override
-            {
-              W::accept(visitor);
-            }
-
-            void accept(GetTitle& visitor)  const override
-            {
-              W::accept(visitor);
-            }
-
-            void accept(GetRange& visitor)  const override
-            {
-              W::accept(visitor);
-            }
-
-            void accept(SetValue& visitor)        override
-            {
-              W::accept(visitor);
-            }
-
-            Record model()                  const override
-            {
-              return W::model();
-            }
-
-            WeightMatrix computeQueryModelForQuery(
-              const jerome::ir::rm::weighting::Context<Index>& inContext,
-              const Index& inQuery) const override
-            {
-              return W::computeQueryModelForQuery(inContext, inQuery);
-            }
-
-          };
-
+          struct Template;
         };
 
+        template <typename Index>
+        template <typename W>
+        struct AnyQueryWeightingImplementation<Index>::Template
+        : public AnyQueryWeightingImplementation<Index>
+        , W
+        {
+          template <typename ... Args>
+          Template(Args&& ... args)
+          : W(std::forward<Args>(args) ...)
+          {
+          }
+          
+          void accept(GetValue& visitor)  const override
+          {
+            W::accept(visitor);
+          }
+          
+          void accept(GetTitle& visitor)  const override
+          {
+            W::accept(visitor);
+          }
+          
+          void accept(GetRange& visitor)  const override
+          {
+            W::accept(visitor);
+          }
+          
+          void accept(SetValue& visitor)        override
+          {
+            W::accept(visitor);
+          }
+          
+          Record model()                  const override
+          {
+            return W::model();
+          }
+          
+          WeightMatrix computeQueryModelForQuery(
+                                                 const jerome::ir::rm::weighting::Context<Index>& inContext,
+                                                 const Index& inQuery) const override
+          {
+            return W::computeQueryModelForQuery(inContext, inQuery);
+          }          
+        };
+        
         template <typename Index>
         struct AnyDocumentWeightingImplementation
           : public AnyWeightingImplementation
@@ -230,59 +232,62 @@ namespace jerome {
             const WeightMatrix& inModel) const = 0;
 
           template <typename W>
-          struct Template
-            : public AnyDocumentWeightingImplementation
-            , W
-          {
-            template <typename ... Args>
-            Template(Args&& ... args)
-              : W(std::forward<Args>(args) ...)
-            {
-            }
-
-            void accept(GetValue& visitor)  const override
-            {
-              W::accept(visitor);
-            }
-
-            void accept(GetTitle& visitor)  const override
-            {
-              W::accept(visitor);
-            }
-
-            void accept(GetRange& visitor)  const override
-            {
-              W::accept(visitor);
-            }
-
-            void accept(SetValue& visitor)        override
-            {
-              W::accept(visitor);
-            }
-
-            Record model()                  const override
-            {
-              return W::model();
-            }
-
-            WeightMatrix computeAffinity(
-              const jerome::ir::rm::weighting::Context<Index>& inContext) const
-            override
-            {
-              return W::computeAffinity(inContext);
-            }
-
-            WeightMatrix computeAffinityInitialWeight(
-              const jerome::ir::rm::weighting::Context<Index>& inContext,
-              const WeightMatrix& inModel) const override
-            {
-              return W::computeAffinityInitialWeight(inContext, inModel);
-            }
-
-          };
-
+          struct Template;
         };
 
+        template <typename Index>
+        template <typename W>
+        struct AnyDocumentWeightingImplementation<Index>::Template
+        : public AnyDocumentWeightingImplementation<Index>
+        , W
+        {
+          template <typename ... Args>
+          Template(Args&& ... args)
+          : W(std::forward<Args>(args) ...)
+          {
+          }
+          
+          void accept(GetValue& visitor)  const override
+          {
+            W::accept(visitor);
+          }
+          
+          void accept(GetTitle& visitor)  const override
+          {
+            W::accept(visitor);
+          }
+          
+          void accept(GetRange& visitor)  const override
+          {
+            W::accept(visitor);
+          }
+          
+          void accept(SetValue& visitor)        override
+          {
+            W::accept(visitor);
+          }
+          
+          Record model()                  const override
+          {
+            return W::model();
+          }
+          
+          WeightMatrix computeAffinity(
+                                       const jerome::ir::rm::weighting::Context<Index>& inContext) const
+          override
+          {
+            return W::computeAffinity(inContext);
+          }
+          
+          WeightMatrix computeAffinityInitialWeight(
+                                                    const jerome::ir::rm::weighting::Context<Index>& inContext,
+                                                    const WeightMatrix& inModel) const override
+          {
+            return W::computeAffinityInitialWeight(inContext, inModel);
+          }
+          
+        };
+        
       }
 
     }

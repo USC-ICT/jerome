@@ -306,10 +306,11 @@ namespace jerome { namespace ir {
 			std::map<String, typename Index<Storage>::Term>	tmp(f.second.terms().begin(), f.second.terms().end());
 			
 			for(const auto& t : tmp) {
-				outs << f.first << "\t" << t.first << "\t" << t.second.cf() << "\t" << t.second.df() << "\t" << t.second.tfs().size() ;
+        const auto& tfs(t.second.tfs());
+				outs << f.first << "\t" << t.first << "\t" << t.second.cf() << "\t" << t.second.df() << "\t" << tfs.size() ;
 				// I need the iterator here to print indexes and values
-				for(auto i = t.second.tfs().begin(), e = t.second.tfs().end(); i != e; ++i) {
-					outs << " (" << i.index() << "," << (uint64_t)*i << ")";
+				for(long i = 0, e = tfs.nonZeros(); i != e; ++i) {
+					outs << " (" << tfs.innerIndexPtr()[i] << "," << (int)tfs.valuePtr()[i] << ")";
 				}
 				outs << std::endl;
 			}
