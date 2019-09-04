@@ -39,6 +39,7 @@
 // supress clang warnings
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-variable"
+#pragma clang diagnostic ignored "-Wdocumentation"
 // --------------------------------------------------------------
 
 //#include <boost/accumulators/accumulators_fwd.hpp>
