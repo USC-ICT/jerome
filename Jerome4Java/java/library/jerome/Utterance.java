@@ -16,10 +16,9 @@ public class Utterance extends NativePointer {
   public native boolean hasValueForKey(String inKey);
   public native String valueForKey(String inKey);
   public native void setValueForKey(String inValue, String inKey);
+  public native double getCount();
+  public native void setCount(double inCount);
+  public native String[] getFieldNames();
 
-  private static native long init();
-
-  public Utterance() {
-    super(init());
-  }
+  protected native void release();
 }

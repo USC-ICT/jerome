@@ -29,6 +29,7 @@ public class Jerome extends NativePointer {
     public native void succeeded();
     public native void canceled();
     public native void interrupted();
+    protected native void release();
   }
 
   public interface ResponseCallback {
@@ -55,6 +56,7 @@ public class Jerome extends NativePointer {
       ResponseCallback inResponseCallback);
 
   private static native long init();
+  protected native void release();
 
   public Jerome() {
     super(init());
