@@ -99,7 +99,6 @@
 		6284C2FC223DA3B7006BB913 /* ModelReaderCSV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6284C2FA223DA3B7006BB913 /* ModelReaderCSV.cpp */; };
 		6284C2FD223DA3B7006BB913 /* ModelReaderCSV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6284C2FA223DA3B7006BB913 /* ModelReaderCSV.cpp */; };
 		6284C30422418E4F006BB913 /* csv_tests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6284C30322418E4F006BB913 /* csv_tests.mm */; };
-		6284C3092242E73A006BB913 /* CMakeLists.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6284C3082242E73A006BB913 /* CMakeLists.txt */; };
 		6288C8AE163B5C6200191972 /* js_engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8AC163B5C6200191972 /* js_engine.cpp */; };
 		6288C8AF163B5C6200191972 /* js_engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8AC163B5C6200191972 /* js_engine.cpp */; };
 		6288C8BB1651DD0F00191972 /* async.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8B91651DD0E00191972 /* async.cpp */; };
@@ -190,6 +189,22 @@
 		62F5F8F11CE304BE00EECA12 /* Scion.m in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8EF1CE304BE00EECA12 /* Scion.m */; };
 		62F5F9011CE4564900EECA12 /* Macros.h in Headers */ = {isa = PBXBuildFile; fileRef = 62F5F9001CE4555900EECA12 /* Macros.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		62F5F9021CE4564F00EECA12 /* model_private.h in Headers */ = {isa = PBXBuildFile; fileRef = 62EAF8131CE3AF6700A1BCA9 /* model_private.h */; };
+		62F9D551231E1B1D006BEFAE /* Jerome4Java.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 62F9D550231E1B1D006BEFAE /* Jerome4Java.hpp */; };
+		62F9D553231E1B1D006BEFAE /* Jerome4JavaPriv.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 62F9D552231E1B1D006BEFAE /* Jerome4JavaPriv.hpp */; };
+		62F9D555231E1B1D006BEFAE /* Jerome4Java.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62F9D554231E1B1D006BEFAE /* Jerome4Java.cpp */; };
+		62F9D560231E1B4E006BEFAE /* jerome_Jerome.h in Headers */ = {isa = PBXBuildFile; fileRef = 62F9D55C231E1B36006BEFAE /* jerome_Jerome.h */; };
+		62F9D561231E1B4E006BEFAE /* jerome_Jerome_ModelLoaderCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 62F9D55D231E1B36006BEFAE /* jerome_Jerome_ModelLoaderCallback.h */; };
+		62F9D562231E1B4E006BEFAE /* jerome_Jerome_Completion.h in Headers */ = {isa = PBXBuildFile; fileRef = 62F9D55E231E1B36006BEFAE /* jerome_Jerome_Completion.h */; };
+		62F9D563231E1B4E006BEFAE /* jerome_Jerome_ResponseCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 62F9D55F231E1B36006BEFAE /* jerome_Jerome_ResponseCallback.h */; };
+		62F9D565231E1BFE006BEFAE /* jerome_Jerome.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62F9D564231E1BFE006BEFAE /* jerome_Jerome.cpp */; };
+		62F9D567231E1C50006BEFAE /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62F9D566231E1C50006BEFAE /* JavaVM.framework */; };
+		62F9D569231E23BB006BEFAE /* libjerome.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D21604D43600764667 /* libjerome.a */; };
+		62F9D56C231E23F3006BEFAE /* libkstem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58D01CCB344800641E2C /* libkstem.a */; };
+		62F9D56D231E240F006BEFAE /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 628E31CA1D67CFEB0073F882 /* libxml2.tbd */; };
+		62F9D56E231E241D006BEFAE /* libxslt.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CA48201BB087A900A2AA7B /* libxslt.tbd */; };
+		62F9D56F231E2654006BEFAE /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62BEF617153B4BF1009A9151 /* CoreFoundation.framework */; };
+		62F9D579231F7BE1006BEFAE /* jerome_NativePointer.h in Headers */ = {isa = PBXBuildFile; fileRef = 62F9D575231F7BE1006BEFAE /* jerome_NativePointer.h */; };
+		62F9D57A231F7BE1006BEFAE /* jerome_Utterance.h in Headers */ = {isa = PBXBuildFile; fileRef = 62F9D578231F7BE1006BEFAE /* jerome_Utterance.h */; };
 		62FA58C01CC99DED00641E2C /* libjerome.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D21604D43600764667 /* libjerome.a */; };
 		62FA58C11CC99DFB00641E2C /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62262156198C9B6800A0AA4E /* JavaScriptCore.framework */; };
 		62FA58C21CC99E0800641E2C /* libxslt.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CA48201BB087A900A2AA7B /* libxslt.tbd */; };
@@ -661,6 +676,18 @@
 		62F5F8EF1CE304BE00EECA12 /* Scion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Scion.m; sourceTree = "<group>"; };
 		62F5F9001CE4555900EECA12 /* Macros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
 		62F5F9041CE6473500EECA12 /* matrix_eigen_sparse_vector_plugin.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = matrix_eigen_sparse_vector_plugin.hpp; sourceTree = "<group>"; };
+		62F9D54E231E1B1D006BEFAE /* libJerome4Java.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libJerome4Java.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		62F9D550231E1B1D006BEFAE /* Jerome4Java.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Jerome4Java.hpp; sourceTree = "<group>"; };
+		62F9D552231E1B1D006BEFAE /* Jerome4JavaPriv.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Jerome4JavaPriv.hpp; sourceTree = "<group>"; };
+		62F9D554231E1B1D006BEFAE /* Jerome4Java.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Jerome4Java.cpp; sourceTree = "<group>"; };
+		62F9D55C231E1B36006BEFAE /* jerome_Jerome.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jerome_Jerome.h; sourceTree = "<group>"; };
+		62F9D55D231E1B36006BEFAE /* jerome_Jerome_ModelLoaderCallback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jerome_Jerome_ModelLoaderCallback.h; sourceTree = "<group>"; };
+		62F9D55E231E1B36006BEFAE /* jerome_Jerome_Completion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jerome_Jerome_Completion.h; sourceTree = "<group>"; };
+		62F9D55F231E1B36006BEFAE /* jerome_Jerome_ResponseCallback.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jerome_Jerome_ResponseCallback.h; sourceTree = "<group>"; };
+		62F9D564231E1BFE006BEFAE /* jerome_Jerome.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = jerome_Jerome.cpp; sourceTree = "<group>"; };
+		62F9D566231E1C50006BEFAE /* JavaVM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaVM.framework; path = System/Library/Frameworks/JavaVM.framework; sourceTree = SDKROOT; };
+		62F9D575231F7BE1006BEFAE /* jerome_NativePointer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jerome_NativePointer.h; sourceTree = "<group>"; };
+		62F9D578231F7BE1006BEFAE /* jerome_Utterance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jerome_Utterance.h; sourceTree = "<group>"; };
 		62FA58C31CC99E1600641E2C /* libxml2.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.2.tbd; path = usr/lib/libxml2.2.tbd; sourceTree = SDKROOT; };
 		62FA58CA1CCB344700641E2C /* kstem.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = kstem.xcodeproj; path = 3rdParty/kstem/kstem.xcodeproj; sourceTree = "<group>"; };
 		62FAE7061611488B0065D358 /* ranker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ranker.hpp; sourceTree = "<group>"; };
@@ -755,6 +782,19 @@
 			files = (
 				62D19FBD2148692100E8C954 /* libjerome.a in Frameworks */,
 				62D19FC42148698800E8C954 /* boost.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		62F9D54C231E1B1D006BEFAE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				62F9D56F231E2654006BEFAE /* CoreFoundation.framework in Frameworks */,
+				62F9D56E231E241D006BEFAE /* libxslt.tbd in Frameworks */,
+				62F9D56D231E240F006BEFAE /* libxml2.tbd in Frameworks */,
+				62F9D56C231E23F3006BEFAE /* libkstem.a in Frameworks */,
+				62F9D569231E23BB006BEFAE /* libjerome.a in Frameworks */,
+				62F9D567231E1C50006BEFAE /* JavaVM.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -858,6 +898,7 @@
 		622EA2D31604D43600764667 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				62F9D566231E1C50006BEFAE /* JavaVM.framework */,
 				6266F91B22B767D500200A7F /* libiconv.tbd */,
 				6266F91722B767A700200A7F /* libboost_locale.a */,
 				62F21D9B22B21FDE00FA7770 /* libboost_filesystem.a */,
@@ -1165,6 +1206,7 @@
 				62B316C31D0F7B1100D2E4E4 /* Jerome.ios */,
 				62B316CF1D0F7B1100D2E4E4 /* Jerome.iosTests */,
 				62D19FB92148692100E8C954 /* libjerome.osx.tests */,
+				62F9D54F231E1B1D006BEFAE /* Jerome4Java */,
 				622EA2D31604D43600764667 /* Frameworks */,
 				62A2527814365A870008E65F /* Products */,
 			);
@@ -1181,6 +1223,7 @@
 				62B09AD01CECD18200A031CB /* jerome */,
 				62B316C21D0F7B1100D2E4E4 /* Jerome.framework */,
 				62D19FB82148692000E8C954 /* libjerome.osx.tests.xctest */,
+				62F9D54E231E1B1D006BEFAE /* libJerome4Java.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1428,6 +1471,31 @@
 			path = math;
 			sourceTree = "<group>";
 		};
+		62F9D54F231E1B1D006BEFAE /* Jerome4Java */ = {
+			isa = PBXGroup;
+			children = (
+				62F9D55B231E1B36006BEFAE /* cpp */,
+				62F9D550231E1B1D006BEFAE /* Jerome4Java.hpp */,
+				62F9D552231E1B1D006BEFAE /* Jerome4JavaPriv.hpp */,
+				62F9D554231E1B1D006BEFAE /* Jerome4Java.cpp */,
+			);
+			path = Jerome4Java;
+			sourceTree = "<group>";
+		};
+		62F9D55B231E1B36006BEFAE /* cpp */ = {
+			isa = PBXGroup;
+			children = (
+				62F9D575231F7BE1006BEFAE /* jerome_NativePointer.h */,
+				62F9D578231F7BE1006BEFAE /* jerome_Utterance.h */,
+				62F9D55C231E1B36006BEFAE /* jerome_Jerome.h */,
+				62F9D55D231E1B36006BEFAE /* jerome_Jerome_ModelLoaderCallback.h */,
+				62F9D55E231E1B36006BEFAE /* jerome_Jerome_Completion.h */,
+				62F9D55F231E1B36006BEFAE /* jerome_Jerome_ResponseCallback.h */,
+				62F9D564231E1BFE006BEFAE /* jerome_Jerome.cpp */,
+			);
+			path = cpp;
+			sourceTree = "<group>";
+		};
 		62FA58CB1CCB344700641E2C /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1478,6 +1546,21 @@
 				62B316E61D0F7B4A00D2E4E4 /* Scion.h in Headers */,
 				62B316DB1D0F7B4A00D2E4E4 /* ALEngine.h in Headers */,
 				62B316DD1D0F7B4A00D2E4E4 /* ALPlatform.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		62F9D54A231E1B1D006BEFAE /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				62F9D561231E1B4E006BEFAE /* jerome_Jerome_ModelLoaderCallback.h in Headers */,
+				62F9D553231E1B1D006BEFAE /* Jerome4JavaPriv.hpp in Headers */,
+				62F9D562231E1B4E006BEFAE /* jerome_Jerome_Completion.h in Headers */,
+				62F9D560231E1B4E006BEFAE /* jerome_Jerome.h in Headers */,
+				62F9D57A231F7BE1006BEFAE /* jerome_Utterance.h in Headers */,
+				62F9D579231F7BE1006BEFAE /* jerome_NativePointer.h in Headers */,
+				62F9D563231E1B4E006BEFAE /* jerome_Jerome_ResponseCallback.h in Headers */,
+				62F9D551231E1B1D006BEFAE /* Jerome4Java.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1617,6 +1700,24 @@
 			productReference = 62D19FB82148692000E8C954 /* libjerome.osx.tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		62F9D54D231E1B1D006BEFAE /* Jerome4Java */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 62F9D55A231E1B1D006BEFAE /* Build configuration list for PBXNativeTarget "Jerome4Java" */;
+			buildPhases = (
+				62F9D54A231E1B1D006BEFAE /* Headers */,
+				62F9D54B231E1B1D006BEFAE /* Sources */,
+				62F9D54C231E1B1D006BEFAE /* Frameworks */,
+				62F9D570231E26EB006BEFAE /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Jerome4Java;
+			productName = Jerome4Java;
+			productReference = 62F9D54E231E1B1D006BEFAE /* libJerome4Java.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 		62FAE70E161154520065D358 /* libjerome.ios */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 62FAE718161154520065D358 /* Build configuration list for PBXNativeTarget "libjerome.ios" */;
@@ -1678,6 +1779,11 @@
 						DevelopmentTeam = 4RX84Q9D57;
 						ProvisioningStyle = Automatic;
 					};
+					62F9D54D231E1B1D006BEFAE = {
+						CreatedOnToolsVersion = 11.0;
+						DevelopmentTeam = 4RX84Q9D57;
+						ProvisioningStyle = Automatic;
+					};
 					62FAE70E161154520065D358 = {
 						DevelopmentTeam = 4RX84Q9D57;
 					};
@@ -1711,6 +1817,7 @@
 				62B316C11D0F7B1100D2E4E4 /* Jerome.ios */,
 				6280599B1F05D05900D6B08D /* 3rdParty */,
 				62D19FB72148692000E8C954 /* libjerome.osx.tests */,
+				62F9D54D231E1B1D006BEFAE /* Jerome4Java */,
 			);
 		};
 /* End PBXProject section */
@@ -1751,7 +1858,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6284C3092242E73A006BB913 /* CMakeLists.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1875,6 +1981,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "source \"${SRCROOT}/scripts/make_includes.sh\"\n\n\n\n\n\n\n\n\n\n\n\n";
+		};
+		62F9D570231E26EB006BEFAE /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nln -sf ${CONFIGURATION_BUILD_DIR}/${FULL_PRODUCT_NAME} ${PROJECT_DIR}/Jerome4Java/${FULL_PRODUCT_NAME}\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2001,6 +2124,15 @@
 				6284C30422418E4F006BB913 /* csv_tests.mm in Sources */,
 				62D19FBB2148692100E8C954 /* libjerome_osx_tests.m in Sources */,
 				62D19FC32148692A00E8C954 /* dictionary_Tests.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		62F9D54B231E1B1D006BEFAE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				62F9D555231E1B1D006BEFAE /* Jerome4Java.cpp in Sources */,
+				62F9D565231E1BFE006BEFAE /* jerome_Jerome.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2517,6 +2649,62 @@
 			};
 			name = Release;
 		};
+		62F9D556231E1B1D006BEFAE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 625D3A0021485C740038D20D /* Framework.mac.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEPLOYMENT_LOCATION = NO;
+				DSTROOT = "$(PROJECT_DIR)/Jerome4Java";
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				INSTALL_PATH = /;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = (
+					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
+					"${TARGET_BUILD_DIR}/libboost_system.a",
+					"${TARGET_BUILD_DIR}/libnlopt_cxx.a",
+					"${TARGET_BUILD_DIR}/libboost_thread.a",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		62F9D557231E1B1D006BEFAE /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 625D3A0021485C740038D20D /* Framework.mac.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEPLOYMENT_LOCATION = NO;
+				DSTROOT = "$(PROJECT_DIR)/Jerome4Java";
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				INSTALL_PATH = /;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = (
+					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
+					"${TARGET_BUILD_DIR}/libboost_system.a",
+					"${TARGET_BUILD_DIR}/libnlopt_cxx.a",
+					"${TARGET_BUILD_DIR}/libboost_thread.a",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		62FAE719161154520065D358 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 625D39FF21485C740038D20D /* Framework.ios.xcconfig */;
@@ -2613,6 +2801,15 @@
 			buildConfigurations = (
 				62D19FC12148692100E8C954 /* Debug */,
 				62D19FC22148692100E8C954 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		62F9D55A231E1B1D006BEFAE /* Build configuration list for PBXNativeTarget "Jerome4Java" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				62F9D556231E1B1D006BEFAE /* Debug */,
+				62F9D557231E1B1D006BEFAE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
