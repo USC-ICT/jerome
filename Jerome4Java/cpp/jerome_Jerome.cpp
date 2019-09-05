@@ -77,29 +77,38 @@ Java_jerome_Jerome_loadModel(JNIEnv * inEnv,
   auto jerome = model(inEnv, inJerome);
   if (!jerome) return;
   
+  jerome->platform.setUsingLookupTable(true);
   jerome->platform.setEngineEventHandler([](const EngineEvent&){});
   jerome->mainMachineName = OptionalString();
   
-  std::ifstream  collectionStream(to_string(inEnv, inCollectionPath));
+  auto collectionPath = to_string(inEnv, inCollectionPath);
+  std::cout << "collection path " << collectionPath << std::endl;
+  
+  std::ifstream  collectionStream(collectionPath);
   auto collectionResult = jerome->platform.loadCollection(collectionStream);
   if (collectionResult) {
     executeLoadModelCallback(inEnv, inCallback, collectionResult);
     return;
   }
   
-  std::ifstream  dmStream(to_string(inEnv, inDMPath));
+  auto dmPath = to_string(inEnv, inDMPath);
+  std::cout << "dm path " << dmPath << std::endl;
+
+  std::ifstream  dmStream(dmPath);
+  GlobalObjectReference callback(inEnv, inCallback);
+  
   jerome->platform.loadDialogueManager
-    (dmStream, [inJerome, inCallback](const Result<String>& optionalName) {    
+    (dmStream, [jerome, callback](const Result<String>& optionalName) {    
       AttachedThreadRegion region;
       if (!region.env) return;
-      auto jerome = model(region.env, inJerome);
-      if (!jerome) return;      
       if (optionalName) {
+        std::cout << "name " << optionalName.value() << std::endl;
         jerome->mainMachineName = optionalName.value();
         jerome->installEngineHandler();
-        executeLoadModelCallback(region.env, inCallback, OptionalError());
+        executeLoadModelCallback(region.env, callback.object(), OptionalError());
       } else {
-        executeLoadModelCallback(region.env, inCallback, optionalName.error());
+        std::cout << "error " << optionalName.error() << std::endl;
+        executeLoadModelCallback(region.env, callback.object(), optionalName.error());
       }
   });
 }

@@ -37,10 +37,15 @@ public class Jerome extends NativePointer {
     void didFinishProcessing();
   }
 
-  public void loadModel(File inCollectionFile,
-      File inDialogueManagerFile, ModelLoaderCallback inCallback) {
-    loadModel(inCollectionFile.getAbsolutePath(),
-        inDialogueManagerFile.getAbsolutePath(), inCallback);
+  public void loadModel(
+      File inCollectionFile,
+      File inDialogueManagerFile,
+      ModelLoaderCallback inCallback)
+  {
+    loadModel(
+        inCollectionFile.getAbsolutePath(),
+        inDialogueManagerFile.getAbsolutePath(),
+        inCallback);
   }
 
   private native void loadModel(String inCollectionFile,

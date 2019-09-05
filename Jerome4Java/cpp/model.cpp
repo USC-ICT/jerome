@@ -50,7 +50,7 @@ struct UtteranceCallback: public GlobalObjectReference {
     auto method = this->method(inEnv, "didSelectUtterance",
                                "(Ljerome/Utterance;Ljerome/Jerome$Completion;)V");
     if (method) {
-      inEnv->CallVoidMethod(object, method, inUtterance, inCompletion);    
+      inEnv->CallVoidMethod(object(), method, inUtterance, inCompletion);    
     }
   }
   
@@ -58,7 +58,7 @@ struct UtteranceCallback: public GlobalObjectReference {
     auto method = this->method(inEnv, "didFinishProcessing", 
                                "()V");
     if (method) {
-      inEnv->CallVoidMethod(object, method);    
+      inEnv->CallVoidMethod(object(), method);    
     }    
   }
 };

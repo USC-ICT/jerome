@@ -9,6 +9,7 @@
 package main;
 
 import jerome.Jerome;
+import jerome.Utterance;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -24,15 +25,31 @@ public class MainWindow {
   public MainWindow(String[] inArgs) {
     mJerome = new Jerome();
 
-    mJerome.loadModel(new File(inArgs[1]), new File(inArgs[1]), (e) -> {
-      System.err.println(e);
-      System.exit(1);
+    mJerome.loadModel(new File(inArgs[0]), new File(inArgs[1]), (e) -> {
+      if (e != null) {
+        System.err.println("error in loader: " + e);
+        System.exit(1);
+      }
     });
 
     mEntryField.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         System.out.println(e.getActionCommand());
+        mJerome.respondTo(e.getActionCommand(), new Jerome.ResponseCallback() {
+          @Override
+          public void didSelectUtterance(Utterance inUtterance,
+              Jerome.Completion inCompletion)
+          {
+            System.out.println(inUtterance);
+            inCompletion.succeeded();
+          }
+
+          @Override
+          public void didFinishProcessing() {
+            System.out.println("NLU done");
+          }
+        });
       }
     });
   }

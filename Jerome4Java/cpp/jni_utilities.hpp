@@ -45,25 +45,32 @@ struct AttachedThreadRegion {
 };
 
 struct GlobalObjectReference {
-  jobject object;
+  
+  struct Impl {
+    jobject object;
+    Impl(JNIEnv * inEnv, jobject inObject)
+    : object(inEnv->NewGlobalRef(inObject))
+    {}
+
+    ~Impl() {
+      AttachedThreadRegion region;
+      if (!region.env) return;
+      region.env->DeleteGlobalRef(object);
+    }
+  };
+  
   GlobalObjectReference(JNIEnv * inEnv, 
                         jobject inObject)
-  : object(inEnv->NewGlobalRef(inObject))
+  : mImpl(std::make_shared<Impl>(inEnv, inObject))
   {}
 
-  ~GlobalObjectReference() {
-    AttachedThreadRegion region;
-    if (!region.env) return;
-    region.env->DeleteGlobalRef(object);
-  }
-  
   jmethodID method(JNIEnv* inEnv, const char* inName, const char* inSignature) {
-    return ::method(inEnv, object, inName, inSignature);
+    return ::method(inEnv, object(), inName, inSignature);
   }
   
+  jobject object() const { return mImpl->object; }
 private:
-  GlobalObjectReference(const GlobalObjectReference&) = delete;
-  GlobalObjectReference& operator= (const GlobalObjectReference&) = delete;
+  std::shared_ptr<Impl> mImpl;
 };
 
 inline jfieldID nativePointerFieldID(JNIEnv * inEnv, jobject inObject) {
