@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     jerome_Jerome
  * Method:    loadModel
- * Signature: (Ljava/lang/String;Ljava/lang/String;Ljerome/Jerome/ModelLoaderCallback;)V
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljerome/Jerome/ModelLoaderCallback;)V
  */
 JNIEXPORT void JNICALL Java_jerome_Jerome_loadModel
-  (JNIEnv *, jobject, jstring, jstring, jobject);
+  (JNIEnv *, jobject, jstring, jstring, jstring, jobject);
 
 /*
  * Class:     jerome_Jerome

@@ -192,6 +192,20 @@ namespace std {
     outs << "}";
     return outs;
   }
+
+  template <class K, class T>
+  ostream& operator << (ostream& outs, const unordered_map<K, T>& obj)
+  {
+    outs << "{";
+    bool  f = false;
+    for (auto& v : obj) {
+      if (f) outs << ", ";
+      f = true;
+      outs << v.first << " = " << v.second;
+    }
+    outs << "}";
+    return outs;
+  }
 }
 
 template <typename T>

@@ -40,16 +40,21 @@ public class Jerome extends NativePointer {
   public void loadModel(
       File inCollectionFile,
       File inDialogueManagerFile,
+      String inInitialState,
       ModelLoaderCallback inCallback)
   {
     loadModel(
         inCollectionFile.getAbsolutePath(),
         inDialogueManagerFile.getAbsolutePath(),
+        inInitialState,
         inCallback);
   }
 
-  private native void loadModel(String inCollectionFile,
-      String inDialogueManagerFile, ModelLoaderCallback inCallback);
+  private native void loadModel(
+      String inCollectionFile,
+      String inDialogueManagerFile,
+      String inInitialState,
+      ModelLoaderCallback inCallback);
 
   public native void collectionWasUpdated();
   public native void collectionWasUpdatedInState(String inStateName);

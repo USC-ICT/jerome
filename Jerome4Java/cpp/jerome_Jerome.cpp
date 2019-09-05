@@ -72,6 +72,7 @@ Java_jerome_Jerome_loadModel(JNIEnv * inEnv,
                              jobject inJerome, 
                              jstring inCollectionPath, 
                              jstring inDMPath, 
+                             jstring inInitialState,
                              jobject inCallback)
 {
   auto jerome = model(inEnv, inJerome);
@@ -97,13 +98,16 @@ Java_jerome_Jerome_loadModel(JNIEnv * inEnv,
   std::ifstream  dmStream(dmPath);
   GlobalObjectReference callback(inEnv, inCallback);
   
+  auto initialState = to_string(inEnv, inInitialState);
+  
   jerome->platform.loadDialogueManager
-    (dmStream, [jerome, callback](const Result<String>& optionalName) {    
+    (dmStream, [jerome, callback, initialState](const Result<String>& optionalName) {    
       AttachedThreadRegion region;
       if (!region.env) return;
       if (optionalName) {
         std::cout << "name " << optionalName.value() << std::endl;
         jerome->mainMachineName = optionalName.value();
+        jerome->tossDialogueToStateWithName(initialState);
         jerome->installEngineHandler();
         executeLoadModelCallback(region.env, callback.object(), OptionalError());
       } else {

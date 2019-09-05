@@ -309,16 +309,17 @@ namespace jerome { namespace javascript {
                                    const String& exceptionContext)
 	{
 		String exceptionAsString = (String)inException;
-    String location = "("
-    + (inException.hasProperty("sourceURL")? (String)inException["sourceURL"] : String("?"))
-    + ":"
-    + (inException.hasProperty("line")? (String)inException["line"] : String("?"))
-    + ":"
-    + (inException.hasProperty("column")? (String)inException["column"] : String("?"))
-    + ")";
+    // TODO: accessing properties crashes the code.
+//    String location = "("
+//    + (inException.hasProperty("sourceURL")? (String)inException["sourceURL"] : String("?"))
+//    + ":"
+//    + (inException.hasProperty("line")? (String)inException["line"] : String("?"))
+//    + ":"
+//    + (inException.hasProperty("column")? (String)inException["column"] : String("?"))
+//    + ")";
 
 		throw Exception("JavaScript exception: " + exceptionAsString + " "
-                    + location + " "
+//                    + location + " "
                     + "while " + exceptionContext);
 	}
 	

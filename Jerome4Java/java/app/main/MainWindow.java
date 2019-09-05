@@ -25,7 +25,8 @@ public class MainWindow {
   public MainWindow(String[] inArgs) {
     mJerome = new Jerome();
 
-    mJerome.loadModel(new File(inArgs[0]), new File(inArgs[1]), (e) -> {
+    mJerome.loadModel(new File(inArgs[0]), new File(inArgs[1]), inArgs[2],
+        (e) -> {
       if (e != null) {
         System.err.println("error in loader: " + e);
         System.exit(1);
@@ -41,7 +42,7 @@ public class MainWindow {
           public void didSelectUtterance(Utterance inUtterance,
               Jerome.Completion inCompletion)
           {
-            System.out.println(inUtterance);
+            System.out.println(inUtterance.valueForKey("text"));
             inCompletion.succeeded();
           }
 

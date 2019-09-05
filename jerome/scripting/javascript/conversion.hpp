@@ -177,9 +177,11 @@ namespace jerome { namespace javascript { namespace detail {
 		static std::unordered_map<String, T> convert(const Context& ctx, JSValueRef valueRef) {
 			std::unordered_map<String, T>	result;
 			JSPropertyNameArrayRef	array	= JSObjectCopyPropertyNames(ctx.contextRef(), (JSObjectRef)valueRef);
+      
 			for(size_t i = 0, n = JSPropertyNameArrayGetCount(array); i < n; ++i) {
         String	string = detail::JSString(JSPropertyNameArrayGetNameAtIndex(array, i)).string();
-        result[string] = from_valueRef<T>::convert(ctx, ctx.getProperty((JSObjectRef)valueRef, string));
+        auto value = from_valueRef<T>::convert(ctx, ctx.getProperty((JSObjectRef)valueRef, string));
+        result[string] = value;
 			}
 			JSPropertyNameArrayRelease(array);
 			return result;

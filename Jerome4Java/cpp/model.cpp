@@ -92,13 +92,13 @@ void Model::respondTo(JNIEnv * inEnv, jobject inCallback,
 void Model::installEngineHandler() {
   auto weak = weak_ptr<Model>(Model::shared_from_this());
   platform.setEngineEventHandler([weak](const EngineEvent& inEvent){
-    AttachedThreadRegion region;
-    if (!region.env) return;
+    auto data = inEvent.data();
+    auto name = inEvent.name();
     
-    auto machineNameIter = inEvent.data().find(paramStateMachineName);
-    if (machineNameIter == inEvent.data().end()) return;
+    auto machineNameIter = data.find(paramStateMachineName);
+    if (machineNameIter == data.end()) return;
     auto machineName = machineNameIter->second;
-    
+
     auto model = weak.lock();
     if (!model) return;
     
@@ -106,15 +106,19 @@ void Model::installEngineHandler() {
     if (callbackIter == model->callbacks.end()) return;
     auto callback = callbackIter->second;
     
-    if (inEvent.name() == eventMachineDone) {
+    if (name == eventMachineDone) {
+      AttachedThreadRegion region;
+      if (!region.env) return;
       model->callbacks.erase(callbackIter);
       callback->didFinishProcessing(region.env);
       return;
     }
     
-    if (inEvent.name() == eventSendUtterance) {
-      auto utteranceIDIter = inEvent.data().find(paramUtteranceID);
-      if (utteranceIDIter == inEvent.data().end()) return;
+    if (name == eventSendUtterance) {
+      AttachedThreadRegion region;
+      if (!region.env) return;
+      auto utteranceIDIter = data.find(paramUtteranceID);
+      if (utteranceIDIter == data.end()) return;
       auto utteranceID = utteranceIDIter->second;
       auto utterance = model->utterance(region.env, utteranceID);
       auto completion = model->completion(region.env, inEvent.data());
@@ -124,7 +128,7 @@ void Model::installEngineHandler() {
       return;
     }
     
-    std::cerr << "Unknown event name " << inEvent.name() << std::endl;
+    std::cerr << "Unknown event name " << name << std::endl;
   });
 }
 
