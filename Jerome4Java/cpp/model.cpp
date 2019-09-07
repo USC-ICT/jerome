@@ -91,21 +91,26 @@ void Model::respondTo(JNIEnv * inEnv, jobject inCallback,
 
 void Model::installEngineHandler() {
   auto weak = weak_ptr<Model>(Model::shared_from_this());
-  platform.setEngineEventHandler([weak](const EngineEvent& inEvent){
+  platform.setEngineEventHandler([weak](const EngineEvent& inEvent) {
+    auto model = weak.lock();
+    if (!model) return;
+    
+    // making a copy of the hash map so the iterators can be used below.
     auto data = inEvent.data();
     auto name = inEvent.name();
     
+    // FSM name
     auto machineNameIter = data.find(paramStateMachineName);
     if (machineNameIter == data.end()) return;
     auto machineName = machineNameIter->second;
 
-    auto model = weak.lock();
-    if (!model) return;
-    
+    // callback 
     auto callbackIter = model->callbacks.find(machineName);
     if (callbackIter == model->callbacks.end()) return;
+    // we can copy the callback safely because it's a reference class.
     auto callback = callbackIter->second;
     
+    // if nlu is done
     if (name == eventMachineDone) {
       AttachedThreadRegion region;
       if (!region.env) return;
@@ -114,12 +119,16 @@ void Model::installEngineHandler() {
       return;
     }
     
+    // if nlu emitted an utterance
     if (name == eventSendUtterance) {
       AttachedThreadRegion region;
       if (!region.env) return;
+      
+      // utterance ID
       auto utteranceIDIter = data.find(paramUtteranceID);
       if (utteranceIDIter == data.end()) return;
       auto utteranceID = utteranceIDIter->second;
+
       auto utterance = model->utterance(region.env, utteranceID);
       auto completion = model->completion(region.env, inEvent.data());
       callback->didSelectUtterance(region.env, utterance, completion);

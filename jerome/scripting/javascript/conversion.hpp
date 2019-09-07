@@ -180,8 +180,7 @@ namespace jerome { namespace javascript { namespace detail {
       
 			for(size_t i = 0, n = JSPropertyNameArrayGetCount(array); i < n; ++i) {
         String	string = detail::JSString(JSPropertyNameArrayGetNameAtIndex(array, i)).string();
-        auto value = from_valueRef<T>::convert(ctx, ctx.getProperty((JSObjectRef)valueRef, string));
-        result[string] = value;
+        result[string] = from_valueRef<T>::convert(ctx, ctx.getProperty((JSObjectRef)valueRef, string));
 			}
 			JSPropertyNameArrayRelease(array);
 			return result;

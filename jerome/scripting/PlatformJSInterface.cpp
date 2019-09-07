@@ -102,7 +102,7 @@ namespace jerome {
         return mOrigin;
       }
 
-      StringStringMap data() const override
+      const StringStringMap& data() const override
       {
         return mData;
       }
@@ -116,10 +116,10 @@ namespace jerome {
     };
 
     void PlatformJSInterface::receiveEvent(const String& inName,
-                                                 const OptionalString& inType,
-                                                 const OptionalString& inTarget,
-                                                 const OptionalString& inOrigin,
-                                                 const StringStringMap& inData)
+                                           const OptionalString& inType,
+                                           const OptionalString& inTarget,
+                                           const OptionalString& inOrigin,
+                                           const StringStringMap& inData)
     {
       implementation().handleEngineEvent(EngineEventImpl(inName, inType,
           inTarget, inOrigin, inData));

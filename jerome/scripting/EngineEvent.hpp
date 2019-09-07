@@ -35,7 +35,7 @@ namespace jerome {
 			virtual OptionalString type() const = 0;
 			virtual OptionalString target() const = 0;
 			virtual OptionalString origin() const = 0;
-			virtual StringStringMap data() const = 0;
+			virtual const StringStringMap& data() const = 0;
 		};
 
 		typedef std::function<void (const EngineEvent&)> EngineEventHandler;
