@@ -27,6 +27,7 @@
 #else
 # include<jni.h>
 #endif
+#include <memory>
 
 std::string to_string(JNIEnv * inEnv, jstring inString);
 jmethodID method(JNIEnv* inEnv, jobject inObject, 

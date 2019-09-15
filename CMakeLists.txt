@@ -18,11 +18,13 @@ set(jerome_GENERATED_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECT
 
 message("compiler: ${CMAKE_CXX_COMPILER_ID}")
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "[cC][lL][aA][nN][gG]")
 # hide inlines == smaller executable and no warnings
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DGCC_SYMBOLS_PRIVATE_EXTERN -DGCC_INLINES_ARE_PRIVATE_EXTERN -fvisibility-inlines-hidden -DEIGEN_SPARSEVECTOR_PLUGIN=\\\"${EIGEN_SPARSEVECTOR_PLUGIN}\\\"")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DGCC_SYMBOLS_PRIVATE_EXTERN -DGCC_INLINES_ARE_PRIVATE_EXTERN -fvisibility-inlines-hidden -fPIC -DEIGEN_SPARSEVECTOR_PLUGIN=\\\"${EIGEN_SPARSEVECTOR_PLUGIN}\\\"")
 else ()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DGCC_SYMBOLS_PRIVATE_EXTERN -DGCC_INLINES_ARE_PRIVATE_EXTERN -DEIGEN_SPARSEVECTOR_PLUGIN=\\\"${EIGEN_SPARSEVECTOR_PLUGIN}\\\"")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DGCC_SYMBOLS_PRIVATE_EXTERN -DGCC_INLINES_ARE_PRIVATE_EXTERN -fPIC -DEIGEN_SPARSEVECTOR_PLUGIN=\\\"${EIGEN_SPARSEVECTOR_PLUGIN}\\\"")
 endif ()
 
 # -------------------------------------------------
@@ -35,7 +37,7 @@ file(GLOB_RECURSE kstem_source_files
 )
 
 # shared, because LGPL
-add_library(kstem SHARED ${kstem_source_files})
+add_library(kstem STATIC ${kstem_source_files})
 
 target_include_directories(kstem
   PUBLIC "${kstem_dir}"
@@ -150,7 +152,8 @@ if (APPLE)
 endif (APPLE)
 
 # jerome library source files
-file(GLOB_RECURSE jerome_source_files "${PROJECT_SOURCE_DIR}/jerome/*.cpp")
+file(GLOB_RECURSE jerome_source_files 
+		"${PROJECT_SOURCE_DIR}/jerome/*.cpp")
 
 add_library(jerome STATIC ${jerome_source_files}  
   "${jerome_GENERATED_OUTPUT_DIR}/startup.js.inc"
@@ -170,6 +173,34 @@ target_include_directories(jerome
 )
 
 target_link_libraries(jerome ${jerome_libraries} )
+
+# -------------------------------------------------
+# Jerome4Java
+
+find_package(Java REQUIRED)
+find_package(JNI REQUIRED)
+
+
+# jerome library source files
+file(GLOB_RECURSE Jerome4Java_source_files 
+		"${PROJECT_SOURCE_DIR}/Jerome4Java/cpp/*.cpp")
+
+add_library(Jerome4Java SHARED ${Jerome4Java_source_files})
+        
+target_include_directories(Jerome4Java
+  PUBLIC ${PROJECT_SOURCE_DIR}
+  PRIVATE ${jerome_includes}
+  ${jerome_GENERATED_OUTPUT_DIR}
+  ${LIBXML2_INCLUDE_DIR}
+  ${LIBXSLT_INCLUDE_DIR}
+  "/usr/include/eigen3"
+  "/usr/include/webkitgtk-4.0"
+  ${JNI_INCLUDE_DIRS}
+)
+
+set(Jerome4Java_libraries ${jerome_libraries} jerome ${JNI_LIBRARIES})
+
+target_link_libraries(Jerome4Java ${Jerome4Java_libraries} )
 
 # -------------------------------------------------
 # jerome_tool
