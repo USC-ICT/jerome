@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactManager">
+    <artifact type="jar" build-on-make="true" name="JavaJerome:jar">
+      <output-path>$PROJECT_DIR$/out/artifacts/JavaJerome_jar</output-path>
+      <root id="archive" name="JavaJerome.jar">
+        <element id="module-output" name="JavaJerome" />
+      </root>
+    </artifact>
+  </component>
   <component name="Encoding">
     <file url="PROJECT" charset="UTF-8" />
   </component>
