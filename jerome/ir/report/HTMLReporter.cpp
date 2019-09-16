@@ -19,7 +19,7 @@
 //  limitations under the License.
 //
 
-#include <strstream>
+#include <sstream>
 
 #include <jerome/xml/writer.hpp>
 #include <jerome/xml/document.hpp>
@@ -39,8 +39,7 @@ namespace jerome {
 
         static xml::stylesheet init_stylesheet()
         {
-          std::strstreambuf buffer(kDefaultStylesheet, 0);
-          std::istream is(&buffer);
+          std::istringstream is(kDefaultStylesheet);
           return xml::stylesheet(is);
         }
 

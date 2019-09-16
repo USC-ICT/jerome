@@ -175,34 +175,6 @@ target_include_directories(jerome
 target_link_libraries(jerome ${jerome_libraries} )
 
 # -------------------------------------------------
-# Jerome4Java
-
-find_package(Java REQUIRED)
-find_package(JNI REQUIRED)
-
-
-# jerome library source files
-file(GLOB_RECURSE Jerome4Java_source_files 
-		"${PROJECT_SOURCE_DIR}/Jerome4Java/cpp/*.cpp")
-
-add_library(Jerome4Java SHARED ${Jerome4Java_source_files})
-        
-target_include_directories(Jerome4Java
-  PUBLIC ${PROJECT_SOURCE_DIR}
-  PRIVATE ${jerome_includes}
-  ${jerome_GENERATED_OUTPUT_DIR}
-  ${LIBXML2_INCLUDE_DIR}
-  ${LIBXSLT_INCLUDE_DIR}
-  "/usr/include/eigen3"
-  "/usr/include/webkitgtk-4.0"
-  ${JNI_INCLUDE_DIRS}
-)
-
-set(Jerome4Java_libraries ${jerome_libraries} jerome ${JNI_LIBRARIES})
-
-target_link_libraries(Jerome4Java ${Jerome4Java_libraries} )
-
-# -------------------------------------------------
 # jerome_tool
 
 set(exec_libs jerome ${boost_lib})
@@ -231,3 +203,49 @@ target_include_directories(jerome_tool PRIVATE
 set_target_properties(jerome_tool PROPERTIES OUTPUT_NAME "jerome")
 
 target_link_libraries(jerome_tool ${exec_libs})
+
+# -------------------------------------------------
+# Jerome4Java
+
+find_package(Java REQUIRED)
+find_package(JNI REQUIRED)
+
+
+# jerome library source files
+file(GLOB_RECURSE Jerome4Java_source_files 
+		"${PROJECT_SOURCE_DIR}/Jerome4Java/cpp/*.cpp")
+
+add_library(Jerome4Java SHARED ${Jerome4Java_source_files})
+        
+target_include_directories(Jerome4Java
+  PUBLIC ${PROJECT_SOURCE_DIR}
+  PRIVATE ${jerome_includes}
+  ${jerome_GENERATED_OUTPUT_DIR}
+  ${LIBXML2_INCLUDE_DIR}
+  ${LIBXSLT_INCLUDE_DIR}
+  "/usr/include/eigen3"
+  "/usr/include/webkitgtk-4.0"
+  ${JNI_INCLUDE_DIRS}
+)
+
+set(Jerome4Java_libraries ${jerome_libraries} jerome ${JNI_LIBRARIES})
+
+target_link_libraries(Jerome4Java ${Jerome4Java_libraries} )
+
+# -------------------------------------------------
+# Jerome4Java
+
+find_package(Java REQUIRED)
+include(UseJava)
+
+set(JAR_NAME J4JTest)
+
+# J4JTest source files
+file(GLOB_RECURSE J4JTest_source_files 
+		"${PROJECT_SOURCE_DIR}/Jerome4Java/java/*/*.java")
+
+# message("J4j source: ${J4JTest_source_files}")
+
+add_jar(${JAR_NAME} ${J4JTest_source_files} 
+  MANIFEST "${PROJECT_SOURCE_DIR}/Jerome4Java/java/app/META-INF/MANIFEST.MF"
+  OUTPUT_DIR ${EXECUTABLE_OUTPUT_PATH})
