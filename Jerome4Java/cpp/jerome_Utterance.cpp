@@ -128,8 +128,8 @@ Java_jerome_Utterance_getFieldNames(JNIEnv* inEnv,
 {
   auto object = model(inEnv, inObject);
   auto array = inEnv->NewObjectArray(object ? (int)object->fieldNames().size() : 0,
-                        inEnv->FindClass("java/lang/String"),
-                        inEnv->NewStringUTF(""));
+                                     findClass(inEnv, "java/lang/String"),
+                                     inEnv->NewStringUTF(""));
   if (!object) return array;
   int index = 0;
   for(auto name: object->fieldNames()) {

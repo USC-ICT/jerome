@@ -238,6 +238,11 @@ Java_jerome_Jerome_init(JNIEnv * inEnv,
     isInitialized = true;
     Platform::initialize();
     AttachedThreadRegion::initialize(inEnv);
+
+    findClass(inEnv, "java/lang/String");
+    findClass(inEnv, "jerome/JeromeException");
+    findClass(inEnv, "jerome/Utterance");
+    findClass(inEnv, "jerome/Jerome$Completion");
   }
   auto pointer = new shared_ptr<Model>;
   *pointer = std::make_shared<Model>();

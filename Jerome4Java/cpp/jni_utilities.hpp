@@ -28,6 +28,7 @@
 # include<jni.h>
 #endif
 #include <memory>
+#include <unordered_map>
 
 std::string to_string(JNIEnv * inEnv, jstring inString);
 jmethodID method(JNIEnv* inEnv, jobject inObject, 
@@ -73,6 +74,8 @@ struct GlobalObjectReference {
 private:
   std::shared_ptr<Impl> mImpl;
 };
+
+jclass findClass(JNIEnv * inEnv, const char* inClassName);
 
 inline jfieldID nativePointerFieldID(JNIEnv * inEnv, jobject inObject) {
   auto clazz = inEnv->GetObjectClass(inObject);

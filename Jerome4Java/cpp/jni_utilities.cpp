@@ -22,6 +22,24 @@
 #include <iostream>
 #include "jni_utilities.hpp"
 
+static std::unordered_map<std::string, GlobalObjectReference> sJavaClassCache;
+
+jclass findClass(JNIEnv * inEnv, const char* inClassName) {
+  auto iter = sJavaClassCache.find(inClassName);
+  if (iter != sJavaClassCache.end()) {
+    return static_cast<jclass>(iter->second.object());
+  }
+
+  auto clazz = inEnv->FindClass(inClassName);
+  if (!clazz) {
+    std::cerr << "Unknown class " << inClassName << std::endl;
+    return nullptr;
+  }
+
+  sJavaClassCache[inClassName] = GlobalObjectReference(inEnv, clazz);
+  return clazz;
+}
+
 std::string to_string(JNIEnv * inEnv, jstring inString) {
   auto value = inEnv->GetStringUTFChars(inString, nullptr);
   auto result = std::string(value);
@@ -54,7 +72,7 @@ jobject newObject(JNIEnv* inEnv,
   va_list a_list;
   va_start(a_list, inConstructorSignature);
   
-  auto clazz = inEnv->FindClass(inClassName);
+  auto clazz = findClass(inEnv, inClassName);
   if (!clazz) {
     std::cerr << "Unknown class " << inClassName << std::endl;
     return nullptr;
