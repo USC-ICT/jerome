@@ -36,7 +36,8 @@ jclass findClass(JNIEnv * inEnv, const char* inClassName) {
     return nullptr;
   }
 
-  sJavaClassCache[inClassName] = GlobalObjectReference(inEnv, clazz);
+  sJavaClassCache.emplace(inClassName, GlobalObjectReference(inEnv, static_cast<jobject>(clazz)));
+
   return clazz;
 }
 
