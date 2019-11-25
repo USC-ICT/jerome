@@ -99,9 +99,9 @@ namespace jerome {
 				//          void operator () (
 				//            typename ranked_list_collector_type::result_type const& x) const
 				//          {
-				//            std::cout << fmeasure(x) << " " << retrieved_count(x) << " "
+				//            log::info() << fmeasure(x) << " " << retrieved_count(x) << " "
 				//                      << relevant_count(x) << " " << precision(x) << " "
-				//                      << recall(x) << " " << relevant_size(x) << std::endl;
+				//                      << recall(x) << " " << relevant_size(x);
 				//          }
 				//
 				//        };

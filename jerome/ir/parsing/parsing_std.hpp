@@ -88,7 +88,7 @@ namespace jerome {
 		, mLocale(inLocale)
 		, mHasToken(true)
 		{
-//		std::cout<< locale().name() << std::endl;
+//		log::info() << locale().name();
 		}
 		
 		NonTokenizer(const String* inString, jerome::Locale const & inLocale = jerome::Locale()) 
@@ -96,7 +96,7 @@ namespace jerome {
 		, mLocale(inLocale)
 		, mHasToken(true)
 		{
-//		std::cout<< locale().name() << std::endl;
+//		log::info() << locale().name();
 		}
 
 		bool getNextToken(Token& ioToken) {

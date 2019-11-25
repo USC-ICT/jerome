@@ -59,7 +59,7 @@ namespace jerome {
 		, mEndIterator(mIndex.end())
 		, mLocale(inLocale)
 		{
-//		std::cout<< locale().name() << std::endl;
+//		log::info() << locale().name();
 		}
 
 		Tokenizer(const String* inString, jerome::Locale const & inLocale = jerome::Locale()) 
@@ -69,13 +69,13 @@ namespace jerome {
 		, mEndIterator(mIndex.end())
 		, mLocale(inLocale)
 		{
-//		std::cout<< locale().name() << std::endl;
+//		log::info() << locale().name();
 		}
 		
 		bool getNextToken(Token& ioToken) {
-// 		  std::cout << "asking for token ";
+// 		  log::info() << "asking for token ";
 			if (mIterator == mEndIterator) {
-//   		  std::cout << "none available" << std::endl;
+//   		  log::info() << "none available";
 			  return false;
 			}
 			index_type::iterator	start	= mIterator;
@@ -106,7 +106,7 @@ namespace jerome {
 		, mLocale(inLocale)
 		, mHasToken(true)
 		{
-//		std::cout<< locale().name() << std::endl;
+//		log::info() << locale().name();
 		}
 		
 		NonTokenizer(const String* inString, jerome::Locale const & inLocale = jerome::Locale()) 
@@ -114,7 +114,7 @@ namespace jerome {
 		, mLocale(inLocale)
 		, mHasToken(true)
 		{
-//		std::cout<< locale().name() << std::endl;
+//		log::info() << locale().name();
 		}
 
 		bool getNextToken(Token& ioToken) {

@@ -39,6 +39,7 @@
 
 #include <jerome/type/string.hpp>
 #include <jerome/type/error.hpp>
+#include <jerome/logger.hpp>
 
 namespace ptr = std;
 

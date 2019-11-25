@@ -90,7 +90,8 @@ namespace jerome { namespace ir { namespace rm {
 			
 			DD = outer_prod(diagA, Ed) - A + outer_prod(Ed, diagA) - trans(A);
 			
-//			std::cout << "DD ==========================================================" << std::endl << DD << std::endl;
+//			log::info() << "DD ==========================================================";
+//      log::info() << DD;
 			
 			
 			//					for(std::size_t i = 0, n = ndocs; i < n; ++i) {
@@ -102,7 +103,8 @@ namespace jerome { namespace ir { namespace rm {
 			if (!ioDelegate.noteProgress(progress += deltaProgress)) return false;
 			
 			QQ = outer_prod(diagC, Eq) - C + outer_prod(Eq, diagC) - trans(C);
-//			std::cout << "QQ ==========================================================" << std::endl << QQ << std::endl;
+//			log::info() << "QQ ==========================================================";
+//      log::info() << QQ;
 			
 			//					for(std::size_t i = 0, n = nqrys; i < n; ++i) {
 			//						for(std::size_t j = 0; j <= i; ++j) {
@@ -113,11 +115,14 @@ namespace jerome { namespace ir { namespace rm {
 			if (!ioDelegate.noteProgress(progress += deltaProgress)) return false;
 			
 			DQ = inRanker.prod(A, B);
-//			std::cout << "DQ ==========================================================" << std::endl << DQ << std::endl;
+//			log::info() << "DQ ==========================================================";
+//      log::info() << DQ;
 			
-			//					std::cout << "Ae ==========================================================" << std::endl << Ae << std::endl;
-			//
-			//					std::cout << "B ==========================================================" << std::endl << B << std::endl;
+//			log::info() << "Ae ==========================================================";
+//      log::info() << Ae;
+//
+//			log::info() << "B ==========================================================";
+//      log::info() << B;
 			
 			//					for(std::size_t i = 0, n = nqrys; i < n; ++i) {
 			//						WeightMatrixConstColumn	column(B, i);

@@ -80,7 +80,7 @@ namespace filter {
 		
 		if (strcmp(ioToken.text().c_str(), thestem.get())) {
 			
-//			std::cout << token->text() << " -> " << thestem.get() << std::endl;
+//			log::info() << token->text() << " -> " << thestem.get();
 		
 			ioToken.text() = thestem.get();
 		}
@@ -265,7 +265,7 @@ namespace filter {
 //		
 //		FILE*	f	= fopen(inDictionaryFileName.c_str(), "r");
 //		if (!f) {
-//			std::cerr << "Failed to open " << inDictionaryFileName << std::endl;
+//			log::error() << "Failed to open " << inDictionaryFileName;
 //			return;
 //		}
 //

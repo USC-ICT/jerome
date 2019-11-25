@@ -103,22 +103,22 @@ namespace jerome {
 //        time_point_type mStartTime = time_point_type::clock::now();
 
         Ranker::result_type   rl = ranker_or_error.value()(query);
-        // std::cout << *rl;
+        // log::info() << *rl;
 
 //        time_point_type end = time_point_type::clock::now();
 //        std::chrono::duration<double> elapsed_seconds = end - mStartTime;
-//        std::cout << "TIME: " << elapsed_seconds.count() << std::endl;
+//        log::info() << "TIME: " << elapsed_seconds.count();
 
 //        {
 //          typedef std::chrono::time_point<std::chrono::system_clock>	time_point_type;
 //          time_point_type mStartTime = time_point_type::clock::now();
 //          
 //          Ranker::result_type   rl = ranker_or_error.value()(query);
-//          // std::cout << *rl;
+//          // log::info() << *rl;
 //          
 //          time_point_type end = time_point_type::clock::now();
 //          std::chrono::duration<double> elapsed_seconds = end - mStartTime;
-//          std::cout << "TIME: " << elapsed_seconds.count() << std::endl;
+//          log::info() << "TIME: " << elapsed_seconds.count();
 //        }
         
         std::vector<Utterance>  result;
@@ -126,7 +126,7 @@ namespace jerome {
 //        int count = 0;
         for (const Ranker::ranked_list_type::value_type& s : rl[0]) {
 //          if (count++ < 3) {
-//            std::cout << s.score() << " " << s.object().get("id") << std::endl;
+//            log::info() << s.score() << " " << s.object().get("id");
 //          }
           result.push_back(s.object());
         }
@@ -258,7 +258,7 @@ namespace jerome {
         trainer.setData(data.subdata(params.trainingQuestions),
                         data.subdata(params.developmentQuestions));
         
-        //				std::cout << data.questions().size() << " " << data.answers().size();
+        //				log::info() << data.questions().size() << " " << data.answers().size();
         
         ranker.train(trainer, [&params](Trainer::state_type& state){
           state_type_impl	fakeState(params.stateName, state);

@@ -85,6 +85,7 @@
 		6268B0321A0579FC00287DF4 /* parsing_icu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6268B02B1A0579FC00287DF4 /* parsing_icu.cpp */; };
 		6268B0351A057A1800287DF4 /* parsing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6268B0341A057A1800287DF4 /* parsing.cpp */; };
 		6268B0361A057A1800287DF4 /* parsing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6268B0341A057A1800287DF4 /* parsing.cpp */; };
+		626C734E238AF20800CCF5E8 /* libjerome.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D21604D43600764667 /* libjerome.a */; };
 		62750A2E1D835BB2004ABECE /* Evaluate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62750A2C1D835BB2004ABECE /* Evaluate.cpp */; };
 		627818B91CC831C300C344E4 /* Jerome.h in Headers */ = {isa = PBXBuildFile; fileRef = 627818B81CC831C300C344E4 /* Jerome.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		627818C21CC8322700C344E4 /* ALPlatform.h in Headers */ = {isa = PBXBuildFile; fileRef = 627818BE1CC8322700C344E4 /* ALPlatform.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -103,6 +104,9 @@
 		6288C8AF163B5C6200191972 /* js_engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8AC163B5C6200191972 /* js_engine.cpp */; };
 		6288C8BB1651DD0F00191972 /* async.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8B91651DD0E00191972 /* async.cpp */; };
 		6288C8BC1651DD0F00191972 /* async.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6288C8B91651DD0E00191972 /* async.cpp */; };
+		628E21992389DFA00005CC18 /* logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 628E21972389DFA00005CC18 /* logger.cpp */; };
+		628E219A2389DFA00005CC18 /* logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 628E21972389DFA00005CC18 /* logger.cpp */; };
+		628E219E238AF0750005CC18 /* logger_Tests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 628E219D238AF0250005CC18 /* logger_Tests.mm */; };
 		628E31CB1D67CFEC0073F882 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 628E31CA1D67CFEB0073F882 /* libxml2.tbd */; };
 		628E31CC1D67D0520073F882 /* libkstem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58D01CCB344800641E2C /* libkstem.a */; };
 		62990CD21B6CCD5400DEB2E8 /* Trainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62990CD01B6CCD5400DEB2E8 /* Trainer.cpp */; };
@@ -159,9 +163,6 @@
 		62CD1BDB16CD70DE004BDE86 /* async_js.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62CD1BD916CD70DE004BDE86 /* async_js.cpp */; };
 		62CD1BDC16CD70DE004BDE86 /* async_js.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62CD1BD916CD70DE004BDE86 /* async_js.cpp */; };
 		62D19FBB2148692100E8C954 /* libjerome_osx_tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 62D19FBA2148692100E8C954 /* libjerome_osx_tests.m */; };
-		62D19FBD2148692100E8C954 /* libjerome.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 622EA2D21604D43600764667 /* libjerome.a */; };
-		62D19FC32148692A00E8C954 /* dictionary_Tests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 625D39F421484F7A0038D20D /* dictionary_Tests.mm */; };
-		62D19FC42148698800E8C954 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62DDE2FF1F699F66002B1DE8 /* boost.framework */; };
 		62D56AF71987069400F09A32 /* cross_entropy_jelinek_mercer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62D56AF11987069400F09A32 /* cross_entropy_jelinek_mercer.cpp */; };
 		62D56AF81987069400F09A32 /* cross_entropy_jelinek_mercer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62D56AF11987069400F09A32 /* cross_entropy_jelinek_mercer.cpp */; };
 		62D56AF91987069400F09A32 /* jelinek_mercer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62D56AF51987069400F09A32 /* jelinek_mercer.cpp */; };
@@ -523,6 +524,9 @@
 		6288C8B91651DD0E00191972 /* async.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = async.cpp; sourceTree = "<group>"; };
 		6288C8BA1651DD0E00191972 /* async.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = async.hpp; sourceTree = "<group>"; };
 		628BEE271B8D28C200F18BC0 /* Ranker_impl.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Ranker_impl.hpp; sourceTree = "<group>"; };
+		628E21972389DFA00005CC18 /* logger.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = logger.cpp; sourceTree = "<group>"; };
+		628E21982389DFA00005CC18 /* logger.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = logger.hpp; sourceTree = "<group>"; };
+		628E219D238AF0250005CC18 /* logger_Tests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = logger_Tests.mm; sourceTree = "<group>"; };
 		628E31CA1D67CFEB0073F882 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		628E7C5E1B81C0980077028A /* input_buffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = input_buffer.hpp; sourceTree = "<group>"; };
 		628F1564199164A70050F485 /* exception.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = exception.hpp; sourceTree = "<group>"; };
@@ -781,8 +785,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				62D19FBD2148692100E8C954 /* libjerome.a in Frameworks */,
-				62D19FC42148698800E8C954 /* boost.framework in Frameworks */,
+				626C734E238AF20800CCF5E8 /* libjerome.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -883,6 +886,7 @@
 				6226216D198DAD7C00A0AA4E /* jerome_osx_Tests.mm */,
 				62262168198DAD7C00A0AA4E /* Supporting Files */,
 				62176ACE1A546946000F745D /* classifier_Tests.mm */,
+				628E219D238AF0250005CC18 /* logger_Tests.mm */,
 			);
 			path = "jerome.osx Tests";
 			sourceTree = "<group>";
@@ -1246,6 +1250,8 @@
 				6288C8B91651DD0E00191972 /* async.cpp */,
 				620C61B01B730FB500FA2953 /* async_boost.hpp */,
 				620C61B11B730FC900FA2953 /* async_gcd.hpp */,
+				628E21972389DFA00005CC18 /* logger.cpp */,
+				628E21982389DFA00005CC18 /* logger.hpp */,
 			);
 			path = jerome;
 			sourceTree = "<group>";
@@ -1745,7 +1751,7 @@
 			attributes = {
 				CLASSPREFIX = AL;
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1120;
 				ORGANIZATIONNAME = "Anton Leuski & ICT/USC";
 				TargetAttributes = {
 					622EA2D11604D43600764667 = {
@@ -2035,6 +2041,7 @@
 				62092D5C16BB22E5003001AC /* scion.cpp in Sources */,
 				62C327691B96326E001EB593 /* AnalyzerFactory.cpp in Sources */,
 				62D56AF71987069400F09A32 /* cross_entropy_jelinek_mercer.cpp in Sources */,
+				628E21992389DFA00005CC18 /* logger.cpp in Sources */,
 				6268B0311A0579FC00287DF4 /* parsing_icu.cpp in Sources */,
 				62CD1BDB16CD70DE004BDE86 /* async_js.cpp in Sources */,
 				62C327801B9AC258001EB593 /* model_impl.cpp in Sources */,
@@ -2122,7 +2129,7 @@
 			files = (
 				6284C30422418E4F006BB913 /* csv_tests.mm in Sources */,
 				62D19FBB2148692100E8C954 /* libjerome_osx_tests.m in Sources */,
-				62D19FC32148692A00E8C954 /* dictionary_Tests.mm in Sources */,
+				628E219E238AF0750005CC18 /* logger_Tests.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2149,6 +2156,7 @@
 				62FAE722161155500065D358 /* model_cpp.cpp in Sources */,
 				62FAE72A161155500065D358 /* collection.cpp in Sources */,
 				6255E91B1B6C51AC00EA9402 /* Ranker.cpp in Sources */,
+				628E219A2389DFA00005CC18 /* logger.cpp in Sources */,
 				6200F72F1B83C87000CA121E /* ModelWriter.cpp in Sources */,
 				6211C31A1B7F212C00F293DC /* writer.cpp in Sources */,
 				62C3276E1B963286001EB593 /* ReporterFactory.cpp in Sources */,
@@ -2559,10 +2567,6 @@
 				DEVELOPMENT_TEAM = 4RX84Q9D57;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/3rdParty/build/macosx/Frameworks",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -2582,6 +2586,12 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
+					"${TARGET_BUILD_DIR}/libboost_system.a",
+					"${TARGET_BUILD_DIR}/libnlopt_cxx.a",
+					"${TARGET_BUILD_DIR}/libboost_thread.a",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "net.leuski.libjerome-osx-tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -2629,10 +2639,6 @@
 				DEVELOPMENT_TEAM = 4RX84Q9D57;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/3rdParty/build/macosx/Frameworks",
-				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2645,6 +2651,12 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
+					"${TARGET_BUILD_DIR}/libboost_system.a",
+					"${TARGET_BUILD_DIR}/libnlopt_cxx.a",
+					"${TARGET_BUILD_DIR}/libboost_thread.a",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "net.leuski.libjerome-osx-tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

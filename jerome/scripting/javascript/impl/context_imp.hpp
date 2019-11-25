@@ -112,7 +112,7 @@ namespace jerome { namespace javascript {
                                        const String& sourceURL,
                                        int startingLineNumber)
 	{
-		//			std::cerr << s.substr(0,std::min(64ul, s.length())) << "\n";
+		//			log::error() << s.substr(0,std::min(64ul, s.length()));
     JEROME_CALL_JS_API(JSValueRef, JSEvaluateScript,
                        detail::from_valueRef<Value>::convert(*this, result),
                        "evaluating script",
@@ -126,7 +126,7 @@ namespace jerome { namespace javascript {
                                        const String& sourceURL,
                                        int startingLineNumber)
 	{
-    //			std::cerr << s.substr(0,std::min(64ul, s.length())) << "\n";
+    //			log::error() << s.substr(0,std::min(64ul, s.length()));
     JEROME_CALL_JS_API(JSValueRef, JSEvaluateScript,
                        detail::from_valueRef<Value>::convert(*this, result),
                        "evaluating script",

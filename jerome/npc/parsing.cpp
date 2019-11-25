@@ -74,7 +74,7 @@ namespace jerome {
       
       const String& textp     = inObject.get(utteranceFieldName, empty);
 
-      //		std::cout << textp << std::endl;
+      //		log::info() << textp;
       TokenStream ts(new NonTokenizingPipe<result_type>
                      (&textp,
                       keyword::_index = &ioIndex,
@@ -94,7 +94,7 @@ namespace jerome {
       
       const String& textp     = inObject.get(utteranceFieldName, empty);
       
-      //		std::cout << textp << std::endl;
+      //		log::info() << textp;
       TokenStream ts(new UniversalTokenPipe<result_type>
                      (&textp,
                       keyword::_index = &ioIndex,

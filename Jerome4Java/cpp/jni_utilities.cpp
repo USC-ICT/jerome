@@ -20,6 +20,7 @@
 //
 
 #include <iostream>
+#include <jerome/logger.hpp>
 #include "jni_utilities.hpp"
 
 static std::unordered_map<std::string, GlobalObjectReference> sJavaClassCache;
@@ -32,7 +33,7 @@ jclass findClass(JNIEnv * inEnv, const char* inClassName) {
 
   auto clazz = inEnv->FindClass(inClassName);
   if (!clazz) {
-    std::cerr << "Unknown class " << inClassName << std::endl;
+    jerome::log::error() << "Unknown class " << inClassName;
     return nullptr;
   }
 
@@ -53,13 +54,13 @@ jmethodID method(JNIEnv* inEnv, jobject inObject,
 {
   auto clazz = inEnv->GetObjectClass(inObject);
   if (!clazz) {
-    std::cerr << "Unknown class for method " << inName << std::endl;
+    jerome::log::error() << "Unknown class for method " << inName ;
     return nullptr;
   }
   
   auto method = inEnv->GetMethodID(clazz, inName, inSignature);
   if (!method) {
-    std::cerr << "Unknown method " << inName << std::endl;
+    jerome::log::error() << "Unknown method " << inName;
   }
   
   return method;
@@ -75,14 +76,14 @@ jobject newObject(JNIEnv* inEnv,
   
   auto clazz = findClass(inEnv, inClassName);
   if (!clazz) {
-    std::cerr << "Unknown class " << inClassName << std::endl;
+    jerome::log::error() << "Unknown class " << inClassName;
     return nullptr;
   }
   
   auto constructor = inEnv->GetMethodID(clazz, "<init>", inConstructorSignature);
   if (!constructor) {
-    std::cerr << "Unknown constructor " << inConstructorSignature 
-    << " for class " << inClassName << std::endl;
+    jerome::log::error() << "Unknown constructor " << inConstructorSignature
+    << " for class " << inClassName;
     return nullptr;
   }
   
@@ -98,7 +99,7 @@ void AttachedThreadRegion::initialize(JNIEnv* inEnv) {
 AttachedThreadRegion::AttachedThreadRegion() {
   gJVM->AttachCurrentThread((void **)&env, nullptr);
   if (!env) {
-    std::cerr << "Failed to attach current thread with JVM" << std::endl;
+    jerome::log::error() << "Failed to attach current thread with JVM";
   }
 }
 

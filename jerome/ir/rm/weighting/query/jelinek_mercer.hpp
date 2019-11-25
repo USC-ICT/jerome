@@ -101,11 +101,10 @@ namespace jerome {
                 //			for(Term::Frequencies::const_iterator termDocIterator =
                 // ti.tfs().begin(), iend = ti.tfs().end(); termDocIterator !=
                 // iend; ++termDocIterator) {
-                //				//				std::cout << te->first << " " << cs << " "
+                //				//				log::info() << te->first << " " << cs << " "
                 // << vs << " " << epsilon << " " << ti.df() <<  " "
                 //				//							<< qf << " " << lambda << " " <<
-                // (int)*i << " " << doclen[i.index()] << " " << wIndep <<
-                // std::endl;
+                // (int)*i << " " << doclen[i.index()] << " " << wIndep;
                 //				double	theWeight = log(
                 // document_weight(termDocIterator, field) / wIndep + 1);
                 //				for(Term::Frequencies::const_iterator queryDocIterator
@@ -123,7 +122,7 @@ namespace jerome {
               // I shift the numbers so the maximum number is always 1.
 
               const double  min_exp =
-                std::numeric_limits<double>::min_exponent * log(2) + 1;
+                std::numeric_limits<double>::min_exponent * std::log(2) + 1;
 
               
               for (IndexType j = 0, n = size.columnCount; j < n; ++j) {
@@ -131,12 +130,11 @@ namespace jerome {
 
                 double  max   = jerome::max_element(theColumn);
                 
-                //		std::cout << max << " " << min_exp << " " <<
-                // std::numeric_limits<double>::min_exponent << " " << log(2) <<
-                // std::endl;
+                //		log::info() << max << " " << min_exp << " " <<
+                // std::numeric_limits<double>::min_exponent << " " << log(2);
                 double sum = 0;
                 for (IndexType k = 0, nk = theColumn.size(); k < nk; ++k) {
-                  //			std::cout << i << " ";
+                  //			log::info() << i << " ";
                   double x = theColumn(k) - max;
                   x = x < min_exp ? 0 : exp(x);
                   theColumn(k) = x;

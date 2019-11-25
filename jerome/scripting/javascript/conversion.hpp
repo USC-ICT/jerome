@@ -276,7 +276,8 @@ namespace jerome { namespace javascript { namespace detail {
 	> {
 		static T convert(const Context& ctx, JSValueRef valueRef) {
 			if (!JSValueIsObjectOfClass(ctx.contextRef(), valueRef, ClassTraits<T>::instance())) {
-				std::cerr << "expected an object of class " << ClassTraits<T>::instance().className() << std::endl;
+				log::error() << "expected an object of class "
+          << ClassTraits<T>::instance().className();
 				assert(false);
 			}
 			return ClassTraits<T>::instance().representedObjectForRef((JSObjectRef)valueRef);
@@ -306,7 +307,8 @@ namespace jerome { namespace javascript { namespace detail {
 			if (JSValueIsNull(ctx.contextRef(), valueRef)) return nullptr;
 			if (JSValueIsUndefined(ctx.contextRef(), valueRef)) return nullptr;
 			if (!JSValueIsObjectOfClass(ctx.contextRef(), valueRef, ClassTraits<T>::instance())) {
-				std::cerr << "expected an object of class " << ClassTraits<T>::instance().className() << std::endl;
+				log::error() << "expected an object of class "
+          << ClassTraits<T>::instance().className();
 				assert(false);
 			}
 			return ClassTraits<T>::instance().representedObjectForRef((JSObjectRef)valueRef);

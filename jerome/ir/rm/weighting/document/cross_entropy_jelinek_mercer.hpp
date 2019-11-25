@@ -67,7 +67,7 @@ namespace jerome {
                 const typename Index::Term&   term(te.second);
                 const double  cf    = collection_weight<Index>(term,
                   field);
-                const double  log_cf  = log(cf);
+                const double  log_cf  = std::log(cf);
 
                 // I need to compute A[j][i] = a[i] * log(a[j])
                 // = sum_t (a[i](t) * log(a[j](t))) // depend on terms
@@ -102,13 +102,13 @@ namespace jerome {
               //
               //		double	dt = (endt.tv_usec - startt.tv_usec) + 1000000 *
               // (endt.tv_sec - startt.tv_sec);
-              //		std::cout << dt << std::endl;
+              //		log::info() << dt;
 
               //		for(int i = 0, n = result->size1(); i < n; ++i) {
+              //      auto llog(log::info());
               //			for(int j = 0; j < n; ++j) {
-              //				std::cout << (*result)(i, j) <<  " ";
+              //				llog << (*result)(i, j) <<  " ";
               //			}
-              //			std::cout << std::endl;
               //		}
 
               return ai_log_aj;

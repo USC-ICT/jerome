@@ -47,9 +47,9 @@ namespace jerome {
         try {
           f();
         } catch (const std::exception& ex) {
-          std::cerr << "uncaught exception: " << ex.what() << std::endl;
+          log::error() << "uncaught exception: " << ex.what();
         } catch (...) {
-          std::cerr << "unknown uncaught exception" << std::endl;
+          log::error() << "unknown uncaught exception";
         }
       }
       
@@ -152,12 +152,12 @@ namespace jerome {
           std::size_t needed = count < (long)max_thread_count
                                ? max_thread_count
                                : (std::size_t)(max_thread_count *
-                                               (log((double)count) /
-                                                log(max_thread_count)));
+                                               (std::log((double)count) /
+                                                std::log(max_thread_count)));
 
           if (needed <= mThreadGroup.size()) return;
 
-//    std::cout << std::endl
+//    log::info() << std::endl
 //			<< "increasing the thread pool to size " << needed << " " << count;
 
 					addThreads(needed - mThreadGroup.size());

@@ -25,6 +25,7 @@
 #include "model.hpp"
 #include "jni_utilities.hpp"
 #include <jerome/scripting/scripts.hpp>
+#include <jerome/logger.hpp>
 
 using namespace jerome::scripting;
 
@@ -137,7 +138,7 @@ void Model::installEngineHandler() {
       return;
     }
     
-    std::cerr << "Unknown event name " << name << std::endl;
+    jerome::log::error() << "Unknown event name " << name;
   });
 }
 

@@ -170,7 +170,7 @@ namespace jerome {
             reader().assertNode(xml::reader::END_ELEMENT, tag::database);
 
           } catch (const Error& ex) {
-            std::cout << "|" << reader() << "|" << std::endl;
+            log::info() << "|" << reader() << "|";
             // I try to avoid exceptions as much as possible,
             // but this is a localized case deep in the implementation.
             return Error("failed to parse the collection xml document", ex);

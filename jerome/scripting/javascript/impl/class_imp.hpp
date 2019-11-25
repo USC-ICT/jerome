@@ -23,6 +23,7 @@
 #define __jerome_javascript_class_imp_hpp__
 
 #include <jerome/scripting/javascript/class_traits.hpp>
+#include <jerome/logger.hpp>
 
 namespace jerome { namespace javascript {
 
@@ -107,7 +108,7 @@ definition.x = &Callback<traits_type, decltype(&traits_type::x##Callback), &trai
 				typedef typename member_class_type<FN>::type	object_type;
 				
 				if (!JSValueIsObjectOfClass(ctx, thisObject, ClassTraits<object_type>::instance())) {
-					std::cerr << "this object is not of the mapped type" << std::endl;
+					log::error() << "this object is not of the mapped type";
 					assert(false);
 				}
 				
@@ -126,7 +127,7 @@ definition.x = &Callback<traits_type, decltype(&traits_type::x##Callback), &trai
 				typedef typename member_class_type<FN>::type	object_type;
 				
 				if (!JSValueIsObjectOfClass(ctx, object, ClassTraits<object_type>::instance())) {
-					std::cerr << "this object is not of the mapped type" << std::endl;
+					log::error() << "this object is not of the mapped type";
 					assert(false);
 				}
 				detail::CallbackContext myContext(ctx, exc);
@@ -144,7 +145,7 @@ definition.x = &Callback<traits_type, decltype(&traits_type::x##Callback), &trai
 				typedef typename member_class_type<FN>::type	object_type;
 				
 				if (!JSValueIsObjectOfClass(ctx, object, ClassTraits<object_type>::instance())) {
-					std::cerr << "this object is not of the mapped type" << std::endl;
+					log::error() << "this object is not of the mapped type";
 					assert(false);
 				}
 				

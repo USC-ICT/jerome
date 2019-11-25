@@ -101,7 +101,7 @@ namespace jerome {
 							try {
 								callback();
 							} catch (const std::exception& ex) {
-								std::cerr << ex.what() << std::endl; // TODO better error handling
+								log::error() << ex.what(); // TODO better error handling
 							}
 						});
 					
@@ -125,7 +125,7 @@ namespace jerome {
 //						try {
 //							inCallback();
 //						} catch (const std::exception& ex) {
-//							std::cerr << ex.what() << std::endl; // TODO better error handling
+//							log::error() << ex.what(); // TODO better error handling
 //						}
 //					}
 //				}
@@ -282,14 +282,14 @@ namespace jerome {
 #ifdef stringWithContentsOfURL_implemented
 			String		error	= "";
 			String		content;
-			//						std::cout << "asking for " << (String)url << " ";
+			//	auto log(log::info());
+      //  log << "asking for " << (String)url << " ";
 			if (stringWithContentsOfURL(url, content, error)) {
 				cb(nullptr, content);
-				//							std::cout << "SUCCEDED" << std::endl;
-				//							std::cout << content << std::endl;
+				//							log << "SUCCEDED " << content;
 			} else {
 				cb(error.c_str(), content);
-				//							std::cout << "FAILED" << std::endl;
+				//							log << "FAILED";
 			}
 #endif
 		};
@@ -306,7 +306,8 @@ namespace jerome {
 		// Internally, this is used by SCION to implement SCXML send/@delay.
 		unsigned ScionPlatform::setTimeout(js::Value cb, double timeout) {
 			if (!cb.isFunction()) throw js::illegal_arguments();
-			//		std::cout << "SET_TIMEOUT " << arguments[1] << " " << arguments[1].toNumber() << std::endl;
+			//		log::info() << "SET_TIMEOUT " << arguments[1]
+      //      << " " << arguments[1].toNumber();
 			return det::Timeout::createTimer(cb, timeout);
 		};
 		
@@ -322,20 +323,20 @@ namespace jerome {
 		// Internally, this is used by SCION to implement SCXML log.
 		void ScionPlatform::log() {
       auto args = js::Context::currentArguments();
-			std::cout << "log(" << args.size() << ") ";
+      auto log(log::info());
+			log << "scxml(" << args.size() << ") ";
 			for(auto v : args) {
 				try {
-					std::cout << v.toJSONString(1);
+					log << v.toJSONString(1);
 				} catch (...) {
 					try {
-						std::cout << v;
+						log << v;
 					} catch (...) {
-						std::cout << "UNKNOWN VALUE";
+						log << "UNKNOWN VALUE";
 					}
 				}
-				std::cout << " ";
+				log << " ";
 			}
-			std::cout << std::endl;
 		};
 		
 		// eval : function(content,name){}
@@ -400,7 +401,7 @@ namespace jerome {
 			if (rgx::regex_match(url, m, URL_REGEX)) {
 				path = m[5].str();
 			}
-			//					std::cout << "extract " << url << " -> " << path << std::endl;
+			//					log::info() << "extract " << url << " -> " << path;
 			return path;
 		};
 		
@@ -411,7 +412,7 @@ namespace jerome {
 			String newURL = rgx::regex_replace (url, URL_REGEX,"$1"+newPath+"$6",
 												rgx::regex_constants::format_first_only);
 	
-			//					std::cout << "replace " << url << " -> " << newURL << std::endl;
+			//					log::info() << "replace " << url << " -> " << newURL;
 			return newURL;
 		};
 		
@@ -462,7 +463,7 @@ namespace jerome {
 			if (ns) {
 				theNs	= xmlSearchNsByHref(doc, xmlDocGetRootElement(doc), (xmlChar*)ns);
 				if (!theNs) {
-					std::cerr << "Cannot find prefix for " << ns << std::endl;
+					log::error() << "Cannot find prefix for " << ns;
 					//						theNs	= xmlNewNs(xmlDocGetRootElement(theDoc), (xmlChar*)nsURL, NULL);
 				}
 			}

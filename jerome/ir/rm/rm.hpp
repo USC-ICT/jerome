@@ -195,8 +195,8 @@ namespace jerome { namespace ir { namespace rm {
 		
 		result_type	operator() (const query_type& inQuery) {
 			const WeightMatrix&	qm	= this->queryModel(inQuery);
-//			std::cout << inQuery << " -- " << qm << std::endl;
-//			std::cout << inQuery << " " << std::endl;
+//			log::info() << inQuery << " -- " << qm;
+//			log::info() << inQuery << " ";
 			return postRank(this->rank(qm));
 		}
 				
@@ -262,7 +262,7 @@ namespace jerome { namespace ir { namespace rm {
       MatrixSize queryModelSize(inQueryModel);
 			result_type						ranked_list(queryModelSize.columnCount);
 			
-			//					std::cout << inQueryModel.size() << " " << documentWeight->size1() << " " << documentWeight->size2() << " " << initialWeight->size() << std::endl;
+			//					log::info() << inQueryModel.size() << " " << documentWeight->size1() << " " << documentWeight->size2() << " " << initialWeight->size();
 			
 #ifdef VIENNACL_WITH_OPENCL
 			FastMatrix vcl_b(inQueryModel.size1(), inQueryModel.size2());
@@ -293,7 +293,7 @@ namespace jerome { namespace ir { namespace rm {
 			for(auto & rl : inRankedList) {
 				std::sort(rl.begin(), rl.end(), ScoresDescending());
 			}
-			//std::cout << inRankedList.size() << " + " << inRankedList[0].size() << " " << inRankedList[0] << std::endl;
+			//log::info() << inRankedList.size() << " + " << inRankedList[0].size() << " " << inRankedList[0];
 			return inRankedList;
 		}
 		

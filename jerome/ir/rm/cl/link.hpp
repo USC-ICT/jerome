@@ -84,11 +84,11 @@ namespace jerome { namespace ir { namespace rm { namespace cl {
 			
 			if (qiter != qmap.end() && diter != dmap.end()) {
 				result.push_back(L(qiter->second, diter->second));
-				//								std::cout << "good link " << qiter->second << " " << diter->second << "\n";
+				//log::info() << "good link " << qiter->second << " " << diter->second;
 			} else {
         // it's possible that one of the objects connected by the link
         // is not in the corresponding object set
-        //        std::cout << "bad link" << std::endl;
+        //        log::info() << "bad link";
 			}
 			
 		}

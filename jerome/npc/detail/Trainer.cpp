@@ -309,12 +309,12 @@ map.emplace(#X, Algorithm(nlopt::X, true, true))
 					std::vector<double> x = inRanker.values();
           std::vector<double> o = math::parameters::clumpToMean(x, ranges);
 
-//          std::cout << x << std::endl;
-//          std::cout << obj.scoreValuePair(x) << std::endl;
+//          log::info() << x;
+//          log::info() << obj.scoreValuePair(x);
 
 					x = gopt.optimize(o);
 
-//		std::cout << "switch" << std::endl;
+//		log::info() << "switch";
 //
 //    optimizer_type lopt(nlopt::LN_BOBYQA, ranges);
 //    lopt.set_ftol_rel(5.0e-4);
@@ -327,16 +327,16 @@ map.emplace(#X, Algorithm(nlopt::X, true, true))
           result.best_point = obj.scoreValuePair(x);
 
           if (this->model().at(Trainer::HACK_THRESHOLD, Bool()).value()) {
-//            std::cout << "hacking score to " 
-//              << result.best_point.score() - 1 << std::endl;
+//            log::info() << "hacking score to "
+//              << result.best_point.score() - 1;
            
             result.best_point = 
               ScoredObject<double>(result.best_point.score() - 1, 
                                    result.best_point.object());
           }
           
-//          std::cout << x << std::endl;
-//          std::cout << result.best_point << std::endl;
+//          log::info() << x;
+//          log::info() << result.best_point;
 
           return std::move(result);
         }
@@ -379,15 +379,13 @@ map.emplace(#X, Algorithm(nlopt::X, true, true))
 
               gopt.set_max_objective(obj);
 
-              std::cout
-                << std::endl << gopt.get_algorithm_name();
-              ;
+              log::info() << gopt.get_algorithm_name();
 
               try {
                 gopt.optimize(o);
-                std::cout << std::endl << obj.evaluationCount();
+                log::info() << obj.evaluationCount();
               } catch (const std::exception& ex) {
-                std::cout << std::endl << "exception:" << ex.what();
+                log::error() << "exception:" << ex.what();
               }
 
             } else {
@@ -408,17 +406,15 @@ map.emplace(#X, Algorithm(nlopt::X, true, true))
                 gopt.set_local_optimizer(lopt);
                 gopt.set_max_objective(obj);
 
-                std::cout
-                  << std::endl << gopt.get_algorithm_name()
+                log::info() << gopt.get_algorithm_name()
                   << " w/ " << lopt.get_algorithm_name()
                 ;
 
                 try {
                   gopt.optimize(o);
-                  std::cout << std::endl << obj.evaluationCount() << std::endl;
+                  log::info() << obj.evaluationCount();
                 } catch (const std::exception& ex) {
-                  std::cout << std::endl << "exception:" << ex.what() <<
-                    std::endl;
+                  log::error() << "exception:" << ex.what();
                 }
               }
 

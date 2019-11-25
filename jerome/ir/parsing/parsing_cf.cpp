@@ -136,7 +136,7 @@ namespace jerome {
 	, mLocale(inLocale)
 	, mHasToken(true)
 	{
-//		std::cout<< locale().name() << std::endl;
+//		log::info() << locale().name();
 	}
 
 	namespace filter {
