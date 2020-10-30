@@ -2348,8 +2348,6 @@
 					"$(SRCROOT)/3rdParty/build/$(PLATFORM_NAME)/include",
 				);
 				INFOPLIST_FILE = Framework/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
 					"${TARGET_BUILD_DIR}/libboost_system.a",
@@ -2372,8 +2370,6 @@
 					"$(SRCROOT)/3rdParty/build/$(PLATFORM_NAME)/include",
 				);
 				INFOPLIST_FILE = Framework/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
 					"${TARGET_BUILD_DIR}/libboost_system.a",
@@ -2472,8 +2468,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Jerome.ios/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
 					"${TARGET_BUILD_DIR}/libboost_system.a",
@@ -2492,8 +2486,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Jerome.ios/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
 					"${TARGET_BUILD_DIR}/libboost_system.a",
