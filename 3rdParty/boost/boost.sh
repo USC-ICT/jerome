@@ -38,7 +38,21 @@ TARGET_DIR="$1"
 echo "IPHONE_SDKVERSION = ${IPHONE_SDKVERSION}"
 echo "MACOSX_DEPLOYMENT_TARGET = ${MACOSX_DEPLOYMENT_TARGET}"
 
-: ${BUILD_UIKIT_FOR_MAC:=`echo "${IPHONE_SDKVERSION} >= 13.0 && ${MACOSX_DEPLOYMENT_TARGET} >= 10.15" | bc`}
+if [ `echo "${MACOSX_DEPLOYMENT_TARGET} >= 10.15" | bc` -eq 1 ]
+then
+  UIKIT_DEPLOYMENT_TARGET="${MACOSX_DEPLOYMENT_TARGET}"
+else
+  UIKIT_DEPLOYMENT_TARGET="10.15"
+fi
+
+if [ `echo "${IPHONEOS_DEPLOYMENT_TARGET} >= 13.0" | bc` -eq 1 ]
+then
+  UIKIT_IOS_DEPLOYMENT_TARGET="${IPHONEOS_DEPLOYMENT_TARGET}"
+else
+  UIKIT_IOS_DEPLOYMENT_TARGET="13.0"
+fi
+
+: ${BUILD_UIKIT_FOR_MAC:=`echo "${IPHONE_SDKVERSION} >= 13.0 && ${UIKIT_DEPLOYMENT_TARGET} >= 10.15" | bc`}
 
 : ${XCODE_ROOT:=`xcode-select -print-path`}
 : ${EXTRA_CPPFLAGS:="-fvisibility=hidden -fvisibility-inlines-hidden -DBOOST_AC_USE_PTHREADS -DBOOST_SP_USE_PTHREADS -g -DNDEBUG -std=${CLANG_CXX_LANGUAGE_STANDARD} -stdlib=${CLANG_CXX_LIBRARY} -Os"}
@@ -133,6 +147,7 @@ unpackBoost()
     echo "patching matrix.hpp"
     pushd $SRCDIR
     patch -p1 < ../matrix-${THE_BOOST_VERSION}.patch
+#    patch -p1 < ../boost.patch
     popd
 
     doneSection
@@ -171,6 +186,11 @@ using darwin : ${IPHONE_SDKVERSION}~iphonesim
 : $XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -mios-version-min=$IPHONEOS_DEPLOYMENT_TARGET $EXTRA_CPPFLAGS
 : <striper> <root>$XCODE_ROOT/Platforms/iPhoneSimulator.platform/Developer
 : <architecture>x86/<target-os>iphone
+;
+using darwin : ${OSX_SDKVERSION}~maccatalyst
+: $XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $EXTRA_CPPFLAGS 
+: <striper> <root>$XCODE_ROOT/Platforms/MacOSX.platform/Developer
+: <architecture>x86/<target-os>darwin
 ;
 using darwin : ${OSX_SDKVERSION}
 : $XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -mmacosx-version-min=$MACOSX_DEPLOYMENT_TARGET $EXTRA_CPPFLAGS 
@@ -222,11 +242,11 @@ buildBoost()
     ./b2 -j${CPU_COUNT} \
     	--build-dir="${ARM_B2_DIR}" \
     	--stagedir="${ARM_B2_DIR}/stage" \
-    	--prefix="${PREFIXDIR}/iphoneos" \
+    	--prefix="${PREFIXDIR}/iphoneos-iphoneos" \
     	toolset=darwin-${IPHONE_SDKVERSION}~iphone \
     	cxxflags="-target arm64-apple-ios${IPHONEOS_DEPLOYMENT_TARGET} ${EXTRA_CPPFLAGS}" \
     	-sICONV_PATH="${ICONV_PATH}" \
-    	macosx-version=iphone-${IPHONEOS_DEPLOYMENT_TARGET} \
+    	macosx-version=iphone-${IPHONE_SDKVERSION} \
     	architecture=arm \
     	target-os=iphone \
     	define=_LITTLE_ENDIAN \
@@ -239,11 +259,11 @@ buildBoost()
     ./b2 -j${CPU_COUNT} \
     	--build-dir="${ARM_B2_DIR}" \
     	--stagedir="${ARM_B2_DIR}/stage" \
-    	--prefix="${PREFIXDIR}/iphoneos" \
+    	--prefix="${PREFIXDIR}/iphoneos-iphoneos" \
     	toolset=darwin-${IPHONE_SDKVERSION}~iphone \
     	cxxflags="${EXTRA_CPPFLAGS}" \
     	-sICONV_PATH="${ICONV_PATH}" \
-    	macosx-version=iphone-${IPHONEOS_DEPLOYMENT_TARGET} \
+    	macosx-version=iphone-${IPHONE_SDKVERSION} \
     	architecture=arm \
     	target-os=iphone \
     	define=_LITTLE_ENDIAN \
@@ -261,12 +281,12 @@ buildBoost()
     	toolset=darwin-${IPHONE_SDKVERSION}~iphonesim \
     	cxxflags="-target x86_64-apple-ios${IPHONEOS_DEPLOYMENT_TARGET} ${EXTRA_CPPFLAGS}" \
     	-sICONV_PATH="${ICONV_PATH}" \
-    	macosx-version=iphonesim-${IPHONEOS_DEPLOYMENT_TARGET} \
+    	macosx-version=iphonesim-${IPHONE_SDKVERSION} \
     	architecture=x86 \
     	target-os=iphone \
     	link=static \
     	stage
-    copyLibs "${SIM_B2_DIR}/stage" iphonesimulator    	
+    copyLibs "${SIM_B2_DIR}/stage" iphonesimulator-iphonesimulator    	
     doneSection
 
     echo building Boost for OSX
@@ -279,7 +299,7 @@ buildBoost()
     	toolset=darwin-${OSX_SDKVERSION} \
     	cxxflags="-target x86_64-apple-macos${MACOSX_DEPLOYMENT_TARGET}  ${EXTRA_CPPFLAGS}" \
     	-sICU_PATH="${ICONV_PATH}" \
-    	macosx-version=${MACOSX_DEPLOYMENT_TARGET} \
+    	macosx-version=${OSX_SDKVERSION} \
     	architecture=x86 \
     	target-os=darwin \
     	threading=multi \
@@ -295,15 +315,15 @@ buildBoost()
       ./b2 -j${CPU_COUNT} \
         --build-dir="${U4M_B2_DIR}" \
         --stagedir="${U4M_B2_DIR}/stage" \
-        toolset=darwin-${OSX_SDKVERSION} \
-        cxxflags="-target x86_64-apple-ios${IPHONEOS_DEPLOYMENT_TARGET}-macabi ${EXTRA_CPPFLAGS}" \
+        toolset=darwin-${OSX_SDKVERSION}~maccatalyst \
+        cxxflags="-target x86_64-apple-ios${UIKIT_IOS_DEPLOYMENT_TARGET}-macabi ${EXTRA_CPPFLAGS}" \
     	  -sICONV_PATH="${ICONV_PATH}" \
-        macosx-version=${MACOSX_DEPLOYMENT_TARGET} \
+        macosx-version=${OSX_SDKVERSION} \
         architecture=x86 \
         target-os=darwin \
         link=static \
         stage
-      copyLibs "${U4M_B2_DIR}/stage" uikitformac    	
+      copyLibs "${U4M_B2_DIR}/stage" macosx-maccatalyst    	
       doneSection
     fi
     
@@ -326,7 +346,7 @@ copyLibs()
     popd
 	mkdir -p "${PREFIXDIR}/${DST_DIR}/include/"
 	pushd "${PREFIXDIR}/${DST_DIR}/include/"
-	ln -fs "../../iphoneos/include/boost"
+	ln -fs "../../iphoneos-iphoneos/include/boost"
 	popd
 }
 

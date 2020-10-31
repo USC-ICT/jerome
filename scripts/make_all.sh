@@ -12,6 +12,9 @@ then
 	mkdir -p "${build_dir}"
 fi
 
+echo "IPHONE_SDKVERSION = ${IPHONE_SDKVERSION}"
+echo "MACOSX_DEPLOYMENT_TARGET = ${MACOSX_DEPLOYMENT_TARGET}"
+
 echo "compile ${root_dir} to ${build_dir}"
 
 : ${IPHONEOS_DEPLOYMENT_TARGET:=12.0}
@@ -24,7 +27,7 @@ echo "compile ${root_dir} to ${build_dir}"
 echo "IPHONE_SDKVERSION = ${IPHONE_SDKVERSION}"
 echo "MACOSX_DEPLOYMENT_TARGET = ${MACOSX_DEPLOYMENT_TARGET}"
 
-: ${BUILD_UIKIT_FOR_MAC:=`echo "${IPHONE_SDKVERSION} >= 13.0 && ${MACOSX_DEPLOYMENT_TARGET} >= 10.15" | bc`}
+: ${BUILD_UIKIT_FOR_MAC:=`echo "${IPHONE_SDKVERSION} >= 13.0" | bc`}
 
 export IPHONEOS_DEPLOYMENT_TARGET
 export MACOSX_DEPLOYMENT_TARGET

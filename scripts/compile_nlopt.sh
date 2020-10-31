@@ -13,15 +13,15 @@ dst_dir=$2
 echo "IPHONE_SDKVERSION = ${IPHONE_SDKVERSION}"
 echo "MACOSX_DEPLOYMENT_TARGET = ${MACOSX_DEPLOYMENT_TARGET}"
 
-: ${BUILD_UIKIT_FOR_MAC:=`echo "${IPHONE_SDKVERSION} >= 13.0 && ${MACOSX_DEPLOYMENT_TARGET} >= 10.15" | bc`}
+: ${BUILD_UIKIT_FOR_MAC:=`echo "${IPHONE_SDKVERSION} >= 13.0" | bc`}
 
 if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
 then
-  echo "build uikitformac on"
-  platform_names="iphoneos iphonesimulator macosx uikitformac"
+  echo "build macosx-maccatalyst on"
+  platform_names="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx macosx-maccatalyst"
 else
-  echo "build uikitformac off"
-  platform_names="iphoneos iphonesimulator macosx"
+  echo "build macosx-maccatalyst off"
+  platform_names="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx"
 fi
 
 found_nlopt="YES"
@@ -81,16 +81,31 @@ pushd nlopt-2.3
 
 if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
 then
-configure_and_make "${BASE_PREFIX}/uikitformac" "-target x86_64-apple-ios${IPHONEOS_DEPLOYMENT_TARGET}-macabi" \
-	"MacOSX" ${OSX_SDKVERSION} "-mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}" \
+
+if [ `echo "${MACOSX_DEPLOYMENT_TARGET} >= 10.15" | bc` -eq 1 ]
+then
+  UIKIT_DEPLOYMENT_TARGET="${MACOSX_DEPLOYMENT_TARGET}"
+else
+  UIKIT_DEPLOYMENT_TARGET="10.15"
+fi
+
+if [ `echo "${IPHONEOS_DEPLOYMENT_TARGET} >= 13.0" | bc` -eq 1 ]
+then
+  UIKIT_IOS_DEPLOYMENT_TARGET="${IPHONEOS_DEPLOYMENT_TARGET}"
+else
+  UIKIT_IOS_DEPLOYMENT_TARGET="13.0"
+fi
+
+configure_and_make "${BASE_PREFIX}/macosx-maccatalyst" "-target x86_64-apple-ios${UIKIT_IOS_DEPLOYMENT_TARGET}-macabi" \
+	"MacOSX" ${OSX_SDKVERSION} " " \
 	""
 fi
 
-configure_and_make "${BASE_PREFIX}/iphoneos" "-arch arm64" \
+configure_and_make "${BASE_PREFIX}/iphoneos-iphoneos" "-arch arm64" \
 	"iPhoneOS" ${IPHONE_SDKVERSION} "-mios-version-min=${IPHONEOS_DEPLOYMENT_TARGET}" \
 	"--host=arm-apple-darwin --target=arm-apple-darwin"
 
-configure_and_make "${BASE_PREFIX}/iphonesimulator" "-arch x86_64" \
+configure_and_make "${BASE_PREFIX}/iphonesimulator-iphonesimulator" "-arch x86_64" \
 	"iPhoneSimulator" ${IPHONE_SDKVERSION} "-mios-version-min=${IPHONEOS_DEPLOYMENT_TARGET}" \
 	"--host=x86-apple-darwin"
 

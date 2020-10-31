@@ -1,6 +1,6 @@
-diff -Naur old/boost_1_59_0/boost/numeric/ublas/matrix.hpp new/boost_1_59_0/boost/numeric/ublas/matrix.hpp
---- old/boost_1_59_0/boost/numeric/ublas/matrix.hpp	2015-08-06 02:47:02.000000000 -0700
-+++ new/boost_1_59_0/boost/numeric/ublas/matrix.hpp	2019-06-06 16:03:27.000000000 -0700
+diff -Naur orig/boost_1_59_0/boost/numeric/ublas/matrix.hpp patched/boost_1_59_0/boost/numeric/ublas/matrix.hpp
+--- orig/boost_1_59_0/boost/numeric/ublas/matrix.hpp	2015-08-06 02:47:02.000000000 -0700
++++ patched/boost_1_59_0/boost/numeric/ublas/matrix.hpp	2020-10-30 23:51:42.000000000 -0700
 @@ -1384,7 +1384,7 @@
  
          /*! @note "pass by value" the key idea to enable move semantics */
@@ -10,9 +10,70 @@ diff -Naur old/boost_1_59_0/boost/numeric/ublas/matrix.hpp new/boost_1_59_0/boos
              assign_temporary(m);
              return *this;
          }
-diff -Naur old/boost_1_59_0/tools/build/src/tools/builtin.jam new/boost_1_59_0/tools/build/src/tools/builtin.jam
---- old/boost_1_59_0/tools/build/src/tools/builtin.jam	2015-08-11 06:53:51.000000000 -0700
-+++ new/boost_1_59_0/tools/build/src/tools/builtin.jam	2019-06-06 16:04:10.000000000 -0700
+diff -Naur orig/boost_1_59_0/tools/build/src/engine/build.jam patched/boost_1_59_0/tools/build/src/engine/build.jam
+--- orig/boost_1_59_0/tools/build/src/engine/build.jam	2015-08-11 06:53:51.000000000 -0700
++++ patched/boost_1_59_0/tools/build/src/engine/build.jam	2020-10-30 21:50:22.000000000 -0700
+@@ -200,7 +200,7 @@
+     : -L$(--python-lib[1]) -l$(--python-lib[2]) ;
+ ## MacOSX Darwin, using GCC 2.9.x, 3.x
+ toolset darwin cc :  "-o " : -D
+-    :
++    : -Wno-implicit-function-declaration
+     [ opt --release : -Wl,-x -O3 -finline-functions ]
+     [ opt --debug : -g -O0 -fno-inline -pg ]
+     [ opt --profile : -Wl,-x -O3 -finline-functions -g -pg ]
+diff -Naur orig/boost_1_59_0/tools/build/src/engine/build.sh patched/boost_1_59_0/tools/build/src/engine/build.sh
+--- orig/boost_1_59_0/tools/build/src/engine/build.sh	2015-08-11 06:53:51.000000000 -0700
++++ patched/boost_1_59_0/tools/build/src/engine/build.sh	2020-10-30 21:44:50.000000000 -0700
+@@ -142,7 +142,7 @@
+     ;;
+ 
+     darwin)
+-    BOOST_JAM_CC=cc
++    BOOST_JAM_CC="cc  -Wno-unused -Wno-format -Wno-implicit-function-declaration"
+     ;;
+ 
+     intel-darwin)
+@@ -234,7 +234,7 @@
+     ;;
+ 
+     clang*)
+-    BOOST_JAM_CC="clang -Wno-unused -Wno-format"
++    BOOST_JAM_CC="clang -Wno-unused -Wno-format -Wno-implicit-function-declaration"
+     BOOST_JAM_TOOLSET=clang
+     ;;
+ 
+@@ -295,7 +295,10 @@
+     BJAM_UPDATE=
+ fi
+ 
++echo "### ready" 
++
+ if test "${BJAM_UPDATE}" != "update" ; then
++echo "### will update" 
+     echo_run rm -rf bootstrap
+     echo_run mkdir bootstrap
+     if test ! -r jamgram.y -o ! -r jamgramtab.h ; then
+@@ -318,11 +321,16 @@
+             echo_run ./bootstrap/mkjambase0 jambase.c Jambase
+         fi
+     fi
++echo "### will compile" 
+     echo_run ${BOOST_JAM_CC} ${BOOST_JAM_OPT_JAM} ${BJAM_SOURCES}
+ fi
++echo "### testing jam0" 
+ if test -x "./bootstrap/jam0" ; then
+     if test "${BJAM_UPDATE}" != "update" ; then
++echo "### will update jam0 clean" 
+         echo_run ./bootstrap/jam0 -f build.jam --toolset=$BOOST_JAM_TOOLSET "--toolset-root=$BOOST_JAM_TOOLSET_ROOT" "$@" clean
+     fi
++echo "### will update jam0" 
+     echo_run ./bootstrap/jam0 -f build.jam --toolset=$BOOST_JAM_TOOLSET "--toolset-root=$BOOST_JAM_TOOLSET_ROOT" "$@"
+ fi
++echo "### done" 
+diff -Naur orig/boost_1_59_0/tools/build/src/tools/builtin.jam patched/boost_1_59_0/tools/build/src/tools/builtin.jam
+--- orig/boost_1_59_0/tools/build/src/tools/builtin.jam	2015-08-11 06:53:51.000000000 -0700
++++ patched/boost_1_59_0/tools/build/src/tools/builtin.jam	2020-10-30 23:51:42.000000000 -0700
 @@ -304,7 +304,7 @@
  
      # Advanced RISC Machines
@@ -22,9 +83,33 @@ diff -Naur old/boost_1_59_0/tools/build/src/tools/builtin.jam new/boost_1_59_0/t
  
      : propagated optional ;
  
-diff -Naur old/boost_1_59_0/tools/build/src/tools/darwin.jam new/boost_1_59_0/tools/build/src/tools/darwin.jam
---- old/boost_1_59_0/tools/build/src/tools/darwin.jam	2015-08-11 06:53:51.000000000 -0700
-+++ new/boost_1_59_0/tools/build/src/tools/darwin.jam	2019-06-06 16:31:36.000000000 -0700
+diff -Naur orig/boost_1_59_0/tools/build/src/tools/darwin.jam patched/boost_1_59_0/tools/build/src/tools/darwin.jam
+--- orig/boost_1_59_0/tools/build/src/tools/darwin.jam	2015-08-11 06:53:51.000000000 -0700
++++ patched/boost_1_59_0/tools/build/src/tools/darwin.jam	2020-10-30 23:57:26.000000000 -0700
+@@ -137,15 +137,15 @@
+     common.handle-options darwin : $(condition) : $(command) : $(options) ;
+     
+     # - GCC 4.0 and higher in Darwin does not have -fcoalesce-templates.
+-    if $(real-version) < "4.0.0"
+-    {
+-        flags darwin.compile.c++ OPTIONS $(condition) : -fcoalesce-templates ;
+-    }
++#    if $(real-version) < "4.0.0"
++#    {
++#        flags darwin.compile.c++ OPTIONS $(condition) : -fcoalesce-templates ;
++#    }
+     # - GCC 4.2 and higher in Darwin does not have -Wno-long-double.
+-    if $(real-version) < "4.2.0"
+-    {
+-        flags darwin.compile OPTIONS $(condition) : -Wno-long-double ;
+-    }
++#    if $(real-version) < "4.2.0"
++#    {
++#        flags darwin.compile OPTIONS $(condition) : -Wno-long-double ;
++#    }
+     # - GCC on Darwin with -pedantic, suppress unsupported long long warning
+     flags darwin.compile OPTIONS $(condition)/<warnings>all : -Wno-long-long ;
+ 
 @@ -433,10 +433,10 @@
          {
              if $(address-model) = 32_64 {
@@ -47,3 +132,17 @@ diff -Naur old/boost_1_59_0/tools/build/src/tools/darwin.jam new/boost_1_59_0/to
              }
          }
      }
+diff -Naur orig/boost_1_59_0/tools/build/src/tools/darwin.py patched/boost_1_59_0/tools/build/src/tools/darwin.py
+--- orig/boost_1_59_0/tools/build/src/tools/darwin.py	2015-08-11 06:53:51.000000000 -0700
++++ patched/boost_1_59_0/tools/build/src/tools/darwin.py	2020-10-30 23:57:51.000000000 -0700
+@@ -37,8 +37,8 @@
+ feature.feature ('framework', [], ['free'])
+ 
+ toolset.flags ('darwin.compile', 'OPTIONS', '<link>shared', ['-dynamic'])
+-toolset.flags ('darwin.compile', 'OPTIONS', None, ['-Wno-long-double', '-no-cpp-precomp'])
+-toolset.flags ('darwin.compile.c++', 'OPTIONS', None, ['-fcoalesce-templates'])
++toolset.flags ('darwin.compile', 'OPTIONS', None, ['-no-cpp-precomp'])
++toolset.flags ('darwin.compile.c++', 'OPTIONS', None, [])
+ 
+ toolset.flags ('darwin.link', 'FRAMEWORK', '<framework>')
+ 

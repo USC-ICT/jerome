@@ -6,8 +6,8 @@
 #  Created by Anton Leuski on 6/6/19.
 #  Copyright © 2019 Anton Leuski & ICT/USC. All rights reserved.
 
-name=${EFFECTIVE_PLATFORM_NAME}
-name=${name#"-"}
+name="${PLATFORM_NAME}${EFFECTIVE_PLATFORM_NAME}"
+#name=${name#"-"}
 echo ">> $name"
 echo ">> ${TARGET_BUILD_DIR}"
 

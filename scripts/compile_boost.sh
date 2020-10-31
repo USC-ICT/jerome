@@ -13,15 +13,15 @@ dst_dir=$2
 echo "IPHONE_SDKVERSION = ${IPHONE_SDKVERSION}"
 echo "MACOSX_DEPLOYMENT_TARGET = ${MACOSX_DEPLOYMENT_TARGET}"
 
-: ${BUILD_UIKIT_FOR_MAC:=`echo "${IPHONE_SDKVERSION} >= 13.0 && ${MACOSX_DEPLOYMENT_TARGET} >= 10.15" | bc`}
+: ${BUILD_UIKIT_FOR_MAC:=`echo "${IPHONE_SDKVERSION} >= 13.0" | bc`}
 
 if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
 then
-  echo "build uikitformac on"
-  platform_names="iphoneos iphonesimulator macosx uikitformac"
+  echo "build macosx-maccatalyst on"
+  platform_names="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx macosx-maccatalyst"
 else
-  echo "build uikitformac off"
-  platform_names="iphoneos iphonesimulator macosx"
+  echo "build macosx-maccatalyst off"
+  platform_names="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx"
 fi
 
 found_boost="YES"
