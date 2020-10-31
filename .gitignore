@@ -40,3 +40,5 @@ Jerome4Java/java/out
 ignore
 3rdParty/build.old
 3rdParty/boost/src
+3rdParty/boost/orig
+3rdParty/boost/patched
