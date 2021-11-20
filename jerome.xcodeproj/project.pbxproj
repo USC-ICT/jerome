@@ -1727,7 +1727,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 62FAE718161154520065D358 /* Build configuration list for PBXNativeTarget "libjerome.ios" */;
 			buildPhases = (
-				627818B01CC82FD700C344E4 /* ShellScript */,
+				627818B01CC82FD700C344E4 /* Make Includes */,
 				62FAE70B161154520065D358 /* Sources */,
 				62FAE70C161154520065D358 /* Frameworks */,
 				62FAE70D161154520065D358 /* CopyFiles */,
@@ -1917,7 +1917,7 @@
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${SRCROOT}/scripts/copy_3rdParty_libs.sh\"\n";
 		};
-		627818B01CC82FD700C344E4 /* ShellScript */ = {
+		627818B01CC82FD700C344E4 /* Make Includes */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1929,6 +1929,7 @@
 				"$(SRCROOT)/scripts/make_includes.sh",
 				"$(SRCROOT)/jerome/scripting/utteranceCompiler.js",
 			);
+			name = "Make Includes";
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/startup.js.inc",
 				"$(DERIVED_FILE_DIR)/scion.js.inc",
@@ -2469,7 +2470,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Jerome.ios/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				OTHER_LDFLAGS = (
 					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
 					"${TARGET_BUILD_DIR}/libboost_system.a",
@@ -2488,7 +2488,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Jerome.ios/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				OTHER_LDFLAGS = (
 					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
 					"${TARGET_BUILD_DIR}/libboost_system.a",
