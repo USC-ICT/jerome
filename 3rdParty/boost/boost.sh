@@ -26,7 +26,14 @@ TARGET_DIR="$1"
 : ${BOOST_VERSION:=1.${THE_BOOST_VERSION}.0}
 : ${BOOST_VERSION2:=1_${THE_BOOST_VERSION}_0}
 
-: ${BOOST_LIBS:="thread filesystem program_options system date_time locale"}
+# disabling locale lib. It's a pain to get it to compile: you either need
+# ICU, which you have install yourself, e.g., via cocoapods; or you need
+# iconv and boost build has a hell of a time trying to figure out how
+# to use it (in Mac Catalyst)-- it's gets all confused being run on an arm Mac, 
+# it believes it's building for iphone, but the it sees a Mac Catalyst lib
+# and think we are linking an osx file. Jerome has a local class wrapper 
+# that uses CFLocale anyway. So, having locale here was mostly for dogfooding.
+: ${BOOST_LIBS:="thread filesystem program_options system date_time"} # locale"}
 
 : ${IPHONEOS_DEPLOYMENT_TARGET:=12.0}
 : ${MACOSX_DEPLOYMENT_TARGET:=10.13}
@@ -55,7 +62,7 @@ fi
 : ${BUILD_UIKIT_FOR_MAC:=`echo "${IPHONE_SDKVERSION} >= 13.0 && ${UIKIT_DEPLOYMENT_TARGET} >= 10.15" | bc`}
 
 : ${XCODE_ROOT:=`xcode-select -print-path`}
-: ${EXTRA_CPPFLAGS:="-fvisibility=hidden -fvisibility-inlines-hidden -DBOOST_AC_USE_PTHREADS -DBOOST_SP_USE_PTHREADS -g -DNDEBUG -std=${CLANG_CXX_LANGUAGE_STANDARD} -stdlib=${CLANG_CXX_LIBRARY} -Os"}
+: ${EXTRA_CPPFLAGS:="-fvisibility=hidden -fvisibility-inlines-hidden -w -DBOOST_AC_USE_PTHREADS -DBOOST_SP_USE_PTHREADS -g -DNDEBUG -std=${CLANG_CXX_LANGUAGE_STANDARD} -stdlib=${CLANG_CXX_LIBRARY} -Os"}
 
 # The EXTRA_CPPFLAGS definition works around a thread race issue in
 # shared_ptr. I encountered this historically and have not verified that
@@ -83,62 +90,62 @@ JAM_FILE="$BOOST_SRC/tools/build/src/user-config.jam"
 
 abort()
 {
-    echo
-    echo "Aborted: $@"
-    exit 1
+  echo
+  echo "Aborted: $@"
+  exit 1
 }
 
 doneSection()
 {
-    echo
-    echo "================================================================="
-    echo "Done"
-    echo
+  echo
+  echo "================================================================="
+  echo "Done"
+  echo
 }
 
 #===============================================================================
 
 cleanEverythingReadyToStart()
 {
-    echo Cleaning everything before we start to build...
+  echo Cleaning everything before we start to build...
 
-    echo "    rm -rf \"${BUILDDIR}\" \"${SRCDIR}\""
-    rm -rf "${BUILDDIR}" "${SRCDIR}"
+  echo "    rm -rf \"${BUILDDIR}\" \"${SRCDIR}\""
+  rm -rf "${BUILDDIR}" "${SRCDIR}"
 
-    doneSection
+  doneSection
 }
 
 #===============================================================================
 
 downloadBoost()
 {
-    if [ ! -s $TARBALLDIR/boost_${BOOST_VERSION2}.tar.bz2 ]; then
-        echo "Downloading boost ${BOOST_VERSION}"
-        curl -L -o $TARBALLDIR/boost_${BOOST_VERSION2}.tar.bz2 http://sourceforge.net/projects/boost/files/boost/${BOOST_VERSION}/boost_${BOOST_VERSION2}.tar.bz2/download
-    fi
+  if [ ! -s $TARBALLDIR/boost_${BOOST_VERSION2}.tar.bz2 ]; then
+    echo "Downloading boost ${BOOST_VERSION}"
+    curl -L -o $TARBALLDIR/boost_${BOOST_VERSION2}.tar.bz2 http://sourceforge.net/projects/boost/files/boost/${BOOST_VERSION}/boost_${BOOST_VERSION2}.tar.bz2/download
+  fi
 
-    doneSection
+  doneSection
 }
 
 #===============================================================================
 
 unpackBoost()
 {
-    [ -f "$BOOST_TARBALL" ] || abort "Source tarball missing."
+  [ -f "$BOOST_TARBALL" ] || abort "Source tarball missing."
 
-    echo Unpacking boost into $SRCDIR...
+  echo Unpacking boost into $SRCDIR...
 
-    [ -d $SRCDIR ]    || mkdir -p $SRCDIR
-    [ -d $BOOST_SRC ] || ( cd $SRCDIR; tar xfj $BOOST_TARBALL )
-    [ -d $BOOST_SRC ] && echo "    ...unpacked as $BOOST_SRC"
+  [ -d $SRCDIR ]    || mkdir -p $SRCDIR
+  [ -d $BOOST_SRC ] || ( cd $SRCDIR; tar xfj $BOOST_TARBALL )
+  [ -d $BOOST_SRC ] && echo "    ...unpacked as $BOOST_SRC"
 
-    echo "patching matrix.hpp"
-    pushd $SRCDIR
-    patch -p1 < ../matrix-${THE_BOOST_VERSION}.patch
+  echo "patching matrix.hpp"
+  pushd $SRCDIR
+  patch -p1 < ../matrix-${THE_BOOST_VERSION}.patch
 #    patch -p1 < ../boost.patch
-    popd
+  popd
 
-    doneSection
+  doneSection
 }
 
 #===============================================================================
@@ -159,34 +166,35 @@ updateBoost()
 {
   echo Updating boost into $BOOST_SRC...
 
-    doneSection
+  doneSection
 }
 
 #===============================================================================
 
 inventMissingHeaders()
 {
-    # These files are missing in the ARM iPhoneOS SDK, but they are in the simulator.
-    # They are supported on the device, so we copy them from x86 SDK to a staging area
-    # to use them on ARM, too.
-    echo Invent missing headers
+  # These files are missing in the ARM iPhoneOS SDK, but they are in the simulator.
+  # They are supported on the device, so we copy them from x86 SDK to a staging area
+  # to use them on ARM, too.
+  echo Invent missing headers
 
-    cp $XCODE_ROOT/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator${IPHONE_SDKVERSION}.sdk/usr/include/{crt_externs,bzlib}.h $BOOST_SRC
+  cp $XCODE_ROOT/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator${IPHONE_SDKVERSION}.sdk/usr/include/{crt_externs,bzlib}.h $BOOST_SRC
 }
 
 #===============================================================================
 
 bootstrapBoost()
 {
-    pushd $BOOST_SRC
+  pushd $BOOST_SRC
 
-    BOOST_LIBS_COMMA=$(echo $BOOST_LIBS | sed -e "s/ /,/g")
-    echo "Bootstrapping (with libs $BOOST_LIBS_COMMA)"
-    ./bootstrap.sh --with-libraries=$BOOST_LIBS_COMMA
+  BOOST_LIBS_COMMA=$(echo $BOOST_LIBS | sed -e "s/ /,/g")
+  echo "Bootstrapping (with libs $BOOST_LIBS_COMMA)"
+# arch is required to build on Apple Silicon mac.
+  arch -x86_64 ./bootstrap.sh --with-libraries=$BOOST_LIBS_COMMA
 
-    popd
+  popd
 
-    doneSection
+  doneSection
 }
 
 #===============================================================================
@@ -244,13 +252,16 @@ runBuildBoost()
     target_os="darwin"
     sdk_platform="macosx"
     root="$XCODE_ROOT/Platforms/MacOSX.platform/Developer"
-    clang_arg=""
+    local ios_support="$root/SDKs/MacOSX.sdk/System/iOSSupport"
+    clang_arg="" #"-I${ios_support}/usr/include/ -isystem ${ios_support}/usr/include -iframework ${ios_support}/System/Library/Frameworks"
     ;;
   "*")
     echo "unknown platform ${full_platform_name}"
     exit -1
   esac
 
+  local target="${clang_arch}-apple-${target_sys}"
+  local sdk_path=$(xcrun --sdk ${sdk_platform} --show-sdk-path)
   local ICONV_PATH=$(dirname $(find $(xcrun --sdk ${sdk_platform} --show-sdk-platform-path) -name "libiconv*.tbd" | tail -1 ) | rev | cut -d/ -f2- | rev)  
 
   echo "ICONV_PATH=$ICONV_PATH"
@@ -262,14 +273,14 @@ runBuildBoost()
 
   cat > "${JAM_FILE}" <<EOF
 using darwin : al_toolset
-: ${clang} ${clang_arg}
-: <striper> <root>${root}
-: <architecture>${architecture} <target-os>${target_os}
+: ${clang}
+: <striper> 
+  <root>${root} 
 ;
 EOF
 
-
-  ./b2 -j${CPU_COUNT} \
+# arch is required to build on Apple Silicon mac.
+  arch -x86_64 ./b2 -j${CPU_COUNT} \
     --build-dir="${BUILDDIR}/${full_platform_name}/${architecture}" \
     --stagedir="${BUILDDIR}/${full_platform_name}/${architecture}/stage" \
     --prefix="${PREFIXDIR}/${full_platform_name}" \
@@ -277,7 +288,7 @@ EOF
     address-model=64 \
     architecture=${architecture} \
     -sICONV_PATH="${ICONV_PATH}" \
-    cxxflags="-target ${clang_arch}-apple-${target_sys} ${EXTRA_CPPFLAGS}" \
+    cxxflags="-target ${target} ${EXTRA_CPPFLAGS} ${clang_arg} -isysroot ${sdk_path}" \
     macosx-version=${macosx_version} \
     target-os=${target_os} \
     variant=release \
@@ -318,19 +329,17 @@ buildBoostForPlatform()
 
 buildBoost()
 {
-    pushd $BOOST_SRC
+  pushd $BOOST_SRC
 
-    echo Building Boost for iPhone
-    
-    runBuildBoost iphoneos-iphoneos arm stage
-    runBuildBoost iphoneos-iphoneos arm install
-    
-    buildBoostForPlatform iphonesimulator-iphonesimulator
-    buildBoostForPlatform macosx
-    if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
-    then
-      buildBoostForPlatform macosx-maccatalyst
-    fi
+  runBuildBoost iphoneos-iphoneos arm stage
+  runBuildBoost iphoneos-iphoneos arm install
+  
+  buildBoostForPlatform iphonesimulator-iphonesimulator
+  buildBoostForPlatform macosx
+  if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
+  then
+    buildBoostForPlatform macosx-maccatalyst
+  fi
     
 #   exit 0
 
@@ -371,32 +380,31 @@ cleanAfterBuild()
 # Execution starts here
 #===============================================================================
 
-# cleanEverythingReadyToStart #may want to comment if repeatedly running during dev
-# restoreBoost
-# 
-# echo "BOOST_VERSION:              $BOOST_VERSION"
-# echo "BOOST_LIBS:                 $BOOST_LIBS"
-# echo "BOOST_SRC:                  $BOOST_SRC"
-# echo "PREFIXDIR:                  $PREFIXDIR"
-# echo "IPHONE_SDKVERSION:          $IPHONE_SDKVERSION"
-# echo "OSX_SDKVERSION:             $OSX_SDKVERSION"
-# echo "IPHONEOS_DEPLOYMENT_TARGET: $IPHONEOS_DEPLOYMENT_TARGET"
-# echo "MACOSX_DEPLOYMENT_TARGET:   $MACOSX_DEPLOYMENT_TARGET"
-# echo "BUILD_UIKIT_FOR_MAC:        $BUILD_UIKIT_FOR_MAC"
-# echo "XCODE_ROOT:                 $XCODE_ROOT"
-# echo
-# 
-# cleanAfterBuild
-# 
-# downloadBoost
-# unpackBoost
-# inventMissingHeaders
-# bootstrapBoost
-# updateBoost
-rm -rf "${BUILDDIR}"
+cleanEverythingReadyToStart #may want to comment if repeatedly running during dev
+restoreBoost
+
+echo "BOOST_VERSION:              $BOOST_VERSION"
+echo "BOOST_LIBS:                 $BOOST_LIBS"
+echo "BOOST_SRC:                  $BOOST_SRC"
+echo "PREFIXDIR:                  $PREFIXDIR"
+echo "IPHONE_SDKVERSION:          $IPHONE_SDKVERSION"
+echo "OSX_SDKVERSION:             $OSX_SDKVERSION"
+echo "IPHONEOS_DEPLOYMENT_TARGET: $IPHONEOS_DEPLOYMENT_TARGET"
+echo "MACOSX_DEPLOYMENT_TARGET:   $MACOSX_DEPLOYMENT_TARGET"
+echo "BUILD_UIKIT_FOR_MAC:        $BUILD_UIKIT_FOR_MAC"
+echo "XCODE_ROOT:                 $XCODE_ROOT"
+echo
+
+cleanAfterBuild
+
+downloadBoost
+unpackBoost
+inventMissingHeaders
+bootstrapBoost
+updateBoost
 buildBoost
-#cleanAfterBuild
-# restoreBoost
+cleanAfterBuild
+restoreBoost
 
 echo "Completed successfully"
 
