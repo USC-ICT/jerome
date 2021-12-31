@@ -9,13 +9,12 @@
 SDKROOT = iphoneos
 // this is what boost is built for
 IPHONEOS_DEPLOYMENT_TARGET = 12.0
-TARGETED_DEVICE_FAMILY = 1,2
+TARGETED_DEVICE_FAMILY = 1,2,6
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @loader_path/Frameworks
 ENABLE_BITCODE = NO
-SUPPORTED_PLATFORMS = iphonesimulator iphoneos
 
-VALID_ARCHS[sdk=iphoneos*] = arm64
-VALID_ARCHS[sdk=iphonesimulator*] = x86_64
+//VALID_ARCHS[sdk=iphoneos*] = arm64
+//VALID_ARCHS[sdk=iphonesimulator*] = x86_64
 SUPPORTS_UIKITFORMAC = YES
 
 // disabling a feature that is not available < ios 10.0

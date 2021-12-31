@@ -8,5 +8,3 @@
 
 #include "Framework.xcconfig"
 #include "ios.xcconfig"
-
-INFOPLIST_FILE = Sources/apps/ios/Framework-Info.plist

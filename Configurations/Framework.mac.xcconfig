@@ -8,5 +8,3 @@
 
 #include "Framework.xcconfig"
 #include "mac.xcconfig"
-
-INFOPLIST_FILE = Sources/apps/mac/Framework-Info.plist

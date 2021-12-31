@@ -49,7 +49,7 @@ PRINCIPAL_CLASS = $(PRODUCT_MODULE_NAME).$(PRODUCT_MODULE_NAME)
 PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.jerome$(TARGET_NAME:suffix).$(TARGET_NAME:base)
 PRODUCT_NAME = $(TARGET_NAME:base)
 SWIFT_SWIFT3_OBJC_INFERENCE = Off // On
-SWIFT_VERSION = 4.1
+SWIFT_VERSION = 5
 SYMROOT = $(HOME)/Documents/Developer/Build/$(PROJECT_NAME)
 VERSIONING_SYSTEM = apple-generic
 
@@ -68,4 +68,4 @@ DEVELOPMENT_TEAM = 4RX84Q9D57
 // a temporary workaround to avoid building arm binaries for catalyst
 // we need to figure out how to build boost fat libraries for catalyst first.
 EXCLUDED_ARCHS__IS_MACCATALYST_YES__NATIVE_ARCH_64_BIT_x86_64=arm64 arm64e armv7 armv7s armv6 armv8
-EXCLUDED_ARCHS = $(inherited) $(EXCLUDED_ARCHS__IS_MACCATALYST_$(IS_MACCATALYST)__NATIVE_ARCH_64_BIT_$(NATIVE_ARCH_64_BIT))
+//EXCLUDED_ARCHS = $(inherited) $(EXCLUDED_ARCHS__IS_MACCATALYST_$(IS_MACCATALYST)__NATIVE_ARCH_64_BIT_$(NATIVE_ARCH_64_BIT))
