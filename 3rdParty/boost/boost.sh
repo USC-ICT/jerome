@@ -233,7 +233,7 @@ runBuildBoost()
     ;;
   "iphonesimulator-iphonesimulator")
     sdk_platform="iphonesimulator"
-    target_sys="ios${IPHONEOS_DEPLOYMENT_TARGET}"
+    target_sys="ios${IPHONEOS_DEPLOYMENT_TARGET}-simulator"
     macosx_version="iphonesim-${IPHONE_SDKVERSION}"
     target_os="iphone"
     root="$XCODE_ROOT/Platforms/iPhoneSimulator.platform/Developer"

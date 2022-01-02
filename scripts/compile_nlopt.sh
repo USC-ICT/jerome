@@ -60,12 +60,12 @@ TOOLCHAIN="$XCODE_ROOT/Toolchains/XcodeDefault.xctoolchain"
 
 configure_and_make () {
 
-  PREFIX="$1"
-  ARCHS_LIST="$2"
-  PLATFORM="$3"
-  SDK="$4"
-  EXTRA_FLAGS="$5"
-  EXTRA_CONFIG="$6"
+  local PREFIX="$1"
+  local ARCHS_LIST="$2"
+  local PLATFORM="$3"
+  local SDK="$4"
+  local EXTRA_FLAGS="$5"
+  local EXTRA_CONFIG="$6"
 
   SYSRT="$XCODE_ROOT/Platforms/${PLATFORM}.platform/Developer/SDKs/${PLATFORM}${SDK}.sdk"
 
@@ -83,15 +83,39 @@ cat <<EOF
 --without-octave --without-matlab
 EOF
 
+  make clean
+
   ./configure --prefix="$PREFIX" ${EXTRA_CONFIG} \
     --disable-shared --enable-static --with-cxx --without-guile --without-python \
     --without-octave --without-matlab || abort "cofigure failed"
 
-  make clean
   make -j 16 || abort "make failed"
   make install || abort "make install failed"
-  make clean
 
+}
+
+configure_and_make_fat() {
+  local PREFIX="$1"
+  local SYS="$2"
+  local PLATFORM="$3"
+  local SDK="$4"
+  local EXTRA_FLAGS="$5"
+  local SECONDARY_PREFIX="${PREFIX}/arm"
+  local tmp_FILE="${PREFIX}/lib/libnlopt_cxx_tmp.a"
+  
+  configure_and_make "${SECONDARY_PREFIX}" "-arch arm64 -target arm64-apple-${SYS}" \
+    ${PLATFORM} ${SDK} "${EXTRA_FLAGS}" \
+    "--host=arm-apple-darwin"
+  
+  configure_and_make "${PREFIX}" "-arch x86_64 -target x86_64-apple-${SYS}" \
+    ${PLATFORM} ${SDK} "${EXTRA_FLAGS}" \
+    "--host=x86-apple-darwin"
+
+  mv "${PREFIX}/lib/libnlopt_cxx.a" "${tmp_FILE}"
+  lipo -create "${tmp_FILE}" "${SECONDARY_PREFIX}/lib/libnlopt_cxx.a"   \
+     -o "${PREFIX}/lib/libnlopt_cxx.a"
+  rm -rf "${SECONDARY_PREFIX}"
+  rm -f "${tmp_FILE}"
 }
 
 pushd nlopt-2.3
@@ -113,33 +137,19 @@ else
   UIKIT_IOS_DEPLOYMENT_TARGET="13.0"
 fi
 
-configure_and_make "${BASE_PREFIX}/macosx-maccatalyst" "-arch arm64 -target arm64-apple-ios${UIKIT_IOS_DEPLOYMENT_TARGET}-macabi" \
-  "MacOSX" ${OSX_SDKVERSION} " " \
-  "--host=arm-apple-darwin"
-  
-configure_and_make "${BASE_PREFIX}/macosx-maccatalyst/x86" "-arch x86_64 -target x86_64-apple-ios${UIKIT_IOS_DEPLOYMENT_TARGET}-macabi" \
-  "MacOSX" ${OSX_SDKVERSION} " " \
-  "--host=x86-apple-darwin"
-
-mv "${BASE_PREFIX}/macosx-maccatalyst/lib/libnlopt_cxx.a"   "${BASE_PREFIX}/macosx-maccatalyst/lib/libnlopt_cxx_arm.a"
-lipo -create "${BASE_PREFIX}/macosx-maccatalyst/lib/libnlopt_cxx_arm.a" \
-   "${BASE_PREFIX}/macosx-maccatalyst/x86/lib/libnlopt_cxx.a"   \
-   -o "${BASE_PREFIX}/macosx-maccatalyst/lib/libnlopt_cxx.a"
-rm -rf "${BASE_PREFIX}/macosx-maccatalyst/x86"
-rm -f "${BASE_PREFIX}/macosx-maccatalyst/lib/libnlopt_cxx_arm.a"
+configure_and_make_fat "${BASE_PREFIX}/macosx-maccatalyst" "ios${UIKIT_IOS_DEPLOYMENT_TARGET}-macabi" \
+  "MacOSX" ${OSX_SDKVERSION} " " 
 fi
 
 configure_and_make "${BASE_PREFIX}/iphoneos-iphoneos" "-arch arm64" \
   "iPhoneOS" ${IPHONE_SDKVERSION} "-mios-version-min=${IPHONEOS_DEPLOYMENT_TARGET}" \
   "--host=arm-apple-darwin"
 
-configure_and_make "${BASE_PREFIX}/iphonesimulator-iphonesimulator" "-arch arm64 -arch x86_64" \
-  "iPhoneSimulator" ${IPHONE_SDKVERSION} "-mios-version-min=${IPHONEOS_DEPLOYMENT_TARGET}" \
-  "--host=arm-apple-darwin"
+configure_and_make_fat "${BASE_PREFIX}/iphonesimulator-iphonesimulator" "ios${IPHONEOS_DEPLOYMENT_TARGET}-simulator" \
+  "iPhoneSimulator" ${IPHONE_SDKVERSION} "-mios-version-min=${IPHONEOS_DEPLOYMENT_TARGET}" 
 
-configure_and_make "${BASE_PREFIX}/macosx" "-arch x86_64 -arch arm64" \
-  "MacOSX" ${OSX_SDKVERSION} "-mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}" \
-  ""
+configure_and_make_fat "${BASE_PREFIX}/macosx" "macos${MACOSX_DEPLOYMENT_TARGET}" \
+  "MacOSX" ${OSX_SDKVERSION} "-mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}" 
 
 popd
 rm -rf nlopt-2.3
