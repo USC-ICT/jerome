@@ -7,8 +7,9 @@ dst_dir=$2
 : ${MACOSX_DEPLOYMENT_TARGET:=10.13}
 : ${CLANG_CXX_LANGUAGE_STANDARD:=gnu++14}
 : ${CLANG_CXX_LIBRARY:=libc++}
-: ${IPHONE_SDKVERSION:=`xcodebuild -showsdks | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
-: ${OSX_SDKVERSION:=`xcodebuild -showsdks | grep macosx | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
+: ${SDKS:=`xcodebuild -showsdks`}
+: ${IPHONE_SDKVERSION:=`echo "${SDKS}" | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
+: ${OSX_SDKVERSION:=`echo "${SDKS}" | grep macosx | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
 
 echo "IPHONE_SDKVERSION = ${IPHONE_SDKVERSION}"
 echo "MACOSX_DEPLOYMENT_TARGET = ${MACOSX_DEPLOYMENT_TARGET}"
@@ -43,6 +44,8 @@ export IPHONEOS_DEPLOYMENT_TARGET
 export MACOSX_DEPLOYMENT_TARGET
 export CLANG_CXX_LANGUAGE_STANDARD
 export CLANG_CXX_LIBRARY
+export IPHONE_SDKVERSION
+export OSX_SDKVERSION
 export BUILD_UIKIT_FOR_MAC
 
 pushd "${src_dir}"

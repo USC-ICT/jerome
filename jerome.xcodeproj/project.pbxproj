@@ -495,6 +495,10 @@
 		6268B0381A057A3800287DF4 /* token.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = token.hpp; sourceTree = "<group>"; };
 		6268B0391A057A5700287DF4 /* filters.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filters.hpp; sourceTree = "<group>"; };
 		626BB7E021484D3100FE6408 /* shared.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shared.hpp; sourceTree = "<group>"; };
+		62706EB2288BAEA100E30DF7 /* compile_boost.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = compile_boost.sh; sourceTree = "<group>"; };
+		62706EB5288BAEA100E30DF7 /* compile_eigen.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = compile_eigen.sh; sourceTree = "<group>"; };
+		62706EB6288BAEA100E30DF7 /* compile_nlopt.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = compile_nlopt.sh; sourceTree = "<group>"; };
+		62706EB7288BAEA100E30DF7 /* make_all.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = make_all.sh; sourceTree = "<group>"; };
 		62750A2C1D835BB2004ABECE /* Evaluate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Evaluate.cpp; sourceTree = "<group>"; };
 		62750A2D1D835BB2004ABECE /* Evaluate.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Evaluate.hpp; sourceTree = "<group>"; };
 		62778F3218FC8D07007F7FD2 /* functions.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = functions.hpp; sourceTree = "<group>"; };
@@ -1287,12 +1291,16 @@
 		62AC3BC31BBC9C830067C540 /* scripts */ = {
 			isa = PBXGroup;
 			children = (
+				62706EB2288BAEA100E30DF7 /* compile_boost.sh */,
+				62706EB5288BAEA100E30DF7 /* compile_eigen.sh */,
+				62706EB6288BAEA100E30DF7 /* compile_nlopt.sh */,
 				3A46DCB222A9FBD90017F7EE /* copy_3rdParty_libs.sh */,
 				627818CA1CC8341600C344E4 /* copy_headers.sh */,
-				62AC3BC71BBCBB2D0067C540 /* copyright.txt */,
+				62706EB7288BAEA100E30DF7 /* make_all.sh */,
 				62AC3BC41BBC9C840067C540 /* make_includes.sh */,
 				62AC3BC61BBCBA730067C540 /* update_copyright.sh */,
 				62AC3BC51BBC9CB90067C540 /* update_header_define.sh */,
+				62AC3BC71BBCBB2D0067C540 /* copyright.txt */,
 			);
 			path = scripts;
 			sourceTree = "<group>";
