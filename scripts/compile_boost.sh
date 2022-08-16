@@ -1,7 +1,9 @@
 #! /bin/sh
 
-src_dir=$1
-dst_dir=$2
+: ${src_dir:=$1}
+: ${dst_dir:=$2}
+
+echo "compile_boost ${src_dir} ${dst_dir}"
 
 : ${IPHONEOS_DEPLOYMENT_TARGET:=12.0}
 : ${MACOSX_DEPLOYMENT_TARGET:=10.13}
@@ -19,15 +21,16 @@ echo "MACOSX_DEPLOYMENT_TARGET = ${MACOSX_DEPLOYMENT_TARGET}"
 if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
 then
   echo "build macosx-maccatalyst on"
-  platform_names="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx macosx-maccatalyst"
+  : ${PLATFORM_NAMES:="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx macosx-maccatalyst"}
 else
   echo "build macosx-maccatalyst off"
-  platform_names="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx"
+  : ${PLATFORM_NAMES:="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx"}
 fi
 
 found_boost="YES"
-for platform_name in ${platform_names}
+for platform_name in ${PLATFORM_NAMES}
 do
+  echo "${dst_dir}/${platform_name}/lib/libboost_system.a"
 	if [ ! -e "${dst_dir}/${platform_name}/lib/libboost_system.a" ]
 	then
 		found_boost="NO"
@@ -37,17 +40,17 @@ done
 if [ "${found_boost}" = "YES" ]
 then
 	echo "Found boost binary"
-	exit
+else
+  export IPHONEOS_DEPLOYMENT_TARGET
+  export MACOSX_DEPLOYMENT_TARGET
+  export CLANG_CXX_LANGUAGE_STANDARD
+  export CLANG_CXX_LIBRARY
+  export IPHONE_SDKVERSION
+  export OSX_SDKVERSION
+  export BUILD_UIKIT_FOR_MAC
+
+  pushd "${src_dir}"
+    ./boost.sh "${dst_dir}"
+  popd
 fi
 
-export IPHONEOS_DEPLOYMENT_TARGET
-export MACOSX_DEPLOYMENT_TARGET
-export CLANG_CXX_LANGUAGE_STANDARD
-export CLANG_CXX_LIBRARY
-export IPHONE_SDKVERSION
-export OSX_SDKVERSION
-export BUILD_UIKIT_FOR_MAC
-
-pushd "${src_dir}"
-	./boost.sh "${dst_dir}"
-popd

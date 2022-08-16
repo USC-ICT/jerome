@@ -1,7 +1,9 @@
 #! /bin/sh
 
-src_dir=$1
-dst_dir=$2
+: ${src_dir:=$1}
+: ${dst_dir:=$2}
+
+echo "compile_nlopt ${src_dir} ${dst_dir}"
 
 : ${IPHONEOS_DEPLOYMENT_TARGET:=12.0}
 : ${MACOSX_DEPLOYMENT_TARGET:=10.13}
@@ -27,14 +29,14 @@ echo "MACOSX_DEPLOYMENT_TARGET = ${MACOSX_DEPLOYMENT_TARGET}"
 if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
 then
   echo "build macosx-maccatalyst on"
-  platform_names="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx macosx-maccatalyst"
+  : ${PLATFORM_NAMES:="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx macosx-maccatalyst"}
 else
   echo "build macosx-maccatalyst off"
-  platform_names="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx"
+  : ${PLATFORM_NAMES:="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx"}
 fi
 
 found_nlopt="YES"
-for platform_name in ${platform_names}
+for platform_name in ${PLATFORM_NAMES}
 do
   if [ ! -f "${dst_dir}/${platform_name}/lib/libnlopt_cxx.a" ]
   then
@@ -44,9 +46,10 @@ done
 
 if [ "${found_nlopt}" = "YES" ]
 then
+
   echo "Found nlopt binary"
-  exit
-fi
+
+else
 
 pushd "${src_dir}"
 
@@ -75,12 +78,12 @@ configure_and_make () {
   export CPP="$CC -E"
   export CFLAGS=" -Os ${ARCHS_LIST} -isysroot $SYSRT ${EXTRA_FLAGS} $EXTRA_CFLAGS"
   export CXXFLAGS="$CFLAGS -std=${CLANG_CXX_LANGUAGE_STANDARD} -stdlib=${CLANG_CXX_LIBRARY}"
-  
+
   echo "CXXFLAGS=${CXXFLAGS}"
-  
+
 cat <<EOF
-./configure --prefix="$PREFIX" ${EXTRA_CONFIG} 
---disable-shared --enable-static --with-cxx --without-guile --without-python 
+./configure --prefix="$PREFIX" ${EXTRA_CONFIG}
+--disable-shared --enable-static --with-cxx --without-guile --without-python
 --without-octave --without-matlab
 EOF
 
@@ -103,11 +106,11 @@ configure_and_make_fat() {
   local EXTRA_FLAGS="$5"
   local SECONDARY_PREFIX="${PREFIX}/arm"
   local tmp_FILE="${PREFIX}/lib/libnlopt_cxx_tmp.a"
-  
+
   configure_and_make "${SECONDARY_PREFIX}" "-arch arm64 -target arm64-apple-${SYS}" \
     ${PLATFORM} ${SDK} "${EXTRA_FLAGS}" \
     "--host=arm-apple-darwin"
-  
+
   configure_and_make "${PREFIX}" "-arch x86_64 -target x86_64-apple-${SYS}" \
     ${PLATFORM} ${SDK} "${EXTRA_FLAGS}" \
     "--host=x86-apple-darwin"
@@ -139,7 +142,7 @@ else
 fi
 
 configure_and_make_fat "${BASE_PREFIX}/macosx-maccatalyst" "ios${UIKIT_IOS_DEPLOYMENT_TARGET}-macabi" \
-  "MacOSX" ${OSX_SDKVERSION} " " 
+  "MacOSX" ${OSX_SDKVERSION} " "
 fi
 
 configure_and_make "${BASE_PREFIX}/iphoneos-iphoneos" "-arch arm64" \
@@ -147,10 +150,10 @@ configure_and_make "${BASE_PREFIX}/iphoneos-iphoneos" "-arch arm64" \
   "--host=arm-apple-darwin"
 
 configure_and_make_fat "${BASE_PREFIX}/iphonesimulator-iphonesimulator" "ios${IPHONEOS_DEPLOYMENT_TARGET}-simulator" \
-  "iPhoneSimulator" ${IPHONE_SDKVERSION} "-mios-version-min=${IPHONEOS_DEPLOYMENT_TARGET}" 
+  "iPhoneSimulator" ${IPHONE_SDKVERSION} "-mios-version-min=${IPHONEOS_DEPLOYMENT_TARGET}"
 
 configure_and_make_fat "${BASE_PREFIX}/macosx" "macos${MACOSX_DEPLOYMENT_TARGET}" \
-  "MacOSX" ${OSX_SDKVERSION} "-mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}" 
+  "MacOSX" ${OSX_SDKVERSION} "-mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET}"
 
 popd
 rm -rf nlopt-2.3
@@ -164,3 +167,6 @@ popd
 
 # cp $BASE_PREFIX/arm/include/* $BASE_PREFIX/../include/
 # $TOOLCHAIN/usr/bin/lipo -create -output $BASE_PREFIX/../lib/libnlopt_cxx.a $BASE_PREFIX/arm/lib/libnlopt_cxx.a $BASE_PREFIX/x86/lib/libnlopt_cxx.a
+
+fi
+

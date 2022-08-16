@@ -11,7 +11,7 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 6280599E1F05D05900D6B08D /* Build configuration list for PBXAggregateTarget "3rdParty" */;
 			buildPhases = (
-				6280599F1F05D05F00D6B08D /* ShellScript */,
+				6280599F1F05D05F00D6B08D /* Run Script jerome/scripts/make_all.sh */,
 			);
 			dependencies = (
 			);
@@ -371,7 +371,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3A46DCB222A9FBD90017F7EE /* copy_3rdParty_libs.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = copy_3rdParty_libs.sh; sourceTree = "<group>"; };
 		6200F5561BA76288009828A4 /* Record.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Record.hpp; sourceTree = "<group>"; };
 		6200F5571BAA04AD009828A4 /* evaluation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = evaluation.cpp; sourceTree = "<group>"; };
 		6200F5581BAA04AD009828A4 /* evaluation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = evaluation.hpp; sourceTree = "<group>"; };
@@ -1294,7 +1293,6 @@
 				62706EB2288BAEA100E30DF7 /* compile_boost.sh */,
 				62706EB5288BAEA100E30DF7 /* compile_eigen.sh */,
 				62706EB6288BAEA100E30DF7 /* compile_nlopt.sh */,
-				3A46DCB222A9FBD90017F7EE /* copy_3rdParty_libs.sh */,
 				627818CA1CC8341600C344E4 /* copy_headers.sh */,
 				62706EB7288BAEA100E30DF7 /* make_all.sh */,
 				62AC3BC41BBC9C840067C540 /* make_includes.sh */,
@@ -1623,7 +1621,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 627818BB1CC831C300C344E4 /* Build configuration list for PBXNativeTarget "Jerome.osx" */;
 			buildPhases = (
-				3A46DCB422A9FCB70017F7EE /* ShellScript */,
 				627818B11CC831C300C344E4 /* Sources */,
 				627818B21CC831C300C344E4 /* Frameworks */,
 				627818B31CC831C300C344E4 /* Headers */,
@@ -1661,7 +1658,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 62B316D31D0F7B1100D2E4E4 /* Build configuration list for PBXNativeTarget "Jerome.ios" */;
 			buildPhases = (
-				3A46DCB322A9FCA50017F7EE /* ShellScript */,
 				62B316BD1D0F7B1100D2E4E4 /* Sources */,
 				62B316BE1D0F7B1100D2E4E4 /* Frameworks */,
 				62B316BF1D0F7B1100D2E4E4 /* Headers */,
@@ -1891,41 +1887,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3A46DCB322A9FCA50017F7EE /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${SRCROOT}/scripts/copy_3rdParty_libs.sh\"\n";
-		};
-		3A46DCB422A9FCB70017F7EE /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${SRCROOT}/scripts/copy_3rdParty_libs.sh\"\n";
-		};
 		627818B01CC82FD700C344E4 /* Make Includes */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1962,7 +1923,7 @@
 			shellPath = /bin/sh;
 			shellScript = "#source \"${SRCROOT}/scripts/copy_headers.sh\"\n";
 		};
-		6280599F1F05D05F00D6B08D /* ShellScript */ = {
+		6280599F1F05D05F00D6B08D /* Run Script jerome/scripts/make_all.sh */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -1970,6 +1931,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Run Script jerome/scripts/make_all.sh";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2361,9 +2323,9 @@
 				INFOPLIST_FILE = Framework/Info.plist;
 				OTHER_LDFLAGS = (
 					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
-					"${TARGET_BUILD_DIR}/libboost_system.a",
-					"${TARGET_BUILD_DIR}/libnlopt_cxx.a",
-					"${TARGET_BUILD_DIR}/libboost_thread.a",
+					"$(THIRD_PARTY_BUILD_DIR)/lib/libboost_system.a",
+					"$(THIRD_PARTY_BUILD_DIR)/lib/libnlopt_cxx.a",
+					"$(THIRD_PARTY_BUILD_DIR)/lib/libboost_thread.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
 				PRODUCT_NAME = Jerome;
@@ -2383,9 +2345,9 @@
 				INFOPLIST_FILE = Framework/Info.plist;
 				OTHER_LDFLAGS = (
 					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
-					"${TARGET_BUILD_DIR}/libboost_system.a",
-					"${TARGET_BUILD_DIR}/libnlopt_cxx.a",
-					"${TARGET_BUILD_DIR}/libboost_thread.a",
+					"$(THIRD_PARTY_BUILD_DIR)/lib/libboost_system.a",
+					"$(THIRD_PARTY_BUILD_DIR)/lib/libnlopt_cxx.a",
+					"$(THIRD_PARTY_BUILD_DIR)/lib/libboost_thread.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
 				PRODUCT_NAME = Jerome;
@@ -2483,9 +2445,9 @@
 				INFOPLIST_FILE = Jerome.ios/Info.plist;
 				OTHER_LDFLAGS = (
 					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
-					"${TARGET_BUILD_DIR}/libboost_system.a",
-					"${TARGET_BUILD_DIR}/libnlopt_cxx.a",
-					"${TARGET_BUILD_DIR}/libboost_thread.a",
+					"$(THIRD_PARTY_BUILD_DIR)/lib/libboost_system.a",
+					"$(THIRD_PARTY_BUILD_DIR)/lib/libnlopt_cxx.a",
+					"$(THIRD_PARTY_BUILD_DIR)/lib/libboost_thread.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
 				PRODUCT_NAME = Jerome;
@@ -2502,9 +2464,9 @@
 				INFOPLIST_FILE = Jerome.ios/Info.plist;
 				OTHER_LDFLAGS = (
 					"$(CONFIGURATION_BUILD_DIR)/libjerome.a",
-					"${TARGET_BUILD_DIR}/libboost_system.a",
-					"${TARGET_BUILD_DIR}/libnlopt_cxx.a",
-					"${TARGET_BUILD_DIR}/libboost_thread.a",
+					"$(THIRD_PARTY_BUILD_DIR)/lib/libboost_system.a",
+					"$(THIRD_PARTY_BUILD_DIR)/lib/libnlopt_cxx.a",
+					"$(THIRD_PARTY_BUILD_DIR)/lib/libboost_thread.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
 				PRODUCT_NAME = Jerome;

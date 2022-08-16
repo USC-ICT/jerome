@@ -12,7 +12,18 @@ then
 	mkdir -p "${build_dir}"
 fi
 
+if [ "macosx${SDK_VERSION}" = "${SDK_NAME}" ]
+then
+  OSX_SDKVERSION=${SDK_VERSION}
+fi
+
+if [ "${OSX_SDKVERSION}" = "13.0" ]
+then
+  IPHONE_SDKVERSION="16.0"
+fi
+
 echo "IPHONE_SDKVERSION = ${IPHONE_SDKVERSION}"
+echo "OSX_SDKVERSION = ${OSX_SDKVERSION}"
 echo "MACOSX_DEPLOYMENT_TARGET = ${MACOSX_DEPLOYMENT_TARGET}"
 
 echo "compile ${root_dir} to ${build_dir}"
@@ -31,6 +42,20 @@ echo "MACOSX_DEPLOYMENT_TARGET = ${MACOSX_DEPLOYMENT_TARGET}"
 
 : ${BUILD_UIKIT_FOR_MAC:=`echo "${IPHONE_SDKVERSION} >= 13.0" | bc`}
 
+if [ "x${PLATFORM_NAME}${EFFECTIVE_PLATFORM_NAME}" != "x" ]
+then
+  PLATFORM_NAMES="${PLATFORM_NAME}${EFFECTIVE_PLATFORM_NAME}"
+else
+  if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
+  then
+    echo "build macosx-maccatalyst on"
+    PLATFORM_NAMES="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx macosx-maccatalyst"
+  else
+    echo "build macosx-maccatalyst off"
+    PLATFORM_NAMES="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx"
+  fi
+fi
+
 export IPHONEOS_DEPLOYMENT_TARGET
 export MACOSX_DEPLOYMENT_TARGET
 export CLANG_CXX_LANGUAGE_STANDARD
@@ -38,9 +63,20 @@ export CLANG_CXX_LIBRARY
 export IPHONE_SDKVERSION
 export OSX_SDKVERSION
 export BUILD_UIKIT_FOR_MAC
+export PLATFORM_NAMES
 
 pushd "${root_dir}"
-	./compile_boost.sh "${thirdParty_dir}/boost" "${build_dir}"
-	./compile_nlopt.sh "${thirdParty_dir}" "${build_dir}"
-	./compile_eigen.sh "${thirdParty_dir}" "${build_dir}"
+## this seems to be faster than calling the scripts
+  src_dir="${thirdParty_dir}/boost"
+  dst_dir="${build_dir}"
+  source ./compile_boost.sh
+
+  src_dir="${thirdParty_dir}"
+  source ./compile_nlopt.sh
+
+  source ./compile_eigen.sh
+
+#	time ./compile_boost.sh "${thirdParty_dir}/boost" "${build_dir}"
+#	time ./compile_nlopt.sh "${thirdParty_dir}" "${build_dir}"
+#	time ./compile_eigen.sh "${thirdParty_dir}" "${build_dir}"
 popd

@@ -1,7 +1,9 @@
 #! /bin/sh
 
-src_dir=$1
-dst_dir=$2
+: ${src_dir:=$1}
+: ${dst_dir:=$2}
+
+echo "compile_eigen ${src_dir} ${dst_dir}"
 
 : ${IPHONEOS_DEPLOYMENT_TARGET:=12.0}
 : ${MACOSX_DEPLOYMENT_TARGET:=10.13}
@@ -19,14 +21,14 @@ echo "MACOSX_DEPLOYMENT_TARGET = ${MACOSX_DEPLOYMENT_TARGET}"
 if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
 then
   echo "build macosx-maccatalyst on"
-  platform_names="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx macosx-maccatalyst"
+  : ${PLATFORM_NAMES:="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx macosx-maccatalyst"}
 else
   echo "build macosx-maccatalyst off"
-  platform_names="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx"
+  : ${PLATFORM_NAMES:="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx"}
 fi
 
 found_eigen="YES"
-for platform_name in ${platform_names}
+for platform_name in ${PLATFORM_NAMES}
 do
 	if [ ! -e "${dst_dir}/${platform_name}/include/eigen3" ]
 	then
@@ -37,40 +39,39 @@ done
 if [ "${found_eigen}" = "YES" ]
 then
 	echo "Found eigen binary"
-	exit
+else
+  pushd "${src_dir}"
+  #	eigen_name="eigen-eigen-07105f7124f9"
+    eigen_name="eigen-eigen-b3f3d4950030"
+  #	tar -xkf eigen-3.2.8.tar.bz2
+    tar -xkf eigen-3.3.5.tar.bz2
+    pushd "${eigen_name}"
+      mkdir "build"
+      pushd "build"
+        cmake .. -DCMAKE_INSTALL_PREFIX="${dst_dir}/macosx"
+        make install
+      popd
+
+      if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
+      then
+        link_platform_names="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx-maccatalyst"
+      else
+        link_platform_names="iphoneos-iphoneos iphonesimulator-iphonesimulator"
+      fi
+
+      for platform_name in ${link_platform_names}
+      do
+        if [ ! -d "${dst_dir}/${platform_name}/include/" ]
+        then
+          mkdir -p "${dst_dir}/${platform_name}/include/"
+        fi
+
+        pushd "${dst_dir}/${platform_name}/include/"
+        ln -sf "../../macosx/include/eigen3"
+        popd
+      done
+
+    popd
+    rm -rf "${eigen_name}"
+  popd
 fi
-
-pushd "${src_dir}"
-#	eigen_name="eigen-eigen-07105f7124f9"
-	eigen_name="eigen-eigen-b3f3d4950030"
-#	tar -xkf eigen-3.2.8.tar.bz2
-	tar -xkf eigen-3.3.5.tar.bz2
-	pushd "${eigen_name}"
-		mkdir "build"
-		pushd "build"
-			cmake .. -DCMAKE_INSTALL_PREFIX="${dst_dir}/macosx"
-			make install
-		popd
-
-    if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
-    then
-      link_platform_names="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx-maccatalyst"
-    else
-      link_platform_names="iphoneos-iphoneos iphonesimulator-iphonesimulator"
-    fi
-
-		for platform_name in ${link_platform_names}
-		do
-			if [ ! -d "${dst_dir}/${platform_name}/include/" ]
-			then
-				mkdir -p "${dst_dir}/${platform_name}/include/"
-			fi
-
-			pushd "${dst_dir}/${platform_name}/include/"
-			ln -sf "../../macosx/include/eigen3"
-			popd
-		done
-
-	popd
-	rm -rf "${eigen_name}"
-popd
