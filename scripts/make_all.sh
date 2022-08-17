@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/zsh
 
 pushd $(dirname "${0}")
 root_dir=$(pwd -L)
@@ -32,9 +32,14 @@ echo "compile ${root_dir} to ${build_dir}"
 : ${MACOSX_DEPLOYMENT_TARGET:=10.13}
 : ${CLANG_CXX_LANGUAGE_STANDARD:=gnu++14}
 : ${CLANG_CXX_LIBRARY:=libc++}
-: ${SDKS:=`xcodebuild -showsdks`}
-: ${IPHONE_SDKVERSION:=`echo "${SDKS}" | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
-: ${OSX_SDKVERSION:=`echo "${SDKS}" | grep macosx | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
+
+if [ -z "${OSX_SDKVERSION}" -o -z "${IPHONE_SDKVERSION}" ]
+then
+  # this is very expensive (~0.7 sec) with Xcode beta. 
+  : ${SDKS:=`xcodebuild -showsdks`}
+  : ${IPHONE_SDKVERSION:=`echo "${SDKS}" | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
+  : ${OSX_SDKVERSION:=`echo "${SDKS}" | grep macosx | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
+fi
 
 echo "IPHONE_SDKVERSION = ${IPHONE_SDKVERSION}"
 echo "OSX_SDKVERSION = ${OSX_SDKVERSION}"
@@ -66,17 +71,7 @@ export BUILD_UIKIT_FOR_MAC
 export PLATFORM_NAMES
 
 pushd "${root_dir}"
-## this seems to be faster than calling the scripts
-  src_dir="${thirdParty_dir}/boost"
-  dst_dir="${build_dir}"
-  source ./compile_boost.sh
-
-  src_dir="${thirdParty_dir}"
-  source ./compile_nlopt.sh
-
-  source ./compile_eigen.sh
-
-#	time ./compile_boost.sh "${thirdParty_dir}/boost" "${build_dir}"
-#	time ./compile_nlopt.sh "${thirdParty_dir}" "${build_dir}"
-#	time ./compile_eigen.sh "${thirdParty_dir}" "${build_dir}"
+  time ./compile_boost.sh "${thirdParty_dir}/boost" "${build_dir}"
+  time ./compile_nlopt.sh "${thirdParty_dir}" "${build_dir}"
+  time ./compile_eigen.sh "${thirdParty_dir}" "${build_dir}"
 popd

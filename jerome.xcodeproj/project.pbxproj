@@ -1935,7 +1935,7 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
+			shellPath = /bin/zsh;
 			shellScript = "\"${SRCROOT}/scripts/make_all.sh\"\n";
 		};
 		62B84DB51BB4B2AB009FD8E4 /* ShellScript */ = {

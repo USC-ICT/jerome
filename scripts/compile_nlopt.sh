@@ -9,9 +9,13 @@ echo "compile_nlopt ${src_dir} ${dst_dir}"
 : ${MACOSX_DEPLOYMENT_TARGET:=10.13}
 : ${CLANG_CXX_LANGUAGE_STANDARD:=gnu++14}
 : ${CLANG_CXX_LIBRARY:=libc++}
-: ${SDKS:=`xcodebuild -showsdks`}
-: ${IPHONE_SDKVERSION:=`echo "${SDKS}" | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
-: ${OSX_SDKVERSION:=`echo "${SDKS}" | grep macosx | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
+
+if [ -z "${OSX_SDKVERSION}" -o -z "${IPHONE_SDKVERSION}" ]
+then
+  : ${SDKS:=`xcodebuild -showsdks`}
+  : ${IPHONE_SDKVERSION:=`echo "${SDKS}" | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
+  : ${OSX_SDKVERSION:=`echo "${SDKS}" | grep macosx | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
+fi
 
 abort()
 {
