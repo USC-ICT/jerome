@@ -138,11 +138,26 @@ namespace jerome {
         if (auto self = weakSelf.lock()) {
           self->initializeScripting();
           self->context()["initStateMachineWithString"]
-          (s, [cb](const js::Value& inError, const String& inName) {
+          (s, [cb](const js::Value& inError, const js::Value& inMetadata) {
             if (js::Context::currentArguments().size() == 1) {
               cb(Error((String)inError));
             } else {
-              cb(inName);
+              if (!inMetadata.hasProperty("name")) {
+                cb(Error("missing name field in the DM metadata"));
+                return;
+              }
+              auto name = (String)inMetadata["name"];
+              bool hasStages = false;
+              if (inMetadata.hasProperty("datamodel")) {
+                js::Value datamodel = inMetadata["datamodel"];
+                if (datamodel.hasProperty("hasStages")) {
+                  auto hasStagesString = (String)datamodel["hasStages"];
+                  if (hasStagesString == "true") {
+                    hasStages = true;
+                  }
+                }
+              }
+              cb(DialogueManagerMetadata(name, hasStages));
             }
           });
         }

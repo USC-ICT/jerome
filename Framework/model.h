@@ -33,6 +33,12 @@ JEROME_FRAMEWORK_SYMBOL_EXPORT
 @property (nonatomic, copy, nonnull)  NSDictionary* data;
 @end
 
+JEROME_FRAMEWORK_SYMBOL_EXPORT
+@interface ALDialogueManagerMetadata : NSObject
+@property (nonatomic, copy, nonnull)  NSString* name;
+@property (nonatomic, assign)         BOOL hasStages;
+@end
+
 //@protocol ALPlatformDelegate <NSObject>
 //@optional
 //- (void)platform:(nonnull ALPlatform*)platform didReceiveEvent:(nonnull ALPlatformEvent*)event;
@@ -79,5 +85,5 @@ JEROME_FRAMEWORK_SYMBOL_EXPORT
 @end
 
 typedef void (^ALTrainingStateHandler)(ALTrainingState * _Nonnull);
-typedef void (^ALDialogueScriptLoadedHandle)(NSString * _Nullable, NSError * _Nullable);
+typedef void (^ALDialogueScriptLoadedHandle)(ALDialogueManagerMetadata * _Nullable, NSError * _Nullable);
 typedef void (^ALEngineEventHandler)(ALPlatformEvent * _Nonnull);

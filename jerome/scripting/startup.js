@@ -172,7 +172,7 @@ function loadStateMachineCompleteBlock(cb)
              if (debugTrace) pm.log("success reading model", model.name);
              var sm = new scion.SCXML(model, { send: _send });
              stateMachines[model.name] = sm;
-             if (cb) cb(null, model.name);
+             if (cb) cb(null, model);
              var conf = sm.start();
              if (debugTrace) pm.log("conf", conf, model.name);
            }

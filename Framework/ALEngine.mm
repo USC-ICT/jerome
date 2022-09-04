@@ -82,6 +82,9 @@ using namespace jerome::npc;
 - (instancetype)init
 {
   if (self = [super init]) {
+    self.engineEventHandler = ^(ALPlatformEvent* event){
+    };
+
     self.queue = dispatch_queue_create("edu.usc.ict.ScriptingEngine",
                                        DISPATCH_QUEUE_SERIAL);
     self.log = ^(NSArray<NSObject*>* array) {
@@ -147,9 +150,27 @@ struct membuf : std::streambuf
 {
   [self initializeScripting];
   [self.context[@"initStateMachineWithString"]
-   callWithArguments:@[ source, ^(JSValue* error, NSString* name) {
-    if (name) {
-      completionHandle(name, nil);
+   callWithArguments:@[ source, ^(JSValue* error, NSDictionary* data) {
+    if (data) {
+      id name = data[@"name"];
+      if (name == nil || ![name isKindOfClass:[NSString class]]) {
+        completionHandle(nil,
+                         [NSError errorWithDomain:@"JS"
+                                             code:0
+                                         userInfo:@{ NSLocalizedDescriptionKey
+                                                     : @"missing name attribute in DM scxml tag" }]);
+        return;
+      }
+      ALDialogueManagerMetadata* metadata = [ALDialogueManagerMetadata new];
+      metadata.name = name;
+      NSDictionary* datamodel = data[@"datamodel"];
+      if (datamodel && [datamodel isKindOfClass:[NSDictionary class]]) {
+        NSString* hasStagesString = datamodel[@"hasStages"];
+        if (hasStagesString && [hasStagesString isKindOfClass:[NSString class]]) {
+          metadata.hasStages = [[hasStagesString lowercaseString] isEqualToString:@"true"];
+        }
+      }
+      completionHandle(metadata, nil);
     } else {
       completionHandle(nil,
                        [NSError errorWithDomain:@"JS"
@@ -181,8 +202,8 @@ struct membuf : std::streambuf
   });
 }
 
-- (NSString*)readDialogueManagerFromURL:(NSURL*)url
-                                  error:(NSError**)outError
+- (ALDialogueManagerMetadata*)readDialogueManagerFromURL:(NSURL*)url
+                                                   error:(NSError**)outError
 {
   NSString* source = [NSString stringWithContentsOfURL:url
                                           usedEncoding:nil
@@ -191,24 +212,25 @@ struct membuf : std::streambuf
     return nil;
   }
   
-  __block NSError*  error = nil;
-  __block NSString* name = nil;
+  __block NSError* error = nil;
+  __block ALDialogueManagerMetadata* metadata = nil;
   
   dispatch_sync(self.queue, ^{
     [self doReadDialogueManagerFromSource:source
-                         completionHandle:^(NSString* inName, NSError* inError)
+                         completionHandle:^(ALDialogueManagerMetadata* inMetadata,
+                                            NSError* inError)
     {
-      name = inName;
+      metadata = inMetadata;
       error = inError;
     }];
   });
   
   if (outError) *outError = error;
-  return name;
+  return metadata;
 }
 
-- (NSString*)readDialogueManagerFromData:(NSData*)data
-                                   error:(NSError**)outError
+- (ALDialogueManagerMetadata*)readDialogueManagerFromData:(NSData*)data
+                                                    error:(NSError**)outError
 {
   NSString* source = [[NSString alloc] initWithData:data 
                                            encoding:NSUTF8StringEncoding];
@@ -221,20 +243,21 @@ struct membuf : std::streambuf
     return nil;
   }
   
-  __block NSError*  error = nil;
-  __block NSString* name = nil;
+  __block NSError* error = nil;
+  __block ALDialogueManagerMetadata* metadata = nil;
   
   dispatch_sync(self.queue, ^{
     [self doReadDialogueManagerFromSource:source
-                         completionHandle:^(NSString* inName, NSError* inError)
+                         completionHandle:^(ALDialogueManagerMetadata* inMetadata,
+                                            NSError* inError)
      {
-       name = inName;
+       metadata = inMetadata;
        error = inError;
      }];
   });
   
   if (outError) *outError = error;
-  return name;
+  return metadata;
 }
 
 - (ALUtterance* _Nullable)do_classifier:(NSString* _Nonnull)stateName

@@ -74,10 +74,13 @@ using namespace jerome;
 {
 	std::ifstream	inp(url.absoluteURL.fileSystemRepresentation);
 	self->_platform.loadDialogueManager(inp,
-    [self, completionHandle](const Result<String>& result)
+    [self, completionHandle](const Result<scripting::DialogueManagerMetadata>& result)
   {
 		if (result) {
-      completionHandle([NSString stringWithCPPString:result.value()], nil);
+      ALDialogueManagerMetadata* metadata = [ALDialogueManagerMetadata new];
+      metadata.name = [NSString stringWithCPPString:result.value().name];
+      metadata.hasStages = result.value().hasStages;
+      completionHandle(metadata, nil);
 		} else {
       completionHandle(nil, [NSError errorWithError:result.error()]);
     }

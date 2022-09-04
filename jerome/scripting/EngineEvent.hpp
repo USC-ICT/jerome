@@ -40,6 +40,16 @@ namespace jerome {
 
 		typedef std::function<void (const EngineEvent&)> EngineEventHandler;
 	
+    struct DialogueManagerMetadata {
+      const String name;
+      const bool hasStages;
+
+      DialogueManagerMetadata(String inName, bool inHasStages)
+      : name(std::move(inName))
+      , hasStages(inHasStages)
+      {}
+    };
+
 	}
 }
 

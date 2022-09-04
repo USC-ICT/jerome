@@ -57,7 +57,7 @@ namespace jerome {
 
       js::Context& context() { return mContext; }
 
-      typedef std::function<void(const Result<String>&)> load_dialogue_manager_callback;
+      typedef std::function<void(const Result<DialogueManagerMetadata>&)> load_dialogue_manager_callback;
       void	loadDialogueManager(std::istream& is, const load_dialogue_manager_callback&);
       
       void            postEvent(const String& inName,

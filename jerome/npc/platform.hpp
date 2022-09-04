@@ -120,8 +120,8 @@ namespace jerome {
        @param cb  callback function to call when the script is loaded
        */
       void loadDialogueManager(std::istream& is,
-                               const std::function<void(const Result<String>&)>&
-                                   cb = [](const Result<String>&) {});
+                               const std::function<void(const Result<scripting::DialogueManagerMetadata>&)>&
+                                   cb = [](const Result<scripting::DialogueManagerMetadata>&) {});
 
       /**
        Posts an SCXML event with the given name and data to the state machine

@@ -111,3 +111,11 @@ using namespace jerome;
           self.target, self.origin, self.data];
 }
 @end
+
+@implementation ALDialogueManagerMetadata
+- (NSString*)description
+{
+  return [NSString stringWithFormat:@"ALDialogueManagerMetadata{name=\"%@\", hastStages=%d}",
+          self.name, (int)self.hasStages];
+}
+@end

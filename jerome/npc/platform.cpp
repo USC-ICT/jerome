@@ -27,7 +27,6 @@
 namespace jerome {
 	namespace npc {
 	
-	
 		void Platform::initialize(const String& locale)
 		{
       detail::Engine::initialize(locale);
@@ -51,7 +50,7 @@ namespace jerome {
     }
 	
     void Platform::loadDialogueManager(std::istream& is,
-                                       const std::function<void(const Result<String>&)>& cb)
+                                       const std::function<void(const Result<scripting::DialogueManagerMetadata>&)>& cb)
     {
       implementation().loadDialogueManager(is, cb);
     }
