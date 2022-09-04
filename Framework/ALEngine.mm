@@ -58,7 +58,6 @@ using namespace jerome::npc;
                 withSourceURL:[NSURL fileURLWithPath:name]];
 }
 
-
 @end
 
 @interface ALEngine ()
@@ -165,9 +164,12 @@ struct membuf : std::streambuf
       metadata.name = name;
       NSDictionary* datamodel = data[@"datamodel"];
       if (datamodel && [datamodel isKindOfClass:[NSDictionary class]]) {
-        NSString* hasStagesString = datamodel[@"hasStages"];
-        if (hasStagesString && [hasStagesString isKindOfClass:[NSString class]]) {
-          metadata.hasStages = [[hasStagesString lowercaseString] isEqualToString:@"true"];
+        NSDictionary* hasStagesEntry = datamodel[@"hasStages"];
+        if (hasStagesEntry && [hasStagesEntry isKindOfClass:[NSDictionary class]]) {
+          NSString* hasStagesString = hasStagesEntry[@"content"];
+          if (hasStagesString && [hasStagesString isKindOfClass:[NSString class]]) {
+            metadata.hasStages = [[hasStagesString lowercaseString] isEqualToString:@"true"];
+          }
         }
       }
       completionHandle(metadata, nil);
@@ -309,7 +311,7 @@ struct membuf : std::streambuf
 }
 
 - (void)doPostEvent:(NSString* _Nonnull)eventName
-         withData:(NSDictionary<NSString*, NSString*>* _Nonnull)data
+         withData:(NSDictionary<NSString*, id>* _Nonnull)data
         toMachine:(NSString* _Nonnull)machine
 {
   [self initializeScripting];
@@ -318,7 +320,7 @@ struct membuf : std::streambuf
 }
 
 - (void)postEventWithName:(NSString* _Nonnull)eventName
-                     data:(NSDictionary<NSString*, NSString*>* _Nonnull)data
+                     data:(NSDictionary<NSString*, id>* _Nonnull)data
                 toMachine:(NSString* _Nonnull)machine
 {
   __weak ALEngine* weakSelf = self;

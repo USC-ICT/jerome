@@ -56,7 +56,7 @@ JEROME_FRAMEWORK_SYMBOL_EXPORT
                                                               error:(NSError* _Nullable * _Nullable)outError;
 
 - (void)postEventWithName:(NSString* _Nonnull)name
-                     data:(NSDictionary<NSString*, NSString*>* _Nonnull)data
+                     data:(NSDictionary<NSString*, id>* _Nonnull)data
                 toMachine:(NSString* _Nonnull)machine
 NS_SWIFT_NAME(postEvent(name:data:toMachine:))
 ;
