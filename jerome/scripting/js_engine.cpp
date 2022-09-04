@@ -151,9 +151,12 @@ namespace jerome {
               if (inMetadata.hasProperty("datamodel")) {
                 js::Value datamodel = inMetadata["datamodel"];
                 if (datamodel.hasProperty("hasStages")) {
-                  auto hasStagesString = (String)datamodel["hasStages"];
-                  if (hasStagesString == "true") {
-                    hasStages = true;
+                  js::Value hasStagesEntry = datamodel["hasStages"];
+                  if (hasStagesEntry.hasProperty("content")) {
+                    auto hasStagesString = (String)hasStagesEntry["content"];
+                    if (hasStagesString == "true") {
+                      hasStages = true;
+                    }
                   }
                 }
               }
