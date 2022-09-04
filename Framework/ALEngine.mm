@@ -34,6 +34,8 @@
 - (ALUtterance*)utteranceWithID:(NSString*)inUtteranceID;
 - (void)receiveEvent:(NSString*)inName :(NSString*)inType :(NSString*)inTarget
                     :(NSString*)inOrigin :(NSDictionary*)inData;
+- (void)didTransitionToState:(NSString* _Nonnull)stateName
+                            :(NSDictionary* _Nonnull)data;
 @end
 
 @interface ALScriptingEngine : NSObject <ALScriptingEngineProtocol>
@@ -399,6 +401,12 @@ static NSArray* utteranceVectorToArray(const std::vector<Utterance>& utterances)
 
   return [ALUtterance utteranceWithOptionalUtterance:
           engine.platform.utteranceWithID(inUtteranceID.cppString)];
+}
+
+- (void)didTransitionToState:(NSString*)stateName
+                            :(NSDictionary*)data
+{
+  [self receiveEvent:@"didTransitionToState" :nil :stateName :nil :data];
 }
 
 - (void)receiveEvent:(NSString*)inName :(NSString*)inType :(NSString*)inTarget

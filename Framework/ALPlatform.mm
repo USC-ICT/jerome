@@ -15,8 +15,6 @@
 
 using namespace jerome;
 
-
-
 @interface ALPlatform ()
 @property (nonatomic, assign) jerome::npc::Platform platform;
 @end
@@ -71,7 +69,8 @@ using namespace jerome;
  
 }
 
-- (void)readDialogueManagerFromURL:(NSURL*)url completionHandle:(void (^_Nonnull)(NSString *, NSError *))completionHandle
+- (void)readDialogueManagerFromURL:(NSURL*)url
+                  completionHandle:(ALDialogueScriptLoadedHandle)completionHandle
 {
 	std::ifstream	inp(url.absoluteURL.fileSystemRepresentation);
 	self->_platform.loadDialogueManager(inp,
@@ -85,12 +84,15 @@ using namespace jerome;
 	});
 }
 
-- (ALUtterance* _Nullable)classifier:(NSString* _Nonnull)stateName respondTo:(NSString* _Nonnull)question
+- (ALUtterance* _Nullable)classifier:(NSString* _Nonnull)stateName
+                           respondTo:(NSString* _Nonnull)question
 {
   return [ALUtterance utteranceWithOptionalUtterance:self->_platform.respond(stateName.cppString, question.cppString)];
 }
 
-- (void)postEvent:(NSString* _Nonnull)eventName withData:(NSDictionary<NSString*, NSString*>* _Nonnull)data toMachine:(NSString* _Nonnull)machine
+- (void)postEvent:(NSString* _Nonnull)eventName
+         withData:(NSDictionary<NSString*, NSString*>* _Nonnull)data
+        toMachine:(NSString* _Nonnull)machine
 {
   self->_platform.postEvent(eventName.cppString, data.stringMap, machine.cppString);
 }
