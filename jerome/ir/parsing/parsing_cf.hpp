@@ -26,100 +26,93 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include <jerome/types.hpp>
 
-namespace jerome { 
+namespace jerome {
 
-	namespace detail {
-		class LocaleImpl {
-			CFLocaleRef	mLocale;
-		public:
-			LocaleImpl(CFLocaleRef inLocale);
-			LocaleImpl(const String& inName);
-			~LocaleImpl();
-			CFLocaleRef locale() const { return mLocale; }
-		};
-	}
+  namespace detail {
+    class LocaleImpl;
+  }
 
-	class Locale : public ReferenceClassInterface<detail::LocaleImpl> {
-	public:
-		typedef ReferenceClassInterface<detail::LocaleImpl> parent_type;
-		static void global(const String& inLocaleString);
-		CFLocaleRef	locale() const { return implementation().locale(); }
-		Locale();
-		Locale(const String& inLocaleString);
-		Locale(CFLocaleRef inLocale);
-	};
+  class Locale : public ReferenceClassInterface<detail::LocaleImpl> {
+  public:
+    typedef ReferenceClassInterface<detail::LocaleImpl> parent_type;
+    using implementation_type = parent_type::implementation_type;
+    static void global(const String& inLocaleString);
+    CFLocaleRef locale() const;
+    Locale();
+    Locale(const String& inLocaleString);
+  };
 
-	namespace ir {
+  namespace ir {
 
-	class Tokenizer : public i::TokenStreamImpl {
-	private:
-		const jerome::Locale			mLocale;
-		CFStringRef					mString;
-		CFStringTokenizerRef		mTokenizer;
-		
-		void init(CFStringRef inString);
-		 
-	public:
+    class Tokenizer : public i::TokenStreamImpl {
+    private:
+      const jerome::Locale    mLocale;
+      CFStringRef             mString;
+      CFStringTokenizerRef    mTokenizer;
 
-		Tokenizer(const String* inString, jerome::Locale const & inLocale = jerome::Locale()); 
-		Tokenizer(CFStringRef inString, jerome::Locale const & inLocale = jerome::Locale()); 
-		bool getNextToken(Token& ioToken);
-		
-		~Tokenizer();
+      void init(CFStringRef inString);
 
-		const jerome::Locale& locale() const { return mLocale; }
-	};
+    public:
 
-	class NonTokenizer : public i::TokenStreamImpl {
-	private:
-		const jerome::Locale			mLocale;
-		Token						mToken;
-		bool						mHasToken;
-		
-	public:
-		
-		NonTokenizer(const String* inString, jerome::Locale const & inLocale = jerome::Locale()); 
-		NonTokenizer(CFStringRef inString, jerome::Locale const & inLocale = jerome::Locale());
-		
-		bool getNextToken(Token& ioToken) {
-			if (!mHasToken) return false;
-			ioToken = std::move(mToken);
-			mHasToken = false;
-			return true;
-		}
+      Tokenizer(const String* inString, jerome::Locale const & inLocale = jerome::Locale());
+      Tokenizer(CFStringRef inString, jerome::Locale const & inLocale = jerome::Locale());
+      bool getNextToken(Token& ioToken);
 
-		const jerome::Locale& locale() const { return mLocale; }
-	};
-	
-	namespace filter {
+      ~Tokenizer();
 
-		/**
-		 * filter out tokens that do not contain any characters from the given set, i.e., punctuation
-		 */
-		class CharSet : public TokenFilter {
-			CFCharacterSetRef	mCharSet;
-		public:
-			CharSet(TokenStream inSource, CFCharacterSetRef inCharSet) : TokenFilter(inSource), mCharSet(inCharSet) {}
-			bool getNextToken(Token& ioToken);
-		};
+      const jerome::Locale& locale() const { return mLocale; }
+    };
 
-		/**
-		 * filter out tokens that do not contain any alphanumeric characters, i.e., punctuation
-		 */
-		class Alphanumeric : public CharSet {
-		public:
-			Alphanumeric(TokenStream inSource) : CharSet(inSource, CFCharacterSetGetPredefined(kCFCharacterSetAlphaNumeric)) {}
-		};
-		
-		/**
-		 * filter out tokens that do not contain any alpha characters, i.e., numbers & punctuation
-		 */
-		class Alpha : public CharSet {
-		public:
-			Alpha(TokenStream inSource) : CharSet(inSource, CFCharacterSetGetPredefined(kCFCharacterSetLetter)) {}
-		};
-	}
-}}
+    class NonTokenizer : public i::TokenStreamImpl {
+    private:
+      const jerome::Locale  mLocale;
+      Token                 mToken;
+      bool                  mHasToken;
+
+    public:
+
+      NonTokenizer(const String* inString, jerome::Locale const & inLocale = jerome::Locale());
+      NonTokenizer(CFStringRef inString, jerome::Locale const & inLocale = jerome::Locale());
+
+      bool getNextToken(Token& ioToken) {
+        if (!mHasToken) return false;
+        ioToken = std::move(mToken);
+        mHasToken = false;
+        return true;
+      }
+
+      const jerome::Locale& locale() const { return mLocale; }
+    };
+
+    namespace filter {
+
+      /**
+       * filter out tokens that do not contain any characters from the given set, i.e., punctuation
+       */
+      class CharSet : public TokenFilter {
+        CFCharacterSetRef  mCharSet;
+      public:
+        CharSet(TokenStream inSource, CFCharacterSetRef inCharSet) : TokenFilter(inSource), mCharSet(inCharSet) {}
+        bool getNextToken(Token& ioToken);
+      };
+
+      /**
+       * filter out tokens that do not contain any alphanumeric characters, i.e., punctuation
+       */
+      class Alphanumeric : public CharSet {
+      public:
+        Alphanumeric(TokenStream inSource) : CharSet(inSource, CFCharacterSetGetPredefined(kCFCharacterSetAlphaNumeric)) {}
+      };
+
+      /**
+       * filter out tokens that do not contain any alpha characters, i.e., numbers & punctuation
+       */
+      class Alpha : public CharSet {
+      public:
+        Alpha(TokenStream inSource) : CharSet(inSource, CFCharacterSetGetPredefined(kCFCharacterSetLetter)) {}
+      };
+    }
+  }}
 
 #endif
 #endif // defined __jerome_ir_parsing_parsing_cf_hpp__

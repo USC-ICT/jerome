@@ -43,13 +43,21 @@ namespace jerome {
 	}
 
 	namespace detail {
-		LocaleImpl::LocaleImpl(CFLocaleRef inLocale) {
+    struct LocaleImpl {
+      CFLocaleRef  mLocale;
+      LocaleImpl(CFLocaleRef inLocale);
+      LocaleImpl(const String& inName);
+      ~LocaleImpl();
+      CFLocaleRef locale() const { return mLocale; }
+    };
+
+    LocaleImpl::LocaleImpl(CFLocaleRef inLocale) {
 			mLocale	= inLocale;
-			CFRetain(mLocale);
+      CFRetain(mLocale);
 		}
 		LocaleImpl::LocaleImpl(const String& inName) {
-			CFStringRef	name	= CFStringCreateWithCString(kCFAllocatorDefault,
-																										inName.c_str(), kCFStringEncodingUTF8);
+			CFStringRef	name	= CFStringCreateWithCString(
+        kCFAllocatorDefault, inName.c_str(), kCFStringEncodingUTF8);
 			mLocale	= CFLocaleCreate(kCFAllocatorDefault, name);
 			CFRelease(name);
 		}
@@ -58,24 +66,30 @@ namespace jerome {
 		}
 	}
 
-	static Locale	kDefaultLocale(CFLocaleCopyCurrent());
-
-	Locale::Locale(CFLocaleRef inLocale)
-	: parent_type(shared_ptr<implementation_type>(new detail::LocaleImpl(inLocale)))
-	{
-	}
+  static std::shared_ptr<detail::LocaleImpl>* defaultImplementation() {
+    static std::shared_ptr<detail::LocaleImpl> singleton;
+    if (!singleton) {
+      auto locale = CFLocaleCopyCurrent();
+      singleton = std::make_shared<detail::LocaleImpl>(locale);
+      CFRelease(locale);
+    }
+    return &singleton;
+  }
 
 	Locale::Locale(const String& inLocale)
-	: parent_type(shared_ptr<implementation_type>(new detail::LocaleImpl(inLocale)))
+  : parent_type(std::make_shared<implementation_type>(inLocale))
 	{
 	}
 
-	Locale::Locale() {
-		*this = kDefaultLocale;
+	Locale::Locale()
+  : parent_type(*defaultImplementation())
+  {
 	}
 
+  CFLocaleRef  Locale::locale() const { return implementation().locale(); }
+
 	void Locale::global(const String& inLocale) {
-		kDefaultLocale		= Locale(inLocale);
+    *defaultImplementation() = std::make_shared<detail::LocaleImpl>(inLocale);
 	}
 
 	namespace ir {
