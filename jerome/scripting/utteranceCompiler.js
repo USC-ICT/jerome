@@ -47,20 +47,32 @@ Compiler.prototype = {
     if (debugTrace) pm.log("end");
   },
 
-  schedule : function(inUtteranceID, inEvent) {
+  // inUtteranceInfo is either a string continaing the utterance external ID
+  // or an object with utterance ID in the utteranceID field and
+  // stage ID in the stageID field.
+  schedule : function(inUtteranceInfo, inEvent) {
+
+    var stageID;
+    var utteranceID;
+    if (typeof inUtteranceInfo === 'object') {
+      stageID = inUtteranceInfo.stageID;
+      utteranceID = inUtteranceInfo.utteranceID;
+    } else {
+      utteranceID = inUtteranceInfo;
+    }
 
     if (debugTrace) {
-      pm.log("schedule", inUtteranceID);
+      pm.log("schedule", inUtteranceInfo);
     }
 
     if (inEvent != null) {
-      pm.log("cannot schedule on non null event", inUtteranceID);
+      pm.log("cannot schedule on non null event (for now).", inUtteranceInfo);
       return;
     }
 
-    var utt = classifier.utteranceWithID(inUtteranceID);
+    var utt = classifier.utteranceWithID(utteranceID);
     if (utt == null) {
-      pm.log("no utterance with ID", inUtteranceID);
+      pm.log("no utterance with ID", utteranceID);
       return;
     }
 
@@ -79,6 +91,9 @@ Compiler.prototype = {
         '		<send id="$eventID" event="$eventName"\n'+
         '					type="$eventType" target="$eventTarget">\n'+
         '			<param name="utteranceID" expr="\'$expr\'"/>\n'+
+        (stageID
+         ? '     <param name="stageID" expr="\'$stageID\'"/>\n'
+                .formatXML({stageID : stageID.escapeJS()}) : '') +
         '			<param name="machineName" expr="\'$name\'"/>\n'+
         '			<param name="complete" expr="\'$complete\'"/>\n'+
         '			<param name="interrupted" expr="\'$interrupted\'"/>\n'+
@@ -95,7 +110,7 @@ Compiler.prototype = {
         eventName : this.sendUtteranceEventName,
         eventType : jeromeEventType,
         eventTarget : jeromeEventTarget,
-        expr : inUtteranceID.escapeJS(),
+        expr : utteranceID.escapeJS(),
         complete : (thisID + ".complete").escapeJS(),
         interrupted : (thisID + ".interrupted").escapeJS(),
         error : (thisID + ".error").escapeJS(),

@@ -199,10 +199,13 @@ function initStateMachineWithString(str, cb, prefix)
 
 var engine;
 
-function triggerUtterance(inExternalID, inName, cb)
+// inUtteranceInfo is either a string continaing the utterance external ID
+// or an object with utterance ID in the utteranceID field and
+// stage ID in the stageID field.
+function triggerUtterance(inUtteranceInfo, inName, cb)
 {
   if (debugTrace) {
-    pm.log("triggerUtterance:", inExternalID, inName);
+    pm.log("triggerUtterance:", inUtteranceInfo, inName);
   }
 
   var callback = function() {
@@ -216,7 +219,7 @@ function triggerUtterance(inExternalID, inName, cb)
       pm.log("got compiler");
     }
 
-    engine.schedule(inExternalID);
+    engine.schedule(inUtteranceInfo);
 
     if (debugTrace) {
       pm.log("output:", engine.output());
