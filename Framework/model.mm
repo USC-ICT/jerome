@@ -24,6 +24,11 @@
 #import "ObjectiveC++.h"
 #import "model_private.h"
 
+ALPlatformEventName const ALPlatformEventNameSendUtterance = @"sendUtterance";
+ALPlatformEventName const ALPlatformEventNameMachineDone = @"machineDone";
+ALPlatformEventName const ALPlatformEventNameDidTransitionToState = @"didTransitionToState";
+ALPlatformEventName const ALPlatformEventNameEndOfStream = @"endOfStream";
+
 using namespace jerome;
 
 @interface ALUtterance ()
@@ -104,6 +109,20 @@ using namespace jerome;
 @end
 
 @implementation ALPlatformEvent
++ (ALPlatformEvent*)eventWithName:(ALPlatformEventName)inName data:(NSDictionary*)inData
+{
+  ALPlatformEvent* event = [ALPlatformEvent new];
+  event.name = inName;
+  event.data = inData;
+  return event;
+}
+
++ (ALPlatformEvent*)eventWithName:(ALPlatformEventName)inName
+{
+  return [ALPlatformEvent eventWithName:inName data:[NSDictionary new]];
+}
+
+
 - (NSString*)description
 {
   return [NSString stringWithFormat:@"PlatformEvent{name=\"%@\", type=\"%@\", "

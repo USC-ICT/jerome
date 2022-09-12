@@ -24,13 +24,27 @@
 #import <JavaScriptCore/JavaScriptCore.h>
 #import <Jerome/Macros.h>
 
+typedef NSString* _Nonnull ALPlatformEventName NS_TYPED_EXTENSIBLE_ENUM;
+JEROME_FRAMEWORK_SYMBOL_EXPORT
+extern ALPlatformEventName const ALPlatformEventNameSendUtterance;
+JEROME_FRAMEWORK_SYMBOL_EXPORT
+extern ALPlatformEventName const ALPlatformEventNameMachineDone;
+JEROME_FRAMEWORK_SYMBOL_EXPORT
+extern ALPlatformEventName const ALPlatformEventNameDidTransitionToState;
+JEROME_FRAMEWORK_SYMBOL_EXPORT
+extern ALPlatformEventName const ALPlatformEventNameEndOfStream;
+
 JEROME_FRAMEWORK_SYMBOL_EXPORT
 @interface ALPlatformEvent : NSObject
-@property (nonatomic, copy, nonnull)  NSString* name;
+@property (nonatomic, copy, nonnull)  ALPlatformEventName name;
 @property (nonatomic, copy, nullable) NSString* type;
 @property (nonatomic, copy, nullable) NSString* target;
 @property (nonatomic, copy, nullable) NSString* origin;
 @property (nonatomic, copy, nonnull)  NSDictionary* data;
+
++ (ALPlatformEvent* _Nonnull)eventWithName:(ALPlatformEventName)inName
+                                      data:(NSDictionary* _Nonnull)inData;
++ (ALPlatformEvent* _Nonnull)eventWithName:(ALPlatformEventName)inName;
 @end
 
 JEROME_FRAMEWORK_SYMBOL_EXPORT

@@ -95,6 +95,13 @@ using namespace jerome::npc;
   return self;
 }
 
+- (void)dealloc {
+  ALEngineEventHandler handler = self.engineEventHandler;
+  if (handler) {
+    handler([ALPlatformEvent eventWithName:ALPlatformEventNameEndOfStream]);
+  }
+}
+
 - (detail::Engine&)platform
 {
   return self->_platformStorage;
@@ -431,10 +438,13 @@ static NSArray* utteranceVectorToArray(const std::vector<Utterance>& utterances)
 - (void)didTransitionToState:(NSString*)stateName
                             :(NSDictionary*)data
 {
-  [self receiveEvent:@"didTransitionToState" :nil :stateName :nil :data];
+  [self receiveEvent:ALPlatformEventNameDidTransitionToState
+                    :nil :stateName :nil :data];
 }
 
-- (void)receiveEvent:(NSString*)inName :(NSString*)inType :(NSString*)inTarget
+- (void)receiveEvent:(ALPlatformEventName)inName
+                    :(NSString*)inType
+                    :(NSString*)inTarget
                     :(NSString*)inOrigin :(NSDictionary*)inData
 {
   ALEngine* engine = self.client;

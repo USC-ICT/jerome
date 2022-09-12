@@ -17,6 +17,7 @@ using namespace jerome;
 
 @interface ALPlatform ()
 @property (nonatomic, assign) jerome::npc::Platform platform;
+@property (nonatomic, copy) ALEngineEventHandler storedEngineEventHandler;
 @end
 
 @implementation ALPlatform
@@ -31,6 +32,7 @@ using namespace jerome;
 - (instancetype)init
 {
 	if (self = [super init]) {
+    self.storedEngineEventHandler = nil;
 //		self.engine = std::make_shared<npc::detail::Engine>();
 //		self.context = [JSContext contextWithJSGlobalContextRef:(JSGlobalContextRef)self->_engine->context()];
 //		self.engine->setEngineEventHandler([self](const npc::EngineEvent& event) {
@@ -46,6 +48,15 @@ using namespace jerome;
 //		});
 	}
 	return self;
+}
+
+- (void)dealloc {
+  self->_platform.setEngineEventHandler(
+    [](const jerome::scripting::EngineEvent& event) {});
+  ALEngineEventHandler handler = self.storedEngineEventHandler;
+  if (handler) {
+    handler([ALPlatformEvent eventWithName:ALPlatformEventNameEndOfStream]);
+  }
 }
 
 - (BOOL)readCollectionFromURL:(NSURL*)url error:(NSError **)outError
@@ -100,8 +111,9 @@ using namespace jerome;
   self->_platform.postEvent(eventName.cppString, data.stringMap, machine.cppString);
 }
 
-- (void)setEngineEventHandler:(void (^_Nonnull)(ALPlatformEvent * _Nonnull))eventHandler
+- (void)setEngineEventHandler:(ALEngineEventHandler)eventHandler
 {
+  self.storedEngineEventHandler = eventHandler;
   self->_platform.setEngineEventHandler(
   [self, eventHandler](const jerome::scripting::EngineEvent& event)
   {
