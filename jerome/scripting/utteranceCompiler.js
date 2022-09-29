@@ -70,13 +70,16 @@ Compiler.prototype = {
       return;
     }
 
-    var utt = classifier.utteranceWithID(utteranceID);
-    if (utt == null) {
-      pm.log("no utterance with ID", utteranceID);
-      return;
+    var script  = null;
+    
+    if (utteranceID) {
+      var utt = classifier.utteranceWithID(utteranceID);
+      if (utt == null) {
+        pm.log("no utterance with ID", utteranceID);
+      } else {
+        script  = utt.script;
+      }
     }
-
-    var script  = utt.script;
 
     if (script == null || script.trim().length == 0) {
 
@@ -90,7 +93,9 @@ Compiler.prototype = {
         '	<onentry>\n' +
         '		<send id="$eventID" event="$eventName"\n'+
         '					type="$eventType" target="$eventTarget">\n'+
-        '			<param name="utteranceID" expr="\'$expr\'"/>\n'+
+        (utteranceID
+         ? '			<param name="utteranceID" expr="\'$expr\'"/>\n'
+                .formatXML({expr : utteranceID.escapeJS()}) : '') +
         (stageID
          ? '     <param name="stageID" expr="\'$stageID\'"/>\n'
                 .formatXML({stageID : stageID.escapeJS()}) : '') +
@@ -110,7 +115,6 @@ Compiler.prototype = {
         eventName : this.sendUtteranceEventName,
         eventType : jeromeEventType,
         eventTarget : jeromeEventTarget,
-        expr : utteranceID.escapeJS(),
         complete : (thisID + ".complete").escapeJS(),
         interrupted : (thisID + ".interrupted").escapeJS(),
         error : (thisID + ".error").escapeJS(),
