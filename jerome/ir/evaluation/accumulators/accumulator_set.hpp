@@ -88,9 +88,9 @@ namespace jerome {
         template <typename Sample, typename Features, typename Weight = void>
         struct subtractable_accumulator_set
           : accumulator_set<Sample, Features, Weight>
-          , std::unary_function<Sample, void>
         {
-
+          typedef Sample argument_type;
+          typedef void result_type;
           typedef subtractable_accumulator_set<Sample, Features,
             Weight>          this_type;
           typedef accumulator_set<Sample, Features,

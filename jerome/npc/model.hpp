@@ -519,8 +519,10 @@ namespace jerome {
   namespace npc {
     
     struct FieldValueExpander
-    : std::unary_function<const Utterance&, Utterance>
     {
+      typedef const Utterance& argument_type; \
+      typedef Utterance result_type; \
+
       FieldValueExpander(const Collection::utterance_index_type& inIndex);
       Utterance operator () (const Utterance& inUtterance) const;
       
@@ -534,13 +536,16 @@ namespace std {
   
 #define HASH_AND_EQUAL_TO(C) \
 template <> \
-struct hash<C> \
-: public unary_function<C, std::size_t> { \
+struct hash<C> { \
+typedef C argument_type; \
+typedef std::size_t result_type; \
 std::size_t operator () (C const& x) const { return x.hash(); } \
 }; \
 template <> \
-struct equal_to<C> \
-: public binary_function<C, C, bool> { \
+struct equal_to<C> { \
+typedef C first_argument_type; \
+typedef C second_argument_type; \
+typedef bool result_type; \
 bool operator () (const C& x, const C& y) const \
 { return x.equal_to(y); } \
 };

@@ -471,7 +471,10 @@ if (exception) this->handleException(exception, CTX)
 
 
 namespace std {
-	template <> struct hash<jerome::javascript::ContextGroup> : public std::unary_function<jerome::javascript::ContextGroup, std::size_t> {
+	template <> struct hash<jerome::javascript::ContextGroup> {
+    typedef jerome::javascript::ContextGroup argument_type;
+    typedef std::size_t result_type;
+
 		size_t operator()(jerome::javascript::ContextGroup __v) const 
 		{ return hash<JSContextGroupRef>()((JSContextGroupRef)__v); }
 	};

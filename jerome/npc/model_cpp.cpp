@@ -19,9 +19,12 @@
 //  limitations under the License.
 //
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/random_access_index.hpp>
 #include <boost/multi_index/hashed_index.hpp>
+#pragma clang diagnostic pop
 
 #include <jerome/npc/detail/model_impl.hpp>
 #include <jerome/npc/model_cpp.hpp>

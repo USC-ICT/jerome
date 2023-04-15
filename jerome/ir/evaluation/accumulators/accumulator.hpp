@@ -40,6 +40,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wdocumentation"
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 // --------------------------------------------------------------
 
 //#include <boost/accumulators/accumulators_fwd.hpp>

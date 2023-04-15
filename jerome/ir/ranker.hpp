@@ -58,14 +58,13 @@ namespace jerome {  namespace ir {
 		 */
 		
 		template <typename Q, typename D>
-		struct Ranker : public std::unary_function<Q, std::vector<RankedList<D>>>
+		struct Ranker
 		{
-			typedef std::unary_function<Q, std::vector<RankedList<D>>>	parent_type;
 			typedef Q											query_type;
 			typedef D											document_type;
-			typedef RankedList<document_type>	ranked_list_type;
-			typedef typename parent_type::argument_type			argument_type;
-			typedef typename parent_type::result_type			result_type;
+			typedef RankedList<document_type>	  ranked_list_type;
+			typedef Q			                      argument_type;
+			typedef std::vector<RankedList<D>>  result_type;
 		};
 		
 #define JEROME_INTERNAL_QUERY_RANKER_TYPES(t) \

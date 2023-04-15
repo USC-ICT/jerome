@@ -74,10 +74,10 @@ namespace jerome {
   using StringMap = std::unordered_map<String, V>;
 
   template <typename Iter>
-  struct KeyGetter
-    : std::unary_function<typename Iter::value_type,
-      typename Iter::value_type::first_type>
-  {
+  struct KeyGetter {
+    typedef typename Iter::value_type argument_type;
+    typedef typename Iter::value_type::first_type result_type;
+
     const typename Iter::value_type::first_type& operator () (
       const typename Iter::value_type& p) const
     {
@@ -92,9 +92,9 @@ namespace jerome {
   struct ReferenceClass {};
 
   template <typename T>
-  struct Identity
-    : std::unary_function<const T&, const T&>
-  {
+  struct Identity {
+    typedef const T& argument_type;
+    typedef const T& result_type;
     const T& operator () (const T& v) const
     {
       return v;

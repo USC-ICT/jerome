@@ -29,10 +29,10 @@ namespace jerome {
 		namespace evaluation {
 
       template <class DSCollector>
-      using EvaluatorObjectiveFunction = std::unary_function<
-        const jerome::math::parameters::value_vector&,
-        typename DSCollector::result_type
-        >;
+      struct EvaluatorObjectiveFunction {
+        typedef const jerome::math::parameters::value_vector& argument_type;
+        typedef typename DSCollector::result_type result_type;
+      };
 
 		}
 	}

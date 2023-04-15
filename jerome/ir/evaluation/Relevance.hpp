@@ -26,9 +26,10 @@ namespace jerome {
   namespace ir {
     namespace evaluation {
       template <typename D>
-      struct Relevance
-        : std::unary_function<D, bool>
-      {
+      struct Relevance {
+        typedef D argument_type;
+        typedef bool result_type;
+
         typedef Set<D> RelevantSet;
         typedef Relevance<D> this_type;
 
