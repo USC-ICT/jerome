@@ -21,7 +21,11 @@
 //
 
 #include <iostream>
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdocumentation"
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/range/adaptors.hpp>
+#pragma clang diagnostic pop
 
 #include "ClassifierCommand.hpp"
 

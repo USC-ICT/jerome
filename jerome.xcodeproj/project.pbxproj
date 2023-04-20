@@ -1912,6 +1912,7 @@
 		};
 		627818CD1CC834FD00C344E4 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -2372,6 +2373,7 @@
 			baseConfigurationReference = 62D0F52022C02F5800BB44D1 /* 3rdParty.xcconfig */;
 			buildSettings = {
 				DEVELOPMENT_TEAM = 4RX84Q9D57;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
 			};
@@ -2591,6 +2593,7 @@
 			baseConfigurationReference = 62D0F52022C02F5800BB44D1 /* 3rdParty.xcconfig */;
 			buildSettings = {
 				DEVELOPMENT_TEAM = 4RX84Q9D57;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
 			};
@@ -2601,6 +2604,7 @@
 			baseConfigurationReference = 62D0F52022C02F5800BB44D1 /* 3rdParty.xcconfig */;
 			buildSettings = {
 				DEVELOPMENT_TEAM = 4RX84Q9D57;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
 			};

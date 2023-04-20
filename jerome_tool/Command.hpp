@@ -27,6 +27,7 @@
 #include <jerome/types.hpp>
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wcomma"
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/program_options.hpp>
 #pragma clang diagnostic pop
 
