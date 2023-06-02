@@ -8,7 +8,6 @@
 
 SDKROOT = macosx
 // this is what boost is built for
-MACOSX_DEPLOYMENT_TARGET = 10.13
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @loader_path/../Frameworks
 COMBINE_HIDPI_IMAGES = YES
 

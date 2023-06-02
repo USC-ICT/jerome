@@ -20,7 +20,7 @@
 //  limitations under the License.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 //! Project version number for Jerome.
 FOUNDATION_EXPORT double JeromeVersionNumber;
@@ -30,4 +30,3 @@ FOUNDATION_EXPORT const unsigned char JeromeVersionString[];
 
 #import <Jerome/ALPlatform.h>
 #import <Jerome/ALEngine.h>
-
