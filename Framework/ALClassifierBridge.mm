@@ -126,6 +126,7 @@ struct membuf : std::streambuf
     if (result) {
       self = nil;
     }
+    self.platform.setUsingLookupTable(true);
   }
   return self;
 }

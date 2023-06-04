@@ -204,7 +204,7 @@ namespace jerome { namespace ir { namespace rm {
 		
 		void accept(SetValue& ioVisitor) {
 			visit(ioVisitor, *this);
-			clearCache(); // not thread safe
+			clearCache();
 		}
 
 //		std::size_t countOfDocuments() const { return document().model().countOfDocuments(); }
@@ -224,22 +224,16 @@ namespace jerome { namespace ir { namespace rm {
 	protected:
 		
 		void clearCache() {
+      std::lock_guard<std::mutex> lock(mAffinityMatrixMutex);
 			mAffinityMatrix = jerome::shared_ptr<FastMatrix>();
 		}
 		
 		FastMatrix	documentWeight(const WeightMatrix& inQueryModel) {
+      std::lock_guard<std::mutex> lock(mAffinityMatrixMutex);
 			if (nullptr == mAffinityMatrix.get()) {
-#ifdef VIENNACL_WITH_OPENCL
-				WeightMatrix	tmp = documentWeightings().computeAffinity(model().documentWeightingContext());
-				mAffinityMatrix = jerome::shared_ptr<FastMatrix>(new FastMatrix(tmp.size1(), tmp.size2()));
-				viennacl::copy(tmp, *mAffinityMatrix);
-#else
-				auto x = std::make_shared<FastMatrix>(
-            document().weightings().computeAffinity(
-              model().documentWeightingContext()));
+        auto x = this->makeAffinityMatrix();
 				mAffinityMatrix = x;
 				return *x;
-#endif
 			}
 			return *mAffinityMatrix;
 		}
@@ -301,6 +295,7 @@ namespace jerome { namespace ir { namespace rm {
 		Q	mQuery;
 		D	mDocument;
 		jerome::shared_ptr<FastMatrix>	mAffinityMatrix;
+    mutable std::mutex mAffinityMatrixMutex;
 				
 		RM& model() { return *static_cast<RM*>(this); }
 		const RM& model() const { return *static_cast<const RM*>(this); }
@@ -310,6 +305,19 @@ namespace jerome { namespace ir { namespace rm {
 			visitable.document().weightings().accept(visitor);
 			visitable.query().weightings().accept(visitor);
 		}
+
+    jerome::shared_ptr<FastMatrix> makeAffinityMatrix() {
+#ifdef VIENNACL_WITH_OPENCL
+      WeightMatrix  tmp = documentWeightings().computeAffinity(model().documentWeightingContext());
+      auto matrix = jerome::shared_ptr<FastMatrix>(new FastMatrix(tmp.size1(), tmp.size2()));
+      viennacl::copy(tmp, *matrix);
+      return matrix;
+#else
+      return std::make_shared<FastMatrix>(
+          document().weightings().computeAffinity(model().documentWeightingContext()));
+#endif
+    }
+
 	};
 
 	
