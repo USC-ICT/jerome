@@ -1,9 +1,8 @@
 //
-//  Jerome.h
-//  Jerome
+//  UtteranceIdentifier.swift
 //
-//  Created by Anton Leuski on 4/20/16.
-//  Copyright © 2016 Anton Leuski & ICT/USC. All rights reserved.
+//  Created by Anton Leuski on 6/3/23.
+//  Copyright © 2023 Anton Leuski & ICT/USC. All rights reserved.
 //
 //  This file is part of Jerome.
 //
@@ -20,12 +19,14 @@
 //  limitations under the License.
 //
 
-#import <Foundation/Foundation.h>
+import Foundation
 
-//! Project version number for Jerome.
-FOUNDATION_EXPORT double JeromeVersionNumber;
-
-//! Project version string for Jerome.
-FOUNDATION_EXPORT const unsigned char JeromeVersionString[];
-
-#import <Jerome/ALUtterance.h>
+public struct UtteranceIdentifier: RawRepresentable,
+                                   Codable, Sendable,
+                                   Hashable
+{
+  public let rawValue: String
+  public init(rawValue: String) {
+    self.rawValue = rawValue
+  }
+}

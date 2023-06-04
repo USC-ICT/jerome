@@ -26,6 +26,17 @@
 		6200F73E1B84772E00CA121E /* ModelReaderXML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6200F73B1B84772E00CA121E /* ModelReaderXML.cpp */; };
 		620346751D8C9996008C7608 /* parsing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620346731D8C9996008C7608 /* parsing.cpp */; };
 		6207662F2A2A90B800112A3D /* libxslt.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CA48201BB087A900A2AA7B /* libxslt.tbd */; };
+		6207664E2A2BB60A00112A3D /* ALClassifierBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 6207664C2A2BB60A00112A3D /* ALClassifierBridge.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		6207664F2A2BB60A00112A3D /* ALClassifierBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6207664D2A2BB60A00112A3D /* ALClassifierBridge.mm */; };
+		6207667B2A2C108C00112A3D /* EngineAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620766772A2C108C00112A3D /* EngineAdapter.swift */; };
+		6207667C2A2C108C00112A3D /* Classifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620766782A2C108C00112A3D /* Classifier.swift */; };
+		6207667D2A2C108C00112A3D /* DialogueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620766792A2C108C00112A3D /* DialogueManager.swift */; };
+		6207667E2A2C108C00112A3D /* ScionPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6207667A2A2C108C00112A3D /* ScionPlatform.swift */; };
+		620766802A2C10FF00112A3D /* UtteranceIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6207667F2A2C10FF00112A3D /* UtteranceIdentifier.swift */; };
+		6207668D2A2C16E800112A3D /* ALUtterance.h in Headers */ = {isa = PBXBuildFile; fileRef = 6207668B2A2C16E800112A3D /* ALUtterance.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6207668E2A2C16E800112A3D /* ALUtterance.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6207668C2A2C16E800112A3D /* ALUtterance.mm */; };
+		620766A72A2C20A000112A3D /* ObjcExceptionBridging in Frameworks */ = {isa = PBXBuildFile; productRef = 620766A62A2C20A000112A3D /* ObjcExceptionBridging */; };
+		620766A92A2C20A000112A3D /* XCGLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 620766A82A2C20A000112A3D /* XCGLogger */; };
 		62092D5D16BB22E5003001AC /* scion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62092D5A16BB22E5003001AC /* scion.cpp */; };
 		6209AE251D7E6EEA00697B76 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62BEF617153B4BF1009A9151 /* CoreFoundation.framework */; };
 		6209AE271D7E6EEF00697B76 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62262156198C9B6800A0AA4E /* JavaScriptCore.framework */; };
@@ -73,18 +84,9 @@
 		62B09AD31CECD18200A031CB /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62B09AD21CECD18200A031CB /* main.cpp */; };
 		62B09ADA1CECD1BA00A031CB /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62FA58C31CC99E1600641E2C /* libxml2.2.tbd */; };
 		62B316C51D0F7B1100D2E4E4 /* Jerome.h in Headers */ = {isa = PBXBuildFile; fileRef = 62B316C41D0F7B1100D2E4E4 /* Jerome.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		62B316DB1D0F7B4A00D2E4E4 /* ALEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 62EAF8091CE3ABAF00A1BCA9 /* ALEngine.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		62B316DC1D0F7B4A00D2E4E4 /* ALEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 62EAF80A1CE3ABAF00A1BCA9 /* ALEngine.mm */; };
-		62B316DD1D0F7B4A00D2E4E4 /* ALPlatform.h in Headers */ = {isa = PBXBuildFile; fileRef = 627818BE1CC8322700C344E4 /* ALPlatform.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		62B316DE1D0F7B4A00D2E4E4 /* ALPlatform.mm in Sources */ = {isa = PBXBuildFile; fileRef = 627818BF1CC8322700C344E4 /* ALPlatform.mm */; };
 		62B316E01D0F7B4A00D2E4E4 /* Macros.h in Headers */ = {isa = PBXBuildFile; fileRef = 62F5F9001CE4555900EECA12 /* Macros.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		62B316E11D0F7B4A00D2E4E4 /* model_private.h in Headers */ = {isa = PBXBuildFile; fileRef = 62EAF8131CE3AF6700A1BCA9 /* model_private.h */; };
-		62B316E21D0F7B4A00D2E4E4 /* model.h in Headers */ = {isa = PBXBuildFile; fileRef = 62EAF80F1CE3AE1600A1BCA9 /* model.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		62B316E31D0F7B4A00D2E4E4 /* model.mm in Sources */ = {isa = PBXBuildFile; fileRef = 62EAF8101CE3AE1600A1BCA9 /* model.mm */; };
 		62B316E41D0F7B4A00D2E4E4 /* ObjectiveC++.h in Headers */ = {isa = PBXBuildFile; fileRef = 627818C01CC8322700C344E4 /* ObjectiveC++.h */; };
 		62B316E51D0F7B4A00D2E4E4 /* ObjectiveC++.mm in Sources */ = {isa = PBXBuildFile; fileRef = 627818C11CC8322700C344E4 /* ObjectiveC++.mm */; };
-		62B316E61D0F7B4A00D2E4E4 /* Scion.h in Headers */ = {isa = PBXBuildFile; fileRef = 62F5F8EE1CE304BE00EECA12 /* Scion.h */; };
-		62B316E71D0F7B4A00D2E4E4 /* Scion.m in Sources */ = {isa = PBXBuildFile; fileRef = 62F5F8EF1CE304BE00EECA12 /* Scion.m */; };
 		62B316E91D0F7CD200D2E4E4 /* libxml2.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62B316E81D0F7CD100D2E4E4 /* libxml2.2.tbd */; };
 		62B316ED1D0F7D0400D2E4E4 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62B316EC1D0F7D0400D2E4E4 /* JavaScriptCore.framework */; };
 		62B316F31D0F8B5B00D2E4E4 /* string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62AC3BBC1BBC94C80067C540 /* string.cpp */; };
@@ -242,6 +244,17 @@
 		620663F519A506F200FEC1C5 /* abstract_value.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = abstract_value.hpp; sourceTree = "<group>"; };
 		6206DD261CB5D422003CD514 /* parsing_std.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = parsing_std.cpp; sourceTree = "<group>"; };
 		6206DD271CB5D422003CD514 /* parsing_std.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = parsing_std.hpp; sourceTree = "<group>"; };
+		6207664C2A2BB60A00112A3D /* ALClassifierBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ALClassifierBridge.h; sourceTree = "<group>"; };
+		6207664D2A2BB60A00112A3D /* ALClassifierBridge.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ALClassifierBridge.mm; sourceTree = "<group>"; };
+		620766772A2C108C00112A3D /* EngineAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EngineAdapter.swift; sourceTree = "<group>"; };
+		620766782A2C108C00112A3D /* Classifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Classifier.swift; sourceTree = "<group>"; };
+		620766792A2C108C00112A3D /* DialogueManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DialogueManager.swift; sourceTree = "<group>"; };
+		6207667A2A2C108C00112A3D /* ScionPlatform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScionPlatform.swift; sourceTree = "<group>"; };
+		6207667F2A2C10FF00112A3D /* UtteranceIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtteranceIdentifier.swift; sourceTree = "<group>"; };
+		6207668B2A2C16E800112A3D /* ALUtterance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ALUtterance.h; sourceTree = "<group>"; };
+		6207668C2A2C16E800112A3D /* ALUtterance.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ALUtterance.mm; sourceTree = "<group>"; };
+		6207668F2A2C17DA00112A3D /* ALUtterance.private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ALUtterance.private.h; sourceTree = "<group>"; };
+		620766AA2A2C23A000112A3D /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		62092D5A16BB22E5003001AC /* scion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scion.cpp; sourceTree = "<group>"; };
 		62092D5B16BB22E5003001AC /* scion.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scion.hpp; sourceTree = "<group>"; };
 		62092D5E16BBBD67003001AC /* startup.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = startup.js; sourceTree = "<group>"; };
@@ -353,8 +366,6 @@
 		6277C3CC1536105000F8C7B0 /* rm.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = rm.hpp; sourceTree = "<group>"; };
 		6277C3CF1536109300F8C7B0 /* weighting.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = weighting.hpp; sourceTree = "<group>"; };
 		6277C3D51536129C00F8C7B0 /* ranker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ranker.hpp; sourceTree = "<group>"; };
-		627818BE1CC8322700C344E4 /* ALPlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALPlatform.h; sourceTree = "<group>"; };
-		627818BF1CC8322700C344E4 /* ALPlatform.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ALPlatform.mm; sourceTree = "<group>"; };
 		627818C01CC8322700C344E4 /* ObjectiveC++.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ObjectiveC++.h"; sourceTree = "<group>"; };
 		627818C11CC8322700C344E4 /* ObjectiveC++.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "ObjectiveC++.mm"; sourceTree = "<group>"; };
 		627818CA1CC8341600C344E4 /* copy_headers.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = copy_headers.sh; sourceTree = "<group>"; };
@@ -509,11 +520,6 @@
 		62E4E3A41B5DFA9A008440CC /* platform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = platform.hpp; sourceTree = "<group>"; };
 		62E830E51B64752400847135 /* engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = engine.cpp; sourceTree = "<group>"; };
 		62E830E61B64752500847135 /* engine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = engine.hpp; sourceTree = "<group>"; };
-		62EAF8091CE3ABAF00A1BCA9 /* ALEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALEngine.h; sourceTree = "<group>"; };
-		62EAF80A1CE3ABAF00A1BCA9 /* ALEngine.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ALEngine.mm; sourceTree = "<group>"; };
-		62EAF80F1CE3AE1600A1BCA9 /* model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = model.h; sourceTree = "<group>"; };
-		62EAF8101CE3AE1600A1BCA9 /* model.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = model.mm; sourceTree = "<group>"; };
-		62EAF8131CE3AF6700A1BCA9 /* model_private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = model_private.h; sourceTree = "<group>"; };
 		62EAF81E1CE6AD7900A1BCA9 /* matrix_boost.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = matrix_boost.hpp; sourceTree = "<group>"; };
 		62EAF8211CE6AD8F00A1BCA9 /* matrix_eigen.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = matrix_eigen.hpp; sourceTree = "<group>"; };
 		62F21D9522B21FCE00FA7770 /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_program_options.a; path = 3rdParty/build/macosx/lib/libboost_program_options.a; sourceTree = SOURCE_ROOT; };
@@ -525,8 +531,6 @@
 		62F5F8E01CE2C0CE00EECA12 /* npc_model.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = npc_model.hpp; sourceTree = "<group>"; };
 		62F5F8E71CE2C8D500EECA12 /* scripts.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scripts.cpp; sourceTree = "<group>"; };
 		62F5F8E81CE2C8D500EECA12 /* scripts.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scripts.hpp; sourceTree = "<group>"; };
-		62F5F8EE1CE304BE00EECA12 /* Scion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scion.h; sourceTree = "<group>"; };
-		62F5F8EF1CE304BE00EECA12 /* Scion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Scion.m; sourceTree = "<group>"; };
 		62F5F9001CE4555900EECA12 /* Macros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
 		62F5F9041CE6473500EECA12 /* matrix_eigen_sparse_vector_plugin.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = matrix_eigen_sparse_vector_plugin.hpp; sourceTree = "<group>"; };
 		62F9D54E231E1B1D006BEFAE /* libJerome4Java.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libJerome4Java.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -586,8 +590,10 @@
 			files = (
 				6207662F2A2A90B800112A3D /* libxslt.tbd in Frameworks */,
 				62EBE0581D30119800CC87F8 /* libkstem.a in Frameworks */,
+				620766A72A2C20A000112A3D /* ObjcExceptionBridging in Frameworks */,
 				62B316ED1D0F7D0400D2E4E4 /* JavaScriptCore.framework in Frameworks */,
 				62B316E91D0F7CD200D2E4E4 /* libxml2.2.tbd in Frameworks */,
+				620766A92A2C20A000112A3D /* XCGLogger in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -924,20 +930,22 @@
 		627818B71CC831C300C344E4 /* Jerome */ = {
 			isa = PBXGroup;
 			children = (
-				62EAF8091CE3ABAF00A1BCA9 /* ALEngine.h */,
-				627818BE1CC8322700C344E4 /* ALPlatform.h */,
+				6207664C2A2BB60A00112A3D /* ALClassifierBridge.h */,
+				6207668B2A2C16E800112A3D /* ALUtterance.h */,
+				6207668F2A2C17DA00112A3D /* ALUtterance.private.h */,
 				62B316C41D0F7B1100D2E4E4 /* Jerome.h */,
 				62F5F9001CE4555900EECA12 /* Macros.h */,
-				62EAF8131CE3AF6700A1BCA9 /* model_private.h */,
-				62EAF80F1CE3AE1600A1BCA9 /* model.h */,
 				627818C01CC8322700C344E4 /* ObjectiveC++.h */,
-				62F5F8EE1CE304BE00EECA12 /* Scion.h */,
-				62F5F8EF1CE304BE00EECA12 /* Scion.m */,
-				62EAF80A1CE3ABAF00A1BCA9 /* ALEngine.mm */,
-				627818BF1CC8322700C344E4 /* ALPlatform.mm */,
-				62EAF8101CE3AE1600A1BCA9 /* model.mm */,
+				6207664D2A2BB60A00112A3D /* ALClassifierBridge.mm */,
+				6207668C2A2C16E800112A3D /* ALUtterance.mm */,
 				627818C11CC8322700C344E4 /* ObjectiveC++.mm */,
 				62B316C61D0F7B1100D2E4E4 /* Info.plist */,
+				620766782A2C108C00112A3D /* Classifier.swift */,
+				620766792A2C108C00112A3D /* DialogueManager.swift */,
+				620766772A2C108C00112A3D /* EngineAdapter.swift */,
+				6207667A2A2C108C00112A3D /* ScionPlatform.swift */,
+				6207667F2A2C10FF00112A3D /* UtteranceIdentifier.swift */,
+				620766AA2A2C23A000112A3D /* module.modulemap */,
 			);
 			name = Jerome;
 			path = Framework;
@@ -1340,13 +1348,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				62B316E41D0F7B4A00D2E4E4 /* ObjectiveC++.h in Headers */,
-				62B316E11D0F7B4A00D2E4E4 /* model_private.h in Headers */,
-				62B316E21D0F7B4A00D2E4E4 /* model.h in Headers */,
 				62B316C51D0F7B1100D2E4E4 /* Jerome.h in Headers */,
 				62B316E01D0F7B4A00D2E4E4 /* Macros.h in Headers */,
-				62B316E61D0F7B4A00D2E4E4 /* Scion.h in Headers */,
-				62B316DB1D0F7B4A00D2E4E4 /* ALEngine.h in Headers */,
-				62B316DD1D0F7B4A00D2E4E4 /* ALPlatform.h in Headers */,
+				6207664E2A2BB60A00112A3D /* ALClassifierBridge.h in Headers */,
+				6207668D2A2C16E800112A3D /* ALUtterance.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1414,6 +1419,10 @@
 				62B316DA1D0F7B2000D2E4E4 /* PBXTargetDependency */,
 			);
 			name = Jerome;
+			packageProductDependencies = (
+				620766A62A2C20A000112A3D /* ObjcExceptionBridging */,
+				620766A82A2C20A000112A3D /* XCGLogger */,
+			);
 			productName = Jerome.ios;
 			productReference = 62B316C21D0F7B1100D2E4E4 /* Jerome.framework */;
 			productType = "com.apple.product-type.framework";
@@ -1544,6 +1553,9 @@
 				Base,
 			);
 			mainGroup = 62A2526C14365A860008E65F;
+			packageReferences = (
+				620766A52A2C20A000112A3D /* XCRemoteSwiftPackageReference "XCGLogger" */,
+			);
 			productRefGroup = 62A2527814365A870008E65F /* Products */;
 			projectDirPath = "";
 			projectReferences = (
@@ -1689,10 +1701,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				62B316E31D0F7B4A00D2E4E4 /* model.mm in Sources */,
-				62B316E71D0F7B4A00D2E4E4 /* Scion.m in Sources */,
-				62B316DC1D0F7B4A00D2E4E4 /* ALEngine.mm in Sources */,
-				62B316DE1D0F7B4A00D2E4E4 /* ALPlatform.mm in Sources */,
+				6207668E2A2C16E800112A3D /* ALUtterance.mm in Sources */,
+				6207667C2A2C108C00112A3D /* Classifier.swift in Sources */,
+				6207667E2A2C108C00112A3D /* ScionPlatform.swift in Sources */,
+				620766802A2C10FF00112A3D /* UtteranceIdentifier.swift in Sources */,
+				6207667D2A2C108C00112A3D /* DialogueManager.swift in Sources */,
+				6207667B2A2C108C00112A3D /* EngineAdapter.swift in Sources */,
+				6207664F2A2BB60A00112A3D /* ALClassifierBridge.mm in Sources */,
 				62B316E51D0F7B4A00D2E4E4 /* ObjectiveC++.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1902,6 +1917,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
 				PRODUCT_NAME = Jerome;
 				SUPPORTS_MACCATALYST = YES;
+				SWIFT_INCLUDE_PATHS = "${PROJECT_DIR}/Framework";
 			};
 			name = "Release-beta";
 		};
@@ -2153,6 +2169,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
 				PRODUCT_NAME = Jerome;
 				SUPPORTS_MACCATALYST = YES;
+				SWIFT_INCLUDE_PATHS = "${PROJECT_DIR}/Framework";
 			};
 			name = Debug;
 		};
@@ -2172,6 +2189,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = edu.usc.ict.Jerome;
 				PRODUCT_NAME = Jerome;
 				SUPPORTS_MACCATALYST = YES;
+				SWIFT_INCLUDE_PATHS = "${PROJECT_DIR}/Framework";
 			};
 			name = Release;
 		};
@@ -2507,6 +2525,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		620766A52A2C20A000112A3D /* XCRemoteSwiftPackageReference "XCGLogger" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/DaveWoodCom/XCGLogger";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		620766A62A2C20A000112A3D /* ObjcExceptionBridging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 620766A52A2C20A000112A3D /* XCRemoteSwiftPackageReference "XCGLogger" */;
+			productName = ObjcExceptionBridging;
+		};
+		620766A82A2C20A000112A3D /* XCGLogger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 620766A52A2C20A000112A3D /* XCRemoteSwiftPackageReference "XCGLogger" */;
+			productName = XCGLogger;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 62A2526E14365A860008E65F /* Project object */;
 }

@@ -1,9 +1,8 @@
 //
-//  model.m
-//  jerome
+//  ALUtterance.m
 //
-//  Created by Anton Leuski on 5/11/16.
-//  Copyright © 2016 Anton Leuski & ICT/USC. All rights reserved.
+//  Created by Anton Leuski on 6/3/23.
+//  Copyright © 2023 Anton Leuski & ICT/USC. All rights reserved.
 //
 //  This file is part of Jerome.
 //
@@ -22,17 +21,13 @@
 
 #include <jerome/npc/model.hpp>
 #import "ObjectiveC++.h"
-#import "model_private.h"
 
-ALPlatformEventName const ALPlatformEventNameSendUtterance = @"sendUtterance";
-ALPlatformEventName const ALPlatformEventNameMachineDone = @"machineDone";
-ALPlatformEventName const ALPlatformEventNameDidTransitionToState = @"didTransitionToState";
-ALPlatformEventName const ALPlatformEventNameEndOfStream = @"endOfStream";
+#import "ALUtterance.private.h"
 
-using namespace jerome;
+using namespace jerome::npc;
 
 @interface ALUtterance ()
-@property (nonatomic, assign) npc::Utterance utterance;
+@property (nonatomic, assign) Utterance utterance;
 @property (nonatomic, copy, readonly, nonnull) NSArray* fields;
 @property (nonatomic, copy, readonly, nonnull) NSDictionary* dictionaryWithFieldValues;
 @end
@@ -48,8 +43,8 @@ using namespace jerome;
 {
   auto name = fieldName.cppString;
   return self->_utterance.has(name)
-    ? [NSString stringWithCPPString:self->_utterance.get(name)]
-    : nil;
+  ? [NSString stringWithCPPString:self->_utterance.get(name)]
+  : nil;
 }
 
 - (void)setValue:(NSString* _Nullable)fieldValue forKey:(NSString* _Nonnull)fieldName
@@ -94,47 +89,16 @@ using namespace jerome;
 
 @implementation ALUtterance (AL)
 
-+ (ALUtterance* _Nonnull)utteranceWithUtterance:(const npc::Utterance&)utterance
++ (nonnull ALUtterance*)utteranceWithUtterance:(const Utterance&)utterance
 {
   ALUtterance* utt = [ALUtterance new];
   utt.utterance = utterance;
   return utt;
 }
 
-+ (ALUtterance* _Nullable)utteranceWithOptionalUtterance:(const optional<npc::Utterance>&)utterance
++ (nullable ALUtterance*)utteranceWithOptionalUtterance:(const jerome::optional<Utterance>&)utterance
 {
   return utterance ? [self utteranceWithUtterance:*utterance] : nil;
 }
 
-@end
-
-@implementation ALPlatformEvent
-+ (ALPlatformEvent*)eventWithName:(ALPlatformEventName)inName data:(NSDictionary*)inData
-{
-  ALPlatformEvent* event = [ALPlatformEvent new];
-  event.name = inName;
-  event.data = inData;
-  return event;
-}
-
-+ (ALPlatformEvent*)eventWithName:(ALPlatformEventName)inName
-{
-  return [ALPlatformEvent eventWithName:inName data:[NSDictionary new]];
-}
-
-
-- (NSString*)description
-{
-  return [NSString stringWithFormat:@"PlatformEvent{name=\"%@\", type=\"%@\", "
-          "target=\"%@\", origin=\"%@\", data=%@}", self.name, self.type,
-          self.target, self.origin, self.data];
-}
-@end
-
-@implementation ALDialogueManagerMetadata
-- (NSString*)description
-{
-  return [NSString stringWithFormat:@"ALDialogueManagerMetadata{name=\"%@\", hastStages=%d}",
-          self.name, (int)self.hasStages];
-}
 @end

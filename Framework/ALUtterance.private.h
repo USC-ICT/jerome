@@ -1,9 +1,8 @@
 //
-//  model_private.h
-//  jerome
+//  ALUtterance.private.h
 //
-//  Created by Anton Leuski on 5/11/16.
-//  Copyright © 2016 Anton Leuski & ICT/USC. All rights reserved.
+//  Created by Anton Leuski on 6/3/23.
+//  Copyright © 2023 Anton Leuski & ICT/USC. All rights reserved.
 //
 //  This file is part of Jerome.
 //
@@ -20,9 +19,9 @@
 //  limitations under the License.
 //
 
-#import "model.h"
+#import "ALUtterance.h"
 
 @interface ALUtterance (AL)
-+ (ALUtterance* _Nonnull)utteranceWithUtterance:(const jerome::npc::Utterance&)utterance;
-+ (ALUtterance* _Nullable)utteranceWithOptionalUtterance:(const jerome::optional<jerome::npc::Utterance>&)utterance;
++ (nonnull ALUtterance*)utteranceWithUtterance:(const jerome::npc::Utterance&)utterance;
++ (nullable ALUtterance*)utteranceWithOptionalUtterance:(const jerome::optional<jerome::npc::Utterance>&)utterance;
 @end

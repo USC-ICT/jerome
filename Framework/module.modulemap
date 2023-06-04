@@ -1,0 +1,4 @@
+module Jerome_Private {
+  header "ALClassifierBridge.h"
+  export *
+}
