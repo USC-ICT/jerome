@@ -26,7 +26,10 @@ import Jerome_Private
 
 public typealias Utterance = ALUtterance
 
-final public class Classifier {
+// classifier bridge is synchronized.
+// logger is fine as it does not store state (much)
+final public class Classifier: @unchecked Sendable // valid Sendable
+{
   private let bridge: ALClassifierBridge
   public let logger: XCGLogger
 
