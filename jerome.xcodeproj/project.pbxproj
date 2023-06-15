@@ -26,7 +26,7 @@
 		6200F73E1B84772E00CA121E /* ModelReaderXML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6200F73B1B84772E00CA121E /* ModelReaderXML.cpp */; };
 		620346751D8C9996008C7608 /* parsing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620346731D8C9996008C7608 /* parsing.cpp */; };
 		6207662F2A2A90B800112A3D /* libxslt.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CA48201BB087A900A2AA7B /* libxslt.tbd */; };
-		6207664E2A2BB60A00112A3D /* ALClassifierBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 6207664C2A2BB60A00112A3D /* ALClassifierBridge.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		6207664E2A2BB60A00112A3D /* ALClassifierBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 6207664C2A2BB60A00112A3D /* ALClassifierBridge.h */; };
 		6207664F2A2BB60A00112A3D /* ALClassifierBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6207664D2A2BB60A00112A3D /* ALClassifierBridge.mm */; };
 		6207667B2A2C108C00112A3D /* EngineAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620766772A2C108C00112A3D /* EngineAdapter.swift */; };
 		6207667C2A2C108C00112A3D /* Classifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620766782A2C108C00112A3D /* Classifier.swift */; };
