@@ -25,7 +25,10 @@
 #include <iostream>
 
 #include <exception>
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Weverything"
 #include <boost/variant.hpp>
+#pragma clang diagnostic pop
 #include <jerome/type/macros.hpp>
 #include <jerome/type/string.hpp>
 

@@ -26,9 +26,12 @@
 #include <vector>
 #include <random>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Weverything"
 #include <boost/range/algorithm/random_shuffle.hpp>
 #include <boost/range/adaptor/transformed.hpp>
 #include <boost/iterator/transform_iterator.hpp>
+#pragma clang diagnostic pop
 
 #include <jerome/types.hpp>
 

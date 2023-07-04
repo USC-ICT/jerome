@@ -20,7 +20,7 @@
 //
 
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdocumentation"
+#pragma clang diagnostic ignored "-Weverything"
 #pragma clang diagnostic ignored "-Wcomma"
 #pragma clang diagnostic ignored "-Wshorten-64-to-32"
 #include <boost/spirit/include/qi.hpp>

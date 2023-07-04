@@ -8,7 +8,6 @@
 
 SDKROOT = iphoneos
 // this is what boost is built for
-TARGETED_DEVICE_FAMILY = 1,2,6
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @loader_path/Frameworks
 ENABLE_BITCODE = NO
 

@@ -19,8 +19,11 @@
 //  limitations under the License.
 //
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Weverything"
 #include <boost/algorithm/string/join.hpp>
 #include <boost/range/adaptor/transformed.hpp>
+#pragma clang diagnostic pop
 
 #include <jerome/xml/writer_manip.hpp>
 #include <jerome/npc/detail/ModelIO.hpp>

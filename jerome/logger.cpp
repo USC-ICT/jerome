@@ -42,7 +42,7 @@ struct LogTarget {
     virtual std::ostream& stream() = 0;
     virtual ~Implementation() {}
     void print(const std::string& inString) {
-      std::async(std::launch::async, [=] {
+      auto discard = std::async(std::launch::async, [=] {
         std::lock_guard<std::mutex> guard(this->semaphore);
         this->stream() << inString;
       });

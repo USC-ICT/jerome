@@ -5,16 +5,18 @@
 
 echo "compile_nlopt ${src_dir} ${dst_dir}"
 
+: ${VISIONOS_DEPLOYMENT_TARGET:=1.0}
 : ${IPHONEOS_DEPLOYMENT_TARGET:=12.0}
 : ${MACOSX_DEPLOYMENT_TARGET:=10.13}
 : ${CLANG_CXX_LANGUAGE_STANDARD:=gnu++14}
 : ${CLANG_CXX_LIBRARY:=libc++}
 
-if [ -z "${OSX_SDKVERSION}" -o -z "${IPHONE_SDKVERSION}" ]
+if [ -z "${OSX_SDKVERSION}" -o -z "${IPHONE_SDKVERSION}" -o -z "${VISION_SDKVERSION}" ]
 then
-  : ${SDKS:=`xcodebuild -showsdks`}
-  : ${IPHONE_SDKVERSION:=`echo "${SDKS}" | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
-  : ${OSX_SDKVERSION:=`echo "${SDKS}" | grep macosx | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
+  : ${SDKS:="$(xcodebuild -showsdks | egrep '\-sdk (\w|\.)+' -o)"}
+  : ${VISION_SDKVERSION:=$(echo "${SDKS}" | grep xros     | egrep "[[:digit:]]+\.[[:digit:]]+" -o | head -n 1)}
+  : ${IPHONE_SDKVERSION:=$(echo "${SDKS}" | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | head -n 1)}
+  : ${OSX_SDKVERSION:=$(echo "${SDKS}" | grep macosx   | egrep "[[:digit:]]+\.[[:digit:]]+" -o | head -n 1)}
 fi
 
 abort()
@@ -24,20 +26,32 @@ abort()
     exit 1
 }
 
-
+echo "VISION_SDKVERSION = ${VISION_SDKVERSION}"
 echo "IPHONE_SDKVERSION = ${IPHONE_SDKVERSION}"
 echo "MACOSX_DEPLOYMENT_TARGET = ${MACOSX_DEPLOYMENT_TARGET}"
 
 : ${BUILD_UIKIT_FOR_MAC:=`echo "${IPHONE_SDKVERSION} >= 13.0" | bc`}
+: ${BUILD_VISION:=`echo "${IPHONE_SDKVERSION} >= 17.0" | bc`}
+
+base_names="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx"
 
 if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
 then
   echo "build macosx-maccatalyst on"
-  : ${PLATFORM_NAMES:="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx macosx-maccatalyst"}
+  base_names="${base_names} macosx-maccatalyst"
 else
   echo "build macosx-maccatalyst off"
-  : ${PLATFORM_NAMES:="iphoneos-iphoneos iphonesimulator-iphonesimulator macosx"}
 fi
+
+if [ ${BUILD_VISION} -eq 1 ]
+then
+  echo "build vision on"
+  base_names="${base_names} xros-xros xrsimulator-xrsimulator"
+else
+  echo "build vision off"
+fi
+
+: ${PLATFORM_NAMES:=${base_names}}
 
 found_nlopt="YES"
 for platform_name in ${PLATFORM_NAMES}
@@ -127,6 +141,19 @@ configure_and_make_fat() {
 }
 
 pushd nlopt-2.3
+
+if [ ${BUILD_VISION} -eq 1 ]
+then
+
+configure_and_make "${BASE_PREFIX}/xrsimulator-xrsimulator" "-arch arm64" \
+  "XRSimulator" ${VISION_SDKVERSION} "-target arm64-apple-xros1.0-simulator" \
+  "--host=arm-apple-darwin"
+
+configure_and_make "${BASE_PREFIX}/xros-xros" "-arch arm64" \
+  "XROS" ${VISION_SDKVERSION} "-target arm64-apple-xros1.0" \
+  "--host=arm-apple-darwin"
+
+fi
 
 if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
 then

@@ -24,9 +24,12 @@
 
 #include <random>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Weverything"
 #include <boost/range/algorithm_ext/push_back.hpp>
 #include <boost/range/adaptor/filtered.hpp>
 #include <boost/range/algorithm/find_if.hpp>
+#pragma clang diagnostic pop
 
 #include <jerome/types.hpp>
 #include <jerome/type/algorithm.hpp>

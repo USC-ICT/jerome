@@ -1,6 +1,6 @@
-diff -Naur orig/boost_1_59_0/boost/numeric/ublas/matrix.hpp patched/boost_1_59_0/boost/numeric/ublas/matrix.hpp
---- orig/boost_1_59_0/boost/numeric/ublas/matrix.hpp	2015-08-06 02:47:02.000000000 -0700
-+++ patched/boost_1_59_0/boost/numeric/ublas/matrix.hpp	2020-10-30 23:51:42.000000000 -0700
+diff --color -Naur orig/boost_1_59_0/boost/numeric/ublas/matrix.hpp patched/boost_1_59_0/boost/numeric/ublas/matrix.hpp
+--- orig/boost_1_59_0/boost/numeric/ublas/matrix.hpp	2015-08-06 02:47:02
++++ patched/boost_1_59_0/boost/numeric/ublas/matrix.hpp	2023-07-04 08:59:02
 @@ -1384,7 +1384,7 @@
  
          /*! @note "pass by value" the key idea to enable move semantics */
@@ -10,9 +10,9 @@ diff -Naur orig/boost_1_59_0/boost/numeric/ublas/matrix.hpp patched/boost_1_59_0
              assign_temporary(m);
              return *this;
          }
-diff -Naur orig/boost_1_59_0/tools/build/src/engine/build.jam patched/boost_1_59_0/tools/build/src/engine/build.jam
---- orig/boost_1_59_0/tools/build/src/engine/build.jam	2015-08-11 06:53:51.000000000 -0700
-+++ patched/boost_1_59_0/tools/build/src/engine/build.jam	2020-10-30 21:50:22.000000000 -0700
+diff --color -Naur orig/boost_1_59_0/tools/build/src/engine/build.jam patched/boost_1_59_0/tools/build/src/engine/build.jam
+--- orig/boost_1_59_0/tools/build/src/engine/build.jam	2015-08-11 06:53:51
++++ patched/boost_1_59_0/tools/build/src/engine/build.jam	2023-07-04 08:59:02
 @@ -200,7 +200,7 @@
      : -L$(--python-lib[1]) -l$(--python-lib[2]) ;
  ## MacOSX Darwin, using GCC 2.9.x, 3.x
@@ -22,9 +22,9 @@ diff -Naur orig/boost_1_59_0/tools/build/src/engine/build.jam patched/boost_1_59
      [ opt --release : -Wl,-x -O3 -finline-functions ]
      [ opt --debug : -g -O0 -fno-inline -pg ]
      [ opt --profile : -Wl,-x -O3 -finline-functions -g -pg ]
-diff -Naur orig/boost_1_59_0/tools/build/src/engine/build.sh patched/boost_1_59_0/tools/build/src/engine/build.sh
---- orig/boost_1_59_0/tools/build/src/engine/build.sh	2015-08-11 06:53:51.000000000 -0700
-+++ patched/boost_1_59_0/tools/build/src/engine/build.sh	2020-10-30 21:44:50.000000000 -0700
+diff --color -Naur orig/boost_1_59_0/tools/build/src/engine/build.sh patched/boost_1_59_0/tools/build/src/engine/build.sh
+--- orig/boost_1_59_0/tools/build/src/engine/build.sh	2015-08-11 06:53:51
++++ patched/boost_1_59_0/tools/build/src/engine/build.sh	2023-07-04 08:59:02
 @@ -142,7 +142,7 @@
      ;;
  
@@ -71,9 +71,18 @@ diff -Naur orig/boost_1_59_0/tools/build/src/engine/build.sh patched/boost_1_59_
      echo_run ./bootstrap/jam0 -f build.jam --toolset=$BOOST_JAM_TOOLSET "--toolset-root=$BOOST_JAM_TOOLSET_ROOT" "$@"
  fi
 +echo "### done" 
-diff -Naur orig/boost_1_59_0/tools/build/src/tools/builtin.jam patched/boost_1_59_0/tools/build/src/tools/builtin.jam
---- orig/boost_1_59_0/tools/build/src/tools/builtin.jam	2015-08-11 06:53:51.000000000 -0700
-+++ patched/boost_1_59_0/tools/build/src/tools/builtin.jam	2020-10-30 23:51:42.000000000 -0700
+diff --color -Naur orig/boost_1_59_0/tools/build/src/tools/builtin.jam patched/boost_1_59_0/tools/build/src/tools/builtin.jam
+--- orig/boost_1_59_0/tools/build/src/tools/builtin.jam	2015-08-11 06:53:51
++++ patched/boost_1_59_0/tools/build/src/tools/builtin.jam	2023-07-04 09:23:27
+@@ -41,7 +41,7 @@
+ 
+ 
+ .os-names = aix android bsd cygwin darwin freebsd haiku hpux iphone linux netbsd
+-    openbsd osf qnx qnxnto sgi solaris unix unixware windows
++    openbsd osf qnx qnxnto sgi solaris unix unixware windows xros
+     elf  # Not actually an OS -- used for targeting bare metal where object
+          # format is ELF.  This catches both -elf and -eabi gcc targets and well
+          # as other compilers targeting ELF. It is not clear how often we need
 @@ -304,7 +304,7 @@
  
      # Advanced RISC Machines
@@ -83,9 +92,21 @@ diff -Naur orig/boost_1_59_0/tools/build/src/tools/builtin.jam patched/boost_1_5
  
      : propagated optional ;
  
-diff -Naur orig/boost_1_59_0/tools/build/src/tools/darwin.jam patched/boost_1_59_0/tools/build/src/tools/darwin.jam
---- orig/boost_1_59_0/tools/build/src/tools/darwin.jam	2015-08-11 06:53:51.000000000 -0700
-+++ patched/boost_1_59_0/tools/build/src/tools/darwin.jam	2020-10-30 23:57:26.000000000 -0700
+diff --color -Naur orig/boost_1_59_0/tools/build/src/tools/builtin.py patched/boost_1_59_0/tools/build/src/tools/builtin.py
+--- orig/boost_1_59_0/tools/build/src/tools/builtin.py	2015-08-11 06:53:51
++++ patched/boost_1_59_0/tools/build/src/tools/builtin.py	2023-07-04 09:23:40
+@@ -84,7 +84,7 @@
+ __os_names = """
+     amiga aix bsd cygwin darwin dos emx freebsd hpux iphone linux netbsd
+     openbsd osf qnx qnxnto sgi solaris sun sunos svr4 sysv ultrix unix unixware
+-    vms windows
++    vms windows xros
+ """.split()
+ 
+ # Translates from bjam current OS to the os tags used in host-os and target-os,
+diff --color -Naur orig/boost_1_59_0/tools/build/src/tools/darwin.jam patched/boost_1_59_0/tools/build/src/tools/darwin.jam
+--- orig/boost_1_59_0/tools/build/src/tools/darwin.jam	2015-08-11 06:53:51
++++ patched/boost_1_59_0/tools/build/src/tools/darwin.jam	2023-07-04 09:35:23
 @@ -137,15 +137,15 @@
      common.handle-options darwin : $(condition) : $(command) : $(options) ;
      
@@ -110,7 +131,86 @@ diff -Naur orig/boost_1_59_0/tools/build/src/tools/darwin.jam patched/boost_1_59
      # - GCC on Darwin with -pedantic, suppress unsupported long long warning
      flags darwin.compile OPTIONS $(condition)/<warnings>all : -Wno-long-long ;
  
-@@ -433,10 +433,10 @@
+@@ -216,6 +216,10 @@
+     {
+         switch $(version[1])
+         {
++            case xr* :
++            {
++                return $(version[1])-$(version[2-]:J=.) ;
++            }
+             case iphone* :
+             {
+                 return $(version[1])-$(version[2-]:J=.) ;
+@@ -258,6 +262,31 @@
+         # Then device variation options.
+         switch $(version[1])
+         {
++#                flags darwin.compile OPTIONS <macosx-version-min>$(version-feature)
++#                    : -D__IPHONE_OS_VERSION_MIN_REQUIRED=$(N) ;
++#                flags darwin.link OPTIONS <macosx-version-min>$(version-feature)
++#                    : -D__IPHONE_OS_VERSION_MIN_REQUIRED=$(N) ;
++            case xrsim* :
++            {
++                local N = $(version[2]) ;
++                if ! $(version[3]) { N += 00 ; }
++                else if [ regex.match (..) : $(version[3]) ] { N += $(version[3]) ; }
++                else { N += 0$(version[3]) ; }
++                if ! $(version[4]) { N += 00 ; }
++                else if [ regex.match (..) : $(version[4]) ] { N += $(version[4]) ; }
++                else { N += 0$(version[4]) ; }
++                N = $(N:J=) ;
++            }
++            
++#                flags darwin.compile OPTIONS <macosx-version-min>$(version-feature)
++#                    : -miphoneos-version-min=$(version[2-]:J=.) ;
++#                flags darwin.link OPTIONS <macosx-version-min>$(version-feature)
++#                    : -miphoneos-version-min=$(version[2-]:J=.) ;
++
++            case xr* :
++            {
++            }
++            
+             case iphonesim* :
+             {
+                 local N = $(version[2]) ;
+@@ -333,7 +362,7 @@
+ {
+     root ?= /Developer ;
+     local sdks-root = $(root)/SDKs ;
+-    local sdks = [ GLOB $(sdks-root) : MacOSX*.sdk iPhoneOS*.sdk iPhoneSimulator*.sdk ] ;
++    local sdks = [ GLOB $(sdks-root) : MacOSX*.sdk iPhoneOS*.sdk iPhoneSimulator*.sdk XROS*.sdk XRSimulator*.sdk ] ;
+     local result ;
+     for local sdk in $(sdks)
+     {
+@@ -356,6 +385,14 @@
+                 {
+                     sdk-version = iphonesim $(sdk-version) ;
+                 }
++                case xros :
++                {
++                    sdk-version = xros $(sdk-version) ;
++                }
++                case xrsimulator :
++                {
++                    sdk-version = xrsim $(sdk-version) ;
++                }
+                 case * :
+                 {
+                     sdk-version = $(sdk-version:J=-) ;
+@@ -397,6 +434,11 @@
+         {
+             support-ppc64 = ;
+         }
++
++        case xr* :
++        {
++            support-ppc64 = ;
++        }
+         
+         case * :
+         if $(osx-version) && ! [ version.version-less [ regex.split $(osx-version) \\. ] : 10 6 ]
+@@ -433,10 +475,10 @@
          {
              if $(address-model) = 32_64 {
                  options = -arch i386 -arch x86_64 ;
@@ -123,7 +223,7 @@ diff -Naur orig/boost_1_59_0/tools/build/src/tools/darwin.jam patched/boost_1_59
              }
          }        
          
-@@ -462,7 +462,7 @@
+@@ -462,7 +504,7 @@
              if $(instruction-set) {
                  options = -arch$(_)$(instruction-set) ;
              } else {
@@ -132,9 +232,9 @@ diff -Naur orig/boost_1_59_0/tools/build/src/tools/darwin.jam patched/boost_1_59
              }
          }
      }
-diff -Naur orig/boost_1_59_0/tools/build/src/tools/darwin.py patched/boost_1_59_0/tools/build/src/tools/darwin.py
---- orig/boost_1_59_0/tools/build/src/tools/darwin.py	2015-08-11 06:53:51.000000000 -0700
-+++ patched/boost_1_59_0/tools/build/src/tools/darwin.py	2020-10-30 23:57:51.000000000 -0700
+diff --color -Naur orig/boost_1_59_0/tools/build/src/tools/darwin.py patched/boost_1_59_0/tools/build/src/tools/darwin.py
+--- orig/boost_1_59_0/tools/build/src/tools/darwin.py	2015-08-11 06:53:51
++++ patched/boost_1_59_0/tools/build/src/tools/darwin.py	2023-07-04 08:59:02
 @@ -37,8 +37,8 @@
  feature.feature ('framework', [], ['free'])
  

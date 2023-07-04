@@ -25,7 +25,11 @@
 // The reason for this file is that optional will be introduced in C++14.
 // We are using boost implementation meanwhile
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Weverything"
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/optional.hpp>
+#pragma clang diagnostic pop
 
 namespace jerome {
   template <class T> using optional	= boost::optional<T>;

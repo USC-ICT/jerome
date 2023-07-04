@@ -20,6 +20,7 @@
 //
 
 #pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Weverything"
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/random_access_index.hpp>

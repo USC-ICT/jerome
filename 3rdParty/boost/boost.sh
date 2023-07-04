@@ -35,12 +35,15 @@ TARGET_DIR="$1"
 # that uses CFLocale anyway. So, having locale here was mostly for dogfooding.
 : ${BOOST_LIBS:="thread filesystem program_options system date_time"} # locale"}
 
+: ${VISIONOS_DEPLOYMENT_TARGET:=1.0}
 : ${IPHONEOS_DEPLOYMENT_TARGET:=12.0}
 : ${MACOSX_DEPLOYMENT_TARGET:=10.13}
 : ${CLANG_CXX_LANGUAGE_STANDARD:=gnu++14}
 : ${CLANG_CXX_LIBRARY:=libc++}
-: ${IPHONE_SDKVERSION:=`xcodebuild -showsdks | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
-: ${OSX_SDKVERSION:=`xcodebuild -showsdks | grep macosx | egrep "[[:digit:]]+\.[[:digit:]]+" -o | tail -1`}
+: ${SDKS:="$(xcodebuild -showsdks | egrep '\-sdk (\w|\.)+' -o)"}
+: ${VISION_SDKVERSION:=$(echo "${SDKS}" | grep xros     | egrep "[[:digit:]]+\.[[:digit:]]+" -o | head -n 1)}
+: ${IPHONE_SDKVERSION:=$(echo "${SDKS}" | grep iphoneos | egrep "[[:digit:]]+\.[[:digit:]]+" -o | head -n 1)}
+: ${OSX_SDKVERSION:=$(echo "${SDKS}" | grep macosx   | egrep "[[:digit:]]+\.[[:digit:]]+" -o | head -n 1)}
 
 echo "IPHONE_SDKVERSION = ${IPHONE_SDKVERSION}"
 echo "MACOSX_DEPLOYMENT_TARGET = ${MACOSX_DEPLOYMENT_TARGET}"
@@ -56,10 +59,11 @@ if [ `echo "${IPHONEOS_DEPLOYMENT_TARGET} >= 13.0" | bc` -eq 1 ]
 then
   UIKIT_IOS_DEPLOYMENT_TARGET="${IPHONEOS_DEPLOYMENT_TARGET}"
 else
-  UIKIT_IOS_DEPLOYMENT_TARGET="13.0"
+  UIKIT_IOS_DEPLOYMENT_TARGET="14.0"
 fi
 
 : ${BUILD_UIKIT_FOR_MAC:=`echo "${IPHONE_SDKVERSION} >= 13.0 && ${UIKIT_DEPLOYMENT_TARGET} >= 10.15" | bc`}
+: ${BUILD_VISION:=`echo "${IPHONE_SDKVERSION} >= 17.0" | bc`}
 
 : ${XCODE_ROOT:=`xcode-select -print-path`}
 : ${EXTRA_CPPFLAGS:="-fvisibility=hidden -fvisibility-inlines-hidden -w -DBOOST_AC_USE_PTHREADS -DBOOST_SP_USE_PTHREADS -g -DNDEBUG -std=${CLANG_CXX_LANGUAGE_STANDARD} -stdlib=${CLANG_CXX_LIBRARY} -Os"}
@@ -223,6 +227,24 @@ runBuildBoost()
   fi
 
   case ${full_platform_name} in
+  "xros-xros")
+    sdk_platform="xros"
+    target_sys="xros${VISIONOS_DEPLOYMENT_TARGET}"
+    macosx_version="xros-${VISION_SDKVERSION}"
+    target_os="xros"
+    root="$XCODE_ROOT/Platforms/XROS.platform/Developer"
+    clang_arg="" 
+    #"-mios-version-min=$VISIONOS_DEPLOYMENT_TARGET"
+    ;;
+  "xrsimulator-xrsimulator")
+    sdk_platform="xrsimulator"
+    target_sys="xros${VISIONOS_DEPLOYMENT_TARGET}-simulator"
+    macosx_version="xrsim-${VISION_SDKVERSION}"
+    target_os="xros"
+    root="$XCODE_ROOT/Platforms/XRSimulator.platform/Developer"
+    clang_arg=""
+    #"-mios-version-min=$VISIONOS_DEPLOYMENT_TARGET"
+    ;;
   "iphoneos-iphoneos")
     sdk_platform="iphoneos"
     target_sys="ios${IPHONEOS_DEPLOYMENT_TARGET}"
@@ -253,7 +275,8 @@ runBuildBoost()
     sdk_platform="macosx"
     root="$XCODE_ROOT/Platforms/MacOSX.platform/Developer"
     local ios_support="$root/SDKs/MacOSX.sdk/System/iOSSupport"
-    clang_arg="" #"-I${ios_support}/usr/include/ -isystem ${ios_support}/usr/include -iframework ${ios_support}/System/Library/Frameworks"
+    clang_arg="" 
+    #"-I${ios_support}/usr/include/ -isystem ${ios_support}/usr/include -iframework ${ios_support}/System/Library/Frameworks"
     ;;
   "*")
     echo "unknown platform ${full_platform_name}"
@@ -331,9 +354,17 @@ buildBoost()
 {
   pushd $BOOST_SRC
 
+  if [ ${BUILD_VISION} -eq 1 ]
+  then
+    runBuildBoost xros-xros arm stage
+    runBuildBoost xros-xros arm install
+    runBuildBoost xrsimulator-xrsimulator arm stage
+    runBuildBoost xrsimulator-xrsimulator arm install
+  fi
+  
   runBuildBoost iphoneos-iphoneos arm stage
   runBuildBoost iphoneos-iphoneos arm install
-  
+
   buildBoostForPlatform iphonesimulator-iphonesimulator
   buildBoostForPlatform macosx
   if [ ${BUILD_UIKIT_FOR_MAC} -eq 1 ]
@@ -387,10 +418,13 @@ echo "BOOST_VERSION:              $BOOST_VERSION"
 echo "BOOST_LIBS:                 $BOOST_LIBS"
 echo "BOOST_SRC:                  $BOOST_SRC"
 echo "PREFIXDIR:                  $PREFIXDIR"
+echo "VISION_SDKVERSION:          $VISION_SDKVERSION"
 echo "IPHONE_SDKVERSION:          $IPHONE_SDKVERSION"
 echo "OSX_SDKVERSION:             $OSX_SDKVERSION"
+echo "VISIONOS_DEPLOYMENT_TARGET: $VISIONOS_DEPLOYMENT_TARGET"
 echo "IPHONEOS_DEPLOYMENT_TARGET: $IPHONEOS_DEPLOYMENT_TARGET"
 echo "MACOSX_DEPLOYMENT_TARGET:   $MACOSX_DEPLOYMENT_TARGET"
+echo "BUILD_VISION:               $BUILD_VISION"
 echo "BUILD_UIKIT_FOR_MAC:        $BUILD_UIKIT_FOR_MAC"
 echo "XCODE_ROOT:                 $XCODE_ROOT"
 echo
