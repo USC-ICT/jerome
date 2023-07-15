@@ -78,3 +78,9 @@ SUPPORTED_PLATFORMS = iphoneos iphonesimulator macosx xros xrsimulator
 MACOSX_DEPLOYMENT_TARGET = 10.13
 IPHONEOS_DEPLOYMENT_TARGET = 12.0
 TARGETED_DEVICE_FAMILY = 1,2,6,7
+
+COMBINE_HIDPI_IMAGES[sdk=macosx*] = YES
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @loader_path/Frameworks
+LD_RUNPATH_SEARCH_PATHS[sdk=macosx*] = $(inherited) @loader_path/../Frameworks
+ENABLE_BITCODE = NO
+SUPPORTS_MACCATALYST = YES
