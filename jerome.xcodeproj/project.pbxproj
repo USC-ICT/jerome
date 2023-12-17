@@ -1498,7 +1498,7 @@
 				BuildIndependentTargetsInParallel = YES;
 				CLASSPREFIX = AL;
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = "Anton Leuski & ICT/USC";
 				TargetAttributes = {
 					62527B621BBB490500767BA7 = {
