@@ -22,7 +22,6 @@
 import Foundation
 import JavaScriptCore
 import libxml2
-import XCGLogger
 import Jerome_Private
 
 @objc protocol ALXMLDocProtocol: JSExport {
@@ -291,7 +290,7 @@ extension String {
 }
 
 struct JeromeLogMessage {
-  let level: XCGLogger.Level
+  let level: Logger.Level
   let message: String
 
   init?(_ args: [Any]) {
@@ -308,8 +307,7 @@ struct JeromeLogMessage {
     guard let firstArgument = args.first else { return nil }
     if
       let level = (firstArgument as? String)?.lowercased(),
-      let loggerLevel = XCGLogger.Level.allCases
-        .first(where: { xcgLevel in xcgLevel.description.lowercased() == level})
+      let loggerLevel = Logger.Level(jerome: level)
     {
       self.level = loggerLevel
       self.message = _reformat(args.dropFirst())

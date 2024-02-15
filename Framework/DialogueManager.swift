@@ -21,7 +21,6 @@
 
 import Foundation
 import JavaScriptCore
-import XCGLogger
 import Jerome_Private
 
 extension JSContext {
@@ -63,14 +62,13 @@ final public class DialogueManager: @unchecked Sendable // valid Sendable
     let context: JSContext = .init()
     self.context = context
     self.context.exceptionHandler = { _, exception in
-      classifier.logger.alert(exception)
+      classifier.logger.critical("\(String(describing: exception))")
     }
 
     self.context.setObject(
       ALScionPlatform(
         queue: queue, log: { message in
-          classifier.logger.logln(
-            message.message, level: message.level)}),
+          classifier.logger.log(level: message.level, "\(message.message)")}),
       forKeyedSubscript: "__scionPlatform" as NSString)
 
     self.context.evaluate(ALDialogueManagerBridge.scion)

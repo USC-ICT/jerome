@@ -21,7 +21,6 @@
 
 import Foundation
 import JavaScriptCore
-import XCGLogger
 import Jerome_Private
 
 public typealias Utterance = ALUtterance
@@ -31,9 +30,9 @@ public typealias Utterance = ALUtterance
 final public class Classifier: @unchecked Sendable // valid Sendable
 {
   private let bridge: ALClassifierBridge
-  public let logger: XCGLogger
+  public let logger: Logger
 
-  public init(data: Data, logger: XCGLogger) throws {
+  public init(data: Data, logger: Logger) throws {
     self.bridge = try ALClassifierBridge(data: data)
     self.logger = logger
   }
@@ -62,7 +61,7 @@ final public class Classifier: @unchecked Sendable // valid Sendable
     bridge.collectionWasUpdated(inDomain: state)
   }
 
-  public convenience init(contentsOf url: URL, logger: XCGLogger) throws {
+  public convenience init(contentsOf url: URL, logger: Logger) throws {
     try self.init(data: Data(contentsOf: url), logger: logger)
   }
 }
@@ -110,7 +109,7 @@ extension EngineAdapter: ClassifierAdapterProtocol {
         return try client.search(for: query, in: name as String)
       }
     } catch {
-      client.logger.error(error)
+      client.logger.error("\(error)")
     }
 
     return []
